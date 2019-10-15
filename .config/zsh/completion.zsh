@@ -1,0 +1,1 @@
+zstyle ':completion:*' menu select

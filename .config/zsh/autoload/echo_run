@@ -1,0 +1,12 @@
+echo_run() {
+  local bold
+  local reset_color
+
+  bold="\033[1m"
+  reset_color="\033[0m"
+
+  echo "$bold$@$reset_color"
+  eval "$@"
+}
+
+# vi:filetype=zsh

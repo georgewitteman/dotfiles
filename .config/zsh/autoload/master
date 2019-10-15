@@ -1,0 +1,12 @@
+#! /usr/bin/env zsh
+
+[ -d .git ] || git rev-parse --git-dir > /dev/null 2>&1
+if (( $status )); then
+  printf "Not in a git repository.\n"
+  return 128
+fi
+
+GIT_ROOT=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')
+git checkout $GIT_ROOT
+git fetch -p
+git merge --ff-only $(git symbolic-ref refs/remotes/origin/HEAD)

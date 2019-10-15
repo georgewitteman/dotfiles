@@ -1,0 +1,16 @@
+function rebase() {
+  local main_branch
+  main_branch=$(git symbolic-ref --short refs/remotes/origin/HEAD) || return 1
+  echo "${fg_bold[default]}git fetch -p${reset_color}"
+  git fetch -p && \
+
+  echo "${fg_bold[default]}git rebase $main_branch${reset_color}" && \
+  git rebase $main_branch && \
+
+  if [[ "$(pwd)" =~ "web-ux" ]] && [ -f "./package.json" ]; then
+    echo "${fg_bold[default]}yarn install$reset_color" && \
+    yarn install
+  fi
+}
+
+# vi:filetype=zsh

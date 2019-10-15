@@ -1,0 +1,7 @@
+--exclude=.mypy
+--exclude=\*.pyc
+--exclude=site-packages
+--exclude=.venv
+--exclude=.tox
+--exclude=.mypy_cache
+

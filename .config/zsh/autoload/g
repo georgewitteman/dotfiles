@@ -1,0 +1,13 @@
+#! /usr/bin/env zsh
+
+if [ ${#@} -gt 0 ]; then
+  git "$@"
+else
+  [ -d .git ] || git rev-parse --git-dir > /dev/null 2>&1
+  if (( $status )); then
+    printf "Not in a git repository.\n"
+    return 128
+  fi
+  git status --short --branch --ahead-behind && \
+  git stash list
+fi

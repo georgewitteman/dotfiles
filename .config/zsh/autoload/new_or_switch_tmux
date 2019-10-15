@@ -1,0 +1,14 @@
+function new_or_switch_tmux() {
+  tmux has-session -t $1
+  [ $? != 0 ] && tmux new-session -d -s $1 -c $2
+  if [ -n "$TMUX" ]; then
+    CURRENT_SESSION=$(tmux display-message -p '#S')
+    if [ "$CURRENT_SESSION" != "$1" ]; then
+      tmux switch-client -t $1
+    fi
+  else
+    tmux attach-session -t $1
+  fi
+}
+
+# vi:filetype=zsh

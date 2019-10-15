@@ -1,0 +1,5 @@
+function take() {
+  mkdir -p $@ && cd ${@:$#}
+}
+
+# vi:filetype=zsh

@@ -1,0 +1,9 @@
+pack/
+plugged
+python3-venv
+python2-venv
+plug.vim
+plug.vim.old
+.netrwhist
+env.vim
+undodir/

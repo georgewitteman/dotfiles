@@ -1,0 +1,6 @@
+#! /usr/bin/env zsh
+
+(
+echo_run cd $(npm prefix)
+echo_run rm -rf ./node_modules
+)
