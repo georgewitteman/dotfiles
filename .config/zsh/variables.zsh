@@ -18,6 +18,7 @@ export LS_COLORS="di=34:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30
 export XDG_CACHE_HOME=$HOME/.cache
 export XDG_CONFIG_HOME=$HOME/.config
 export XDG_DATA_HOME=$HOME/.local/share
+export XDG_RUNTIME_DIR=$TMPDIR
 
 export NPM_CONFIG_USERCONFIG=$XDG_CONFIG_HOME/npm/npmrc
 export ASDF_DEFAULT_TOOL_VERSIONS_FILENAME="$XDG_CONFIG_HOME"/asdf/tool-versions
@@ -51,3 +52,6 @@ export GEM_SPEC_CACHE="$XDG_CACHE_HOME"/gem
 export DOCKER_CONFIG="$XDG_CONFIG_HOME"/docker
 export MYSQL_HISTFILE="$XDG_DATA_HOME"/mysql_history
 export BABEL_CACHE_PATH="$XDG_CACHE_HOME"/babel.json
+export NPM_CONFIG_USERCONFIG=$XDG_CONFIG_HOME/npm/config
+export NPM_CONFIG_CACHE=$XDG_CACHE_HOME/npm
+export NPM_CONFIG_TMP=$XDG_RUNTIME_DIR/npm
