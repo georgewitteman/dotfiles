@@ -4,6 +4,9 @@ fi
 zmodload zsh/datetime
 ZSH_STARTUP_TIMER=$EPOCHREALTIME
 
+# No duplicates in path
+typeset -U path
+
 # Setup env specific stuff
 source $ZDOTDIR/env.zsh
 

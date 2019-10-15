@@ -5,11 +5,18 @@ fi
 source "$ZDOTDIR/zgen/zgen.zsh"
 
 if ! zgen saved; then
+  # Handle local zsh plugins
+  if [ ! -d "$MY_ZSH_PLUGINS" ]; then
+    unset MY_ZSH_PLUGINS
+  elif [ "${MY_ZSH_PLUGINS[-1]}" != "/" ]; then
+    MY_ZSH_PLUGINS="$MY_ZSH_PLUGINS"/
+  fi
+
   zgen load zsh-users/zsh-completions
   zgen load zsh-users/zsh-history-substring-search
   zgen load ael-code/zsh-colored-man-pages
-  zgen load $HOME/Code/georgewitteman/affirm-scripts-zsh
-  zgen load $HOME/Code/georgewitteman/zsh-prompt
+  zgen load ${MY_ZSH_PLUGINS}georgewitteman/affirm-scripts-zsh
+  zgen load ${MY_ZSH_PLUGINS}georgewitteman/zsh-prompt
 
   zgen save
 fi
