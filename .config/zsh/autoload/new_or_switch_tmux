@@ -1,5 +1,5 @@
 function new_or_switch_tmux() {
-  tmux has-session -t $1
+  tmux has-session -t $1 >/dev/null 2>&1
   [ $? != 0 ] && tmux new-session -d -s $1 -c $2
   if [ -n "$TMUX" ]; then
     CURRENT_SESSION=$(tmux display-message -p '#S')
