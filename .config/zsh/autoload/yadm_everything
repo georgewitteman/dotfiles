@@ -1,29 +1,4 @@
-function yadm_everything() {
-  function __yadm_add() {
-    echo_run yadm add $1
-  }
+#! /usr/bin/env zsh
 
-  __yadm_add ~/.zshenv
-  __yadm_add $ZDOTDIR
-
-  __yadm_add ~/.gitconfig ~/.config/.gitexcludes
-  __yadm_add ~/.config/git/config
-
-  __yadm_add ~/.config/vim
-  __yadm_add ~/.config/nvim
-  __yadm_add ~/.vimrc
-
-  __yadm_add ~/.config/alacritty
-
-  __yadm_add ~/.config/ranger
-
-  __yadm_add ~/.config/tmux
-
-  __yadm_add ~/.config/tealdeer
-
-  echo_run yadm add --update --verbose
-
-  echo_run yadm status
-}
-
-# vi:filetype=zsh
+echo_run yadm add --update --verbose
+echo_run yadm status
