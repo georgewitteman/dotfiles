@@ -6,8 +6,12 @@ let $VIMHOME = $XDG_CONFIG_HOME.'/vim'
 set undodir=$XDG_DATA_HOME/vim/undo
 set directory=$XDG_DATA_HOME/vim/swap
 set backupdir=$XDG_DATA_HOME/vim/backup
-set viminfo+='1000,n$XDG_DATA_HOME/vim/viminfo
 set runtimepath=$XDG_CONFIG_HOME/vim,$VIMRUNTIME,$XDG_CONFIG_HOME/vim/after
+if has('nvim')
+  set viminfo+='1000,n$XDG_DATA_HOME/vim/shada
+else
+  set viminfo+='1000,n$XDG_DATA_HOME/vim/viminfo
+endif
 
 " Load plugins
 source $VIMHOME/plugins.vim
@@ -166,10 +170,16 @@ set fillchars+=vert:│
 " Don't add tags file to home directory
 let g:gutentags_exclude_project_root = ['/usr/local', $HOME]
 
+" Enable better whitespace plugin
+let g:better_whitespace_enabled = 1
+let g:strip_whitespace_on_save = 1
+let g:strip_whitespace_confirm = 0 " Don't ask for confirmation
+let g:strip_whitelines_at_eof = 1 " Strip white lines at end of file
+
 if filereadable($VIMHOME.'/env.vim')
   source $VIMHOME/env.vim
 endif
 
-source $VIMHOME/netrw.vim
+source $VIMHOME/explorer.vim
 source $VIMHOME/mappings.vim
 source $VIMHOME/statusline.vim

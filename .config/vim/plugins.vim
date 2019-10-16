@@ -67,22 +67,17 @@ function! PackInit() abort
   " Tags
   call minpac#add('ludovicchabant/vim-gutentags')
 
-  " Better netrw
-  call minpac#add('tpope/vim-vinegar')
-
   " Automatically :set paste
   call minpac#add('ConradIrwin/vim-bracketed-paste')
 
   " Better whitespace
   call minpac#add('ntpeters/vim-better-whitespace')
-  let g:better_whitespace_enabled = 1
-  let g:strip_whitespace_on_save = 1
-
-  " Completion
-  call minpac#add('ajh17/VimCompletesMe')
 
   " Caps Lock
   call minpac#add('tpope/vim-capslock')
+
+  " File manager
+  call minpac#add('justinmk/vim-dirvish')
 endfunction
 
 if empty(glob($VIMHOME.'/pack/minpac/opt/minpac/plugin/minpac.vim'))

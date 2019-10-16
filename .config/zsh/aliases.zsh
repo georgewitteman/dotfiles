@@ -34,3 +34,5 @@ alias develop="master"
 alias c="clear"
 
 alias d='print -P "%~"'
+
+alias vim='nvim'
