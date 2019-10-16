@@ -12,6 +12,7 @@ yadm status
 
 ## Tools I Use
  - [Alacritty](https://github.com/jwilm/alacritty) (terminal emulator)
+ - [Kitty](https://sw.kovidgoyal.net/kitty/index.html) (terminal emulator)
  - [Neovim](https://neovim.io) (text editor) with WebStorm/PyCharm as a backup
  - [yadm](https://yadm.io) (dotfiles manager, aka thing that manages this repo)
  - [asdf](https://asdf-vm.com/#/) (version manager)
