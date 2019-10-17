@@ -50,7 +50,7 @@ function! PackInit() abort
   call minpac#add('tpope/vim-repeat')
 
   " Better incremental searching
-  call minpac#add('haya14busa/incsearch.vim')
+  call minpac#add('haya14busa/is.vim')
 
   " Git status in gutter
   call minpac#add('airblade/vim-gitgutter')
