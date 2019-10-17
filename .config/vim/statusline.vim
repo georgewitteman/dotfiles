@@ -8,4 +8,5 @@ set statusline=[%n]\ %<%.99f
 set statusline+=\ %{exists('*FugitiveStatusline')?FugitiveStatusline():''}
 set statusline+=%y%h%w%m%r
 set statusline+=%{exists('*CapsLockStatusline')?CapsLockStatusline():''}
+set statusline+=%{exists('*gutentags#statusline')?gutentags#statusline('[',']'):''}
 set statusline+=%=\ %(%l,%c%V%)\ %P
