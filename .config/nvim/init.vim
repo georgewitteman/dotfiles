@@ -1,5 +1,12 @@
 scriptencoding utf-8
 
+" Use Vim settings, rather than Vi settings (much better!).
+" This must be first, because it changes other options as a side effect.
+" Avoid side effects when it was already reset.
+if &compatible
+  set nocompatible
+endif
+
 let $VIMHOME = $XDG_CONFIG_HOME.'/nvim'
 
 " Environment
@@ -53,16 +60,6 @@ endif
 if has('gui_macvim')
   set guifont=OperatorMonoLig-Book:h14
 endif
-
-" node version
-let g:node_host_prog = '/Users/georgewitteman/.asdf/installs/nodejs/12.3.1/.npm/bin/neovim-node-host'
-
-" python versions
-let g:python_host_prog = $VIMHOME . '/python2-venv/bin/python2.7'
-let g:python3_host_prog = $VIMHOME . '/python3-venv/bin/python3'
-
-" ruby version
-let g:ruby_host_prog = '/Users/georgewitteman/.asdf/installs/ruby/2.6.3/bin/neovim-ruby-host'
 
 " spaces/tabs setup
 " tabstop: How many whitespace characters a literal \t is worth
@@ -125,8 +122,10 @@ set scroll=0
 set wildmenu
 set wildmode=longest:full,full
 
-" Mouse support
-set mouse=a
+" Enable mouse support for all modes
+if has('mouse')
+  set mouse=a
+endif
 
 " Split below and to the right
 set splitbelow
@@ -149,7 +148,7 @@ if exists('&signcolumn')
   set signcolumn=yes
 endif
 
-" Fix deleting text
+" Allow backspacing over everything in insert mode
 " indent: allow backspacing over autoindent
 " eol: allow backspacing over line breaks (join lines)
 " allow backspacing over the start of insert
