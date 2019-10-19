@@ -1,7 +1,3 @@
-" Homebrew fzf
-set runtimepath+=/usr/local/opt/fzf
-set packpath^=$XDG_CONFIG_HOME/vim
-
 " Define user commands for updating/cleaning the plugins.
 " Each of them calls PackInit() to load minpac and register
 " the information of plugins, then performs the task.
