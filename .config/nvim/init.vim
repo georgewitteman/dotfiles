@@ -44,12 +44,10 @@ syntax on
 
 " Set colorscheme
 set background=dark
-" colorscheme basic
 if (has('termguicolors'))
   let g:one_allow_italics = 1
+  colorscheme one
 endif
-colorscheme one
-" colorscheme base16-default-dark
 
 " Set font
 if has('gui_macvim')
@@ -109,9 +107,6 @@ set incsearch
 " o       Automatically insert the current comment leader after hitting 'o' or
 "         'O' in Normal mode.
 set formatoptions-=ro
-
-" Turn on relative line numbers
-set number relativenumber
 
 " Turn on hybrid relative numbers (current line shows actual number not 0)
 set number rnu
@@ -177,9 +172,6 @@ let g:better_whitespace_enabled = 1
 let g:strip_whitespace_on_save = 1
 let g:strip_whitespace_confirm = 0 " Don't ask for confirmation
 let g:strip_whitelines_at_eof = 1 " Strip white lines at end of file
-
-" Sort directories at the top of dirvish
-let g:dirvish_mode = ':sort ,^.*[\/],'
 
 if filereadable($VIMHOME.'/env.vim')
   source $VIMHOME/env.vim

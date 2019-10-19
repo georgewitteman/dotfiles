@@ -1,3 +1,0 @@
-INFO  2019-10-18T21:49:02.992 63347 emsg_multiline:676: E185: Cannot find color scheme 'one' (/Users/georgewitteman/.config/nvim/init.vim (line 50))
-INFO  2019-10-18T21:49:03.014 63347 main:571: starting main loop
-INFO  2019-10-18T21:49:06.013 63347 mch_exit:99: Nvim exit: 0
