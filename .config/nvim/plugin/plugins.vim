@@ -14,7 +14,7 @@ function! PackInit() abort
   " Additional plugins here.
 
   " Better syntax highlighting
-  call minpac#add('georgewitteman/vim-one')
+  call minpac#add('rakr/vim-one')
 
   " Better syntax highlighting
   call minpac#add('pangloss/vim-javascript')
