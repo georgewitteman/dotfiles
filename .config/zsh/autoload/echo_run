@@ -1,11 +1,13 @@
 echo_run() {
   local bold
   local reset_color
+  local gray
 
   bold="\033[1m"
   reset_color="\033[0m"
+  gray="\u001b[38;5;245m"
 
-  echo "$bold$@$reset_color"
+  echo "$gray\$ $@$reset_color"
   eval "$@"
 }
 
