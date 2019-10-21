@@ -2,4 +2,4 @@
 
 bash $ZDOTDIR/scripts/colors.bash
 bash $ZDOTDIR/scripts/24-bit-color.bash
-bash $ZDOTDIR/scripts/fg-bg.bash
+# bash $ZDOTDIR/scripts/fg-bg.bash
