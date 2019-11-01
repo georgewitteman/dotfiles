@@ -29,6 +29,7 @@ function! PackInit() abort
   call minpac#add('othree/html5.vim')
   call minpac#add('tpope/vim-git')
   call minpac#add('chrisbra/vim-zsh')
+  call minpac#add('lifepillar/pgsql.vim')
 
   " Surround something with text
   call minpac#add('tpope/vim-surround')
