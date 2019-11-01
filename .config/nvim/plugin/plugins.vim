@@ -72,6 +72,9 @@ function! PackInit() abort
 
   " File manager
   call minpac#add('justinmk/vim-dirvish')
+
+  " Dispatch
+  call minpac#add('tpope/vim-dispatch')
 endfunction
 
 if empty(glob($VIMHOME.'/pack/minpac/opt/minpac/plugin/minpac.vim'))
