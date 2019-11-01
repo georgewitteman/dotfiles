@@ -6,7 +6,9 @@ if (( $status )); then
   return 128
 fi
 
-GIT_ROOT=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')
+echo -n "Getting remote HEAD... "
+GIT_ROOT=${$(git remote show origin | grep 'HEAD branch' | cut -d ':' -f 2)[1,-1]}
+echo $GIT_ROOT
 echo_run git checkout $GIT_ROOT
 echo_run git fetch -p
-echo_run git merge --ff-only $(git symbolic-ref refs/remotes/origin/HEAD)
+echo_run git merge --ff-only origin/$GIT_ROOT
