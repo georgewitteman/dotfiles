@@ -13,5 +13,5 @@ if [ "$GIT_ROOT" = "" ]; then
 fi
 echo $GIT_ROOT
 echo_run git checkout $GIT_ROOT
-echo_run git fetch -p
+echo_run git fetch --prune --tags
 echo_run git merge --ff-only origin/$GIT_ROOT
