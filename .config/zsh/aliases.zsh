@@ -26,12 +26,13 @@ alias ll='ls -l'
 alias la='ls -la'
 
 # Git
-alias gs="git status"
-alias gf="git fetch && g"
+compdef g='git'
+alias gs='git status'
+alias gf='git fetch && g'
 alias gb="git branch --sort=-committerdate --format='%(if)%(HEAD)%(then)* %(color:bold green)%(else)  %(end)%(refname:short)%(color:nobold normal) (%(committerdate:relative))'"
-alias develop="master"
+alias develop='master'
 
-alias c="clear"
+alias c='clear'
 
 alias d='print -P "%~"'
 
