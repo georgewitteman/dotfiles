@@ -5,6 +5,8 @@ function new_or_switch_tmux() {
     CURRENT_SESSION=$(tmux display-message -p '#S')
     if [ "$CURRENT_SESSION" != "$1" ]; then
       tmux switch-client -t $1
+    else
+      cd $2
     fi
   else
     tmux attach-session -t $1
