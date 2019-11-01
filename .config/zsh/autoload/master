@@ -7,7 +7,10 @@ if (( $status )); then
 fi
 
 echo -n "Getting remote HEAD... "
-GIT_ROOT=${$(git remote show origin | grep 'HEAD branch' | cut -d ':' -f 2)[1,-1]}
+GIT_ROOT=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@') 2> /dev/null
+if [ "$GIT_ROOT" = "" ]; then
+  GIT_ROOT=${$(git remote show origin | grep 'HEAD branch' | cut -d ':' -f 2)[1,-1]}
+fi
 echo $GIT_ROOT
 echo_run git checkout $GIT_ROOT
 echo_run git fetch -p
