@@ -34,6 +34,9 @@ source $XDG_CONFIG_HOME/fzf/fzf.zsh
 source $XDG_DATA_HOME/asdf/asdf.sh
 source $XDG_DATA_HOME/asdf/completions/asdf.bash
 
+# PYENV
+path=($PYENV_ROOT/shims $path)
+
 if [ $ZSH_STARTUP_TIMER ]; then
   local now
   local startup_diff
