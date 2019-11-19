@@ -35,7 +35,7 @@ source $XDG_DATA_HOME/asdf/asdf.sh
 source $XDG_DATA_HOME/asdf/completions/asdf.bash
 
 # PYENV
-path=($PYENV_ROOT/shims $path)
+(( $+commands[pyenv] )) && path=($PYENV_ROOT/shims $path)
 
 if [ $ZSH_STARTUP_TIMER ]; then
   local now
