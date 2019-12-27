@@ -7,7 +7,8 @@ source "$ZDOTDIR/zgen/zgen.zsh"
 if ! zgen saved; then
   # Handle local zsh plugins
   if [ ! -d "$MY_ZSH_PLUGINS" ]; then
-    unset MY_ZSH_PLUGINS
+    # unset MY_ZSH_PLUGINS
+    MY_ZSH_PLUGINS="git@github.com:"
   elif [ "${MY_ZSH_PLUGINS[-1]}" != "/" ]; then
     MY_ZSH_PLUGINS="$MY_ZSH_PLUGINS"/
   fi
