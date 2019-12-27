@@ -58,8 +58,7 @@ function! PackInit() abort
   " Tags
   " Use forked version for now to get rid of annoying ctags failed
   " messages in neovim
-  " call minpac#add('ludovicchabant/vim-gutentags')
-  call minpac#add('blueyed/vim-gutentags', {'branch': 'ignore-sigpipe-on-exit'})
+  call minpac#add('ludovicchabant/vim-gutentags')
 
   " Automatically :set paste
   call minpac#add('ConradIrwin/vim-bracketed-paste')
