@@ -37,6 +37,11 @@ source $XDG_DATA_HOME/asdf/completions/asdf.bash
 # PYENV
 (( $+commands[pyenv] )) && path=($PYENV_ROOT/shims $path)
 
+# Yarn
+[ -d "$HOME/.yarn" ] && path=($HOME/.yarn/bin $HOME/.config/yarn/global/node_modules/.bin $path)
+# [ -d "$HOME/.yarn" ] && path=($HOME/.yarn/bin $path)
+# [ -d "$HOME/.yarn" ] && export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+
 if [ $ZSH_STARTUP_TIMER ]; then
   local now
   local startup_diff
