@@ -74,6 +74,12 @@ function! PackInit() abort
 
   " Dispatch
   call minpac#add('tpope/vim-dispatch')
+
+  " dadbod.vim (Database query runner)
+  call minpac#add('tpope/vim-dadbod')
+
+  " dotenv.vim
+  call minpac#add('tpope/vim-dotenv')
 endfunction
 
 if empty(glob($VIMHOME.'/pack/minpac/opt/minpac/plugin/minpac.vim'))
