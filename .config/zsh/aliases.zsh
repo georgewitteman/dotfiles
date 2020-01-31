@@ -4,8 +4,6 @@ alias make-venv='python3 -m venv .venv'
 alias activate='source .venv/bin/activate'
 
 # Tmux sessions
-alias att='new_or_switch_tmux all-the-things ~/Code/Affirm/all-the-things'
-alias webux='new_or_switch_tmux web-ux ~/Code/Affirm/web-ux'
 alias default='new_or_switch_tmux default ~/'
 alias misc='default'
 
