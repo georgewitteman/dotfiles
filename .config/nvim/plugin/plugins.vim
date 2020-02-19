@@ -93,6 +93,9 @@ function! PackInit() abort
   call minpac#add('prabirshrestha/vim-lsp')
   call minpac#add('prabirshrestha/asyncomplete.vim')
   call minpac#add('prabirshrestha/asyncomplete-lsp.vim')
+
+  " Python motions
+  call minpac#add('jeetsukumaran/vim-pythonsense')
 endfunction
 
 if empty(glob($VIMHOME.'/pack/minpac/opt/minpac/plugin/minpac.vim'))
