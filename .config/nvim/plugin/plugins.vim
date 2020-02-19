@@ -30,6 +30,7 @@ function! PackInit() abort
   call minpac#add('tpope/vim-git')
   call minpac#add('chrisbra/vim-zsh')
   call minpac#add('lifepillar/pgsql.vim')
+  call minpac#add('saltstack/salt-vim')
 
   " Surround something with text
   call minpac#add('tpope/vim-surround')
