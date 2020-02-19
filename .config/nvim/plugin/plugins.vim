@@ -84,6 +84,9 @@ function! PackInit() abort
 
   " Tests
   call minpac#add('janko/vim-test')
+
+  " Show the context
+  call minpac#add('wellle/context.vim')
 endfunction
 
 if empty(glob($VIMHOME.'/pack/minpac/opt/minpac/plugin/minpac.vim'))
