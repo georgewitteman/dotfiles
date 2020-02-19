@@ -81,6 +81,9 @@ function! PackInit() abort
 
   " dotenv.vim
   call minpac#add('tpope/vim-dotenv')
+
+  " Tests
+  call minpac#add('janko/vim-test')
 endfunction
 
 if empty(glob($VIMHOME.'/pack/minpac/opt/minpac/plugin/minpac.vim'))
