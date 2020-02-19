@@ -87,6 +87,12 @@ function! PackInit() abort
 
   " Show the context
   call minpac#add('wellle/context.vim')
+
+  " Language servers
+  call minpac#add('prabirshrestha/async.vim')
+  call minpac#add('prabirshrestha/vim-lsp')
+  call minpac#add('prabirshrestha/asyncomplete.vim')
+  call minpac#add('prabirshrestha/asyncomplete-lsp.vim')
 endfunction
 
 if empty(glob($VIMHOME.'/pack/minpac/opt/minpac/plugin/minpac.vim'))
