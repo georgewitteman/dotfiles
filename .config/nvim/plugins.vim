@@ -90,5 +90,11 @@ Plug 'prabirshrestha/asyncomplete-lsp.vim'
 " Python motions
 Plug 'jeetsukumaran/vim-pythonsense'
 
+" Let's try an auto pairs plugin again
+Plug 'Krasjet/auto.pairs'
+
+" Smooth scrolling
+Plug 'psliwka/vim-smoothie'
+
 " Initialize plugin system
 call plug#end()
