@@ -24,6 +24,8 @@ set packpath^=$VIMHOME
 " Homebrew fzf
 set runtimepath+=/usr/local/opt/fzf
 
+source $VIMHOME/plugins.vim
+
 " Set 24-bit colors
 if (has('termguicolors'))
   let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
