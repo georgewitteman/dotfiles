@@ -96,5 +96,8 @@ Plug 'Krasjet/auto.pairs'
 " Smooth scrolling
 Plug 'psliwka/vim-smoothie'
 
+" Convert between camelCase and snake_case (and more!)
+Plug 'nicwest/vim-camelsnek'
+
 " Initialize plugin system
 call plug#end()
