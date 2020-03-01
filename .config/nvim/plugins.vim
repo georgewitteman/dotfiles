@@ -99,5 +99,8 @@ Plug 'psliwka/vim-smoothie'
 " Convert between camelCase and snake_case (and more!)
 Plug 'nicwest/vim-camelsnek'
 
+" Make certain things in vim slower (hjkl...)
+Plug 'takac/vim-hardtime'
+
 " Initialize plugin system
 call plug#end()
