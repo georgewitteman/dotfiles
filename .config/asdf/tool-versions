@@ -4,3 +4,4 @@ ruby 2.6.3
 rust 1.37.0
 direnv 2.20.0
 yarn 1.21.1
+golang 1.13.6
