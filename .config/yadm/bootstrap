@@ -71,18 +71,26 @@ decrypt_yadm_files() {
   chmod 644 ~/.ssh/id_rsa.pub
 }
 
+update_yadm_url_to_ssh() {
+  # We now have ssh keys decrypted, so can update the url
+  # to be the ssh url
+  echo "Updating the yadm repo origin URL"
+  yadm remote set-url origin "git@github.com:georgewitteman/dotfiles.git"
+}
+
 reminders() {
   echo
   echo "Don't forget to set yadm class!"
   echo "  $ yadm config local.class <work|personal>"
 }
 
+decrypt_yadm_files
+update_yadm_url_to_ssh
 install_brew
 install_alacritty_terminfo
 install_tmux_terminfo
 bootstrap_vim
 bootstrap_tmux
 bootstrap_asdf
-decrypt_yadm_files
 
 reminders
