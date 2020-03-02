@@ -1,0 +1,98 @@
+#!/usr/bin/env zsh
+
+SERVICE=$1
+INPUT_FILE=$2
+OUTPUT_FILE="$(mktemp).html"
+
+echo Output file: $OUTPUT_FILE
+
+cat >> $OUTPUT_FILE << EOM
+<html>
+  <head>
+    <title>$(basename $INPUT_FILE)</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.1.0/sorts/tablesort.date.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.1.0/sorts/tablesort.dotsep.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.1.0/sorts/tablesort.filesize.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.1.0/sorts/tablesort.monthname.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.1.0/sorts/tablesort.number.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.1.0/tablesort.min.js"></script>
+    <link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <style>
+      html,
+      body {
+        font-family: Arial;
+        font-size: 13px;
+      }
+
+      .container { max-width: 100%; overflow: auto; }
+
+      table {
+        border-collapse: collapse;
+        font-size: 14px;
+      }
+
+      table, th, td {
+        border: 1px solid #ccc;
+      }
+
+      th, td {
+        padding: .4em .8em;
+      }
+
+      td {
+        text-align: left;
+      }
+
+      tr:nth-child(even) {background-color: #f2f2f2;}
+
+      th {
+        background: #2980b9;
+        position: sticky;
+        top: 0;
+        color: white;
+        font-weight: bold;
+      }
+
+      th[role=columnheader]:not(.no-sort) {
+        cursor: pointer;
+      }
+
+      th[aria-sort=ascending]:not(.no-sort):after {
+        content: ' ▾';
+      }
+
+      th[aria-sort=descending]:not(.no-sort):after {
+        content: ' ▴';
+      }
+    </style>
+  </head>
+<body>
+  <pre><code class="postgresql">
+$(cat $INPUT_FILE)
+  </code></pre>
+  <div class="container">
+EOM
+
+psql service="$SERVICE" --html --file="$INPUT_FILE" >> $OUTPUT_FILE 2>&1
+
+RESULT_STATUS=$?
+
+cat >> $OUTPUT_FILE << EOM
+  </div>
+  <script>
+    const thead = document.querySelector('tr');
+    thead.remove();
+    const theadd = document.createElement('thead');
+    theadd.appendChild(thead);
+    document.querySelector('table').tHead = theadd;
+  </script>
+  <script>new Tablesort(document.querySelector('table'));</script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>
+EOM
+
+echo open $OUTPUT_FILE
+open $OUTPUT_FILE
