@@ -1,0 +1,88 @@
+#!/bin/sh
+
+# Stop when any command fails
+set -e
+
+install_brew() {
+  # install homebrew if it's missing
+  if ! command -v brew >/dev/null 2>&1; then
+    echo "Installing homebrew"
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  fi
+
+  if [ -f "${XDG_CONFIG_HOME:-~/.config}/Brewfile" ]; then
+    echo "Updating homebrew bundle"
+    brew bundle --file="${XDG_CONFIG_HOME:-~/.config}/Brewfile" --verbose
+  fi
+}
+
+install_alacritty_terminfo() {
+  echo "Compiling alacritty terminfo file"
+  TMP_DIR=$(mktemp -d)
+  cd $TMP_DIR
+  curl -O https://raw.githubusercontent.com/alacritty/alacritty/master/extra/alacritty.info
+  echo "tic -xe alacritty,alacritty-direct alacritty.info"
+  tic -xe alacritty,alacritty-direct alacritty.info
+  cd
+  rm -rf $TMP_DIR
+}
+
+install_tmux_terminfo() {
+  echo "Installing tmux terminfo file"
+  tic -x $XDG_CONFIG_HOME/tmux/tmux.terminfo
+}
+
+bootstrap_vim() {
+  if command -v vim >/dev/null 2>&1; then
+    echo "Bootstraping Vim"
+    vim '+PlugClean! | only' '+PlugUpdate | only' '+qall'
+  fi
+}
+
+bootstrap_tmux() {
+  if [ ! -d "${HOME}/.tmux/plugins/tpm" ]; then
+    git clone https://github.com/tmux-plugins/tpm $XDG_CONFIG_HOME/tmux/tpm
+  fi
+  if command -v tmux >/dev/null 2>&1; then
+    echo "Installing, updating, and cleaning tmux plugins"
+    $XDG_CONFIG_HOME/tmux/plugins/tpm/bin/install_plugins
+    $XDG_CONFIG_HOME/tmux/plugins/tpm/bin/update_plugins all
+    $XDG_CONFIG_HOME/tmux/plugins/tpm/bin/clean_plugins
+  fi
+}
+
+bootstrap_asdf() {
+  if ! command -v asdf >/dev/null 2>&1; then
+    echo "Installing asdf"
+    git clone https://github.com/asdf-vm/asdf.git $XDG_DATA_HOME/asdf
+    cd $XDG_DATA_HOME/asdf
+    git checkout "$(git describe --abbrev=0 --tags)"
+  fi
+
+  echo "Initializing asdf"
+  cd $XDG_CONFIG_HOME/asdf
+  asdf install
+}
+
+decrypt_yadm_files() {
+  yadm decrypt
+  chmod 700 ~/.ssh
+  chmod 600 ~/.ssh/id_rsa
+  chmod 644 ~/.ssh/id_rsa.pub
+}
+
+reminders() {
+  echo
+  echo "Don't forget to set yadm class!"
+  echo "  $ yadm config local.class <work|personal>"
+}
+
+install_brew
+install_alacritty_terminfo
+install_tmux_terminfo
+bootstrap_vim
+bootstrap_tmux
+bootstrap_asdf
+decrypt_yadm_files
+
+reminders
