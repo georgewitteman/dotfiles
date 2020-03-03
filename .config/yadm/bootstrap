@@ -16,6 +16,20 @@ install_brew() {
   fi
 }
 
+bootstrap_asdf() {
+  if ! command -v asdf >/dev/null 2>&1; then
+    echo "Installing asdf"
+    git clone https://github.com/asdf-vm/asdf.git $XDG_DATA_HOME/asdf
+    cd $XDG_DATA_HOME/asdf
+    git checkout "$(git describe --abbrev=0 --tags)"
+  fi
+
+  echo "Initializing asdf"
+  cd $XDG_CONFIG_HOME/asdf
+  asdf plugin add python || true
+  asdf install
+}
+
 install_alacritty_terminfo() {
   echo "Compiling alacritty terminfo file"
   TMP_DIR=$(mktemp -d)
@@ -35,13 +49,29 @@ install_tmux_terminfo() {
 bootstrap_vim() {
   if command -v vim >/dev/null 2>&1; then
     echo "Bootstraping Vim"
-    vim '+PlugClean! | only' '+PlugUpdate | only' '+qall'
+
+    cd $XDG_CONFIG_HOME/nvim
+
+    python2 -m pip install virtualenv
+    python2 -m virtualenv python2-venv
+    source python2-venv/bin/activate
+    which pip
+    pip install -r requirements.txt
+    deactivate
+
+    python3 -m venv python3-venv
+    source python3-venv/bin/activate
+    which pip
+    pip install -r requirements3.txt
+    deactivate
+
+    nvim -u $XDG_CONFIG_HOME/nvim/init.vim '+PlugClean!' '+PlugUpdate' '+qall'
   fi
 }
 
 bootstrap_tmux() {
-  if [ ! -d "${HOME}/.tmux/plugins/tpm" ]; then
-    git clone https://github.com/tmux-plugins/tpm $XDG_CONFIG_HOME/tmux/tpm
+  if [ ! -d "$XDG_CONFIG_HOME/tmux/plugins/tpm" ]; then
+    git clone https://github.com/tmux-plugins/tpm $XDG_CONFIG_HOME/tmux/plugins/tpm
   fi
   if command -v tmux >/dev/null 2>&1; then
     echo "Installing, updating, and cleaning tmux plugins"
@@ -49,19 +79,6 @@ bootstrap_tmux() {
     $XDG_CONFIG_HOME/tmux/plugins/tpm/bin/update_plugins all
     $XDG_CONFIG_HOME/tmux/plugins/tpm/bin/clean_plugins
   fi
-}
-
-bootstrap_asdf() {
-  if ! command -v asdf >/dev/null 2>&1; then
-    echo "Installing asdf"
-    git clone https://github.com/asdf-vm/asdf.git $XDG_DATA_HOME/asdf
-    cd $XDG_DATA_HOME/asdf
-    git checkout "$(git describe --abbrev=0 --tags)"
-  fi
-
-  echo "Initializing asdf"
-  cd $XDG_CONFIG_HOME/asdf
-  asdf install
 }
 
 decrypt_yadm_files() {
@@ -87,10 +104,10 @@ reminders() {
 decrypt_yadm_files
 update_yadm_url_to_ssh
 install_brew
+bootstrap_asdf
 install_alacritty_terminfo
 install_tmux_terminfo
 bootstrap_vim
 bootstrap_tmux
-bootstrap_asdf
 
 reminders
