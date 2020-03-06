@@ -102,5 +102,8 @@ Plug 'nicwest/vim-camelsnek'
 " Make certain things in vim slower (hjkl...)
 Plug 'takac/vim-hardtime'
 
+" Dash documentation viewer
+Plug 'rizzatti/dash.vim'
+
 " Initialize plugin system
 call plug#end()
