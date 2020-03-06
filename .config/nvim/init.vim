@@ -108,7 +108,11 @@ set incsearch
 "         <Enter> in Insert mode.
 " o       Automatically insert the current comment leader after hitting 'o' or
 "         'O' in Normal mode.
-set formatoptions-=ro
+" See https://stackoverflow.com/a/8748154 for the autocommand explanation
+augroup FormatOptions
+  autocmd!
+  autocmd BufNewFile,BufRead * setlocal formatoptions-=ro
+augroup END
 
 " Turn on hybrid relative numbers (current line shows actual number not 0)
 set number rnu
