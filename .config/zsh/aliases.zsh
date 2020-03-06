@@ -37,4 +37,6 @@ alias c='clear'
 
 alias d='print -P "%~"'
 
+# Vim
 alias vim='nvim'
+alias profvim='vim --startuptime startup.log +qall && vim startup.log && rm startup.log'
