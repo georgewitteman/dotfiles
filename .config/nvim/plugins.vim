@@ -1,7 +1,10 @@
 if empty(glob($VIMHOME.'/autoload/plug.vim'))
   silent !curl -fLo $VIMHOME/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+  augroup VimPlugInstall
+    autocmd!
+    autocmd! VimEnter * PlugInstall --sync | source $MYVIMRC
+  augroup END
 endif
 
 call plug#begin($VIMHOME.'/plugged')
@@ -92,9 +95,6 @@ Plug 'jeetsukumaran/vim-pythonsense'
 
 " Let's try an auto pairs plugin again
 Plug 'Krasjet/auto.pairs'
-
-" Smooth scrolling
-Plug 'psliwka/vim-smoothie'
 
 " Convert between camelCase and snake_case (and more!)
 Plug 'nicwest/vim-camelsnek'

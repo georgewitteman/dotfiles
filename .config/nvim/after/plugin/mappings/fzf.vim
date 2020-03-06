@@ -1,3 +1,7 @@
+if !exists(':FZF')
+  finish
+endif
+
 nnoremap <Leader>f :execute "Files"<CR>
 nnoremap <Leader>b :execute "Buffers"<CR>
 nnoremap <Leader>l :execute "Lines"<CR>

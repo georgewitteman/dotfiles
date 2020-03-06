@@ -5,7 +5,7 @@ function! dirvish_helpers#delete(delflags, refresh)
     return
   endif
 
-  let choice= confirm('Delete '.path.'?', "&Yes\n&No", 2)
+  let choice = confirm('Delete '.path.'?', "&Yes\n&No", 2)
   if choice !=# 1
     return
   endif
@@ -27,9 +27,9 @@ endfunction
 
 function! dirvish_helpers#make_directory()
   call inputsave()
-  let newdirname= input("Please give directory name: ")
+  let newdirname= input('Please give directory name: ')
   call inputrestore()
-  if newdirname == ""
+  if newdirname ==# ''
    return
   endif
 
@@ -49,9 +49,9 @@ endfunction
 
 function! dirvish_helpers#make_file()
   call inputsave()
-  let newfilename = input("Enter filename: ")
+  let newfilename = input('Enter filename: ')
   call inputrestore()
-  if newfilename  == ""
+  if newfilename ==# ''
    return
   endif
 
@@ -63,4 +63,20 @@ function! dirvish_helpers#make_file()
   endif
 
   execute 'e '.fullfilename
+endfunction
+
+function! dirvish_helpers#move_file()
+  let path = getline('.')
+  if !filereadable(path)
+    echo 'Not a file.'
+    return
+  endif
+
+  call inputsave()
+  let newpath = input('Enter new path: ', path)
+  call inputrestore()
+
+  call system('mv ' . path . ' ' . newpath)
+
+  execute 'Dirvish %'
 endfunction
