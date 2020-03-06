@@ -30,6 +30,9 @@ alias gf='git fetch && g'
 alias gb="git branch --sort=-committerdate --format='%(if)%(HEAD)%(then)* %(color:bold green)%(else)  %(end)%(refname:short)%(color:nobold normal) (%(committerdate:relative))'"
 alias develop='master'
 
+# yadm
+alias ys='yadm status'
+
 alias c='clear'
 
 alias d='print -P "%~"'
