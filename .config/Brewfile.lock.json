@@ -380,10 +380,10 @@
       "catalina": {
         "HOMEBREW_VERSION": "2.2.7",
         "HOMEBREW_PREFIX": "/usr/local",
-        "Homebrew/homebrew-core": "3ba0438784e7ccfa7e2bb3e5cde31516eb99b6ab",
-        "CLT": "11.0.33.16",
+        "Homebrew/homebrew-core": "767978bf5ee65762cad92b48847c70f2b8c007a4",
+        "CLT": "11.0.33.8",
         "Xcode": "11.3",
-        "macOS": "10.15.2"
+        "macOS": "10.15.3"
       }
     }
   }
