@@ -69,7 +69,7 @@ endif
 " spaces/tabs setup
 " tabstop: How many whitespace characters a literal \t is worth
 " shiftwidth: how many columns of whitespace a level of indentation is worth
-"             (>, <, ...)
+"             (>, <, ...). If negative, use value of shiftwidth
 " softtabstop: how many columns of whitespace a keypress is worth (<Tab>)
 " expandtab: Always use spaces instead of tabs
 " smarttab: Insert and delete shiftwidth blanks
@@ -77,7 +77,7 @@ endif
 " smartindent: Do smart autoindenting by inserting extra tab when necessary
 set tabstop=8
 set shiftwidth=2
-set softtabstop=2
+set softtabstop=-1
 set expandtab
 set smarttab
 set autoindent
