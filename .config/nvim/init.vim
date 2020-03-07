@@ -17,9 +17,6 @@ else
 endif
 set packpath^=$VIMHOME
 
-" Homebrew fzf
-set runtimepath+=/usr/local/opt/fzf
-
 let g:python_host_prog  = $VIMHOME.'/python2-venv/bin/python'
 let g:python3_host_prog = $VIMHOME.'/python3-venv/bin/python'
 
