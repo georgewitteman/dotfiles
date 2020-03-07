@@ -97,8 +97,5 @@ Plug 'takac/vim-hardtime'
 " Dash documentation viewer
 Plug 'rizzatti/dash.vim'
 
-" Code navigation via regex (kinda like tags, but live)
-Plug 'pechorin/any-jump.vim'
-
 " Initialize plugin system
 call plug#end()
