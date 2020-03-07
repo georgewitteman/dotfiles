@@ -55,9 +55,6 @@ Plug 'junegunn/fzf.vim'
 " Tags
 Plug 'ludovicchabant/vim-gutentags'
 
-" Automatically :set paste
-Plug 'ConradIrwin/vim-bracketed-paste'
-
 " Better whitespace
 Plug 'ntpeters/vim-better-whitespace'
 
