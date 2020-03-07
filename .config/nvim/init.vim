@@ -39,7 +39,7 @@ let mapleader = "\<Space>"
 filetype plugin indent on
 
 " Turn on syntax highlighting
-syntax on
+syntax enable
 
 " Set colorscheme
 set background=dark
