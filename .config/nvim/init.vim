@@ -232,4 +232,10 @@ nnoremap Y y$
 nnoremap [<Space> :call append(line('.')-1, '')<CR>k
 nnoremap ]<Space> :call append(line('.'), '')<CR>j
 
+if executable('rg')
+  " Set grepprg for rg
+  set grepprg=rg\ --vimgrep
+  set grepformat=%f:%l:%c:%m
+endif
+
 runtime! env.vim
