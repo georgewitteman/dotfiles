@@ -94,6 +94,20 @@ set cursorline
 " far, matches. The matched string is highlighted
 set incsearch
 
+" Every wrapped line will continue visually indented (same amount of space as
+" the beginning of that line), thus preserving horizontal blocks of text
+set breakindent
+" sbr: Display the 'showbreak' value before applying the additional indent
+set breakindentopt=sbr
+" String to put at the start of lines that have been wrapped
+set showbreak=↪\  " A comment to keep the space
+" When on, lines longer than the width of the window will wrap and displaying
+" continues on the next line
+set wrap
+" If on, Vim will wrap long lines at a character in 'breakat' rather than at
+" the last character that fits on the screen
+set linebreak
+
 " - c: Auto-wrap comments using textwidth, inserting the current comment
 "   leader automatically
 " - q: Allow formatting of comments with "gq". Note that formatting will not
