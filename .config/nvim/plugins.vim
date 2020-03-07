@@ -53,8 +53,6 @@ Plug 'tpope/vim-rhubarb'
 Plug 'junegunn/fzf.vim'
 
 " Tags
-" Use forked version for now to get rid of annoying ctags failed
-" messages in neovim
 Plug 'ludovicchabant/vim-gutentags'
 
 " Automatically :set paste
