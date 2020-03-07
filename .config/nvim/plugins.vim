@@ -70,9 +70,6 @@ Plug 'tpope/vim-dispatch'
 " dadbod.vim (Database query runner)
 Plug 'tpope/vim-dadbod'
 
-" dotenv.vim
-Plug 'tpope/vim-dotenv'
-
 " Tests
 Plug 'janko/vim-test'
 
