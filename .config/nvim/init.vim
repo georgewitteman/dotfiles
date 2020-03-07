@@ -94,15 +94,27 @@ set cursorline
 " far, matches. The matched string is highlighted
 set incsearch
 
-" Disable comment continuation
-" r       Automatically insert the current comment leader after hitting
-"         <Enter> in Insert mode.
-" o       Automatically insert the current comment leader after hitting 'o' or
-"         'O' in Normal mode.
+" - c: Auto-wrap comments using textwidth, inserting the current comment
+"   leader automatically
+" - q: Allow formatting of comments with "gq". Note that formatting will not
+"   change blank lines or lines containing only the comment leader. A new
+"   paragraph starts after such a line, or when the comment leader changes
+" - r: Automatically insert the current comment leader after hitting <Enter>
+"   in Insert mode.
+" - o: Automatically insert the current comment leader after hitting 'o' or
+"   'O' in Normal mode.
+" - j: Where it makes sense, remove a comment leader when joining lines
+" - a: Automatic formatting of paragraphs. Every time text is inserted or
+"   deleted the paragraph will be reformatted. See auto-format. When the 'c'
+"   flag is present this only happens for recognized comments
+" - n: When formatting text, recognize numbered lists. Thsi actually uses the
+"   'formatlistpat' option, this any kind of list can be used. The indent of
+"   the text after the number is used for the next line
+"
 " See https://stackoverflow.com/a/8748154 for the autocommand explanation
 augroup FormatOptions
   autocmd!
-  autocmd BufNewFile,BufRead * setlocal formatoptions-=ro
+  autocmd BufNewFile,BufRead * setlocal formatoptions=cqjn
 augroup END
 
 " Turn on line numbers
