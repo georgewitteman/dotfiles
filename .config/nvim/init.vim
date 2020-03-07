@@ -64,6 +64,10 @@ set autoindent
 " (Don't) do smart indenting by inserting an extra tab when necessary
 set nosmartindent
 
+" When a file has been detected to have been changed outside of Vim and it has
+" not been changed inside of Vim, automatically read it again
+set autoread
+
 " Don't make a backup before overwriting a file
 set nobackup
 " Don't make a backup before overwriting a file (this option will delete the
