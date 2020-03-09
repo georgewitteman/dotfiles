@@ -1,9 +1,5 @@
 " make test commands execute using dispatch.vim
-if has('nvim')
-  let test#strategy = 'dispatch'
-else
-  let test#strategy = 'vimterminal'
-endif
+let test#strategy = 'dispatch'
 
 " Python
 let test#python#runner = 'nose'
