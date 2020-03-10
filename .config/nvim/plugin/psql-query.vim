@@ -1,5 +1,11 @@
 function s:PsqlQuery(svc)
-  silent execute '!psql_query ' . a:svc . ' ' . expand('%:p')
+  let cmd = 'psql_query ' . a:svc . ' ' . expand('%:p')
+  if exists(':Start')
+    execute 'Start! ' . cmd
+  else
+    execute '!' . cmd
+    redraw!
+  endif
 endfunction
 
 command! -nargs=1 PsqlQuery call s:PsqlQuery(<f-args>)
