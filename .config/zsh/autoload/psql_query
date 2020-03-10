@@ -2,7 +2,10 @@
 
 SERVICE=$1
 INPUT_FILE=$2
+COMMAND=${3:-psql}
 OUTPUT_FILE="$(mktemp).html"
+
+echo "$COMMAND"
 
 echo Output file: $OUTPUT_FILE
 
@@ -75,7 +78,11 @@ $(cat $INPUT_FILE)
   <div class="container">
 EOM
 
-psql service="$SERVICE" --html --file="$INPUT_FILE" >> $OUTPUT_FILE 2>&1
+if [[ "$COMMAND" != "psql" ]]; then
+  "$COMMAND" --html --file="$INPUT_FILE" >> $OUTPUT_FILE 2>&1
+else
+  "$COMMAND" service="$SERVICE" --html --file="$INPUT_FILE" >> $OUTPUT_FILE 2>&1
+fi
 
 RESULT_STATUS=$?
 
@@ -96,3 +103,5 @@ EOM
 
 echo open $OUTPUT_FILE
 open $OUTPUT_FILE
+
+return $RESULT_STATUS
