@@ -238,4 +238,4 @@ if executable('rg')
   set grepformat=%f:%l:%c:%m
 endif
 
-runtime! env.vim
+runtime! local.vim
