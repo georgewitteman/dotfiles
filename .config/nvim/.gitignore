@@ -1,4 +1,5 @@
 pack/
+local.vim
 plugged/
 python3-venv
 python2-venv
