@@ -6,4 +6,4 @@ let test#python#runner = 'nose'
 let test#python#nose#options = '--nologcapture'
 
 let g:dispatch_compilers = {}
-let g:dispatch_compilers['nosetests --doctest-tests --nologcapture'] = 'pyunit'
+let g:dispatch_compilers['nosetests --doctest-tests --nologcapture'] = 'nosetests'
