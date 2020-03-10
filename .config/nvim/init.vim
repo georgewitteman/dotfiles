@@ -85,7 +85,13 @@ set ignorecase
 set smartcase
 
 " Highlight the text line of the cursor with CursorLine
-set cursorline
+" NOTE: Turned this off to try and improve performance
+" set cursorline
+
+" When this option is set, the screen will not be redrawn while executing
+" macros, registers and other commands that have not been typed. Also,
+" updating the window title is postponed
+set lazyredraw
 
 " While typing a search command, show where the pattern, as it was typed so
 " far, matches. The matched string is highlighted
