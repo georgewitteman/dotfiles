@@ -17,7 +17,6 @@ Plug 'pangloss/vim-javascript'
 Plug 'MaxMEllon/vim-jsx-pretty'
 Plug 'ericpruitt/tmux.vim', {'rtp': 'vim/'}
 Plug 'Vimjas/vim-python-pep8-indent'
-" Plug 'vim-python/python-syntax'
 Plug 'pboettch/vim-cmake-syntax'
 Plug 'stephpy/vim-yaml'
 Plug 'plasticboy/vim-markdown'
