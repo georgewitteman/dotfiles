@@ -68,9 +68,6 @@ Plug 'justinmk/vim-dirvish'
 " Dispatch
 Plug 'tpope/vim-dispatch'
 
-" dadbod.vim (Database query runner)
-Plug 'tpope/vim-dadbod'
-
 " Tests
 Plug 'janko/vim-test'
 
@@ -79,19 +76,9 @@ Plug 'wellle/context.vim'
 
 " Language servers
 Plug 'ajh17/VimCompletesMe'
-" Plug 'prabirshrestha/async.vim'
-" Plug 'prabirshrestha/vim-lsp'
-" Plug 'prabirshrestha/asyncomplete.vim'
-" Plug 'prabirshrestha/asyncomplete-lsp.vim'
-
-" Python motions
-Plug 'jeetsukumaran/vim-pythonsense'
 
 " Let's try an auto pairs plugin again
 Plug 'Krasjet/auto.pairs'
-
-" Convert between camelCase and snake_case (and more!)
-Plug 'nicwest/vim-camelsnek'
 
 " Make certain things in vim slower (hjkl...)
 Plug 'takac/vim-hardtime'
