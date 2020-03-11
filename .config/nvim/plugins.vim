@@ -73,7 +73,7 @@ Plug 'janko/vim-test'
 " Show the context
 Plug 'wellle/context.vim'
 
-" Language servers
+" Better autocompletion and tab completion mapping
 Plug 'ajh17/VimCompletesMe'
 
 " Let's try an auto pairs plugin again
