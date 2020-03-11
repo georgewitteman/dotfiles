@@ -10,7 +10,10 @@ endif
 call plug#begin($VIMHOME.'/plugged')
 
 " Better syntax highlighting
-Plug 'rakr/vim-one'
+" TODO: Moved from rakr to laggardkernel for performance reasons. Should move
+" back to rakr once it has better performance
+" Plug 'rakr/vim-one'
+Plug 'laggardkernel/vim-one'
 
 " Better syntax highlighting
 Plug 'pangloss/vim-javascript'
@@ -78,12 +81,6 @@ Plug 'ajh17/VimCompletesMe'
 
 " Let's try an auto pairs plugin again
 Plug 'Krasjet/auto.pairs'
-
-" Make certain things in vim slower (hjkl...)
-Plug 'takac/vim-hardtime'
-
-" Dash documentation viewer
-Plug 'rizzatti/dash.vim'
 
 " Initialize plugin system
 call plug#end()
