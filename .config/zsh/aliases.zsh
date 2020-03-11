@@ -31,6 +31,7 @@ alias gb="git branch --sort=-committerdate --format='%(if)%(HEAD)%(then)* %(colo
 alias develop='master'
 
 # yadm
+alias y='yadm'
 alias ys='yadm status'
 
 alias c='clear'
