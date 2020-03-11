@@ -78,10 +78,11 @@ Plug 'janko/vim-test'
 Plug 'wellle/context.vim'
 
 " Language servers
-Plug 'prabirshrestha/async.vim'
-Plug 'prabirshrestha/vim-lsp'
-Plug 'prabirshrestha/asyncomplete.vim'
-Plug 'prabirshrestha/asyncomplete-lsp.vim'
+Plug 'ajh17/VimCompletesMe'
+" Plug 'prabirshrestha/async.vim'
+" Plug 'prabirshrestha/vim-lsp'
+" Plug 'prabirshrestha/asyncomplete.vim'
+" Plug 'prabirshrestha/asyncomplete-lsp.vim'
 
 " Python motions
 Plug 'jeetsukumaran/vim-pythonsense'
