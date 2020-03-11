@@ -177,6 +177,24 @@ set ttimeout
 " The time in ms that is waited for a key code or mapped key sequence to complete
 set ttimeoutlen=100
 
+" .  scan the current buffer ('wrapscan' is ignored)
+" w  scan buffers from other windows
+" b  scan other loaded buffers that are in the buffer list
+" u  scan the unloaded buffers that are in the buffer list
+" U  scan the buffers that are not in the buffer list
+" k  scan the files given with the 'dictionary' option
+" kspell  use the currently active spell checking |spell|
+" k{dict} scan the file {dict}.  Several "k" flags can be given, patterns are valid too.  For example: >
+"                 :set cpt=k/usr/dict/*,k~/spanish
+" s  scan the files given with the 'thesaurus' option
+" s{tsr}  scan the file {tsr}.  Several "s" flags can be given, patterns are valid too.
+" i  scan current and included files
+" d  scan current and included files for defined name or macro
+" ]  tag completion
+" t  same as "]"
+set complete=.,w,b,u,t
+
+
 " Always show sign column. Doesn't exist on certain vim versions
 if exists('&signcolumn')
   set signcolumn=yes
