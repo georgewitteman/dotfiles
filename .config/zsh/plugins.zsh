@@ -18,7 +18,6 @@ if ! zgen saved; then
   zgen load ael-code/zsh-colored-man-pages
   zgen load ${MY_ZSH_PLUGINS}georgewitteman/affirm-scripts-zsh
   zgen load ${MY_ZSH_PLUGINS}georgewitteman/zsh-prompt
-  zgen load ${MY_ZSH_PLUGINS}georgewitteman/yarn-link
 
   zgen save
 fi
