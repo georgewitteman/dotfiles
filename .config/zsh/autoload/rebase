@@ -1,13 +1,7 @@
-function rebase() {
-  local main_branch
-  main_branch=$(git symbolic-ref --short refs/remotes/origin/HEAD) || return 1
-  echo_run git fetch -p && \
+#!/usr/bin/env zsh
 
-  echo_run git rebase $main_branch && \
+local main_branch
+main_branch=$(git symbolic-ref --short refs/remotes/origin/HEAD) || return 1
+echo_run git fetch -p && \
 
-  if [[ "$(pwd)" =~ "web-ux" ]] && [ -f "./package.json" ]; then
-    echo_run yarn install
-  fi
-}
-
-# vi:filetype=zsh
+echo_run git rebase $main_branch "$@" && \
