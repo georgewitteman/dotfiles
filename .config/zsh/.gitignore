@@ -6,3 +6,4 @@ zsh-async
 config-env.zsh
 env.zsh
 .zcompdump
+.zsh_short_history
