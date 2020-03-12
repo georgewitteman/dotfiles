@@ -1,4 +1,4 @@
-export EDITOR='nvim'
+export EDITOR='vim'
 
 # Don't write python pyc files, because they're not necessary
 export PYTHONDONTWRITEBYTECODE=1
