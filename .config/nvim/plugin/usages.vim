@@ -10,7 +10,9 @@ function! s:Usages(cmd, args)
   " (--word-regexp) and in the same case as the input keyword
   " (--case-sensitive)
   set grepprg=rg\ --vimgrep\ --word-regexp\ --case-sensitive
-  silent execute a:cmd l:grepargs | botright copen | redraw!
+  silent execute a:cmd l:grepargs
+  botright copen
+  redraw!
   let &grepprg = l:grepprg
 endfunction
 
