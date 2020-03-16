@@ -31,6 +31,11 @@ cat >> $OUTPUT_FILE << EOM
 
       .container { max-width: 100%; overflow: auto; }
 
+      .postgresql {
+        max-height: 300px;
+        overflow: auto;
+      }
+
       table {
         border-collapse: collapse;
         font-size: 14px;
