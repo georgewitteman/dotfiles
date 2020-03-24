@@ -1,7 +1,6 @@
 #!/usr/bin/env zsh
 
 local branches branch
-# branches=$(git --no-pager branch --sort=-committerdate -vv) &&
 branches=$(
   git \
     --no-pager \
@@ -14,4 +13,10 @@ branch=$(
   fzf --no-multi --nth=1,2 \
     --preview="git show --color=always {1}" --preview-window="70%"
 ) &&
-git checkout $(echo "$branch" | awk '{print $1}' | sed "s/.* //")
+branch_name=$(echo "$branch" | awk '{print $1}' | sed "s/.* //") &&
+if [ "$branch_name" = "*" ]; then
+  echo -n "Already on branch $bold_color$(echo "$branch" | awk '{print $2}' | sed 's/.* //')"
+  echo "$reset_color"
+  return
+fi &&
+echo_run git checkout $branch_name
