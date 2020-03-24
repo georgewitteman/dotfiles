@@ -1,0 +1,17 @@
+#!/usr/bin/env zsh
+
+local branches branch
+# branches=$(git --no-pager branch --sort=-committerdate -vv) &&
+branches=$(
+  git \
+    --no-pager \
+    branch \
+    --sort=-committerdate \
+    --format="%(if)%(HEAD)%(then)*%(else) %(end) %(refname:short) (%(committerdate:relative))"
+) &&
+branch=$(
+  echo "$branches" |
+  fzf --no-multi --nth=1,2 \
+    --preview="git show --color=always {1}" --preview-window="70%"
+) &&
+git checkout $(echo "$branch" | awk '{print $1}' | sed "s/.* //")
