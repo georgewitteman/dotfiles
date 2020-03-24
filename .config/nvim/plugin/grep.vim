@@ -6,7 +6,11 @@ function! s:Grep(cmd, args)
   endif
 
   " The grep! form of grep doesn't jump to first result automatically
-  silent execute a:cmd l:grepargs | botright copen | redraw!
+  silent execute a:cmd l:grepargs
+  bot cwindow
+  redraw!
 endfunction
 
 command! -bang -nargs=* -complete=file Grep call s:Grep('grep<bang>', <q-args>)
+
+nnoremap <Leader>g :Grep!<CR>
