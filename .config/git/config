@@ -21,7 +21,7 @@
 	base = !sh -c \"git show-branch | grep '*' | grep -v '$(git rev-parse --abbrev-ref HEAD)' | head -n1 | sed 's/.*\\[\\(.*\\)\\].*/\\1/' | sed 's/[\\^~].*//'\"
 	br = for-each-ref --sort=-committerdate refs/heads/ --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(color:red)%(objectname:short)%(color:reset) - %(contents:subject) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))'
 	# Switch to a branch, creating it if necessary
-	go = checkout -B
+	go = switch --create
 [diff]
 	# Better diffing algorithm. It just takes a smidge longer
 	algorithm = patience
