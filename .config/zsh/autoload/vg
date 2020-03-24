@@ -1,0 +1,3 @@
+#!/usr/bin/env zsh
+
+vim -c "silent grep $@" -c "copen"
