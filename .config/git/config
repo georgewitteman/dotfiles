@@ -22,8 +22,14 @@
 	br = for-each-ref --sort=-committerdate refs/heads/ --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(color:red)%(objectname:short)%(color:reset) - %(contents:subject) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))'
 	# Switch to a branch, creating it if necessary
 	go = switch --create
+[core]
+	editor = vim
 [diff]
-	# Better diffing algorithm. It just takes a smidge longer
-	algorithm = patience
+	tool = vimdiff
+[merge]
+	tool = vimdiff
+	conflictstyle = diff3
+[difftool]
+	prompt = 0
 [push]
 	default = simple
