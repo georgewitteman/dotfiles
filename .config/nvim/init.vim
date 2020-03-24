@@ -84,6 +84,13 @@ set ignorecase
 " characters
 set smartcase
 
+" When opening diffs with `git difftool` git passes the -R flag, making the
+" files readonly. This changes the behavior of that so the files always open
+" as readable
+if &diff
+  set noreadonly
+endif
+
 " Highlight the text line of the cursor with CursorLine
 " NOTE: Turned this off to try and improve performance
 " set cursorline
