@@ -48,4 +48,4 @@ tags.lock
 tags.temp
 
 # Just don't add env files by default
-*env*
+*env
