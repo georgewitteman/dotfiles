@@ -2,6 +2,6 @@
 
 local main_branch
 main_branch=$(git symbolic-ref --short refs/remotes/origin/HEAD) || return 1
-echo_run git fetch -p && \
+echo_run git fetch --prune && \
 
 echo_run git rebase $main_branch "$@" && \
