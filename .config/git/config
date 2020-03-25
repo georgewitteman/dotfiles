@@ -22,6 +22,11 @@
 	br = for-each-ref --sort=-committerdate refs/heads/ --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(color:red)%(objectname:short)%(color:reset) - %(contents:subject) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))'
 	# Switch to a branch, creating it if necessary
 	go = switch --create
+	stash-untracked = "!f() {    \
+		git stash;               \
+		git stash -u;            \
+		git stash pop stash@{1}; \
+		}; f"
 [core]
 	editor = vim
 [diff]
