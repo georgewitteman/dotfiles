@@ -1,33 +1,18 @@
+" Specify the character encoding used in the script. The following lines will
+" be converted from [encoding] to the value of the 'encoding' option, if they
+" are different.
+"
+" NOTE: 'encoding' defaults to "latin1" or $LANG
 scriptencoding utf-8
-
-let $VIMHOME = $XDG_CONFIG_HOME.'/nvim'
 
 " Environment
 " Persistent Undo
-set undodir=$XDG_DATA_HOME/nvim/undo
+set undodir=$XDG_DATA_HOME/vim/undo
 set undofile " Automatically save undo history to an undo file. Stored in 'undodir'
-set directory=$XDG_DATA_HOME/nvim/swap " List of dir names for the swap file
+set directory=$XDG_DATA_HOME/vim/swap " List of dir names for the swap file
 set noswapfile " No swapfiles
-set backupdir=$XDG_DATA_HOME/nvim/backup " List of dir names for the backup file
-set runtimepath=$XDG_CONFIG_HOME/nvim,$VIMRUNTIME,$XDG_CONFIG_HOME/nvim/after
-if has('nvim')
-  set viminfo+='1000,n$XDG_DATA_HOME/nvim/shada/main.shada
-else
-  set viminfo+='1000,n$XDG_DATA_HOME/nvim/viminfo
-endif
-set packpath^=$VIMHOME
-
-let g:python_host_prog  = $VIMHOME.'/python2-venv/bin/python'
-let g:python3_host_prog = $VIMHOME.'/python3-venv/bin/python'
-
-runtime! plugins.vim
-
-" Set 24-bit colors
-if (has('termguicolors'))
-  let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
-  let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
-  set termguicolors
-endif
+set backupdir=$XDG_DATA_HOME/vim/backup " List of dir names for the backup file
+set viminfo+='1000,n$XDG_DATA_HOME/vim/viminfo
 
 " Leader to <Space>
 let mapleader = "\<Space>"
@@ -41,6 +26,14 @@ syntax enable
 " Set colorscheme
 set background=dark
 if (has('termguicolors'))
+  " Sometimes setting 'termguicolors' is not enough and one has to set the
+  " |t_8f| and |t_8b| options explicitly. Default values of these options are
+  " "^[[38;2;%lu;%lu;%lum" and "^[[48;2;%lu;%lu;%lum" respectively, but it is
+  " only set when `$TERM` is `xterm`.
+  let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
+  set termguicolors
+
   let g:one_allow_italics = 1
   colorscheme one
 endif
@@ -75,9 +68,6 @@ set nowritebackup
 " to disk. Also used for the CursorHold autocommand event
 set updatetime=200
 
-" turn on git-gutter by default
-let g:gitgutter_enabled = 1
-
 " Ignore case in search patterns. Also used when searching in the tags file
 set ignorecase
 " Overrides the 'ignorecase' option if the search pattern contains upper case
@@ -91,10 +81,6 @@ if &diff
   set noreadonly
 endif
 
-" Highlight the text line of the cursor with CursorLine
-" NOTE: Turned this off to try and improve performance
-" set cursorline
-
 " When this option is set, the screen will not be redrawn while executing
 " macros, registers and other commands that have not been typed. Also,
 " updating the window title is postponed
@@ -103,6 +89,12 @@ set lazyredraw
 " While typing a search command, show where the pattern, as it was typed so
 " far, matches. The matched string is highlighted
 set incsearch
+
+" When there is a previous search pattern, highlight all its matches.
+"
+" When you get bored of looking at the highlightedmatches, you can turn it off
+" with :nohlsearch
+set hlsearch
 
 " Every wrapped line will continue visually indented (same amount of space as
 " the beginning of that line), thus preserving horizontal blocks of text
@@ -182,7 +174,7 @@ set foldlevel=99
 " Time out when waiting for mappings and key codes (requires timeout == off)
 set ttimeout
 " The time in ms that is waited for a key code or mapped key sequence to complete
-set ttimeoutlen=100
+set ttimeoutlen=50
 
 " .  scan the current buffer ('wrapscan' is ignored)
 " w  scan buffers from other windows
@@ -200,12 +192,6 @@ set ttimeoutlen=100
 " ]  tag completion
 " t  same as "]"
 set complete=.,w,b,u,t
-
-
-" Always show sign column. Doesn't exist on certain vim versions
-if exists('&signcolumn')
-  set signcolumn=yes
-endif
 
 " Allow backspacing over everything in insert mode
 " indent: allow backspacing over autoindent
@@ -232,11 +218,6 @@ set winminheight=3
 " hard minimum, windows will never become smaller (default 1, 0-12 reasonable)
 set winminwidth=13
 
-" Status line of current window
-hi StatusLine guifg=#ABB2BF guibg=#3E4452
-" Status lines of the not-current window
-hi StatusLineNC guibg=#6E7A91 guifg=#353A46
-
 " Always display the status line
 set laststatus=2
 
@@ -252,13 +233,6 @@ set statusline+=%=\ %(%l,%c%V%)\ %P
 nnoremap <leader>% :let @*=expand("%:p")<CR>:echo expand('%:p')<CR>
 nnoremap <leader>5 :let @*=expand("%:p")<CR>:echo expand('%:p')<CR>
 
-" Don't use C-c for escape
-noremap <C-c> <Nop>
-noremap! <C-c> <Nop>
-
-" Have Y yank from cursor to end of the line (like C[hange] and D[elete])
-nnoremap Y y$
-
 " Add new lines without entering insert mode
 nnoremap [<Space> :call append(line('.')-1, '')<CR>k
 nnoremap ]<Space> :call append(line('.'), '')<CR>j
@@ -268,5 +242,3 @@ if executable('rg')
   set grepprg=rg\ --vimgrep
   set grepformat=%f:%l:%c:%m
 endif
-
-runtime! local.vim

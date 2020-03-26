@@ -3,6 +3,11 @@
 # Stop when any command fails
 set -e
 
+install_submodules() {
+  echo "Init submodules"
+  yadm submodule update --recursive --init
+}
+
 install_brew() {
   # install homebrew if it's missing
   if ! command -v brew >/dev/null 2>&1; then
@@ -19,15 +24,10 @@ install_brew() {
 bootstrap_asdf() {
   if ! command -v asdf >/dev/null 2>&1; then
     echo "Installing asdf"
-    git clone https://github.com/asdf-vm/asdf.git $XDG_DATA_HOME/asdf
-    cd $XDG_DATA_HOME/asdf
+    git clone https://github.com/asdf-vm/asdf.git ~/.asdf
+    cd ~/.asdf
     git checkout "$(git describe --abbrev=0 --tags)"
   fi
-
-  echo "Initializing asdf"
-  cd $XDG_CONFIG_HOME/asdf
-  asdf plugin add python || true
-  asdf install
 }
 
 install_alacritty_terminfo() {
@@ -46,38 +46,18 @@ install_tmux_terminfo() {
   tic -x $XDG_CONFIG_HOME/tmux/tmux.terminfo
 }
 
-bootstrap_vim() {
-  if command -v vim >/dev/null 2>&1; then
-    echo "Bootstraping Vim"
-
-    cd $XDG_CONFIG_HOME/nvim
-
-    python2 -m pip install virtualenv
-    python2 -m virtualenv python2-venv
-    source python2-venv/bin/activate
-    which pip
-    pip install -r requirements.txt
-    deactivate
-
-    python3 -m venv python3-venv
-    source python3-venv/bin/activate
-    which pip
-    pip install -r requirements3.txt
-    deactivate
-
-    nvim -u $XDG_CONFIG_HOME/nvim/init.vim '+PlugClean!' '+PlugUpdate' '+qall'
-  fi
-}
-
 bootstrap_tmux() {
-  if [ ! -d "$XDG_CONFIG_HOME/tmux/plugins/tpm" ]; then
-    git clone https://github.com/tmux-plugins/tpm $XDG_CONFIG_HOME/tmux/plugins/tpm
-  fi
   if command -v tmux >/dev/null 2>&1; then
     echo "Installing, updating, and cleaning tmux plugins"
-    $XDG_CONFIG_HOME/tmux/plugins/tpm/bin/install_plugins
-    $XDG_CONFIG_HOME/tmux/plugins/tpm/bin/update_plugins all
-    $XDG_CONFIG_HOME/tmux/plugins/tpm/bin/clean_plugins
+
+    if [ ! -d "${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tpm" ]; then
+      git clone https://github.com/tmux-plugins/tpm \
+        "${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tpm"
+    fi
+
+    ${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tpm/bin/install_plugins
+    ${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tpm/bin/update_plugins all
+    ${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tpm/bin/clean_plugins
   fi
 }
 
@@ -103,11 +83,11 @@ reminders() {
 
 decrypt_yadm_files
 update_yadm_url_to_ssh
+install_submodules
 install_brew
 bootstrap_asdf
 install_alacritty_terminfo
 install_tmux_terminfo
-bootstrap_vim
 bootstrap_tmux
 
 reminders

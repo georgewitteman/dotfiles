@@ -1,9 +1,0 @@
-.antigen
-zgen
-gitstatus
-zsh-async
-.zsh_history
-config-env.zsh
-env.zsh
-.zcompdump
-.zsh_short_history
