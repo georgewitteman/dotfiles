@@ -43,7 +43,7 @@ typeset -U path
 
 # pyenv
 export PYENV_ROOT="$HOME/.pyenv"
-(( $+commands[pyenv] )) && path=($PYENV_ROOT/shims $path)
+type "pyenv" >/dev/null && path=($PYENV_ROOT/shims $path)
 # Leaving this here so other install scripts think that it's here, since I'm
 # setting the path manually
 # if command -v pyenv 1>/dev/null 2>&1; then
