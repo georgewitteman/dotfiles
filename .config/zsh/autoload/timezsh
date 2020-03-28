@@ -18,7 +18,12 @@ timezsh() {
     echo "${bold_color}'zsh $@'${reset_color} startup took ${time_color}${startup_diff[0,8]}ms${reset_color}"
   }
 
-  for i in $(seq 1 10); do _helper "$@"; done
+  if (( $+commands[hyperfine] )); then
+    shell_command="$SHELL $@ -c exit"
+    hyperfine $shell_command
+  else
+    for i in $(seq 1 10); do _helper "$@"; done
+  fi
 }
 
 # vi:ft=zsh
