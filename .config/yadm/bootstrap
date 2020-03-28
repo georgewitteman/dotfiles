@@ -21,6 +21,22 @@ install_brew() {
   fi
 }
 
+install_homebrew_zsh() {
+  local zsh_path="$(brew --prefix)/bin/zsh"
+  # -q be quiet
+  # -x match the whole line
+  # -F pattern is a plain string
+  if grep -qxF "$zsh_path" /etc/shells; then
+    echo "$zsh_path already in /etc/shells"
+  else
+    echo "Adding $zsh_path to /etc/shells"
+    echo "$zsh_path" | sudo tee -a /etc/shells >/dev/null
+  fi
+
+  echo "Setting shell to $zsh_path"
+  chsh -s "$zsh_path"
+}
+
 bootstrap_asdf() {
   if ! command -v asdf >/dev/null 2>&1; then
     echo "Installing asdf"
@@ -85,6 +101,7 @@ decrypt_yadm_files
 update_yadm_url_to_ssh
 install_submodules
 install_brew
+install_homebrew_zsh
 bootstrap_asdf
 install_alacritty_terminfo
 install_tmux_terminfo
