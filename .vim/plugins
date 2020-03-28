@@ -1,25 +1,34 @@
-Vimjas/vim-python-pep8-indent
-airblade/vim-gitgutter
+# Colorschemes
+laggardkernel/vim-one
+
+# Filetypes
 chrisbra/vim-zsh
 elzr/vim-json
-haya14busa/is.vim
-janko/vim-test
-junegunn/fzf
-junegunn/fzf.vim
-justinmk/vim-dirvish
-laggardkernel/vim-one
 lifepillar/pgsql.vim
-ludovicchabant/vim-gutentags
-ntpeters/vim-better-whitespace
+saltstack/salt-vim
 pboettch/vim-cmake-syntax
 plasticboy/vim-markdown
-saltstack/salt-vim
 stephpy/vim-yaml
+Vimjas/vim-python-pep8-indent
+
+# Git
+tpope/vim-git
+airblade/vim-gitgutter
+tpope/vim-fugitive
+tpope/vim-rhubarb
+
+# FZF
+junegunn/fzf
+junegunn/fzf.vim
+
+# Miscellaneous
+haya14busa/is.vim
+janko/vim-test
+justinmk/vim-dirvish
+ludovicchabant/vim-gutentags
+ntpeters/vim-better-whitespace
 tpope/vim-capslock
 tpope/vim-commentary.git
 tpope/vim-dispatch
-tpope/vim-fugitive
-tpope/vim-git
 tpope/vim-repeat
-tpope/vim-rhubarb
 tpope/vim-surround.git
