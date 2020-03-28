@@ -71,25 +71,35 @@ if [[ ! -e "${XDG_DATA_HOME:-$HOME/.local/share}/zgen/zgen.zsh" ]]; then
 fi
 
 # non-default location
-ZGEN_CUSTOM_COMPDUMP=${XDG_CACHE_HOME:-$HOME/.cache}/zcompdump
-ZGEN_DIR="${XDG_DATA_HOME:-$HOME/.local/share}"/zgen
-MY_ZSH_PLUGINS=$HOME/Code
+COMPDUMP_FILE=${XDG_CACHE_HOME:-$HOME/.cache}/zcompdump
+plugins_path="${XDG_CONFIG_HOME:-$HOME/.config}/zsh/plugins"
 
-source "${XDG_DATA_HOME:-$HOME/.local/share}/zgen/zgen.zsh"
+# Make $plugins associative
+typeset -A plugins
+plugins=() # plugin_name: git_url
+plugins+=('zsh-prompt' 'git@github.com:georgewitteman/zsh-prompt.git')
 
-if ! zgen saved; then
-  # Handle local zsh plugins
-  if [[ ! -d "$MY_ZSH_PLUGINS" ]]; then
-    MY_ZSH_PLUGINS="git@github.com:"
-  elif [[ "${MY_ZSH_PLUGINS[-1]}" != "/" ]]; then
-    MY_ZSH_PLUGINS="$MY_ZSH_PLUGINS"/
+for plugin_name in ${(k)plugins}; do
+  plugin_path="$plugins_path/$plugin_name"
+  if [[ ! -d "$plugin_path" ]]; then
+    git clone ${plugins[$plugin_name]} $plugin_path
   fi
+done
 
-  zgen load ${MY_ZSH_PLUGINS}georgewitteman/affirm-scripts-zsh
-  zgen load ${MY_ZSH_PLUGINS}georgewitteman/zsh-prompt
+# The '(N)' tells zsh to not error when it doesn't find any directories and
+# the '(/)' tells it to only look for directories
+for plugin_path in $plugins_path/*(/N); do
+  plugin_name=${plugin_path##*/}
+  plugin_file="$plugin_path/$plugin_name.plugin.zsh"
+  [[ -f "$plugin_file" ]] && source "$plugin_file"
+  fpath=("$plugin_path" ${fpath})
+done
 
-  zgen save
-fi
+# Initialize completions
+autoload -Uz compinit && compinit -C -d "$COMPDUMP_FILE"
+
+alias reinit_comps="rm $COMPDUMP_FILE && autoload -Uz compinit && \
+  compinit -d $COMPDUMP_FILE"
 
 export CLICOLOR=1
 export LSCOLORS="exfxcxdxbxegedabagacad"
