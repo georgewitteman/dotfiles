@@ -3,7 +3,7 @@
 local VIM_DIR="${VIM_DIR:-$HOME/.vim}"
 local MANIFEST="$VIM_DIR/plugins"
 local PLUGINS_DIR="${VIM_PLUGINS_DIR:-$VIM_DIR/pack/mine/start}"
-local COMMENT='^#'
+local COMMENT="^ *#"
 
 _edit_manifest() {
   "${EDITOR:-vim}" "$MANIFEST"
@@ -44,7 +44,7 @@ _install_missing_plugins() {
   # because the MONITOR option turns on job control, and something about the
   # wait command requires job control to be on to work properly
   for line in "${(@f)"$(<$MANIFEST)"}"; do
-    ([ -z "$line" ] || [[ "$line" =~ $COMMENT ]]) && continue
+    ([[ -z "${line// }" ]] || [[ "$line" =~ "$COMMENT" ]]) && continue
     _install_plugin "$line" &
   done
   wait
@@ -114,7 +114,7 @@ _update_plugins() {
     _update_plugin "$dir" &
   done
   for line in "${(@f)"$(<$MANIFEST)"}"; do
-    ([ -z "$line" ] || [[ "$line" =~ $COMMENT ]]) && continue
+    ([[ -z "${line// }" ]] || [[ "$line" =~ "$COMMENT" ]]) && continue
     local plugin_name=${line##*/}
     [[ -d "$PLUGINS_DIR/$plugin_name" ]] && continue
     _install_plugin "$line" &
