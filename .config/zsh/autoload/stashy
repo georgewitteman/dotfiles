@@ -1,0 +1,47 @@
+#!/usr/bin/env zsh
+# Copied from https://github.com/MisterRios/stashy
+
+local command=$1
+local parameter=$2
+
+if [[ "$parameter" == "last" ]] || ! [[ "$parameter" ]]; then
+  parameter="0"
+fi
+
+if [[ $command =~ ^[0-9]+$ ]]; then
+  git stash show stash@{$command} -p
+elif [[ "$command" == "show" ]]; then
+  git stash show stash@{$parameter} -p
+elif [[ "$command" == "list" ]]; then
+  git stash list -p
+elif [[ "$command" == "unstaged" ]]; then
+  git stash --keep-index
+elif [[ "$command" == "pop" ]]; then
+  git stash pop stash@{$parameter}
+elif [[ "$command" == "apply" ]]; then
+  git stash apply stash@{$parameter}
+elif [[ "$command" == "drop" ]]; then
+  git stash drop stash@{$parameter}
+elif [[ "$command" == "clear" ]]; then
+  git stash clear
+elif [[ "$command" == "all" ]]; then
+  git stash --include-untracked
+elif [[ "$command" == "staged" ]]; then
+  local files=$(git diff --name-only --cached)
+  if [[ $files ]]; then
+    git stash push $files
+  fi
+else
+  echo "Commands:"
+  echo "  $0 <stash-num> - show stash"
+  echo "  $0 show <stash-num> - show stash"
+  echo "  $0 list - list all stashes"
+  echo "  $0 unstaged - stash unstaged"
+  echo "  $0 pop <stash-num> - pop stash"
+  echo "  $0 apply <stash-num> - apply stash"
+  echo "  $0 drop <stash-num> - drop stash"
+  echo "  $0 clear - clear stashes"
+  echo "  $0 all - stash including untracked files"
+  echo "  $0 staged - stash staged files"
+  return 1
+fi
