@@ -1,14 +1,4 @@
-echo_run() {
-  local bold
-  local reset_color
-  local gray
+#!/usr/bin/env zsh
 
-  bold="\033[1m"
-  reset_color="\033[0m"
-  gray="\u001b[38;5;245m"
-
-  echo "$gray\$ $@$reset_color"
-  eval "$@"
-}
-
-# vi:filetype=zsh
+echo "${fg_bold[blue]}\$ $@$reset_color"
+eval "$@"
