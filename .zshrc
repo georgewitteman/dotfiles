@@ -66,40 +66,8 @@ fpath=($ASDF_DIR/completions $fpath)
 
 fpath=(${XDG_CONFIG_HOME:-$HOME/.config}/zsh/completions $fpath)
 
-if [[ ! -e "${XDG_DATA_HOME:-$HOME/.local/share}/zgen/zgen.zsh" ]]; then
- git clone git@github.com:georgewitteman/zgen "${XDG_DATA_HOME:-$HOME/.local/share}/zgen"
-fi
-
-# non-default location
-COMPDUMP_FILE=${XDG_CACHE_HOME:-$HOME/.cache}/zcompdump
-plugins_path="${XDG_CONFIG_HOME:-$HOME/.config}/zsh/plugins"
-
-# Make $plugins associative
-typeset -A plugins
-plugins=() # plugin_name: git_url
-plugins+=('zsh-prompt' 'git@github.com:georgewitteman/zsh-prompt.git')
-
-for plugin_name in ${(k)plugins}; do
-  plugin_path="$plugins_path/$plugin_name"
-  if [[ ! -d "$plugin_path" ]]; then
-    git clone ${plugins[$plugin_name]} $plugin_path
-  fi
-done
-
-# The '(N)' tells zsh to not error when it doesn't find any directories and
-# the '(/)' tells it to only look for directories
-for plugin_path in $plugins_path/*(/N); do
-  plugin_name=${plugin_path##*/}
-  plugin_file="$plugin_path/$plugin_name.plugin.zsh"
-  [[ -f "$plugin_file" ]] && source "$plugin_file"
-  fpath=("$plugin_path" ${fpath})
-done
-
-# Initialize completions
-autoload -Uz compinit && compinit -C -d "$COMPDUMP_FILE"
-
-alias reinit_comps="rm $COMPDUMP_FILE && autoload -Uz compinit && \
-  compinit -d $COMPDUMP_FILE"
+zplug add zsh-prompt git@github.com:georgewitteman/zsh-prompt.git
+zplug compinit
 
 export CLICOLOR=1
 export LSCOLORS="exfxcxdxbxegedabagacad"
