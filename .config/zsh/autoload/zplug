@@ -1,0 +1,66 @@
+#!/usr/bin/env zsh
+if [[ -z "$plugins_path" ]]; then
+  echo 'The $plugins_path variable is empty'
+  return 1
+fi
+
+_update_plugin() {
+  local dir="$1"
+  local plugin_name=${dir##*/}
+  if [[ -L "$dir" ]] || [[ ! -d "$dir/.git" ]]; then
+    echo "$plugin_name: not updating, local plugin"
+    return 1
+  fi
+
+  cd "$dir"
+  local branch="$(git rev-parse --abbrev-ref --symbolic-full-name HEAD)"
+
+  if [[ "$branch" == "HEAD" ]]; then
+    echo "$plugin_name: not updating, detached HEAD"
+    return 1
+  fi
+
+  local start_commit="$(git rev-parse HEAD)"
+  git pull --quiet
+
+  local commits=$(git rev-list --count "$start_commit"..."HEAD")
+  [[ "$commits" -eq 0 ]] && echo "$plugin_name: nothing to update" && return 1
+
+  local log="\n$(git log --oneline "$start_commit"..."HEAD")\n"
+  echo "$plugin_name: updated $commits commit(s)$log"
+}
+
+_update_plugins() {
+  for dir in $plugins_path/*(/N); do
+    ( _update_plugin "$dir" )
+  done
+}
+
+_usage() {
+  echo "Update zsh plugins"
+  echo ""
+  echo "Usage: $command_name update"
+  echo "       $command_name help | -h | --help"
+  echo ""
+  echo "Options:"
+  echo "  -h, --help     Show this screen."
+  echo ""
+}
+
+local command_name="$0"
+local action="$1"
+
+case $action in
+  update)
+    _update_plugins
+    ;;
+
+  help | --help | -h)
+    _usage
+    ;;
+
+  *)
+    _usage
+    return 1
+    ;;
+esac
