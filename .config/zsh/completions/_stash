@@ -1,10 +1,13 @@
-#compdef stashy
+#compdef stash
 
-_stashy() {
-  zstyle ':completion:*:*:stashy:*:*' list-grouped false
+_stash() {
+  zstyle ':completion:*:*:stash:*:*' list-grouped false
 
   local git_root="$(git rev-parse --show-toplevel)" 2>/dev/null
-  [[ "$git_root" = "" ]] && return
+  if [[ "$git_root" = "" ]]; then
+    _message -r "Not in a git repository."
+    return
+  fi
 
   _stashes() {
     [[ -f "$git_root/.git/logs/refs/stash" ]] || return
