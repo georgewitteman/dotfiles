@@ -1,0 +1,5 @@
+#!/usr/bin/env zsh
+
+zmodload zsh/datetime
+export _PROF_COMMAND="$@"
+export _PROF_START_TIME="$EPOCHREALTIME"
