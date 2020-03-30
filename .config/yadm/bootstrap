@@ -28,13 +28,16 @@ install_homebrew_zsh() {
   # -F pattern is a plain string
   if grep -qxF "$zsh_path" /etc/shells; then
     echo "$zsh_path already in /etc/shells"
+    if [[ "$SHELL" != "$zsh_path" ]]; then
+      echo "Setting shell to $zsh_path"
+      chsh -s "$zsh_path"
+    fi
   else
     echo "Adding $zsh_path to /etc/shells"
     echo "$zsh_path" | sudo tee -a /etc/shells >/dev/null
+    echo "Setting shell to $zsh_path"
+    chsh -s "$zsh_path"
   fi
-
-  echo "Setting shell to $zsh_path"
-  chsh -s "$zsh_path"
 }
 
 bootstrap_asdf() {
@@ -93,8 +96,10 @@ update_yadm_url_to_ssh() {
 
 reminders() {
   echo
-  echo "Don't forget to set yadm class!"
-  echo "  $ yadm config local.class <work|personal>"
+  echo "REMINDERS:"
+  echo " - Don't forget to download the SF Mono font from https://developer.apple.com/fonts/"
+  echo " - Don't forget to set yadm class!"
+  echo "     $ yadm config local.class <work|personal>"
 }
 
 decrypt_yadm_files
