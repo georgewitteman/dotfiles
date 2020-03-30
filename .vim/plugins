@@ -1,5 +1,8 @@
 # Colorschemes
 laggardkernel/vim-one
+arzg/vim-colors-xcode
+dracula/vim
+joshdick/onedark.vim
 
 # Filetypes
 chrisbra/vim-zsh
