@@ -67,9 +67,7 @@ fpath=($ASDF_DIR/completions $fpath)
 fpath=(${XDG_CONFIG_HOME:-$HOME/.config}/zsh/completions $fpath)
 
 zplug add zsh-prompt git@github.com:georgewitteman/zsh-prompt.git
-[[ -f "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/local_plugins.zsh" ]] && \
-  source "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/local_plugins.zsh"
-zplug compinit
+zplug init
 
 export CLICOLOR=1
 export LSCOLORS="exfxcxdxbxegedabagacad"

@@ -7,7 +7,7 @@ _zplug() {
     subcmds=()
     subcmds+=("update:update all installed plugins")
     subcmds+=("add:load a plugin and install it if necessary")
-    subcmds+=("compinit:initializes completions from cache")
+    subcmds+=("init:initializes completions, sets up fpath, and sources plugin")
     subcmds+=("reinit:delete zcompdump and reinit completions")
     subcmds+=("help:show the usage")
     _describe "commands" subcmds
