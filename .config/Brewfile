@@ -19,3 +19,4 @@ brew "zsh"
 brew "universal-ctags/universal-ctags/universal-ctags", args: ["HEAD"]
 brew "nvim"
 brew "hyperfine"
+brew "httpie"
