@@ -1,4 +1,4 @@
 #!/usr/bin/env zsh
 
-echo "${fg_bold[blue]}\$ $@$reset_color"
+echo "${fg_bold[blue]}\$ $@$reset_color" >&2
 eval "$@"
