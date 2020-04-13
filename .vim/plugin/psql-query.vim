@@ -1,7 +1,7 @@
 function s:PsqlQuery(svc)
   let cmd = 'psql_query ' . a:svc . ' ' . expand('%:p')
-  if exists(':Start')
-    execute 'Start! ' . cmd
+  if exists(':Dispatch')
+    execute 'Dispatch! ' . cmd
   else
     execute '!' . cmd
     redraw!
