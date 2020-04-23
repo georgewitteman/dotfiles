@@ -7,4 +7,4 @@
 # Output the command to stderr so we can pipe the result of this to other
 # commands.
 echo "${fg_bold[blue]}\$ ${(q-)@}$reset_color" >&2
-eval "${(q-)@}"
+$@ # `eval "${(q-)@}"` would also work
