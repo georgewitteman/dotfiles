@@ -45,8 +45,7 @@ delete_branches() {
     read -q "confirm?$p"
     echo -n '\n'
     if [ "$confirm" = "y" ]; then
-      echo_run "git branch -D $branch"
-      # git branch -D $branch
+      echo_run git branch -D "$branch"
     else
       echo "Not deleting"
     fi
