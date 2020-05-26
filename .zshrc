@@ -113,7 +113,18 @@ export PAGER=less
 #   -x4  tabs are 4 instead of 8
 export LESS=-iRFXMx4
 
+# [r]eload [c]onfig
 alias rc='exec $SHELL --login --interactive'
+# [e]dit [c]onfig
+alias ec='$EDITOR ~/.zshrc'
+
+alias zplugins='cd ~/.config/zsh/plugins'
+
+# Suffix aliases: Open the file in preferred program just by typing
+#                 `$ <file_name><CR>`
+alias -s {py,md}=vim
+# Paste in a git repository url and it will automatically clone it
+alias -s git='git clone'
 
 alias make_venv='python3 -m venv .venv'
 alias activate='source .venv/bin/activate'
