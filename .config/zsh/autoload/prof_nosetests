@@ -1,0 +1,8 @@
+#!/usr/bin/env zsh
+
+local file="$(mktemp).profile"
+time python -m cProfile -o "$file" $(which nosetests) $@
+echo
+echo "Profile: $file"
+echo "Run: snakeviz $file"
+# snakeviz "$file"
