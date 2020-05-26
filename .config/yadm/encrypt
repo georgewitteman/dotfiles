@@ -1,1 +1,2 @@
 .config/yadm/alt/.ssh/id_rsa*
+.gnupg/.exports/*
