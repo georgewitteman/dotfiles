@@ -1,0 +1,13 @@
+#!/usr/bin/env zsh
+
+# https://github.com/SidOfc/dotfiles/blob/d07fa3862ed065c2a5a7f1160ae98416bfe2e1ee/zsh/bcp
+### BREW + FZF
+# mnemonic [B]rew [I]nstall [P]lugin
+
+local uninst=$(brew leaves | eval "fzf ${FZF_DEFAULT_OPTS} --multi --header='[brew:clean]'")
+
+if [[ $uninst ]]; then
+  for prog in $(echo $uninst); do
+    echo_run brew uninstall $prog
+  done
+fi
