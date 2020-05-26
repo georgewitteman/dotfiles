@@ -25,6 +25,9 @@ tpope/vim-rhubarb
 junegunn/fzf
 junegunn/fzf.vim
 
+# grep/ack/ripgrep
+mileszs/ack.vim
+
 # Miscellaneous
 haya14busa/is.vim
 janko/vim-test
