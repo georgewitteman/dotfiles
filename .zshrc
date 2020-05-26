@@ -128,6 +128,7 @@ alias -s git='git clone'
 
 alias make_venv='python3 -m venv .venv'
 alias activate='source .venv/bin/activate'
+alias de='deactivate'
 
 # Tmux sessions
 alias default='new_or_switch_tmux default ~/'
