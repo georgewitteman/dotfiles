@@ -1,3 +1,24 @@
+# Load Order         Interactive  Interactive  Script
+# Startup            Only login   Always
+# ------------------ -----------  -----------  ------
+# /etc/zshenv             1            1         1
+# $ZDOTDIR/.zshenv        2            2         2
+# /etc/zprofile           3
+# $ZDOTDIR/.zprofile      4
+# /etc/zshrc              5            3
+# $ZDOTDIR/.zshrc         6            4
+# /etc/zlogin             7
+# $ZDOTDIR/.zlogin        8
+#
+# Shutdown
+# ------------------ -----------  -----------  ------
+#   ~/.zlogout            9
+# /etc/zlogout           10
+#
+# Note: ZSH seems to read ~/.profile as well, if ~/.zshrc is not present.
+# `.zprofile' is meant as an alternative to `.zlogin' for ksh fans; the two are
+# not intended to be used together
+
 # http://zsh.sourceforge.net/Intro/intro_3.html
 #
 # `.zshenv' is sourced on all invocations of the shell, unless the -f option is
