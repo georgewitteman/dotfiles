@@ -6,6 +6,9 @@
 #
 # Output the command to stderr so we can pipe the result of this to other
 # commands.
+if [[ "$ECHO_RUN_DEBUG" == "1" ]]; then
+  echo -n "${fg[yellow]}(DEBUG MODE) " >&2
+fi
 echo -n "${fg[yellow]}Run \`${(q-)@}\` (y/N)?${reset_color} " >&2
 read SAFE_RUN_REPLY >&2
 if ! [ "$SAFE_RUN_REPLY" != "${SAFE_RUN_REPLY#[Yy]}" ]; then
