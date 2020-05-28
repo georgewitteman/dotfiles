@@ -1,0 +1,14 @@
+#!/usr/bin/env zsh
+
+# From zsh docs: "If a q- is given (only a single q may appear), a minimal form
+# of single quoting is used that only quotes the string if needed to protect
+# special characters. Typically this form gives the most readable output."
+#
+# Output the command to stderr so we can pipe the result of this to other
+# commands.
+echo -n "${fg[yellow]}Run \`${(q-)@}\` (y/N)?${reset_color} " >&2
+read SAFE_RUN_REPLY >&2
+if ! [ "$SAFE_RUN_REPLY" != "${SAFE_RUN_REPLY#[Yy]}" ]; then
+  return 1
+fi
+echo_run $@
