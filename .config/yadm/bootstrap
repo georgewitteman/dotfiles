@@ -85,6 +85,9 @@ decrypt_yadm_files() {
   chmod 700 ~/.ssh
   chmod 600 ~/.ssh/id_rsa
   chmod 644 ~/.ssh/id_rsa.pub
+  gpg --import ~/.gnupg/.exports/pgp-public-keys.asc
+  gpg --import ~/.gnupg/.exports/pgp-private-keys.asc
+  gpg --import-ownertrust ~/.gnupg/.exports/pgp-ownertrust.asc
 }
 
 update_yadm_url_to_ssh() {
