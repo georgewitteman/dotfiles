@@ -78,10 +78,4 @@ done
 printf "yarn install... "
 yarn install > /dev/null 2>&1
 echo "Done!"
-
-# for ((i = 1; i <= $#packages; i++)); do
-#   echo "\`${packages[i]}\`:"
-#   get_diffs ${packages[i]} ${current_versions[i]} ${new_versions[i]}
-#   echo
-# done
 )
