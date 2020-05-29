@@ -1,20 +1,4 @@
 #!/usr/bin/env zsh
 
-# ECHO_RUN_DEBUG: Set to "1" to output command but not run it
-# ECHO_RUN_DEBUG_RETURN: Set to the desired return value of the command
-
-# From zsh docs: "If a q- is given (only a single q may appear), a minimal form
-# of single quoting is used that only quotes the string if needed to protect
-# special characters. Typically this form gives the most readable output."
-#
-# Output the command to stderr so we can pipe the result of this to other
-# commands.
-if [[ "$ECHO_RUN_DEBUG" == "1" ]]; then
-  echo "${fg_bold[blue]}(DEBUG MODE) " >&2
-fi
-echo "${fg_bold[blue]}\$ ${(q-)@}$reset_color" >&2
-
-if [[ "$ECHO_RUN_DEBUG" == "1" ]]; then
-  return "$ECHO_RUN_DEBUG_RETURN"
-fi
-$@ # `eval "${(q-)@}"` would also work
+echo_eval "${(q-)@}"
+# $@ # Also works
