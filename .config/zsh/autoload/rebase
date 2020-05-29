@@ -1,7 +1,12 @@
 #!/usr/bin/env zsh
 
-local main_branch
-main_branch=$(git symbolic-ref --short refs/remotes/origin/HEAD) || return 1
-echo_run git fetch --prune && \
+if [[ "$1" != "" ]]; then
+  echo_run git fetch --quiet --tags --prune && \
+  echo_run git rebase $@
+  return $?
+fi
 
-echo_run git rebase $main_branch "$@" && \
+get_remote_head
+
+echo_run git fetch --quiet --prune --tags && \
+echo_run git rebase origin/$GIT_HEAD "$@"
