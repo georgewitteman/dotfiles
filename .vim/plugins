@@ -14,6 +14,7 @@ plasticboy/vim-markdown
 stephpy/vim-yaml
 Vimjas/vim-python-pep8-indent
 chrismaher/vim-dbt
+jalvesaq/Nvim-R
 
 # Git
 tpope/vim-git
