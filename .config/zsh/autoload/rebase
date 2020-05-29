@@ -1,12 +1,18 @@
 #!/usr/bin/env zsh
 
-if [[ "$1" != "" ]]; then
-  echo_run git fetch --quiet --tags --prune && \
-  echo_run git rebase $@
+if [[ "$1" == "" ]]; then
+  get_remote_head # sets $GIT_HEAD
+  echo_run git fetch --quiet --tags && \
+  echo_run git rebase origin/$GIT_HEAD
   return $?
 fi
 
-get_remote_head
+if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
+  echo "Usage: $0 [<git rebase args>]"
+  echo
+  safe_run git rebase --help
+  return
+fi
 
-echo_run git fetch --quiet --prune --tags && \
-echo_run git rebase origin/$GIT_HEAD "$@"
+echo_run git fetch --quiet --tags && \
+echo_run git rebase $@
