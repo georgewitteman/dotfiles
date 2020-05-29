@@ -8,6 +8,6 @@ else
     printf "Not in a git repository.\n"
     return 128
   fi
-  git status && # --short --branch --ahead-behind && \
-  git stash list
+  echo_run git status && \
+  echo_run git stash list
 fi
