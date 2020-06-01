@@ -58,12 +58,10 @@ install_alacritty_terminfo() {
   rm -rf $TMP_DIR
 }
 
-install_tmux_terminfo() {
+bootstrap_tmux() {
   echo "Installing tmux terminfo file"
   echo_run tic -x $XDG_CONFIG_HOME/tmux/tmux.terminfo
-}
 
-bootstrap_tmux() {
   if command -v tmux >/dev/null 2>&1; then
     echo "Installing, updating, and cleaning tmux plugins"
 
@@ -111,7 +109,6 @@ install_submodules
 install_homebrew_zsh
 bootstrap_asdf
 install_alacritty_terminfo
-install_tmux_terminfo
 bootstrap_tmux
 
 reminders
