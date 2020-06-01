@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
 
+autoload -U colors && colors
+
 # This is used to allow echoing commands that have special characters like &&.
 # Instead of passing each param as an argument the entire command must be
 # passed as a string. If there are multiple string arguments they are

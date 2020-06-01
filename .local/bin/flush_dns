@@ -2,7 +2,7 @@
 
 local system_type="$(uname -s)"
 if [ "$system_type" = "Darwin" ]; then
-  sudo killall -HUP mDNSResponder
+  echo_run sudo killall -HUP mDNSResponder
 else
   echo "Can't flush DNS cache on this operating system"
   return 1

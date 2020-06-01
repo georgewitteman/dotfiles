@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
 
+autoload -U colors && colors
+
 # From zsh docs: "If a q- is given (only a single q may appear), a minimal form
 # of single quoting is used that only quotes the string if needed to protect
 # special characters. Typically this form gives the most readable output."
