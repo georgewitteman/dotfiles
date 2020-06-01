@@ -145,7 +145,7 @@ _usage() {
   echo ""
 }
 
-local command_name="$0"
+local command_name="${0:t}"
 local action="$1"
 
 case $action in
