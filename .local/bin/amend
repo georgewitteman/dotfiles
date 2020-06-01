@@ -1,0 +1,3 @@
+#!/usr/bin/env zsh
+
+safe_run git commit --amend --no-edit "$@"
