@@ -1,0 +1,5 @@
+#!/bin/sh
+#
+# Stage all unstaged.
+
+echo_run git add --all
