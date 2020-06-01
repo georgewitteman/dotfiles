@@ -71,10 +71,10 @@ type "pyenv" >/dev/null && path=($PYENV_ROOT/shims $path)
 #   eval "$(pyenv init - --no-rehash zsh)"
 # fi
 
-path+=("$HOME/.local/bin")
+export path=("$HOME/.local/bin" $path)
 
 # Add arcanist to path if it's installed
-[[ -d ~/Code/arcanist/bin ]] && path+=("$HOME/Code/arcanist/bin")
+[[ -d ~/Code/arcanist/bin ]] && export path+=("$HOME/Code/arcanist/bin")
 
 # ASDF (needs to be above the fpath set for asdf completions below because we
 # need the $ASDF_DIR variable
@@ -222,7 +222,6 @@ bindkey '^[[1;3D' backward-word # alt-left
 bindkey '^[b' backward-word # alt-b
 bindkey '^[d' kill-word # alt-d
 bindkey "^[[Z" reverse-menu-complete # shift-tab
-
 
 # History file and size.
 HISTFILE="${XDG_DATA_HOME:-$HOME/.local/share}/.zsh_history"

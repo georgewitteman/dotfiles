@@ -1,7 +1,15 @@
 #!/usr/bin/env zsh
 
+if ! check_in_git_repo; then
+  echo "Not in git repository."
+  exit 128
+fi
+
 if [[ "$1" == "" ]]; then
-  get_remote_head # sets $GIT_HEAD
+  echo -n "Getting remote HEAD... "
+  GIT_HEAD="$(get_remote_head)"
+  echo $GIT_HEAD
+
   echo_run git fetch --quiet --tags && \
   echo_run git rebase origin/$GIT_HEAD
   return $?
