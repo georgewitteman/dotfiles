@@ -24,6 +24,9 @@ yadm status
  - [tealdeer](https://github.com/dbrgn/tealdeer) (command line tool reference that's much easier to read than `man`)
    - There are multiple implementations of the `tldr` command/reference, but this one is in Rust and is super fast
 
+## References
+ - https://dwheeler.com/essays/filenames-in-shell.html
+
 ## TODO
  - [ ] Improve setup script
  - [ ] Improve cross platform support (macOS and linux)

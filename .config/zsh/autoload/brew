@@ -7,4 +7,4 @@ if [[ "$VIRTUAL_ENV" != "" ]]; then
   return 1
 fi
 
-command brew $@
+command brew "$@"
