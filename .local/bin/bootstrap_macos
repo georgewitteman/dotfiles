@@ -1,0 +1,42 @@
+#!/usr/bin/env zsh
+
+# install homebrew if it's missing
+if ! command -v brew >/dev/null 2>&1; then
+  echo "Installing homebrew"
+  echo_eval '/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
+fi
+
+install() {
+  echo_run brew install $@
+}
+
+echo_run brew update
+
+echo_run brew upgrade
+
+install --HEAD universal-ctags/universal-ctags/universal-ctags
+install bat \
+  curl \
+  diff-so-fancy \
+  exa \
+  fd \
+  fzf \
+  git \
+  gnupg \
+  httpie \
+  hyperfine \
+  jq \
+  nvim \
+  pgcli \
+  pinentry-mac \
+  ripgrep \
+  rsync \
+  tmux \
+  trash \
+  tree \
+  vim \
+  wget \
+  yadm \
+  zsh \
+
+echo_run brew cleanup

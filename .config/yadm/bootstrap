@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env zsh
 
 # Stop when any command fails
 set -e
@@ -7,26 +7,17 @@ set_local_bin_path() {
   export PATH="$HOME/.local/bin:$PATH"
 }
 
-install_gnupg() {
-  echo_run brew install gnupg pinentry-mac
+bootstrap_platform() {
+  if [[ "$OSTYPE" =~ "darwin" ]]; then
+    echo_run bootstrap_macos
+  else
+    echo "No platform bootstrap script for $OSTYPE"
+  fi
 }
 
 install_submodules() {
   echo "Init submodules"
   echo_run yadm submodule update --recursive --init
-}
-
-install_brew() {
-  # install homebrew if it's missing
-  if ! command -v brew >/dev/null 2>&1; then
-    echo "Installing homebrew"
-    echo_eval '/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
-  fi
-
-  if [ -f "${XDG_CONFIG_HOME:-~/.config}/Brewfile" ]; then
-    echo "Updating homebrew bundle"
-    echo_run brew bundle --file="${XDG_CONFIG_HOME:-~/.config}/Brewfile" --verbose
-  fi
 }
 
 install_homebrew_zsh() {
@@ -113,11 +104,10 @@ reminders() {
 }
 
 set_local_bin_path
-install_gnupg
+bootstrap_platform
 decrypt_yadm_files
 update_yadm_url_to_ssh
 install_submodules
-install_brew
 install_homebrew_zsh
 bootstrap_asdf
 install_alacritty_terminfo
