@@ -71,10 +71,10 @@ type "pyenv" >/dev/null && path=($PYENV_ROOT/shims $path)
 #   eval "$(pyenv init - --no-rehash zsh)"
 # fi
 
-export path=("$HOME/.local/bin" $path)
+path=("$HOME/.local/bin" $path)
 
 # Add arcanist to path if it's installed
-[[ -d ~/Code/arcanist/bin ]] && export path+=("$HOME/Code/arcanist/bin")
+[[ -d ~/Code/arcanist/bin ]] && path+=("$HOME/Code/arcanist/bin")
 
 # ASDF (needs to be above the fpath set for asdf completions below because we
 # need the $ASDF_DIR variable
