@@ -3,21 +3,29 @@
 # Stop when any command fails
 set -e
 
+set_local_bin_path() {
+  export PATH="$HOME/.local/bin:$PATH"
+}
+
+install_gnupg() {
+  echo_run brew install gnupg pinentry-mac
+}
+
 install_submodules() {
   echo "Init submodules"
-  yadm submodule update --recursive --init
+  echo_run yadm submodule update --recursive --init
 }
 
 install_brew() {
   # install homebrew if it's missing
   if ! command -v brew >/dev/null 2>&1; then
     echo "Installing homebrew"
-    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    echo_eval '/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
   fi
 
   if [ -f "${XDG_CONFIG_HOME:-~/.config}/Brewfile" ]; then
     echo "Updating homebrew bundle"
-    brew bundle --file="${XDG_CONFIG_HOME:-~/.config}/Brewfile" --verbose
+    echo_run brew bundle --file="${XDG_CONFIG_HOME:-~/.config}/Brewfile" --verbose
   fi
 }
 
@@ -30,22 +38,22 @@ install_homebrew_zsh() {
     echo "$zsh_path already in /etc/shells"
     if [[ "$SHELL" != "$zsh_path" ]]; then
       echo "Setting shell to $zsh_path"
-      chsh -s "$zsh_path"
+      echo_run chsh -s "$zsh_path"
     fi
   else
     echo "Adding $zsh_path to /etc/shells"
     echo "$zsh_path" | sudo tee -a /etc/shells >/dev/null
     echo "Setting shell to $zsh_path"
-    chsh -s "$zsh_path"
+    echo_run chsh -s "$zsh_path"
   fi
 }
 
 bootstrap_asdf() {
   if ! command -v asdf >/dev/null 2>&1; then
     echo "Installing asdf"
-    git clone https://github.com/asdf-vm/asdf.git ~/.asdf
+    echo_run git clone https://github.com/asdf-vm/asdf.git ~/.asdf
     cd ~/.asdf
-    git checkout "$(git describe --abbrev=0 --tags)"
+    echo_run git checkout "$(git describe --abbrev=0 --tags)"
   fi
 }
 
@@ -53,16 +61,15 @@ install_alacritty_terminfo() {
   echo "Compiling alacritty terminfo file"
   TMP_DIR=$(mktemp -d)
   cd $TMP_DIR
-  curl -O https://raw.githubusercontent.com/alacritty/alacritty/master/extra/alacritty.info
-  echo "tic -xe alacritty,alacritty-direct alacritty.info"
-  tic -xe alacritty,alacritty-direct alacritty.info
+  echo_run curl -O https://raw.githubusercontent.com/alacritty/alacritty/master/extra/alacritty.info
+  echo_run tic -xe alacritty,alacritty-direct alacritty.info
   cd
   rm -rf $TMP_DIR
 }
 
 install_tmux_terminfo() {
   echo "Installing tmux terminfo file"
-  tic -x $XDG_CONFIG_HOME/tmux/tmux.terminfo
+  echo_run tic -x $XDG_CONFIG_HOME/tmux/tmux.terminfo
 }
 
 bootstrap_tmux() {
@@ -70,31 +77,31 @@ bootstrap_tmux() {
     echo "Installing, updating, and cleaning tmux plugins"
 
     if [ ! -d "${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tpm" ]; then
-      git clone https://github.com/tmux-plugins/tpm \
+      echo_run git clone https://github.com/tmux-plugins/tpm \
         "${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tpm"
     fi
 
-    ${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tpm/bin/install_plugins
-    ${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tpm/bin/update_plugins all
-    ${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tpm/bin/clean_plugins
+    echo_run ${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tpm/bin/install_plugins
+    echo_run ${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tpm/bin/update_plugins all
+    echo_run ${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tpm/bin/clean_plugins
   fi
 }
 
 decrypt_yadm_files() {
-  yadm decrypt
-  chmod 700 ~/.ssh
-  chmod 600 ~/.ssh/id_rsa
-  chmod 644 ~/.ssh/id_rsa.pub
-  gpg --import ~/.gnupg/.exports/pgp-public-keys.asc
-  gpg --import ~/.gnupg/.exports/pgp-private-keys.asc
-  gpg --import-ownertrust ~/.gnupg/.exports/pgp-ownertrust.asc
+  echo_run yadm decrypt
+  echo_run chmod 700 ~/.ssh
+  echo_run chmod 600 ~/.ssh/id_rsa
+  echo_run chmod 644 ~/.ssh/id_rsa.pub
+  echo_run gpg --import ~/.gnupg/.exports/pgp-public-keys.asc
+  echo_run gpg --import ~/.gnupg/.exports/pgp-private-keys.asc
+  echo_run gpg --import-ownertrust ~/.gnupg/.exports/pgp-ownertrust.asc
 }
 
 update_yadm_url_to_ssh() {
   # We now have ssh keys decrypted, so can update the url
   # to be the ssh url
   echo "Updating the yadm repo origin URL"
-  yadm remote set-url origin "git@github.com:georgewitteman/dotfiles.git"
+  echo_run yadm remote set-url origin "git@github.com:georgewitteman/dotfiles.git"
 }
 
 reminders() {
@@ -105,6 +112,8 @@ reminders() {
   echo "     $ yadm config local.class <work|personal>"
 }
 
+set_local_bin_path
+install_gnupg
 decrypt_yadm_files
 update_yadm_url_to_ssh
 install_submodules
