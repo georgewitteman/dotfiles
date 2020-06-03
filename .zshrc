@@ -149,6 +149,7 @@ compdef g='git'
 alias gs='git status'
 alias gf='git fetch && g'
 alias develop='master'
+alias amend='echo_run git commit --amend --no-edit --all'
 
 # yadm
 compdef y='yadm'
