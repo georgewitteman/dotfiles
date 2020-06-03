@@ -4,6 +4,7 @@ function s:Isort() abort
     return
   endif
 
+  write
   execute 'silent !isort %'
   redraw!
   edit!
