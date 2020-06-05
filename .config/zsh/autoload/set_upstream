@@ -18,4 +18,4 @@ if [[ ! -z "$(git status --porcelain)" ]]; then
   return 1
 fi
 
-echo_run git push --set-upstream origin "$head"
+echo_run git push --set-upstream origin "$head" "$@"
