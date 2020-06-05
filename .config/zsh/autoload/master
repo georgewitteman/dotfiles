@@ -9,6 +9,7 @@ echo -n "Getting remote HEAD... "
 GIT_HEAD="$(get_remote_head)"
 echo $GIT_HEAD
 
-echo_run git checkout $GIT_HEAD
-echo_run git fetch --prune --tags
-echo_run git merge --ff-only origin/$GIT_HEAD
+echo_run git checkout --quiet $GIT_HEAD && \
+echo_run git fetch --quiet --progress --force --prune --tags && \
+echo_run git merge --quiet --ff-only origin/$GIT_HEAD && \
+echo_run git show --quiet --pretty=short HEAD # --quiet supresses the diff
