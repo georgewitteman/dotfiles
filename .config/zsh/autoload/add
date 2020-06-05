@@ -1,0 +1,14 @@
+#!/usr/bin/env zsh
+
+if ! in_git_repo; then
+  echo "Not in a git repository."
+  exit 128
+fi
+
+if [[ "$#" -eq 0 ]]; then
+  local rel_path="$(realpath --relative-to="$PWD" "$(git rev-parse --show-toplevel)")"
+  echo_run git add "$rel_path"
+  return $?
+fi
+
+echo_run git add "$@"
