@@ -1,0 +1,21 @@
+#!/usr/bin/env zsh
+
+if ! in_git_repo; then
+  echo "Not in git repository."
+  exit 128
+fi
+
+local head=$(git rev-parse --abbrev-ref HEAD)
+
+if [[ "$head" == "HEAD" ]]; then
+  echo "You are not on the HEAD of a branch."
+  return 1
+fi
+
+if [[ ! -z "$(git status --porcelain)" ]]; then
+  echo "There are uncommitted files."
+  echo_run git status
+  return 1
+fi
+
+echo_run git push --set-upstream origin "$head"
