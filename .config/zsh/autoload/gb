@@ -1,5 +1,11 @@
 #!/usr/bin/env zsh
 
+if ! clean_repo; then
+  echo "${fg[yellow]}Warning:$reset_color You have uncommitted changes. Commit or stash your changes."
+  echo_run git status
+  return 1
+fi
+
 local branches branch
 branches=$(
   git \

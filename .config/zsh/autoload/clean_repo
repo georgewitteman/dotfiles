@@ -1,0 +1,5 @@
+#!/usr/bin/env zsh
+
+if [[ ! -z "$(git status --porcelain)" ]]; then
+  return 1
+fi
