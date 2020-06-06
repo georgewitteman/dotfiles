@@ -16,8 +16,8 @@ Get the correct disk with `fdisk -l`
 ### Partition table
 Make sure the partition table is `gpt`. Use `fdisk`. It has a useful help command. There should be 3 partitions:
 1. **EFI system partition:** This is the required EFI partition. Set to 512MB.
-1. **Linux x86-64 root:** Remainder of the device.
 1. **Linux swap:** More than 512MB.
+1. **Linux x86-64 root:** Remainder of the device.
 
 ## Format the partitions
 ```sh
