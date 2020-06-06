@@ -238,6 +238,9 @@ bindkey '^[d' kill-word # alt-d
 bindkey "^[[Z" reverse-menu-complete # shift-tab
 
 # History file and size.
+if [[ ! -f "${XDG_DATA_HOME:-$HOME/.local/share}/.zsh_history" ]]; then
+  mkdir -p "${XDG_DATA_HOME:-$HOME/.local/share}"
+fi
 HISTFILE="${XDG_DATA_HOME:-$HOME/.local/share}/.zsh_history"
 HISTSIZE=10000000
 SAVEHIST=10000000
