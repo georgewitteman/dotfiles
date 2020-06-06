@@ -1,0 +1,41 @@
+#!/usr/bin/env zsh
+
+set -e
+
+install_aur_package() {
+  if command -v "$1" >/dev/null 2>&1; then
+    info "Already installed $1"
+    return
+  fi
+
+  (
+    cd "$HOME/aur"
+    echo_run git clone "$2" || true
+    echo_run cd "${${(s:.:)${2:t}}[1,-2]}"
+    echo_run git pull --rebase
+    echo -n "${fg[yellow]}Want to read the PKGBUILD? (Y/n)?${reset_color} "
+    local reply
+    read reply
+    if ! [[ "$reply" != "${reply#[Nn]}" ]]; then
+      echo_run less PKGBUILD
+    fi
+    safe_run makepkg --syncdeps --noconfirm --install --clean || true
+  )
+}
+
+echo_run mkdir -p "$HOME/aur"
+
+echo_run sudo pacman -Syu
+
+echo_run sudo pacman --sync --needed --noconfirm \
+  ctags \
+  firefox \
+  zsh \
+  vim \
+  tmux \
+  git \
+  fzf \
+  jq \
+  ripgrep
+
+install_aur_package yadm https://aur.archlinux.org/yadm.git

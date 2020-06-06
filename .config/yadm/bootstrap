@@ -1,7 +1,15 @@
 #!/usr/bin/env zsh
 
+autoload -U colors && colors
+
 # Stop when any command fails
 set -e
+
+source "$HOME/.zshrc"
+
+info() {
+  echo "${fg[green]}INFO:${reset_color} $@"
+}
 
 set_local_bin_path() {
   export PATH="$HOME/.local/bin:$PATH"
@@ -9,47 +17,52 @@ set_local_bin_path() {
 
 bootstrap_platform() {
   if [[ "$OSTYPE" =~ "darwin" ]]; then
-    echo_run bootstrap_macos
+    echo_run source bootstrap_macos
+  elif command -v pacman >/dev/null 2>&1; then
+    echo_run source bootstrap_arch_linux
   else
-    echo "No platform bootstrap script for $OSTYPE"
+    info "No platform bootstrap script for $OSTYPE"
   fi
 }
 
 install_submodules() {
-  echo "Init submodules"
   echo_run yadm submodule update --recursive --init
 }
 
 install_homebrew_zsh() {
-  local zsh_path="$(brew --prefix)/bin/zsh"
+  local zsh_path="$(which zsh)"
+  if command -v brew >/dev/null 2>&1; then
+    zsh_path="$(brew --prefix)/bin/zsh"
+  fi
   # -q be quiet
   # -x match the whole line
   # -F pattern is a plain string
   if grep -qxF "$zsh_path" /etc/shells; then
-    echo "$zsh_path already in /etc/shells"
-    if [[ "$SHELL" != "$zsh_path" ]]; then
-      echo "Setting shell to $zsh_path"
-      echo_run chsh -s "$zsh_path"
-    fi
+    info "$zsh_path already in /etc/shells"
   else
-    echo "Adding $zsh_path to /etc/shells"
-    echo "$zsh_path" | sudo tee -a /etc/shells >/dev/null
-    echo "Setting shell to $zsh_path"
-    echo_run chsh -s "$zsh_path"
+    info "Adding $zsh_path to /etc/shells"
+    info "$zsh_path" | sudo tee -a /etc/shells >/dev/null
+  fi
+  if [[ "$SHELL" != "$zsh_path" ]]; then
+    safe_run chsh -s "$zsh_path"
+  else
+    info "User '$USER' already has $zsh_path as their shell"
   fi
 }
 
 bootstrap_asdf() {
   if ! command -v asdf >/dev/null 2>&1; then
-    echo "Installing asdf"
+    info "Installing asdf"
     echo_run git clone https://github.com/asdf-vm/asdf.git ~/.asdf
     cd ~/.asdf
     echo_run git checkout "$(git describe --abbrev=0 --tags)"
+  else
+    info "asdf already installed"
   fi
 }
 
 install_alacritty_terminfo() {
-  echo "Compiling alacritty terminfo file"
+  info "Compiling alacritty terminfo file"
   TMP_DIR=$(mktemp -d)
   cd $TMP_DIR
   echo_run curl -O https://raw.githubusercontent.com/alacritty/alacritty/master/extra/alacritty.info
@@ -59,11 +72,11 @@ install_alacritty_terminfo() {
 }
 
 bootstrap_tmux() {
-  echo "Installing tmux terminfo file"
+  info "Installing tmux terminfo file"
   echo_run tic -x $XDG_CONFIG_HOME/tmux/tmux.terminfo
 
   if command -v tmux >/dev/null 2>&1; then
-    echo "Installing, updating, and cleaning tmux plugins"
+    info "Installing, updating, and cleaning tmux plugins"
 
     if [ ! -d "${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tpm" ]; then
       echo_run git clone https://github.com/tmux-plugins/tpm \
@@ -73,33 +86,45 @@ bootstrap_tmux() {
     echo_run ${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tpm/bin/install_plugins
     echo_run ${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tpm/bin/update_plugins all
     echo_run ${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tpm/bin/clean_plugins
+  else
+    info "tmux not installed."
   fi
 }
 
 decrypt_yadm_files() {
-  echo_run yadm decrypt
-  echo_run chmod 700 ~/.ssh
-  echo_run chmod 600 ~/.ssh/id_rsa
-  echo_run chmod 644 ~/.ssh/id_rsa.pub
-  echo_run gpg --import ~/.gnupg/.exports/pgp-public-keys.asc
-  echo_run gpg --import ~/.gnupg/.exports/pgp-private-keys.asc
-  echo_run gpg --import-ownertrust ~/.gnupg/.exports/pgp-ownertrust.asc
+  if [[ ! -f "$HOME/.ssh/id_rsa" ]]; then
+    echo_run yadm decrypt
+    echo_run chmod 700 ~/.ssh
+    echo_run chmod 600 ~/.ssh/id_rsa
+    echo_run chmod 644 ~/.ssh/id_rsa.pub
+    echo_run gpg --import ~/.gnupg/.exports/pgp-public-keys.asc
+    echo_run gpg --import ~/.gnupg/.exports/pgp-private-keys.asc
+    echo_run gpg --import-ownertrust ~/.gnupg/.exports/pgp-ownertrust.asc
+  else
+    info "The file ~/.ssh/id_rsa already exists."
+    info "Skipping decryption. Run 'yadm decrypt && gpg_restore' if necessary."
+  fi
 }
 
 update_yadm_url_to_ssh() {
   # We now have ssh keys decrypted, so can update the url
   # to be the ssh url
-  echo "Updating the yadm repo origin URL"
+  info "Updating the yadm repo origin URL"
   echo_run yadm remote set-url origin "git@github.com:georgewitteman/dotfiles.git"
 }
 
 reminders() {
   echo
-  echo "REMINDERS:"
-  echo " - Don't forget to download the SF Mono font from https://developer.apple.com/fonts/"
-  echo " - Don't forget to set yadm class!"
-  echo "     $ yadm config local.class <work|personal>"
+  info "REMINDERS:"
+  info " - Don't forget to set yadm class for work computer"
+  info "     $ yadm config local.class work"
 }
+
+sudo echo "$SHELL" > /dev/null
+if [[ $status -ne 0 ]]; then
+  info "We need sudo to do some stuff"
+  return 1
+fi
 
 set_local_bin_path
 bootstrap_platform
