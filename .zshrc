@@ -71,6 +71,9 @@ type "pyenv" >/dev/null && path=($PYENV_ROOT/shims $path)
 #   eval "$(pyenv init - --no-rehash zsh)"
 # fi
 
+if [[ ! -f "$HOME/.local/bin" ]]; then
+  mkdir -p "$HOME/.local/bin"
+fi
 path=("$HOME/.local/bin" $path)
 
 # Add arcanist to path if it's installed
