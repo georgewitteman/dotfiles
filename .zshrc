@@ -91,9 +91,11 @@ fpath=(${XDG_CONFIG_HOME:-$HOME/.config}/zsh/autoload/ $fpath)
 autoload -Uz ${XDG_CONFIG_HOME:-$HOME/.config}/zsh/autoload/**/*
 
 # Set up fpath for asdf completions
-fpath=($ASDF_DIR/completions $fpath)
+[[ -d "$ASDF_DIR" ]] && fpath=($ASDF_DIR/completions $fpath)
 
 fpath=(${XDG_CONFIG_HOME:-$HOME/.config}/zsh/completions $fpath)
+
+[[ -d "/usr/share/zsh/site-functions" ]] && fpath+=("/usr/share/zsh/site-functions")
 
 zplug add zsh-prompt git@github.com:georgewitteman/zsh-prompt.git
 zplug add zsh-prompt-benchmark git@github.com:romkatv/zsh-prompt-benchmark.git
