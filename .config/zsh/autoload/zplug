@@ -25,7 +25,7 @@ _add_plugin() {
 
   if [[ ! -d "$plugin_path" ]]; then
     echo "Installing $plugin_name"
-    git clone "$plugin_url" "$plugin_path"
+    echo_run git clone "$plugin_url" "$plugin_path"
     [[ "$?" -ne 0 ]] && return 1
     _re_compinit
   fi
