@@ -167,6 +167,10 @@ alias d='print -P "%~"'
 # Vim
 alias profvim='vim --startuptime startup.log +qall && vim startup.log && rm startup.log'
 
+if command -v brew >/dev/null 2>&1; then
+  alias brew='brew_helper'
+fi
+
 # Color variables
 autoload -U colors && colors
 
