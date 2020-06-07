@@ -8,31 +8,20 @@ install_aur_package() {
     return
   fi
 
-  (
-    cd "$HOME/aur"
-    echo_run git clone "$2" || true
-    echo_run cd "${${(s:.:)${2:t}}[1,-2]}"
-    echo_run git pull --rebase
-    echo -n "${fg[yellow]}Want to read the PKGBUILD? (Y/n)?${reset_color} "
-    local reply
-    read reply
-    if ! [[ "$reply" != "${reply#[Nn]}" ]]; then
-      echo_run less PKGBUILD
-    fi
-    safe_run makepkg --syncdeps --noconfirm --install --clean || true
-  )
+  aur_install $1
 }
-
-echo_run mkdir -p "$HOME/aur"
 
 echo_run sudo pacman -Syu
 
 echo_run sudo pacman --sync --needed --noconfirm \
   alacritty \
+  bashtop \
   ctags \
   firefox \
   fzf \
   git \
+  glances \
+  htop \
   jq \
   lightdm \
   lightdm-gtk-greeter \
@@ -42,6 +31,7 @@ echo_run sudo pacman --sync --needed --noconfirm \
   vim \
   zsh \
 
-install_aur_package yadm https://aur.archlinux.org/yadm.git
+install_aur_package yay
+install_aur_package ytop
 
 echo_run sudo systemctl enable lightdm.service
