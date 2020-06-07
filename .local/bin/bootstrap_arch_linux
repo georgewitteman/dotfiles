@@ -28,14 +28,19 @@ echo_run mkdir -p "$HOME/aur"
 echo_run sudo pacman -Syu
 
 echo_run sudo pacman --sync --needed --noconfirm \
+  alacritty \
   ctags \
   firefox \
-  zsh \
-  vim \
-  tmux \
-  git \
   fzf \
+  git \
   jq \
-  ripgrep
+  lightdm \
+  lightdm-gtk-greeter \
+  ripgrep \
+  tmux \
+  vim \
+  zsh \
 
 install_aur_package yadm https://aur.archlinux.org/yadm.git
+
+echo_run sudo systemctl enable lightdm.service
