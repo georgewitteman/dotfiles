@@ -36,6 +36,7 @@ echo_run sudo pacman --sync --needed --noconfirm \
   jq \
   lightdm \
   lightdm-gtk-greeter \
+  numlockx \
   ripgrep \
   tmux \
   vim \
