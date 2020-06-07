@@ -21,32 +21,36 @@ Make sure the partition table is `gpt`. Use `fdisk`. It has a useful help comman
 
 ## Format the partitions
 ```sh
-mkfs.ext4 /dev/PARTITION
+mkfs.fat -F 32 /dev/PARTITION
 
 mkswap /dev/PARTITION
 swapon /dev/PARTITION
 
-mkfs.fat -F 32 /dev/PARTITION
+mkfs.ext4 /dev/PARTITION
 ```
 
 ## Mount the file systems
 ```sh
 mount /dev/ROOT_PARTITION /mnt
+mkdir -p /mnt/boot
 mount /dev/EFI_PARTITION /mnt/boot
 ```
 
 ## Reflector command
 Use reflector to get a list of the fastest mirrors for installation.
 ```sh
-reflector --country 'United States' --latest 200 --age 24 --sort rate --fastest 25 --save /etc/pacman.d/mirrorlist
+pacman -Syy
+pacman -S reflector
+reflector --verbose --country 'United States' --latest 200 --age 24 --sort rate --fastest 25 --save /etc/pacman.d/mirrorlist
 ```
 
 ## Install essential packages
 ```sh
-pacstrap /mnt base linux linux-firmware vim dhcpcd man-db man-pages openssh opendoas efibootmgr reflector
+pacstrap /mnt base linux linux-firmware vim dhcpcd man-db man-pages openssh opendoas reflector
 ```
 
 ## Generate `/etc/fstab`
+**SKIPPING THIS BECAUSE I'M GOING TO TRY USING SYSTEMD**
 Note: I'm overwriting the file here, which is different from the official installation guide, which uses `>>` to append.
 ```sh
 # -U for UUIDs, -L for labels
@@ -86,7 +90,7 @@ myhostname
 ```
 127.0.0.1    localhost
 ::1          localhost
-127.0.1.1    myhostname.localdomain scott
+127.0.0.1    myhostname.localdomain scott
 ```
 
 ## Set the root password
@@ -103,6 +107,7 @@ systemctl enable dhcpcd.service
 ```
 
 ## Install a bootloader (EFISTUB)
+**TRYING OUT systemd-boot for the https://systemd.io/DISCOVERABLE_PARTITIONS/ feature**
 ```sh
 ls -l /dev/disk/by-partuuid
 efibootmgr --disk /dev/sdX --part Y --create --label "Arch Linux" --loader /vmlinuz-linux --unicode 'root=PARTUUID=XXXXX-...-XXXXX resume=PARTUUID=XXXXX-...-XXXXX rw initrd=\initramfs-linux.img' --verbose
@@ -112,6 +117,16 @@ efibootmgr --disk /dev/sdX --part Y --create --label "Arch Linux" --loader /vmli
  * `--part Y`: `Y` is the EFI partition number. It's probably 0, but you can check with `fdisk -l`.
  * `root=PARTUUID=...`: Use the `PARTUUID` of the root partition.
  * `resume=PARTUUID=...`: Use the `PARTUUID` of the SWAP partition.
+
+```
+# /etc/mkinitcpio.conf
+HOOKS=(base ~~udev~~systemd ... fsck)
+```
+
+```sh
+mkinitcpio -P
+```
+
 
 ## Reboot
 ```sh
