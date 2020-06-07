@@ -1,3 +1,11 @@
 #!/usr/bin/env zsh
 
-safe_run git commit --amend --no-edit "$@"
+args=(commit --amend --no-edit "$@")
+
+if ! in_git_repo; then
+  echo "Not in git repository. Do you want to use yadm?"
+  safe_run yadm $args
+  return $?
+fi
+
+safe_run git $args

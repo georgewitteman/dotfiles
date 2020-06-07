@@ -154,7 +154,6 @@ compdef g='git'
 alias gs='git status'
 alias gf='git fetch && g'
 alias develop='master'
-alias amend='echo_run git commit --amend --no-edit --all'
 alias push='echo_run set_upstream'
 alias switch='echo_run git switch'
 
