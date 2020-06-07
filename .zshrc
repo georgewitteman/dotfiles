@@ -161,7 +161,6 @@ alias switch='echo_run git switch'
 compdef y='yadm'
 alias y='yadm'
 alias ys='echo_run yadm status'
-alias yadd='echo_run yadm add --update --verbose'
 alias ypush='echo_run yadm push'
 
 alias c='clear'
