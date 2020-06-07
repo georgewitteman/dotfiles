@@ -29,6 +29,7 @@ echo_run sudo pacman --sync --needed --noconfirm \
   ripgrep \
   tmux \
   vim \
+  xdg-utils \
   zsh \
 
 install_aur_package yay
