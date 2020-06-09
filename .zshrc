@@ -164,7 +164,6 @@ alias gf='git fetch && g'
 alias develop='master'
 alias push='echo_run set_upstream'
 alias switch='echo_run git switch'
-alias commit='echo_run git commit'
 
 # yadm
 compdef y='yadm'
