@@ -1,14 +1,22 @@
 #!/usr/bin/env zsh
 
+local cmd="git"
+local run_cmd="echo_run"
 if ! in_git_repo; then
-  echo "Not in a git repository."
-  exit 128
+  echo "Not in a git repository. Using yadm."
+  cmd="yadm"
+  run_cmd="safe_run"
 fi
 
-if [[ "$#" -eq 0 ]]; then
+if [[ "$#" -eq 0 ]] && [[ "$cmd" != "yadm" ]]; then
   local rel_path="$(realpath --relative-to="$PWD" "$(git rev-parse --show-toplevel)")"
   echo_run git add "$rel_path"
   return $?
+elif [[ "$#" -eq 0 ]] && [[ "$cmd" = "yadm" ]]; then
+  echo_run yadm add --update --verbose
+  echo_run yadm status
+  return $?
 fi
 
-echo_run git add "$@"
+
+$run_cmd $cmd add "$@"
