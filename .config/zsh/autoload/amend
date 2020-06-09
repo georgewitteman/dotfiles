@@ -1,11 +1,17 @@
 #!/usr/bin/env zsh
 
-args=(commit --amend --no-edit "$@")
-
+local cmd="git"
 if ! in_git_repo; then
-  echo "Not in git repository. Do you want to use yadm?"
-  safe_run yadm $args
-  return $?
+  echo "Not in git repository. Using yadm."
+  cmd="yadm"
 fi
 
-safe_run git $args
+if is_clean_repo $cmd; then
+  echo "There are no changes to be amended."
+  return 1
+fi
+
+add || return $?
+
+echo "Use '$cmd reset $(git rev-parse HEAD)' if you want to un-amend."
+echo_run $cmd commit --amend --no-edit "$@"

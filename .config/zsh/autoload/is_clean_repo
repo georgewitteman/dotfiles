@@ -1,5 +1,6 @@
 #!/usr/bin/env zsh
 
-if [[ ! -z "$(git status --porcelain)" ]]; then
+local cmd="${1:-git}"
+if [[ ! -z "$($cmd status --porcelain)" ]]; then
   return 1
 fi
