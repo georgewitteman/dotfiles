@@ -1,21 +1,24 @@
 #!/usr/bin/env zsh
 
+local cmd="git"
+local run_cmd="echo_run"
 if ! in_git_repo; then
-  echo "Not in git repository."
-  exit 128
+  echo "Not in git repository. Using yadm."
+  cmd="yadm"
+  run_cmd="safe_run"
 fi
 
-local head=$(git rev-parse --abbrev-ref HEAD)
+local head=$($cmd rev-parse --abbrev-ref HEAD)
 
 if [[ "$head" == "HEAD" ]]; then
   echo "You are not on the HEAD of a branch."
   return 1
 fi
 
-if [[ ! -z "$(git status --porcelain)" ]]; then
+if [[ ! -z "$($cmd status --porcelain)" ]]; then
   echo "There are uncommitted files."
-  echo_run git status
+  echo_run $cmd status
   return 1
 fi
 
-echo_run git push --set-upstream origin "$head" "$@"
+$run_cmd $cmd push "$@" --set-upstream origin "$head"
