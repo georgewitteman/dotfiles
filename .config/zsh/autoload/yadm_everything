@@ -1,4 +1,0 @@
-#! /usr/bin/env zsh
-
-echo_run yadm add --update --verbose
-echo_run yadm status
