@@ -21,4 +21,13 @@ if [[ ! -z "$($cmd status --porcelain)" ]]; then
   return 1
 fi
 
-$run_cmd $cmd push "$@" --set-upstream origin "$head"
+local args=("$@")
+
+local remote="$($cmd rev-parse --abbrev-ref --symbolic-full-name @{upstream} 2>/dev/null)"
+if [[ -z "$remote" ]]; then
+  echo "This branch is not yet tracked on a remote."
+  args+=("--set-upstream" "origin" "$head")
+  run_cmd="safe_run"
+fi
+
+$run_cmd $cmd push $args
