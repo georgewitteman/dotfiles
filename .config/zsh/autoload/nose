@@ -1,0 +1,29 @@
+#!/usr/bin/env zsh
+
+if ! command -v nosetests >/dev/null 2>&1; then
+  echo "Not inside a virtual environment with nosetests."
+  return 127
+fi
+
+local file_or_dir="${@[-1]:a}" # :a resolves absolute path
+
+if [[ -z "$file_or_dir" ]]; then
+  echo "No file or directory specified."
+  return
+fi
+
+local run_dir="$file_or_dir"
+until [[ -f "${run_dir}/requirements.txt" ]] || [[ "$run_dir" = "$HOME" ]]; do
+  run_dir="${run_dir:a:h}"
+done
+
+# (N) ignores no matches. Default is to error
+for dir in "$VIRTUAL_ENV"/lib/python*/site-packages/nose_profile*/(N); do
+  # nose_profile just doesn't work, so lets just get rid of it so we don't always see that error
+  [[ -d "$dir" ]] && echo_run rm -rf "$dir"
+done
+
+(
+  [[ "$run_dir" != "$HOME" ]] && echo_run cd "$run_dir"
+  echo_run nosetests --verbose --nologcapture --timer-top-n 10 "${@[1,-2]}" "${file_or_dir##${run_dir}/}"
+)
