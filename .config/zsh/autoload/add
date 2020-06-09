@@ -18,5 +18,4 @@ elif [[ "$#" -eq 0 ]] && [[ "$cmd" = "yadm" ]]; then
   return $?
 fi
 
-
 $run_cmd $cmd add "$@"
