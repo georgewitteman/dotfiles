@@ -159,7 +159,7 @@ alias la='ls -la'
 
 # Git
 compdef g='git'
-alias gs='git status'
+alias gs='echo_run status'
 alias gf='git fetch && g'
 alias develop='master'
 alias push='echo_run set_upstream'
@@ -168,7 +168,7 @@ alias switch='echo_run git switch'
 # yadm
 compdef y='yadm'
 alias y='yadm'
-alias ys='echo_run yadm status'
+alias ys='echo_run status'
 alias ypush='echo_run yadm push'
 
 alias c='clear'
