@@ -1,0 +1,9 @@
+#!/usr/bin/env zsh
+
+local cmd="git"
+if ! in_git_repo; then
+  echo "Not in git repository. Using yadm."
+  cmd="yadm"
+fi
+
+echo_run $cmd status "$@"
