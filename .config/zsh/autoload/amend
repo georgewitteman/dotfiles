@@ -28,5 +28,5 @@ fi
 
 add || return $?
 
-echo "Use '$cmd reset $(git rev-parse HEAD)' if you want to un-amend."
 echo_run $cmd commit --amend --no-edit "$@"
+echo "Use '$cmd reset $($cmd rev-parse HEAD)' if you want to un-amend."
