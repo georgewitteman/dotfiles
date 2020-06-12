@@ -12,8 +12,10 @@ else
   pyobj="$@"
 fi
 
+local from_clipboard
 if [[ -z "$pyobj" ]]; then
   pyobj="$(pbpaste)"
+  from_clipboard=1
 fi
 
 if [[ -z "$pyobj" ]]; then
@@ -21,7 +23,7 @@ if [[ -z "$pyobj" ]]; then
 fi
 
 # The `-` means read from stdin
-python3 - << EOF
+local output="$(python3 - << EOF
 import json
 try:
     obj = $pyobj
@@ -30,3 +32,10 @@ except Exception as e:
     print('Error parsing python object')
     print(e)
 EOF
+)"
+
+if [[ -n "$from_clipboard" ]]; then
+  echo "$output" | pbcopy
+fi
+
+echo "$output"
