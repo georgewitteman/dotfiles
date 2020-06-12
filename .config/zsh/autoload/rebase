@@ -10,7 +10,7 @@ if [[ "$1" == "" ]]; then
   GIT_HEAD="$(get_remote_head)"
   echo $GIT_HEAD
 
-  echo_run git fetch --quiet --tags && \
+  echo_run git fetch --prune --quiet --tags && \
   echo_run git rebase origin/$GIT_HEAD
   return $?
 fi
@@ -22,5 +22,5 @@ if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
   return
 fi
 
-echo_run git fetch --quiet --tags && \
+echo_run git fetch --prune --quiet --tags && \
 echo_run git rebase $@

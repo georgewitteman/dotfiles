@@ -2,7 +2,7 @@
 
 if ! in_git_repo; then
   echo "Not in git repository."
-  exit 128
+  return 128
 fi
 
 echo -n "Getting remote HEAD... "
