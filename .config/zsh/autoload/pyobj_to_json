@@ -1,0 +1,32 @@
+#!/usr/bin/env zsh
+
+local line
+local pyobj
+
+if [ -p /dev/stdin ]; then
+  while read line; do
+    pyobj+="$line\n"
+  done
+  pyobj+="$line"
+else
+  pyobj="$@"
+fi
+
+if [[ -z "$pyobj" ]]; then
+  pyobj="$(pbpaste)"
+fi
+
+if [[ -z "$pyobj" ]]; then
+  return
+fi
+
+# The `-` means read from stdin
+python3 - << EOF
+import json
+try:
+    obj = $pyobj
+    print(json.dumps(obj, indent=2))
+except Exception as e:
+    print('Error parsing python object')
+    print(e)
+EOF
