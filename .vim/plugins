@@ -13,7 +13,8 @@ pboettch/vim-cmake-syntax
 plasticboy/vim-markdown
 stephpy/vim-yaml
 Vimjas/vim-python-pep8-indent
-vim-python/python-syntax
+raimon49/requirements.txt.vim
+hdima/python-syntax
 chrismaher/vim-dbt
 jalvesaq/Nvim-R
 chrisbra/csv.vim
@@ -30,6 +31,9 @@ junegunn/fzf.vim
 
 # grep/ack/ripgrep
 mileszs/ack.vim
+
+# Python
+jeetsukumaran/vim-pythonsense
 
 # Miscellaneous
 haya14busa/is.vim
