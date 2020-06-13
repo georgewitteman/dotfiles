@@ -1,2 +1,3 @@
 .config/yadm/alt/.ssh/id_rsa*
 .gnupg/.exports/*
+Code/config/terraform.tfstate
