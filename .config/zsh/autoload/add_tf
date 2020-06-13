@@ -1,0 +1,9 @@
+#!/usr/bin/env zsh
+
+(
+echo_run cd "$HOME/Code/config"
+echo_run terraform fmt
+echo_run yadm encrypt
+echo_run yadm add .
+echo_run yadm add "$HOME/.config/yadm/files.gpg"
+)
