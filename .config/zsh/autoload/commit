@@ -7,3 +7,7 @@ if ! in_git_repo; then
 fi
 
 echo_run $cmd commit "$@"
+
+if needs_git_cleanup; then
+  git_cleanup
+fi

@@ -24,3 +24,7 @@ fi
 
 echo_run git fetch --prune --quiet --tags && \
 echo_run git rebase $@
+
+if needs_git_cleanup; then
+  git_cleanup
+fi

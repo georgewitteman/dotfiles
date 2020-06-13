@@ -1,15 +1,14 @@
 #!/usr/bin/env zsh
 
 if ! in_git_repo; then
-  echo "Not in git repository."
   return 128
 fi
 
 local git_dir="$(git rev-parse --git-dir)"
-
 if [[ -f "$git_dir/gc.log" ]]; then
-  echo_eval "cat $git_dir/gc.log && rm $git_dir/gc.log"
+  echo
+  echo "${fg_bold[yellow]}The REPO/.git/gc.log file exists. Need to run git_cleanup!$reset_color"
+  return 0
 fi
 
-echo_run git remote prune origin
-echo_run git gc
+return 1

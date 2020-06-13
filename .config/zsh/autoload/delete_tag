@@ -1,0 +1,13 @@
+#!/usr/bin/env zsh
+
+local tag="$1"
+
+if [[ -z "$tag" ]]; then
+  echo "Usage: $0 TAG"
+  return 1
+fi
+
+echo_run git fetch --tags --force --prune --quiet
+
+echo_run git tag -d "$tag"
+safe_run git push origin ":refs/tags/$tag"
