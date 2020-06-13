@@ -1,7 +1,9 @@
 #!/usr/bin/env zsh
 
 (
-echo_run cd "$HOME/Code/config"
+local tf_dir="$HOME/Code/infra/terraform"
+
+echo_run cd "$tf_dir"
 echo_run terraform fmt
 echo_run yadm encrypt
 echo_run yadm add .
