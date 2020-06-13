@@ -18,6 +18,7 @@ hdima/python-syntax
 chrismaher/vim-dbt
 jalvesaq/Nvim-R
 chrisbra/csv.vim
+hashivim/vim-terraform
 
 # Git
 tpope/vim-git
