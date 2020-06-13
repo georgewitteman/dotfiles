@@ -157,8 +157,12 @@ alias ls='ls -F'
 alias ll='ls -l'
 alias la='ls -la'
 
+# Kubernetes
+if command -v kubectl >/dev/null 2>&1; then
+  alias k='kubectl'
+fi
+
 # Git
-compdef g='git'
 alias gs='echo_run status'
 alias gf='git fetch && g'
 alias develop='master'
@@ -167,7 +171,6 @@ alias switch='echo_run git switch'
 alias gdiff='echo_run git diff'
 
 # yadm
-compdef y='yadm'
 alias y='yadm'
 alias ys='echo_run yadm status'
 alias ypush='echo_run yadm push'
