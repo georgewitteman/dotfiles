@@ -17,6 +17,7 @@ echo_run sudo pacman --sync --needed --noconfirm \
   alacritty \
   bashtop \
   ctags \
+  docker \
   fd \
   firefox \
   fzf \
@@ -41,3 +42,5 @@ install_aur_package yay
 install_aur_package ytop
 
 echo_run sudo systemctl enable lightdm.service
+echo_run sudo systemctl enable docker.service
+echo_run sudo usermod -aG docker $USER
