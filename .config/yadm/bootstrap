@@ -113,6 +113,10 @@ update_yadm_url_to_ssh() {
   echo_run yadm remote set-url origin "git@github.com:georgewitteman/dotfiles.git"
 }
 
+yadm_pull_rebase() {
+  echo_run yadm gitconfig pull.rebase true
+}
+
 reminders() {
   echo
   info "REMINDERS:"
@@ -130,6 +134,7 @@ set_local_bin_path
 bootstrap_platform
 decrypt_yadm_files
 update_yadm_url_to_ssh
+yadm_pull_rebase
 install_submodules
 install_homebrew_zsh
 bootstrap_asdf
