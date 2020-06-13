@@ -25,14 +25,18 @@ echo_run sudo pacman --sync --needed --noconfirm \
   glances \
   htop \
   jq \
+  kubectl \
   lightdm \
   lightdm-gtk-greeter \
+  minikube \
+  noto-fonts-emoji \
   numlockx \
   ripgrep \
   terraform \
   tldr \
   tmux \
   vim \
+  virtualbox \
   wget \
   wmctrl \
   xdg-utils \
