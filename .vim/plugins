@@ -36,6 +36,9 @@ mileszs/ack.vim
 # Python
 jeetsukumaran/vim-pythonsense
 
+# Align table-like data
+godlygeek/tabular
+
 # Miscellaneous
 haya14busa/is.vim
 janko/vim-test
