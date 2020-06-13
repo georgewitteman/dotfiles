@@ -59,6 +59,10 @@ bootstrap_asdf() {
   else
     info "asdf already installed"
   fi
+
+  echo_run asdf plugin add golang || true
+  echo_run asdf install
+  echo_run asdf reshim
 }
 
 install_alacritty_terminfo() {
