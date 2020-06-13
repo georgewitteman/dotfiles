@@ -17,6 +17,7 @@ echo_run sudo pacman --sync --needed --noconfirm \
   alacritty \
   bashtop \
   ctags \
+  fd \
   firefox \
   fzf \
   git \
@@ -27,6 +28,7 @@ echo_run sudo pacman --sync --needed --noconfirm \
   lightdm-gtk-greeter \
   numlockx \
   ripgrep \
+  terraform \
   tmux \
   vim \
   wmctrl \
