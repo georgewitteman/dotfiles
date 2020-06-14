@@ -61,6 +61,7 @@ bootstrap_asdf() {
   fi
 
   echo_run asdf plugin-add golang || true
+  echo_run asdf plugin-add python || true
   echo_run asdf install
   echo_run asdf reshim
 }
