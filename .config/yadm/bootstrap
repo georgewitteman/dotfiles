@@ -15,6 +15,10 @@ set_local_bin_path() {
   export PATH="$HOME/.local/bin:$PATH"
 }
 
+setup_yadm_alt_files() {
+  echo_run yadm alt
+}
+
 bootstrap_platform() {
   if [[ "$OSTYPE" =~ "darwin" ]]; then
     echo_run source bootstrap_macos
@@ -138,6 +142,7 @@ if [[ $status -ne 0 ]]; then
 fi
 
 set_local_bin_path
+setup_yadm_alt_files
 bootstrap_platform
 decrypt_yadm_files
 update_yadm_url_to_ssh
