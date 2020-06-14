@@ -67,9 +67,22 @@ bootstrap_asdf() {
   fi
 
   echo_run asdf plugin-add golang || true
-  echo_run asdf plugin-add python || true
   echo_run asdf install
   echo_run asdf reshim
+}
+
+bootstrap_pyenv() {
+  if ! command -v pyenv >/dev/null 2>&1; then
+    echo_run git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+  else
+    echo_run cd ~/.pyenv
+    echo_run git pull
+  fi
+  local version versions
+  versions=($(<"$HOME/.pyenv/version"))
+  for version in $versions; do
+    echo_run pyenv install --skip-existing "$version"
+  done
 }
 
 install_alacritty_terminfo() {
@@ -150,6 +163,7 @@ yadm_pull_rebase
 install_submodules
 install_homebrew_zsh
 bootstrap_asdf
+bootstrap_pyenv
 install_alacritty_terminfo
 bootstrap_tmux
 

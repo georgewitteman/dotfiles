@@ -62,9 +62,14 @@ export EDITOR='vim'
 # No duplicates in path
 typeset -U path
 
-# pyenv
-export PYENV_ROOT="$HOME/.pyenv"
-type "pyenv" >/dev/null && path=($PYENV_ROOT/shims $path)
+# The ~/.pyenv/versions file is saved in yadm, so use the bin directory to
+# check if pyenv is installed
+if [[ -d "$HOME/.pyenv/bin" ]]; then
+  export PYENV_ROOT="$HOME/.pyenv"
+  export PYENV_SHELL="zsh"
+  [[ -d "$PYENV_ROOT/bin" ]] && path=("$PYENV_ROOT/bin" $path)
+  [[ -d "$PYENV_ROOT/shims" ]] && path=("$PYENV_ROOT/shims" $path)
+fi
 # Leaving this here so other install scripts think that it's here, since I'm
 # setting the path manually
 # if command -v pyenv 1>/dev/null 2>&1; then
