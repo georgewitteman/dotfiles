@@ -30,6 +30,7 @@ echo_run brew install bat \
   ripgrep \
   rsync \
   tealdeer \
+  terraform \
   tmux \
   trash \
   tree \
