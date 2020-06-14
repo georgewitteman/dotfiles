@@ -150,7 +150,9 @@ alias default='new_or_switch_tmux default ~/'
 alias misc='default'
 
 # Always use local package jest
-alias jest='yarn run jest'
+if command -v yarn >/dev/null 2>&1; then
+  alias jest='yarn run jest'
+fi
 
 # -F adds characters to indicate what kind of file it is (e.g. "/" for directories)
 alias ls='ls -F'
@@ -162,19 +164,28 @@ if command -v kubectl >/dev/null 2>&1; then
   alias k='kubectl'
 fi
 
+# Terraform
+if command -v terraform >/dev/null 2>&1; then
+  alias t='terraform'
+fi
+
 # Git
-alias gs='echo_run status'
-alias gf='git fetch && g'
-alias develop='master'
-alias push='echo_run set_upstream'
-alias switch='echo_run git switch'
-alias gdiff='echo_run git diff'
+if command -v git >/dev/null 2>&1; then
+  alias gs='echo_run status'
+  alias gf='git fetch && g'
+  alias develop='master'
+  alias push='echo_run set_upstream'
+  alias switch='echo_run git switch'
+  alias gdiff='echo_run git diff'
+fi
 
 # yadm
-alias y='yadm'
-alias ys='echo_run yadm status'
-alias ypush='echo_run yadm push'
-alias ydiff='echo_run yadm diff'
+if command -v yadm >/dev/null 2>&1; then
+  alias y='yadm'
+  alias ys='echo_run yadm status'
+  alias ypush='echo_run yadm push'
+  alias ydiff='echo_run yadm diff'
+fi
 
 alias c='clear'
 
