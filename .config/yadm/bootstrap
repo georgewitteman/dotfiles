@@ -60,7 +60,7 @@ bootstrap_asdf() {
     info "asdf already installed"
   fi
 
-  echo_run asdf plugin add golang || true
+  echo_run asdf plugin-add golang || true
   echo_run asdf install
   echo_run asdf reshim
 }
