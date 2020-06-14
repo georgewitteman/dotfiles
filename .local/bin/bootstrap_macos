@@ -38,5 +38,3 @@ echo_run brew install bat \
   wget \
   yadm \
   zsh \
-
-echo_run brew cleanup
