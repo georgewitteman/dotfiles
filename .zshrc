@@ -174,7 +174,6 @@ if command -v git >/dev/null 2>&1; then
   alias gs='echo_run status'
   alias gf='git fetch && g'
   alias develop='master'
-  alias push='echo_run set_upstream'
   alias switch='echo_run git switch'
   alias gdiff='echo_run git diff'
 fi
