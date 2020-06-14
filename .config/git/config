@@ -38,3 +38,5 @@
 	prompt = 0
 [push]
 	default = simple
+[pull]
+	rebase = true
