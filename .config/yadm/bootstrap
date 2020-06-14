@@ -55,9 +55,11 @@ bootstrap_asdf() {
     info "Installing asdf"
     echo_run git clone https://github.com/asdf-vm/asdf.git ~/.asdf
     cd ~/.asdf
+    source asdf.sh
     echo_run git checkout "$(git describe --abbrev=0 --tags)"
   else
-    info "asdf already installed"
+    info "asdf already installed. Pulling latest version"
+    asdf update
   fi
 
   echo_run asdf plugin-add golang || true
