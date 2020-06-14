@@ -5,7 +5,6 @@ local run_cmd="echo_run"
 if ! in_git_repo; then
   echo "Not in git repository. Using yadm."
   cmd="yadm"
-  run_cmd="safe_run"
 fi
 
 local head=$($cmd rev-parse --abbrev-ref HEAD)
