@@ -26,7 +26,6 @@ if [[ "$current_commit_author" != "$repo_email" ]]; then
   return 1
 fi
 
-add || return $?
-
+local prev_head="$($cmd rev-parse HEAD)"
 echo_run $cmd commit --amend --no-edit "$@"
-echo "Use '$cmd reset $($cmd rev-parse HEAD)' if you want to un-amend."
+echo "Use '$cmd reset $prev_head' if you want to un-amend."
