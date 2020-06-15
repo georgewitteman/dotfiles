@@ -7,7 +7,12 @@ if [[ -z "$tag" ]]; then
   return 1
 fi
 
+if ! in_git_repo; then
+  echo_err "Not in git repository."
+  return 128
+fi
+
 echo_run git fetch --tags --force --prune --quiet
 
-echo_run git tag -d "$tag"
-safe_run git push origin ":refs/tags/$tag"
+echo_run git tag -d "$tag" && \
+  safe_run git push origin ":refs/tags/$tag"

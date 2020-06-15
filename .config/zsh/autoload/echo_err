@@ -1,4 +1,5 @@
 #!/usr/bin/env zsh
 
-echo "${fg[red]}ERROR:${reset_color} $@"
+echo -n "${fg_bold[red]}ERROR:${reset_color} "
+echo "$@"
 return 1

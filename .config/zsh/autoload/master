@@ -1,11 +1,11 @@
 #!/usr/bin/env zsh
 
 if ! in_git_repo; then
-  echo "Not in git repository."
+  echo_err "Not in git repository."
   return 128
 fi
 
-echo -n "Getting remote HEAD... "
+echo_info -n "Getting remote HEAD... "
 GIT_HEAD="$(get_remote_head)"
 echo $GIT_HEAD
 
