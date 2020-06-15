@@ -13,6 +13,7 @@ echo_run brew update
 echo_run brew upgrade
 
 echo_run brew install --HEAD universal-ctags/universal-ctags/universal-ctags
+echo_run brew install --HEAD vim
 echo_run brew install bat \
   curl \
   diff-so-fancy \
@@ -34,7 +35,6 @@ echo_run brew install bat \
   tmux \
   trash \
   tree \
-  vim \
   wget \
   yadm \
   zsh \

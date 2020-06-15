@@ -73,10 +73,29 @@ bootstrap_asdf() {
 
 bootstrap_pyenv() {
   if ! command -v pyenv >/dev/null 2>&1; then
-    echo_run git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+    if [[ -d "$HOME/.pyenv" ]]; then
+      echo_run cd ~/.pyenv
+      echo_run git init
+      echo_run git remote add origin https://github.com/pyenv/pyenv.git
+      echo_run git fetch
+      echo_run git reset origin/master
+      echo_run git checkout --track origin/master
+      cd
+    else
+      echo_run git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+    fi
   else
     echo_run cd ~/.pyenv
+    if [[ ! -d "$HOME/.pyenv/.git" ]]; then
+      echo_run git init
+      echo_run git remote add origin https://github.com/pyenv/pyenv.git
+      echo_run git fetch
+      echo_run git reset origin/master
+      echo_run git checkout -- "$HOME/.pyenv"
+    fi
+    echo_run git branch --set-upstream-to=origin/master master
     echo_run git pull
+    cd
   fi
   local version versions
   versions=($(<"$HOME/.pyenv/version"))
