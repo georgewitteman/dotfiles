@@ -26,6 +26,7 @@ echo_run brew install bat \
   hyperfine \
   jq \
   nvim \
+  parquet-tools \
   pgcli \
   pinentry-mac \
   ripgrep \
