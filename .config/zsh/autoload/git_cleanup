@@ -9,6 +9,7 @@ local git_dir="$(git rev-parse --git-dir)"
 
 if [[ -f "$git_dir/gc.log" ]]; then
   echo_eval "cat $git_dir/gc.log && rm $git_dir/gc.log"
+  echo_run git prune
 fi
 
 echo_run git remote prune origin
