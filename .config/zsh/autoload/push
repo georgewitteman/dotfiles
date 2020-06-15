@@ -3,19 +3,19 @@
 local cmd="git"
 local run_cmd="echo_run"
 if ! in_git_repo; then
-  echo "Not in git repository. Using yadm."
+  echo_info "Not in git repository. Using yadm."
   cmd="yadm"
 fi
 
 local head=$($cmd rev-parse --abbrev-ref HEAD)
 
 if [[ "$head" == "HEAD" ]]; then
-  echo "You are not on the HEAD of a branch."
+  echo_err "You are not on the HEAD of a branch."
   return 1
 fi
 
 if [[ ! -z "$($cmd status --porcelain)" ]]; then
-  echo "There are uncommitted files."
+  echo_err "There are uncommitted files."
   echo_run $cmd status
   return 1
 fi
@@ -24,7 +24,7 @@ local args=("$@")
 
 local remote="$($cmd rev-parse --abbrev-ref --symbolic-full-name @{upstream} 2>/dev/null)"
 if [[ -z "$remote" ]]; then
-  echo "This branch is not yet tracked on a remote."
+  echo_warn "This branch is not yet tracked on a remote."
   args+=("--set-upstream" "origin" "$head")
   run_cmd="safe_run"
 fi

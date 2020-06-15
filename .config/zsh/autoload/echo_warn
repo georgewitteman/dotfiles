@@ -1,0 +1,3 @@
+#!/usr/bin/env zsh
+
+echo "${fg[yellow]}WARNING:${reset_color} $@"

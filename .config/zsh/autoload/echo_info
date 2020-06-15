@@ -1,0 +1,3 @@
+#!/usr/bin/env zsh
+
+echo "${fg[blue]}INFO:${reset_color} $@"

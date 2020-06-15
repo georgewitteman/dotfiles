@@ -1,0 +1,4 @@
+#!/usr/bin/env zsh
+
+echo "${fg[red]}ERROR:${reset_color} $@"
+return 1
