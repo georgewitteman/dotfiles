@@ -14,6 +14,6 @@ echo_run git fetch --quiet --progress --force --prune --tags && \
 echo_run git merge --quiet --ff-only origin/$GIT_HEAD && \
 echo_run git show --quiet --pretty=short HEAD # --quiet supresses the diff
 
-if needs_git_cleanup; then
-  git_cleanup
-fi
+# if needs_git_cleanup; then
+#   git_cleanup
+# fi
