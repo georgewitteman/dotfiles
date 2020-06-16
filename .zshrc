@@ -154,6 +154,10 @@ alias de='deactivate'
 alias default='new_or_switch_tmux default ~/'
 alias misc='default'
 
+if ! command -v sudoedit >/dev/null 2>&1; then
+  alias sudoedit='sudo -e'
+fi
+
 # Always use local package jest
 if command -v yarn >/dev/null 2>&1; then
   alias jest='yarn run jest'
