@@ -11,7 +11,7 @@ if is_clean_repo $cmd; then
   return 1
 fi
 
-local current_commit_author="$($cmd show -s --format='%ae')"
+local current_commit_author="$($cmd show --no-patch --format='%ae')"
 local repo_email="$($cmd config --get user.email)"
 if [[ "$cmd" = "yadm" ]] && [[ -z "$repo_email" ]]; then
   repo_email="$(yadm gitconfig --global --get user.email)"
