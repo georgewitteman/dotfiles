@@ -96,7 +96,7 @@ fpath=(${XDG_CONFIG_HOME:-$HOME/.config}/zsh/autoload/ $fpath)
 autoload -Uz ${XDG_CONFIG_HOME:-$HOME/.config}/zsh/autoload/**/*
 
 # Set up fpath for asdf completions
-[[ -d "$ASDF_DIR" ]] && fpath=($ASDF_DIR/completions $fpath)
+[[ -n "$ASDF_DIR" ]] && [[ -d "$ASDF_DIR" ]] && fpath=($ASDF_DIR/completions $fpath)
 
 fpath=(${XDG_CONFIG_HOME:-$HOME/.config}/zsh/completions $fpath)
 
@@ -154,12 +154,12 @@ alias de='deactivate'
 alias default='new_or_switch_tmux default ~/'
 alias misc='default'
 
-if ! command -v sudoedit >/dev/null 2>&1; then
+if (( ! $+commands[sudoedit] )); then
   alias sudoedit='sudo -e'
 fi
 
 # Always use local package jest
-if command -v yarn >/dev/null 2>&1; then
+if (( $+commands[yarn] )); then
   alias jest='yarn run jest'
 fi
 
@@ -169,17 +169,17 @@ alias ll='ls -l'
 alias la='ls -la'
 
 # Kubernetes
-if command -v kubectl >/dev/null 2>&1; then
+if (( $+commands[kubectl] )); then
   alias k='kubectl'
 fi
 
 # Terraform
-if command -v terraform >/dev/null 2>&1; then
+if (( $+commands[terraform] )); then
   alias t='terraform'
 fi
 
 # Git
-if command -v git >/dev/null 2>&1; then
+if (( $+commands[git] )); then
   alias gs='echo_run status'
   alias gf='git fetch && g'
   alias develop='master'
@@ -188,7 +188,7 @@ if command -v git >/dev/null 2>&1; then
 fi
 
 # yadm
-if command -v yadm >/dev/null 2>&1; then
+if (( $+commands[yadm] )); then
   alias y='yadm'
   alias ys='echo_run yadm status'
   alias ypush='echo_run yadm push'
@@ -202,7 +202,7 @@ alias d='print -P "%~"'
 # Vim
 alias profvim='vim --startuptime startup.log +qall && vim startup.log && rm startup.log'
 
-if command -v brew >/dev/null 2>&1; then
+if (( $+commands[brew] )); then
   alias brew='brew_helper'
 fi
 
