@@ -1,0 +1,8 @@
+#!/usr/bin/env zsh
+
+local var_name="$1"
+
+local key val
+for key val in ${(Pkv)var_name}; do
+    echo "${fg[green]}$key$reset_color -> $val"
+done
