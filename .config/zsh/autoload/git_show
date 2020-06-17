@@ -1,0 +1,30 @@
+#!/usr/bin/env zsh
+
+local commit_fmt=()
+local newln="%n"
+local ref="$(git show "$@" --quiet --format="%H")"
+
+if ! git rev-parse "$ref" >/dev/null 2>&1; then
+  echo "Invalid ref: $ref"
+  return 1
+fi
+
+local tags=($(git show-ref --tags --dereference | grep "$(git rev-parse "$ref")" | cut -d' ' -f2 | sed 's/refs\/tags\///' | sed 's/\^{}$//'))
+local heads=($(git show-ref --head --dereference | grep "$(git rev-parse "$ref")" | cut -d' ' -f2 | sed 's/refs\/heads\///' | sed 's/refs\/remotes\///' | grep -v "^refs/tags/.*$"))
+local diff_url="$(git show --quiet --format="%b" $ref | grep "^Differential Revision: " | cut -d ' ' -f 3)"
+
+local header="======== git show --format=\"…\" $@ ========"
+local footer="$(printf '=%.0s' {1..${#header}})"
+
+# echo "$header"
+commit_fmt+=("$header")
+commit_fmt+=("   Hash: %h")
+commit_fmt+=("   %C(cyan)Tags:%Creset ${(j:, :)tags}")
+commit_fmt+=("  %C(red)Heads:%Creset ${(j:, :)heads}")
+[[ -n "$diff_url" ]] && commit_fmt+=("   %C(yellow)Diff:%Creset $diff_url")
+commit_fmt+=(" %C(green)Author:%Creset %an <%ae>")
+commit_fmt+=("   %C(blue)Date:%Creset %cd (%ar)")
+commit_fmt+=("%C(magenta)Subject:%Creset %s")
+commit_fmt+=("$footer")
+
+git show --format="${(j:%Creset%n:)commit_fmt}" "$@"
