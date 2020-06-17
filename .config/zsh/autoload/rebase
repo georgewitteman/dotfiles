@@ -1,12 +1,12 @@
 #!/usr/bin/env zsh
 
 if ! in_git_repo; then
-  echo "Not in git repository."
+  echo_err "Not in git repository."
   return 128
 fi
 
 if [[ "$1" == "" ]]; then
-  echo -n "Getting remote HEAD... "
+  echo_info -n "Getting remote HEAD... "
   GIT_HEAD="$(get_remote_head)"
   echo $GIT_HEAD
 
@@ -17,8 +17,6 @@ fi
 
 if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
   echo "Usage: $0 [<git rebase args>]"
-  echo
-  safe_run git rebase --help
   return
 fi
 
