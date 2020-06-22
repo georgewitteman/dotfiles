@@ -1,5 +1,10 @@
 #!/usr/bin/env zsh
 
+if ! in_git_repo; then
+  echo "Not in git repository."
+  return 1
+fi
+
 local commit_fmt=()
 local newln="%n"
 local ref="$(git show "$@" --quiet --format="%H")"
