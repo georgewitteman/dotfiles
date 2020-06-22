@@ -25,4 +25,5 @@ if [ "$branch_name" = "*" ]; then
   echo "$reset_color"
   return
 fi &&
-echo_run git checkout $branch_name
+echo_run git checkout $branch_name || return "$status"
+git_show --quiet
