@@ -88,6 +88,8 @@ path=("$HOME/.local/bin" $path)
 # need the $ASDF_DIR variable
 [[ -f ~/.asdf/asdf.sh ]] && source ~/.asdf/asdf.sh
 
+export PATH="$PATH"
+
 # No duplicates in fpath
 typeset -U fpath
 
