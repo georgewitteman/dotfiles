@@ -204,9 +204,6 @@ alias c='clear'
 
 alias d='print -P "%~"'
 
-# Vim
-alias profvim='vim --startuptime startup.log +qall && vim startup.log && rm startup.log'
-
 if (( $+commands[brew] )); then
   alias brew='brew_helper'
 fi
