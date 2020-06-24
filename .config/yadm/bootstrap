@@ -7,10 +7,6 @@ set -e
 
 source "$HOME/.zshrc"
 
-info() {
-  echo "${fg[green]}INFO:${reset_color} $@"
-}
-
 set_local_bin_path() {
   export PATH="$HOME/.local/bin:$PATH"
 }
@@ -25,7 +21,7 @@ bootstrap_platform() {
   elif command -v pacman >/dev/null 2>&1; then
     echo_run source bootstrap_arch_linux
   else
-    info "No platform bootstrap script for $OSTYPE"
+    echo_info "No platform bootstrap script for $OSTYPE"
   fi
 }
 
@@ -42,31 +38,30 @@ install_homebrew_zsh() {
   # -x match the whole line
   # -F pattern is a plain string
   if grep -qxF "$zsh_path" /etc/shells; then
-    info "$zsh_path already in /etc/shells"
+    echo_info "$zsh_path already in /etc/shells"
   else
-    info "Adding $zsh_path to /etc/shells"
-    info "$zsh_path" | sudo tee -a /etc/shells >/dev/null
+    echo_info "Adding $zsh_path to /etc/shells"
+    echo_info "$zsh_path" | sudo tee -a /etc/shells >/dev/null
   fi
   if [[ "$SHELL" != "$zsh_path" ]]; then
     safe_run chsh -s "$zsh_path"
   else
-    info "User '$USER' already has $zsh_path as their shell"
+    echo_info "User '$USER' already has $zsh_path as their shell"
   fi
 }
 
 bootstrap_asdf() {
   if ! command -v asdf >/dev/null 2>&1; then
-    info "Installing asdf"
+    echo_info "Installing asdf"
     echo_run git clone https://github.com/asdf-vm/asdf.git ~/.asdf
     cd ~/.asdf
     source asdf.sh
     echo_run git checkout "$(git describe --abbrev=0 --tags)"
   else
-    info "asdf already installed. Pulling latest version"
+    echo_info "asdf already installed. Pulling latest version"
     asdf update
   fi
 
-  echo_run asdf plugin-add rust || true
   echo_run asdf plugin-add golang || true
   echo_run asdf install
   echo_run asdf reshim
@@ -105,22 +100,36 @@ bootstrap_pyenv() {
   done
 }
 
-install_alacritty_terminfo() {
-  info "Compiling alacritty terminfo file"
+bootstrap_rust() {
+  if (( ! $+commands[rustup] )) && [[ -d "$HOME"/.cargo ]]; then
+    echo_eval 'curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -- --no-modify-path'
+  else
+    echo_info "Rust is already installed."
+    echo_run rustup update
+  fi
+
+  echo_eval "rustup completions zsh > $HOME/.config/zsh/completions/_rustup"
+  echo_eval "rustup completions zsh cargo > $HOME/.config/zsh/completions/_cargo"
+}
+
+bootstrap_alacritty() {
+  echo_info "Compiling alacritty terminfo file"
   TMP_DIR=$(mktemp -d)
   cd $TMP_DIR
   echo_run curl -O https://raw.githubusercontent.com/alacritty/alacritty/master/extra/alacritty.info
   echo_run tic -xe alacritty,alacritty-direct alacritty.info
+  echo_run curl -O https://raw.githubusercontent.com/alacritty/alacritty/master/extra/completions/_alacritty
+  echo_run mv _alacritty "$HOME/.config/zsh/completions/_alacritty"
   cd
   rm -rf $TMP_DIR
 }
 
 bootstrap_tmux() {
-  info "Installing tmux terminfo file"
+  echo_info "Installing tmux terminfo file"
   echo_run tic -x $XDG_CONFIG_HOME/tmux/tmux.terminfo
 
   if command -v tmux >/dev/null 2>&1; then
-    info "Installing, updating, and cleaning tmux plugins"
+    echo_info "Installing, updating, and cleaning tmux plugins"
 
     if [ ! -d "${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tpm" ]; then
       echo_run git clone https://github.com/tmux-plugins/tpm \
@@ -131,7 +140,7 @@ bootstrap_tmux() {
     echo_run ${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tpm/bin/update_plugins all
     echo_run ${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tpm/bin/clean_plugins
   else
-    info "tmux not installed."
+    echo_info "tmux not installed."
   fi
 }
 
@@ -145,15 +154,15 @@ decrypt_yadm_files() {
     echo_run gpg --import ~/.gnupg/.exports/pgp-private-keys.asc
     echo_run gpg --import-ownertrust ~/.gnupg/.exports/pgp-ownertrust.asc
   else
-    info "The file ~/.ssh/id_rsa already exists."
-    info "Skipping decryption. Run 'yadm decrypt && gpg_restore' if necessary."
+    echo_info "The file ~/.ssh/id_rsa already exists."
+    echo_info "Skipping decryption. Run 'yadm decrypt && gpg_restore' if necessary."
   fi
 }
 
 update_yadm_url_to_ssh() {
   # We now have ssh keys decrypted, so can update the url
   # to be the ssh url
-  info "Updating the yadm repo origin URL"
+  echo_info "Updating the yadm repo origin URL"
   echo_run yadm remote set-url origin "git@github.com:georgewitteman/dotfiles.git"
 }
 
@@ -161,16 +170,24 @@ yadm_pull_rebase() {
   echo_run yadm gitconfig pull.rebase true
 }
 
+remove_zcompdump() {
+  if [[ -f "$HOME/.cache/zcompdump" ]]; then
+    echo_run rm "$HOME/.cache/zcompdump"
+  else
+    echo_info "No zcompdump file to remove"
+  fi
+}
+
 reminders() {
   echo
-  info "REMINDERS:"
-  info " - Don't forget to set yadm class for work computer"
-  info "     $ yadm config local.class work"
+  echo_info "REMINDERS:"
+  echo_info " - Don't forget to set yadm class for work computer"
+  echo_info "     $ yadm config local.class work"
 }
 
 sudo echo "$SHELL" > /dev/null
 if [[ $status -ne 0 ]]; then
-  info "We need sudo to do some stuff"
+  echo_info "We need sudo to do some stuff"
   return 1
 fi
 
@@ -184,7 +201,12 @@ install_submodules
 install_homebrew_zsh
 bootstrap_asdf
 bootstrap_pyenv
-install_alacritty_terminfo
+bootstrap_rust
+bootstrap_alacritty
 bootstrap_tmux
 
+# Keep at end
+remove_zcompdump
+
+# Keep last
 reminders

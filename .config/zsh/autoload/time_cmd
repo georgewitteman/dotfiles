@@ -1,0 +1,6 @@
+#!/usr/bin/env zsh
+
+start_prof_timer "$@"
+"$@"
+echo >&2
+end_prof_timer >&2

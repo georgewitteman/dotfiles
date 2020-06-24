@@ -88,6 +88,9 @@ path=("$HOME/.local/bin" $path)
 # need the $ASDF_DIR variable
 [[ -f ~/.asdf/asdf.sh ]] && source ~/.asdf/asdf.sh
 
+# Rust
+[[ -d "$HOME"/.cargo ]] && path=("$HOME/.cargo/bin" $path)
+
 export PATH="$PATH"
 
 # No duplicates in fpath
