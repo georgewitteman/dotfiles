@@ -25,6 +25,7 @@ for nose_profile_dir in "$VIRTUAL_ENV"/lib/python*/site-packages/nose_profile*/(
 done
 
 (
-  [[ "$run_dir" != "$HOME" ]] && echo_run cd "$run_dir"
-  echo_run nosetests --verbose --nologcapture "${@[1,-2]}" "${file_or_dir##${run_dir}/}"
+  echo_run pushd "$run_dir"
+  echo_eval "TZ=UTC nosetests --verbose --nologcapture ${@[1,-2]} '${file_or_dir##${run_dir}/}'"
+  echo_run popd
 )
