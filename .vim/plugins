@@ -3,6 +3,8 @@ laggardkernel/vim-one
 arzg/vim-colors-xcode
 dracula/vim
 joshdick/onedark.vim
+danilo-augusto/vim-afterglow
+arcticicestudio/nord-vim
 
 # Filetypes
 gisphm/vim-gitignore
