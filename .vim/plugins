@@ -5,6 +5,7 @@ dracula/vim
 joshdick/onedark.vim
 
 # Filetypes
+gisphm/vim-gitignore
 chrisbra/vim-zsh
 elzr/vim-json
 lifepillar/pgsql.vim
