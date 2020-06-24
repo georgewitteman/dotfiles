@@ -66,6 +66,7 @@ bootstrap_asdf() {
     asdf update
   fi
 
+  echo_run asdf plugin-add rust || true
   echo_run asdf plugin-add golang || true
   echo_run asdf install
   echo_run asdf reshim
