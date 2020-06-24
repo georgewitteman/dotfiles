@@ -1,0 +1,8 @@
+#!/usr/bin/env zsh
+
+__SAVED_VIRTUAL_ENVS=(${__SAVED_VIRTUAL_ENVS:-})
+if [[ -n "$VIRTUAL_ENV" ]]; then
+  echo "Saving virtual env \"$VIRTUAL_ENV\"."
+  __SAVED_VIRTUAL_ENVS+=("$VIRTUAL_ENV")
+  echo_run deactivate
+fi

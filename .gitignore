@@ -1,20 +1,21 @@
 # By default ignore everything
 *
+/**
 
 # Except this stuff. Start every line with an "!"
-!.config/
-!.ctags.d/
-!.fzf.zsh
-!.gitignore
-!.gnupg/gpg-agent.conf##*
-!.hushlogin
-!.ignore
-!.local/bin/
-!.tmux.conf
-!.tool-versions
-!.vim/
-!.zshenv
-!.zshrc
-!Code/infra/
-!README.md
-!docs/
+!/.config**
+!/.ctags.d**
+!/.fzf.zsh
+!/.gitignore
+!/.gnupg/gpg-agent.conf##*
+!/.hushlogin
+!/.ignore
+!/.local/bin**
+!/.tmux.conf
+!/.tool-versions
+!/.vim/**
+!/.zshenv
+!/.zshrc
+!/Code/infra**
+!/README.md
+!/docs**
