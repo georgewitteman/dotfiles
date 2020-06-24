@@ -1,2 +1,5 @@
 sepia
 Brewfile.lock.json
+tmux/tpm
+configstore/update-notifier-npm.json
+htop/htoprc
