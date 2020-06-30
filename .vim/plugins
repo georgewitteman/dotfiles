@@ -42,6 +42,9 @@ jeetsukumaran/vim-pythonsense
 # Align table-like data
 godlygeek/tabular
 
+# Join/separate lines
+AndrewRadev/splitjoin.vim
+
 # Miscellaneous
 haya14busa/is.vim
 janko/vim-test
