@@ -12,7 +12,7 @@ if ! in_git_repo; then
   return 128
 fi
 
-echo_run git fetch --tags --force --prune --quiet
+echo_run git fetch --tags --force --prune --quiet || return "$status"
 
-echo_run git tag -d "$tag" && \
-  safe_run git push origin ":refs/tags/$tag"
+echo_run git tag -d "$tag" || return "$status"
+safe_run git push origin ":refs/tags/$tag" || return "$status"
