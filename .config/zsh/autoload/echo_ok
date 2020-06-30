@@ -1,0 +1,4 @@
+#!/usr/bin/env zsh
+
+echo -n "${fg[green]}SUCCESS:${reset_color} "
+echo "$@"
