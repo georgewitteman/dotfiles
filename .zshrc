@@ -62,6 +62,9 @@ export EDITOR='vim'
 # No duplicates in path
 typeset -U path
 
+# Homebrew paths
+path=("/usr/local/bin" "/usr/local/sbin" $path)
+
 # The ~/.pyenv/versions file is saved in yadm, so use the bin directory to
 # check if pyenv is installed
 if [[ -d "$HOME/.pyenv/bin" ]]; then
