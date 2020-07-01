@@ -1,6 +1,6 @@
 # Setup fzf
 # ---------
-if [[ ! "$PATH" == */usr/local/opt/fzf/bin* ]] && [[ -d /usr/local/opt/fzf/bin ]]; then
+if (( ! $+commands[fzf] )) && [[ ! "$PATH" == */usr/local/opt/fzf/bin* ]] && [[ -d /usr/local/opt/fzf/bin ]]; then
   export PATH="${PATH:+${PATH}:}/usr/local/opt/fzf/bin"
 fi
 
