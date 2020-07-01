@@ -1,8 +1,5 @@
 #!/usr/bin/env zsh
 
-# Need this to be named something other than "brew" so that "command -v brew"
-# works as expected
-
 if [[ "$VIRTUAL_ENV" != "" ]]; then
   echo -n "${fg[red]}"
   echo "Warning:${reset_color} It's dangerous to run brew from within a virtual environment."

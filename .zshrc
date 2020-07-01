@@ -210,6 +210,7 @@ alias c='clear'
 alias d='print -P "%~"'
 
 if (( $+commands[brew] )); then
+  compdef brew_helper='brew'
   alias brew='brew_helper'
 fi
 
