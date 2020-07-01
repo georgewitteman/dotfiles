@@ -108,6 +108,8 @@ fpath=(${XDG_CONFIG_HOME:-$HOME/.config}/zsh/completions $fpath)
 [[ -d "/usr/share/zsh/site-functions" ]] && fpath+=("/usr/share/zsh/site-functions")
 
 zplug add zsh-prompt git@github.com:georgewitteman/zsh-prompt.git || true
+zplug add zsh-ctrl-z git@github.com:georgewitteman/zsh-ctrl-z.git || true
+zplug add zsh-pyenv git@github.com:georgewitteman/zsh-pyenv.git || true
 zplug add zsh-prompt-benchmark git@github.com:romkatv/zsh-prompt-benchmark.git || true
 zplug init
 
