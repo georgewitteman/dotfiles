@@ -19,6 +19,7 @@
 .onelogin.cfg
 .oracle_jre_usage/
 .parallel/
+.phabricator/
 .pg_service.conf
 .pgpass*
 .postgresql/

@@ -82,7 +82,7 @@ fi
 path=("$HOME/.local/bin" $path)
 
 # Add arcanist to path if it's installed
-[[ -d ~/Code/arcanist/bin ]] && path+=("$HOME/Code/arcanist/bin")
+[[ -d ~/.phabricator/arcanist/bin ]] && path=("$HOME/.phabricator/arcanist/bin" $path)
 
 # ASDF (needs to be above the fpath set for asdf completions below because we
 # need the $ASDF_DIR variable
