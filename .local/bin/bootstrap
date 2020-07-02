@@ -20,6 +20,6 @@ for i in {1..${#files}}; do
   echo "============================================================="
   echo "Running: ${fg[green]}${file}${reset_color} (${i}/${#files})"
   echo "============================================================="
-  zsh "$HOME/.local/bin/$file"
+  "$HOME/.local/bin/$file"
   [[ "$i" -lt "${#files}" ]] && echo
 done
