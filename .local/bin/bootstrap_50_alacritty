@@ -3,7 +3,7 @@
 set -e
 source "$HOME/.zshrc"
 
-local terminfo_file="$(mktemp -t 'terminfo')"
+local terminfo_file="$(mktemp)"
 echo_eval "curl --silent \\
     https://raw.githubusercontent.com/alacritty/alacritty/master/extra/alacritty.info > \\
     $terminfo_file"
