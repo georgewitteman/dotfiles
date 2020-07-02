@@ -75,6 +75,7 @@ _uninstall_unwanted_plugins() {
 
 _update_plugin() {
   local dir="$1"
+  local quieter="$2"
   local plugin_name=${dir##*/}
   if [[ -L "$dir" ]] || [[ ! -d "$dir/.git" ]]; then
     echo "$plugin_name: not updating, local plugin"
@@ -93,13 +94,22 @@ _update_plugin() {
   git pull --quiet
 
   local commits=$(git rev-list --count "$start_commit"..."HEAD")
-  [[ "$commits" -eq 0 ]] && echo "$plugin_name: nothing to update" && return 1
+  if [[ "$commits" -eq 0 ]]; then
+    [[ -z "$quieter" ]] && echo "$plugin_name: nothing to update"
+    return 1
+  fi
 
   local log="\n$(git log --oneline "$start_commit"..."HEAD")\n"
-  echo "$plugin_name: updated $commits commit(s)$log"
+  if [[ -n "$quieter" ]]; then
+    echo "$plugin_name: updated $commits commit(s)"
+  else
+    echo "$plugin_name: updated $commits commit(s)$log"
+  fi
 }
 
 _update_plugins() {
+  local quieter="$1"
+  [[ -n "$quieter" ]] && shift
   (
   # Running this in a subshell because for some reason that's the only way to
   # reliably not have the job notifications show up. I think it might be
@@ -111,7 +121,7 @@ _update_plugins() {
   for dir in $PLUGINS_DIR/*(/N); do
     plugin_name=${dir##*/}
     [[ -n "$1" ]] && [[ "$1" != "$plugin_name" ]] && continue
-    _update_plugin "$dir" &
+    _update_plugin "$dir" "$quieter" &
   done
   for line in "${(@f)"$(<$MANIFEST)"}"; do
     ([[ -z "${line// }" ]] || [[ "$line" =~ "$COMMENT" ]]) && continue
@@ -137,11 +147,12 @@ _usage() {
   echo "Usage: $command_name edit"
   echo "       $command_name install"
   echo "       $command_name clean"
-  echo "       $command_name update"
+  echo "       $command_name update [--quieter]"
   echo "       $command_name help | -h | --help"
   echo ""
   echo "Options:"
-  echo "  -h, --help     Show this screen."
+  echo "  -h, --help   Show this screen."
+  echo " --quieter     Don't show as much output."
   echo ""
 }
 
@@ -164,7 +175,7 @@ case $action in
 
   update)
     shift
-    _update_plugins
+    _update_plugins "$@"
     ;;
 
   help | --help | -h)
