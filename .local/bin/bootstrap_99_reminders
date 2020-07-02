@@ -1,0 +1,8 @@
+#!/usr/bin/env zsh
+
+set -e
+source "$HOME/.zshrc"
+
+echo_info "REMINDERS:"
+echo_info " - Don't forget to set yadm class for work computer"
+echo_info "     $ yadm config local.class work"

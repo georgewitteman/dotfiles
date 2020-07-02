@@ -1,0 +1,12 @@
+#!/usr/bin/env zsh
+
+set -e
+source "$HOME/.zshrc"
+
+if [[ -f "$HOME/.cache/zcompdump" ]]; then
+  echo_run rm "$HOME/.cache/zcompdump"
+else
+  echo_info "No zcompdump file to remove"
+fi
+
+echo_run zplug update || true

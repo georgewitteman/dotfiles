@@ -1,10 +1,16 @@
 #!/usr/bin/env zsh
 
 set -e
+source "$HOME/.zshrc"
+
+if ! command -v pacman >/dev/null 2>&1; then
+  echo_warn "The 'pacman' command is not available. Skipping arch"
+  exit
+fi
 
 install_aur_package() {
   if command -v "$1" >/dev/null 2>&1; then
-    info "Already installed $1"
+    echo_info "Already installed $1"
     return
   fi
 

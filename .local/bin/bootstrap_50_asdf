@@ -1,0 +1,19 @@
+#!/usr/bin/env zsh
+
+set -e
+source "$HOME/.zshrc"
+
+if ! command -v asdf >/dev/null 2>&1; then
+  echo_info "Installing asdf"
+  echo_run git clone https://github.com/asdf-vm/asdf.git ~/.asdf
+  cd ~/.asdf
+  source asdf.sh
+  echo_run git checkout "$(git describe --abbrev=0 --tags)"
+else
+  echo_info "asdf already installed. Pulling latest version"
+  asdf update
+fi
+
+echo_run asdf plugin-add golang || true
+echo_run asdf install
+echo_run asdf reshim

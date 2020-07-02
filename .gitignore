@@ -19,9 +19,9 @@
 .onelogin.cfg
 .oracle_jre_usage/
 .parallel/
-.phabricator/
 .pg_service.conf
 .pgpass*
+.phabricator/
 .postgresql/
 .psql_history
 .pyenv/
@@ -34,7 +34,9 @@
 .sqlworkbench/
 .ssh/
 .terminfo/
+.terraform.d/
 .tox/
+.vimgolf/
 .viminfo
 .yarnrc
 .zsh_history

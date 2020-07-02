@@ -1,6 +1,12 @@
 #!/usr/bin/env zsh
 
 set -e
+source "$HOME/.zshrc"
+
+if [[ ! "$OSTYPE" =~ "darwin" ]]; then
+  echo_warn "Not on macOS. Skipping macOS."
+  exit
+fi
 
 # install homebrew if it's missing
 if ! command -v brew >/dev/null 2>&1; then
