@@ -13,6 +13,8 @@ then
   exit 1
 fi
 
+# export WINIT_X11_SCALE_FACTOR=2
+
 BNAME=`basename $1`
 
 # test to see if program is already running
