@@ -21,6 +21,7 @@ echo_run sudo pacman -Syu
 
 echo_run sudo pacman --sync --needed --noconfirm \
   alacritty \
+  alsa-utils \
   bashtop \
   ctags \
   docker \
