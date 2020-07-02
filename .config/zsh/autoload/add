@@ -8,11 +8,11 @@ fi
 
 if [[ "$#" -eq 0 ]] && [[ "$cmd" != "yadm" ]]; then
   local rel_path="$(realpath --relative-to="$PWD" "$(git rev-parse --show-toplevel)")"
-  echo_run git add --verbose "$rel_path"
+  echo_run git add "$rel_path"
   status
   return $?
 elif [[ "$#" -eq 0 ]] && [[ "$cmd" = "yadm" ]]; then
-  echo_run yadm add --update --verbose
+  echo_run yadm add --update
   echo_run yadm status
   return $?
 fi
