@@ -239,6 +239,10 @@ setopt pushd_ignore_dups
 # Exchanges the meanings of ‘+’ and ‘-’ when used with a number to specify a
 # directory in the stack
 setopt pushd_minus
+# Don't print the new working directory after pushd-ing
+setopt pushd_silent
+# Don't print the new working directory after cd-ing
+setopt cd_silent
 
 # The time the shell waits, in hundredths of seconds, for another key to be
 # pressed when reading bound multi-character sequences. Useful for vim mode
