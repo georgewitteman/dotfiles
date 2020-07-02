@@ -3,14 +3,14 @@
 set -e
 source "$HOME/.zshrc"
 
-if ! command -v asdf >/dev/null 2>&1; then
+if (( ! $+commands[asdf] )); then
   echo_info "Installing asdf"
   echo_run git clone https://github.com/asdf-vm/asdf.git ~/.asdf
   cd ~/.asdf
   source asdf.sh
   echo_run git checkout "$(git describe --abbrev=0 --tags)"
 else
-  echo_info "asdf already installed. Pulling latest version"
+  echo_ok "asdf already installed."
   asdf update
 fi
 

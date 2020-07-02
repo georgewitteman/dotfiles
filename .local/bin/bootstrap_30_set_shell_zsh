@@ -4,7 +4,7 @@ set -e
 source "$HOME/.zshrc"
 
 local zsh_path="$(which zsh)"
-if command -v brew >/dev/null 2>&1; then
+if (( $+commands[brew] )); then
   zsh_path="$(brew --prefix)/bin/zsh"
 fi
 

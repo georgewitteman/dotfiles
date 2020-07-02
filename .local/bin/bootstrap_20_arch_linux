@@ -3,7 +3,7 @@
 set -e
 source "$HOME/.zshrc"
 
-if ! command -v pacman >/dev/null 2>&1; then
+if (( ! $+commands[pacman] )); then
   echo_warn "The 'pacman' command is not available. Skipping arch"
   exit
 fi

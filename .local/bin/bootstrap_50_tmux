@@ -3,10 +3,10 @@
 set -e
 source "$HOME/.zshrc"
 
-echo_info "Installing tmux terminfo file"
-echo_run tic -x $XDG_CONFIG_HOME/tmux/tmux.terminfo
+if (( $+commands[tmux] )); then
+  echo_info "Installing tmux terminfo file"
+  echo_run tic -x $XDG_CONFIG_HOME/tmux/tmux.terminfo
 
-if command -v tmux >/dev/null 2>&1; then
   echo_info "Installing, updating, and cleaning tmux plugins"
 
   if [ ! -d "${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tpm" ]; then
@@ -18,5 +18,5 @@ if command -v tmux >/dev/null 2>&1; then
   echo_run ${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tpm/bin/update_plugins all
   echo_run ${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tpm/bin/clean_plugins
 else
-  echo_info "tmux not installed."
+  echo_warn "tmux not installed."
 fi

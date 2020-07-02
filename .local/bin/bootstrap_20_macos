@@ -9,7 +9,7 @@ if [[ ! "$OSTYPE" =~ "darwin" ]]; then
 fi
 
 # install homebrew if it's missing
-if ! command -v brew >/dev/null 2>&1; then
+if (( ! $+commands[brew] )); then
   echo_info "Installing homebrew"
   echo_eval '/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
 fi
