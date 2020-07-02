@@ -20,7 +20,7 @@ autoload -U colors && colors
 # Output the command to stderr so we can pipe the result of this to other
 # commands.
 if [[ "$ECHO_RUN_DEBUG" == "1" ]]; then
-  echo "${fg_bold[blue]}(DEBUG MODE) " >&2
+  echo -n "${fg_bold[blue]}(DEBUG MODE) " >&2
 fi
 echo "${fg_bold[blue]}\$ ${@}$reset_color" >&2
 
