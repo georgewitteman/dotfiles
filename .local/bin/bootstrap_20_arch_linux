@@ -10,47 +10,84 @@ fi
 
 install_aur_package() {
   if command -v "$1" >/dev/null 2>&1; then
-    echo_info "Already installed $1"
+    echo_ok "Already installed $1"
     return
   fi
 
   aur_install $1
 }
 
-echo_run sudo pacman -Syu
+echo_run sudo pacman --sync --refresh
 
-echo_run sudo pacman --sync --needed --noconfirm \
-  alacritty \
-  alsa-utils \
-  bashtop \
-  ctags \
-  docker \
-  fd \
-  firefox \
-  fzf \
-  git \
-  glances \
-  htop \
-  jq \
-  kubectl \
-  lightdm \
-  lightdm-gtk-greeter \
-  minikube \
-  noto-fonts-emoji \
-  numlockx \
-  ripgrep \
-  terraform \
-  tldr \
-  tmux \
-  vim \
-  virtualbox \
-  wget \
-  wmctrl \
-  xdg-utils \
-  zsh \
+# echo_run sudo pacman --sync --refresh --sysupgrade
+echo_run sudo pacman --query --upgrades || true
+echo_warn "Skipping 'pacman -Syu' since it might be slow and requires human intervention."
 
-install_aur_package yay
-install_aur_package ytop
+local pacman_list=($(sudo pacman --query --quiet))
+
+local desired_packages=(
+  alacritty
+  alsa-utils
+  bashtop
+  ctags
+  docker
+  fd
+  firefox
+  fzf
+  git
+  glances
+  htop
+  jq
+  kubectl
+  lightdm
+  lightdm-gtk-greeter
+  minikube
+  noto-fonts-emoji
+  numlockx
+  ripgrep
+  terraform
+  tldr
+  tmux
+  vim
+  virtualbox
+  wget
+  wmctrl
+  xdg-utils
+  zsh
+)
+
+local pkgs_to_install=()
+local installed_pkgs=()
+local pkg
+for pkg in $desired_packages; do
+  if (($pacman_list[(Ie)$pkg])); then
+    installed_pkgs+=("$pkg")
+  else
+    pkgs_to_install+=("$pkg")
+  fi
+done
+
+if [[ "${#installed_pkgs}" -ne 0 ]]; then
+  echo_ok "Already installed: $installed_pkgs"
+fi
+
+if [[ "${#pkgs_to_install}" -ne 0 ]]; then
+  echo_run sudo pacman --quiet --sync --noconfirm $pkgs_to_install
+else
+  echo_ok "No more packages from official repositories to install."
+fi
+
+if (( $pacman_list[(Ie)yay] )); then
+  echo_ok "yay already installed."
+else
+  install_aur_package yay
+fi
+
+if (( $pacman_list[(Ie)ytop] )); then
+  echo_ok "ytop already installed."
+else
+  install_aur_package ytop
+fi
 
 echo_run sudo systemctl enable lightdm.service
 echo_run sudo systemctl enable docker.service
