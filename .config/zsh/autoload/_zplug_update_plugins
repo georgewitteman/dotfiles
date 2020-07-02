@@ -27,6 +27,9 @@ _update_plugin() {
 }
 
 local plugins_path="$1"
+(
 for dir in $plugins_path/*(/N); do
-  ( _update_plugin "$dir" )
+  ( _update_plugin "$dir" ) &
 done
+wait
+)
