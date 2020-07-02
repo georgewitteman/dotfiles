@@ -1,0 +1,39 @@
+#!/usr/bin/env zsh
+
+set -e
+source "$HOME/.zshrc"
+
+if (( ! $+commands[pyenv] )); then
+  if [[ -d "$HOME/.pyenv" ]]; then
+    echo_run cd ~/.pyenv
+    echo_run git init
+    echo_run git remote add origin https://github.com/pyenv/pyenv.git
+    echo_run git fetch --quiet
+    echo_run git reset --quiet origin/master
+    echo_run git branch --set-upstream-to=origin/master master
+    echo_run git checkout -- "$HOME/.pyenv"
+  else
+    echo_run git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+  fi
+else
+  echo_run cd ~/.pyenv
+  if [[ ! -d "$HOME/.pyenv/.git" ]]; then
+    echo_run git init
+    echo_run git remote add origin https://github.com/pyenv/pyenv.git
+    echo_run git fetch
+    echo_run git reset origin/master
+    echo_run git checkout -- "$HOME/.pyenv"
+  fi
+  echo_run git branch --set-upstream-to=origin/master master
+  echo_run git pull
+fi
+
+if (( ! $+commands[pyenv] )); then
+  path=("$HOME/.pyenv/bin" $path)
+fi
+
+local versions=($(<"$HOME/.pyenv/version"))
+local python_version
+for python_version in $versions; do
+  echo_run pyenv install --skip-existing "$python_version"
+done
