@@ -1,5 +1,7 @@
 .DS_Store
+.ICEauthority
 .Trash/
+.Xauthority
 .arcrc
 .asdf/
 .aws/
@@ -7,6 +9,7 @@
 .cargo/
 .cups/
 .dbt/
+.dmrc
 .docker/
 .gnupg/
 .gradle/
@@ -14,6 +17,7 @@
 .jenkins*
 .lesshst
 .matplotlib/
+.mozilla/
 .npm/
 .npmrc
 .onelogin.cfg
