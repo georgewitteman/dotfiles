@@ -14,24 +14,24 @@ if (( ! $+commands[brew] )); then
   echo_eval '/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
 fi
 
-echo_run brew update
+echo_run command brew update
 
-# echo_run brew upgrade
-echo_run brew outdated
+# echo_run command brew upgrade
+echo_run command brew outdated
 echo_warn "Skipping 'brew upgrade' since it's kind of slow."
 
-local brew_list=($(brew list -1))
+local brew_list=($(command brew list -1))
 
 if (( $brew_list[(Ie)universal-ctags] )); then
   echo_ok "universal-ctags already installed"
 else
-  echo_run brew install --HEAD universal-ctags/universal-ctags/universal-ctags
+  echo_run command brew install --HEAD universal-ctags/universal-ctags/universal-ctags
 fi
 
 if (( $brew_list[(Ie)vim] )); then
   echo_ok 'vim already installed'
 else
-  echo_run brew install --HEAD vim
+  echo_run command brew install --HEAD vim
 fi
 
 local formulas=(
@@ -78,7 +78,7 @@ if [[ "${#installed_formulas}" -ne 0 ]]; then
 fi
 
 if [[ "${#formulas_to_install}" -ne 0 ]]; then
-  echo_run brew install $formulas_to_install
+  echo_run command brew install $formulas_to_install
 else
   echo_ok "No more formulas to install."
 fi
