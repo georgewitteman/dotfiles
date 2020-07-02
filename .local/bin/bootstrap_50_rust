@@ -4,7 +4,7 @@ set -e
 source "$HOME/.zshrc"
 
 if (( ! $+commands[rustup] )); then
-  echo_eval 'curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --verbose --no-modify-path'
+  echo_eval 'curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path'
   echo_run source $HOME/.cargo/env
 else
   echo_info "Rust is already installed."

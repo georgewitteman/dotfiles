@@ -4,13 +4,15 @@ set -e
 autoload -U colors && colors
 source "$HOME/.zshrc"
 
+# Using 'command ls' here because regular ls is aliased to add color and
+# formatting.
 local files=($(command ls "$HOME/.local/bin" | sort | grep bootstrap_))
 
 local i
 for i in {1..${#files}}; do
   local file="${files[$i]}"
   echo "============================================================="
-  echo " Running: ${fg[green]}${file}${reset_color} (${i}/${#files})"
+  echo "Running: ${fg[green]}${file}${reset_color} (${i}/${#files})"
   echo "============================================================="
   zsh "$HOME/.local/bin/$file"
   [[ "$i" -lt "${#files}" ]] && echo

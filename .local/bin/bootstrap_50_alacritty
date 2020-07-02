@@ -3,12 +3,13 @@
 set -e
 source "$HOME/.zshrc"
 
-echo_info "Compiling alacritty terminfo file"
-TMP_DIR=$(mktemp -d)
-cd $TMP_DIR
-echo_run curl -O https://raw.githubusercontent.com/alacritty/alacritty/master/extra/alacritty.info
-echo_run tic -xe alacritty,alacritty-direct alacritty.info
-echo_run curl -O https://raw.githubusercontent.com/alacritty/alacritty/master/extra/completions/_alacritty
-echo_run mv _alacritty "$HOME/.config/zsh/completions/_alacritty"
-cd
-rm -rf $TMP_DIR
+local terminfo_file="$(mktemp -t 'terminfo')"
+echo_eval "curl --silent \\
+    https://raw.githubusercontent.com/alacritty/alacritty/master/extra/alacritty.info > \\
+    $terminfo_file"
+echo_run tic -xe alacritty,alacritty-direct "$terminfo_file"
+echo_run rm "$terminfo_file"
+
+echo_eval "curl --silent \\
+    https://raw.githubusercontent.com/alacritty/alacritty/master/extra/completions/_alacritty > \\
+    $HOME/.config/zsh/completions/_alacritty"

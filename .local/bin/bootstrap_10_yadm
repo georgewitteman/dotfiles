@@ -12,21 +12,20 @@ if [[ ! -f "$HOME/.ssh/id_rsa" ]]; then
   echo_run gpg --import ~/.gnupg/.exports/pgp-private-keys.asc
   echo_run gpg --import-ownertrust ~/.gnupg/.exports/pgp-ownertrust.asc
 else
-  echo_info "The file ~/.ssh/id_rsa already exists."
-  echo_warn "Skipping decryption. Run 'yadm decrypt && gpg_restore' if necessary."
+  echo_ok "The file ~/.ssh/id_rsa already exists."
+  echo_warn "Skipping decryption because it requires a password."
+  echo_warn "Run 'yadm decrypt && gpg_restore' if necessary."
 fi
 
 echo_run yadm alt
 
 # We now have ssh keys decrypted, so can update the url
 # to be the ssh url
-echo_info "Updating the yadm repo origin URL"
+echo_info "Updating the yadm repo origin URL."
 echo_run yadm remote set-url origin "git@github.com:georgewitteman/dotfiles.git"
 
 echo_run yadm gitconfig pull.rebase true
 
 # Show untracked files since I want to always remember to add new scripts and
 # things. The ~/.gitignore should prevent this from getting ugly.
-echo_run yadm gitconfig --unset status.showUntrackedFiles
-
-echo_run yadm submodule update --recursive --init
+echo_run yadm gitconfig --unset status.showUntrackedFiles || echo_ok "status.showUntrackedFiles already unset."

@@ -3,4 +3,4 @@
 set -e
 source "$HOME/.zshrc"
 
-echo_run vplug update || true
+echo_run vplug update --quieter || true

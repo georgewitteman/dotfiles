@@ -10,38 +10,75 @@ fi
 
 # install homebrew if it's missing
 if ! command -v brew >/dev/null 2>&1; then
-  echo "Installing homebrew"
+  echo_info "Installing homebrew"
   echo_eval '/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
 fi
 
 echo_run brew update
 
-echo_run brew upgrade
+# echo_run brew upgrade
+echo_run brew outdated
+echo_warn "Skipping 'brew upgrade' since it's kind of slow."
 
-echo_run brew install --HEAD universal-ctags/universal-ctags/universal-ctags
-echo_run brew install --HEAD vim
-echo_run brew install bat \
-  curl \
-  diff-so-fancy \
-  exa \
-  fd \
-  fzf \
-  git \
-  gnupg \
-  httpie \
-  hyperfine \
-  jq \
-  nvim \
-  parquet-tools \
-  pgcli \
-  pinentry-mac \
-  ripgrep \
-  rsync \
-  tealdeer \
-  terraform \
-  tmux \
-  trash \
-  tree \
-  wget \
-  yadm \
-  zsh \
+local brew_list=($(brew list -1))
+
+if (( $brew_list[(Ie)universal-ctags] )); then
+  echo_ok "universal-ctags already installed"
+else
+  echo_run brew install --HEAD universal-ctags/universal-ctags/universal-ctags
+fi
+
+if (( $brew_list[(Ie)vim] )); then
+  echo_ok 'vim already installed'
+else
+  echo_run brew install --HEAD vim
+fi
+
+local formulas=(
+  bat
+  curl
+  diff-so-fancy
+  exa
+  fd
+  fzf
+  git
+  gnupg
+  httpie
+  hyperfine
+  jq
+  neovim
+  parquet-tools
+  pgcli
+  pinentry-mac
+  ripgrep
+  rsync
+  tealdeer
+  terraform
+  tmux
+  trash
+  tree
+  wget
+  yadm
+  zsh
+)
+
+local formulas_to_install=()
+local installed_formulas=()
+local formula
+for formula in $formulas; do
+  if (($brew_list[(Ie)$formula])); then
+    installed_formulas+=("$formula")
+  else
+    formulas_to_install+=("$formula")
+  fi
+done
+
+if [[ "${#installed_formulas}" -ne 0 ]]; then
+  echo_ok "Already installed: $installed_formulas"
+fi
+
+if [[ "${#formulas_to_install}" -ne 0 ]]; then
+  echo_run brew install $formulas_to_install
+else
+  echo_ok "No more formulas to install."
+fi
