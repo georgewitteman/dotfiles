@@ -35,6 +35,7 @@ else
 fi
 
 local formulas=(
+  awscli
   bat
   curl
   diff-so-fancy
