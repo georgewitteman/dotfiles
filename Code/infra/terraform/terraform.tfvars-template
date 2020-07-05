@@ -1,2 +1,7 @@
 cloudflare_email = ""
 cloudflare_api_key = ""
+
+namecheap_email = ""
+namecheap_api_user = ""
+namecheap_token = ""
+namecheap_ip = ""
