@@ -5,3 +5,6 @@ namecheap_email = ""
 namecheap_api_user = ""
 namecheap_token = ""
 namecheap_ip = ""
+
+dnsimple_token = ""
+dnsimple_account = ""
