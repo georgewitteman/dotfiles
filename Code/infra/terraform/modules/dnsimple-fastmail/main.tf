@@ -1,15 +1,6 @@
 locals {
-  dkim_hosts = [
-    "fm1",
-    "fm2",
-    "fm3",
-  ]
-
-  mx_hosts = [
-    "",
-    "*",
-    "mail",
-  ]
+  dkim_hosts = ["fm1", "fm2", "fm3"]
+  mx_hosts   = ["", "*", "mail"]
 }
 
 resource "dnsimple_record" "mail" {
