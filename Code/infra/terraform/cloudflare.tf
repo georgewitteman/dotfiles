@@ -72,7 +72,7 @@ resource "cloudflare_record" "MX_georgewitteman_com_4c5517a66f25c22e4c8eb0b94fc9
   type     = "MX"
   proxied  = "false"
   priority = "20"
-  value    = "mailsec.protonmail.ch"
+  value    = "in2-smtp.messagingengine.com"
 }
 
 resource "cloudflare_record" "MX_georgewitteman_com_15e8f7c49a9025cbf0a57606d4507d6b" {
@@ -81,7 +81,7 @@ resource "cloudflare_record" "MX_georgewitteman_com_15e8f7c49a9025cbf0a57606d450
   type     = "MX"
   proxied  = "false"
   priority = "10"
-  value    = "mail.protonmail.ch"
+  value    = "in1-smtp.messagingengine.com"
 }
 
 resource "cloudflare_record" "TXT__dmarc_georgewitteman_com_eac2b4a4c229682cc35127a78b3c4241" {
@@ -89,7 +89,7 @@ resource "cloudflare_record" "TXT__dmarc_georgewitteman_com_eac2b4a4c229682cc351
   name    = "_dmarc"
   type    = "TXT"
   proxied = "false"
-  value   = "v=DMARC1; p=none; rua=mailto:george@georgewitteman.com"
+  value   = "v=DMARC1; p=none; pct=100; rua=mailto:re+uimzzzgugvk@dmarc.postmarkapp.com; sp=none; aspf=r;"
 }
 
 resource "cloudflare_record" "TXT_georgewitteman_com_a848df1bd8bca7deb713190894f0a28b" {
@@ -105,7 +105,7 @@ resource "cloudflare_record" "TXT_georgewitteman_com_777224646f38ed4487dd4fed87a
   name    = "georgewitteman.com"
   type    = "TXT"
   proxied = "false"
-  value   = "v=spf1 include:_spf.protonmail.ch mx ~all"
+  value   = "v=spf1 include:spf.messagingengine.com ?all"
 }
 
 resource "cloudflare_record" "TXT_protonmail__domainkey_georgewitteman_com_500fcfb5228c795890583aca0bf6f2cf" {
@@ -170,7 +170,7 @@ resource "cloudflare_record" "MX_witteman_me_0dccef06819f99d196bef01e62b5c787" {
   type     = "MX"
   proxied  = "false"
   priority = "20"
-  value    = "mailsec.protonmail.ch"
+  value    = "in2-smtp.messagingengine.com"
 }
 
 resource "cloudflare_record" "MX_witteman_me_9a1ffec5c2d0b490c89f013ee99f2c9e" {
@@ -179,7 +179,7 @@ resource "cloudflare_record" "MX_witteman_me_9a1ffec5c2d0b490c89f013ee99f2c9e" {
   type     = "MX"
   proxied  = "false"
   priority = "10"
-  value    = "mail.protonmail.ch"
+  value    = "in1-smtp.messagingengine.com"
 }
 
 resource "cloudflare_record" "TXT__dmarc_witteman_me_ee36eb923adacdcd3cbcf35a8d3a2ba3" {
@@ -187,7 +187,31 @@ resource "cloudflare_record" "TXT__dmarc_witteman_me_ee36eb923adacdcd3cbcf35a8d3
   name    = "_dmarc"
   type    = "TXT"
   proxied = "false"
-  value   = "v=DMARC1; p=none; rua=mailto:george@witteman.me"
+  value   = "v=DMARC1; p=none; pct=100; rua=mailto:re+igrne0h0z9h@dmarc.postmarkapp.com; sp=none; aspf=r;"
+}
+
+resource "cloudflare_record" "TXT_fastmail_fm1_domainkey_witteman_me" {
+  zone_id = data.cloudflare_zones.witteman_me.zones[0].id
+  name    = "fm1._domainkey"
+  type    = "CNAME"
+  proxied = "false"
+  value   = "fm1.witteman.me.dkim.fmhosted.com"
+}
+
+resource "cloudflare_record" "TXT_fastmail_fm2_domainkey_witteman_me" {
+  zone_id = data.cloudflare_zones.witteman_me.zones[0].id
+  name    = "fm2._domainkey"
+  type    = "CNAME"
+  proxied = "false"
+  value   = "fm2.witteman.me.dkim.fmhosted.com"
+}
+
+resource "cloudflare_record" "TXT_fastmail_fm3_domainkey_witteman_me" {
+  zone_id = data.cloudflare_zones.witteman_me.zones[0].id
+  name    = "fm3._domainkey"
+  type    = "CNAME"
+  proxied = "false"
+  value   = "fm3.witteman.me.dkim.fmhosted.com"
 }
 
 resource "cloudflare_record" "TXT_protonmail__domainkey_witteman_me_26127818bfa60edffb2382e49d0eba76" {
@@ -211,5 +235,5 @@ resource "cloudflare_record" "TXT_witteman_me_08b1c08e304e258a38018a6af7d22f79" 
   name    = "witteman.me"
   type    = "TXT"
   proxied = "false"
-  value   = "v=spf1 include:_spf.protonmail.ch mx ~all"
+  value   = "v=spf1 include:spf.messagingengine.com ?all"
 }
