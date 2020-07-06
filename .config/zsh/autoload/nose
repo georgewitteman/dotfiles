@@ -24,8 +24,15 @@ for nose_profile_dir in "$VIRTUAL_ENV"/lib/python*/site-packages/nose_profile*/(
   [[ -d "$nose_profile_dir" ]] && echo_run rm -rf "$nose_profile_dir"
 done
 
+local nose_args=()
+nose_args+=('--verbose')
+nose_args+=('--nologcapture')
+if [[ "${#@[1,-2]}" -ne 0 ]]; then
+  nose_args+=(${@[1,-2]})
+fi
+
 (
   echo_run pushd "$run_dir"
-  echo_eval "TZ=UTC nosetests --verbose --nologcapture ${@[1,-2]} '${file_or_dir##${run_dir}/}'"
+  echo_run TZ=UTC nosetests ${nose_args} "${file_or_dir##${run_dir}/}"
   echo_run popd
 )
