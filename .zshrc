@@ -112,15 +112,22 @@ fpath=(${XDG_CONFIG_HOME:-$HOME/.config}/zsh/completions $fpath)
 
 zplug add git@github.com:georgewitteman/zsh-prompt.git || true
 zplug add git@github.com:georgewitteman/zsh-ctrl-z.git || true
-zplug add git@github.com:georgewitteman/zsh-pyenv.git || true
+# zplug add git@github.com:georgewitteman/zsh-pyenv.git || true
+zplug add git@github.com:georgewitteman/zsh-yavm.git || true
 zplug add git@github.com:romkatv/zsh-prompt-benchmark.git || true
 zplug init
+
+YAVM_PYTHON_ENABLED=1
+YAVM_GO_ENABLED=1
+# YAVM_DEBUG=1 yavm yavm-init
+yavm yavm-init
 
 if [[ -n "$VIRTUAL_ENV" ]]; then
   # Allows you to `rc` (reload config, see aliases below) from inside a virtual
   # environment without losing the virtual environment. Normally `exec` keeps
   # all environment variables, but certain ones get overwritten during zsh
-  # initialization. This reinitializes them
+  # initialization. This reinitializes them. Keep this after anything else that
+  # sets the path.
   source "$VIRTUAL_ENV/bin/activate"
 fi
 
