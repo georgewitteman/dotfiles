@@ -19,7 +19,7 @@ resource "dnsimple_record" "mx_10" {
   name     = element(local.mx_hosts, count.index)
   type     = "MX"
   ttl      = var.ttl
-  priority = "20"
+  priority = "10"
 
   value = "in1-smtp.messagingengine.com"
 }
