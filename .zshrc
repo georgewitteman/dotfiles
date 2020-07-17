@@ -90,8 +90,6 @@ path=("$HOME/.local/bin" $path)
 # Rust
 [[ -d "$HOME"/.cargo ]] && path=("$HOME/.cargo/bin" $path)
 
-export PATH="$PATH"
-
 # No duplicates in fpath
 typeset -U fpath
 
