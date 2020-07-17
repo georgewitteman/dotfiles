@@ -146,8 +146,6 @@ alias rc='echo_eval "path=() && exec $SHELL --login --interactive"'
 # [e]dit [c]onfig
 alias ec='$EDITOR ~/.zshrc'
 
-alias zplugins='cd ~/.config/zsh/plugins'
-
 # Suffix aliases: Open the file in preferred program just by typing
 #                 `$ <file_name><CR>`
 alias -s {py,md}=vim
