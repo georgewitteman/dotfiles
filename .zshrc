@@ -100,8 +100,6 @@ autoload -Uz ${XDG_CONFIG_HOME:-$HOME/.config}/zsh/autoload/**/*
 # Set up fpath for asdf completions
 [[ -n "$ASDF_DIR" ]] && [[ -d "$ASDF_DIR" ]] && fpath=($ASDF_DIR/completions $fpath)
 
-fpath=(${XDG_CONFIG_HOME:-$HOME/.config}/zsh/completions $fpath)
-
 [[ -d "/usr/share/zsh/site-functions" ]] && fpath+=("/usr/share/zsh/site-functions")
 
 zplug add git@github.com:georgewitteman/zsh-prompt.git || true
