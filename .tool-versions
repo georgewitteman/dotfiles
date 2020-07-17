@@ -1,4 +1,4 @@
-nodejs 14.5.0
+nodejs 12.18.2
 ruby 2.7.0
-yarn 1.21.1
+yarn 1.22.4
 golang 1.13.6
