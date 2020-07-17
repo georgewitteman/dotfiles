@@ -160,6 +160,11 @@ alias de='deactivate'
 alias default='new_or_switch_tmux default ~/'
 alias misc='default'
 
+if [[ -z "$TMUX" && "$TERM" = "alacritty" ]]; then
+  # Always open tmux when starting Alacritty
+  default
+fi
+
 if (( ! $+commands[sudoedit] )); then
   alias sudoedit='sudo -e'
 fi
