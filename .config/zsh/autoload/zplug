@@ -7,7 +7,7 @@ _init() {
   for plugin_path in $plugins_path/*(/N); do
     local plugin_name=${plugin_path##*/}
     source "$plugin_path"/*.plugin.zsh
-    fpath=("$plugin_path" $fpath)
+    # fpath=("$plugin_path" $fpath)
   done
   autoload -Uz compinit && compinit -C -d "$compdump_file"
 }
