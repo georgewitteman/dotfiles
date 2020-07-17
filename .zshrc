@@ -63,12 +63,12 @@ path=("/usr/local/bin" "/usr/local/sbin" $path)
 
 # The ~/.pyenv/versions file is saved in yadm, so use the bin directory to
 # check if pyenv is installed
-if [[ -d "$HOME/.pyenv/bin" ]]; then
-  export PYENV_ROOT="$HOME/.pyenv"
-  export PYENV_SHELL="zsh"
-  [[ -d "$PYENV_ROOT/bin" ]] && path=("$PYENV_ROOT/bin" $path)
-  [[ -d "$PYENV_ROOT/shims" ]] && path=("$PYENV_ROOT/shims" $path)
-fi
+# if [[ -d "$HOME/.pyenv/bin" ]]; then
+#   export PYENV_ROOT="$HOME/.pyenv"
+#   export PYENV_SHELL="zsh"
+#   [[ -d "$PYENV_ROOT/bin" ]] && path=("$PYENV_ROOT/bin" $path)
+#   # [[ -d "$PYENV_ROOT/shims" ]] && path=("$PYENV_ROOT/shims" $path)
+# fi
 # Leaving this here so other install scripts think that it's here, since I'm
 # setting the path manually
 # if command -v pyenv 1>/dev/null 2>&1; then
@@ -113,10 +113,9 @@ zplug add git@github.com:georgewitteman/zsh-yavm.git || true
 zplug add git@github.com:romkatv/zsh-prompt-benchmark.git || true
 zplug init
 
-YAVM_PYTHON_ENABLED=1
-YAVM_GO_ENABLED=1
-# YAVM_DEBUG=1 yavm yavm-init
-yavm yavm-init
+# yavm init python
+yavm init pyenv asdf-golang nodejs
+preexec_functions+=(yavm_set_path)
 
 if [[ -n "$VIRTUAL_ENV" ]]; then
   # Allows you to `rc` (reload config, see aliases below) from inside a virtual
