@@ -142,7 +142,7 @@ export PAGER=less
 export LESS=-iRFXMx4
 
 # [r]eload [c]onfig
-alias rc='exec $SHELL --login --interactive'
+alias rc='echo_eval "path=() && exec $SHELL --login --interactive"'
 # [e]dit [c]onfig
 alias ec='$EDITOR ~/.zshrc'
 
