@@ -1,7 +1,6 @@
 # Colorschemes
 laggardkernel/vim-one
 arzg/vim-colors-xcode
-dracula/vim
 joshdick/onedark.vim
 danilo-augusto/vim-afterglow
 arcticicestudio/nord-vim
@@ -44,6 +43,9 @@ godlygeek/tabular
 
 # Join/separate lines
 AndrewRadev/splitjoin.vim
+
+# Better text
+reedes/vim-pencil
 
 # Miscellaneous
 haya14busa/is.vim
