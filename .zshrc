@@ -53,10 +53,6 @@
 #  - /etc/zlogin: Run for login shells
 #  - ~/.zlogin: Run for login shells
 
-if [[ "$ZPROF" = true ]]; then
-  zmodload zsh/zprof
-fi
-
 export EDITOR='vim'
 
 # No duplicates in path

@@ -33,10 +33,6 @@
 # only put something in here that you know you want in every single
 # program/script
 
-if [[ "$ZPROF" = true ]]; then
-  zmodload zsh/zprof
-fi
-
 # XDG Base Directories
 # Where user-specific configurations should be written (analogous to /etc)
 export XDG_CONFIG_HOME="$HOME/.config"
