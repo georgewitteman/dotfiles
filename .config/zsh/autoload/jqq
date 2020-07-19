@@ -1,0 +1,8 @@
+#!/usr/bin/env zsh
+
+local cmd=(jq --color-output --unbuffered --raw-input --raw-output '. as $raw | try fromjson catch $raw')
+if test ! -t 0; then
+  "${cmd[@]}"
+else
+  echo -n "${(q-)cmd[@]}" | pbcopy
+fi
