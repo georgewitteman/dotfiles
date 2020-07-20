@@ -19,10 +19,14 @@ autoload -U colors && colors
 #
 # Output the command to stderr so we can pipe the result of this to other
 # commands.
+local prompt_char="$"
+if [[ "$EUID" -eq 0 ]]; then
+  prompt_char="#"
+fi
 if [[ "$ECHO_RUN_DEBUG" == "1" ]]; then
   echo -n "${fg_bold[blue]}(DEBUG MODE) " >&2
 fi
-echo "${fg_bold[blue]}\$ ${@}$reset_color" >&2
+echo "${fg_bold[blue]}${prompt_char} ${@}$reset_color" >&2
 
 if [[ "$ECHO_RUN_DEBUG" == "1" ]]; then
   return "$ECHO_RUN_DEBUG_RETURN"
