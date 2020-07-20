@@ -11,5 +11,5 @@ else
   echo_run rustup update
 fi
 
-echo_eval "rustup completions zsh > $HOME/.config/zsh/completions/_rustup"
-echo_eval "rustup completions zsh cargo > $HOME/.config/zsh/completions/_cargo"
+echo_eval "rustup completions zsh > $HOME/.config/zsh/autoload/_rustup"
+echo_eval "rustup completions zsh cargo > $HOME/.config/zsh/autoload/_cargo"
