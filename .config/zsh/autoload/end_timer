@@ -18,3 +18,4 @@ else
   echo "per run (for $run_count runs)"
 fi
 unset _PROF_COMMAND
+unset _PROF_START_TIME

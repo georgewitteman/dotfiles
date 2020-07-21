@@ -53,7 +53,7 @@
 #  - /etc/zlogin: Run for login shells
 #  - ~/.zlogin: Run for login shells
 
-export EDITOR='vim'
+export EDITOR="vim"
 
 # No duplicates in $path and $fpath
 typeset -U path fpath
@@ -78,6 +78,11 @@ path=("/usr/local/bin" "/usr/local/sbin" $path)
 [[ ! -d "$HOME/.local/bin" ]] && mkdir -p "$HOME/.local/bin"
 path=("$HOME/.local/bin" $path)
 
+# if (( ! $+commands[fzf] )) && [[ -d "/usr/local/opt/fzf/bin" ]]; then
+if ! whence fzf >/dev/null && [[ -d "/usr/local/opt/fzf/bin" ]]; then
+  path=("/usr/local/opt/fzf/bin" $path)
+fi
+
 # Add arcanist to path if it's installed
 [[ -d "$HOME/.phabricator/arcanist/bin" ]] && path=("$HOME/.phabricator/arcanist/bin" $path)
 
@@ -86,7 +91,7 @@ path=("$HOME/.local/bin" $path)
 if [[ -f "$HOME/.asdf/asdf.sh" ]]; then
   export ASDF_DIR="$HOME/.asdf"
   path=("${ASDF_DIR}/bin" $path)
-  fpath=("${ASDF_DIR}/completions" $fpath)
+  fpath+=("${ASDF_DIR}/completions")
   source "${ASDF_DIR}/lib/asdf.sh"
   # source "$HOME/.asdf/asdf.sh"
   # path=(${path:#$ASDF_USER_SHIMS})
@@ -96,15 +101,17 @@ fi
 [[ -d "$HOME"/.cargo ]] && path=("$HOME/.cargo/bin" $path)
 
 # Set up fpath for my autoloaded functions
-fpath=(${XDG_CONFIG_HOME:-$HOME/.config}/zsh/autoload/ $fpath)
+fpath+=("${XDG_CONFIG_HOME:-$HOME/.config}/zsh/autoload/")
 autoload -Uz ${XDG_CONFIG_HOME:-$HOME/.config}/zsh/autoload/*
 
-[[ -d "/usr/share/zsh/site-functions" ]] && fpath+=("/usr/share/zsh/site-functions")
+if [[ -d "/usr/share/zsh/site-functions" ]] && [ "/usr/share/zsh/site-functions"(NF) ]; then
+  fpath+=("/usr/share/zsh/site-functions")
+fi
 
+# zplug add git@github.com:romkatv/zsh-prompt-benchmark.git || true
 zplug add git@github.com:georgewitteman/zsh-prompt.git || true
 zplug add git@github.com:georgewitteman/zsh-ctrl-z.git || true
 zplug add git@github.com:georgewitteman/zsh-yavm.git || true
-# zplug add git@github.com:romkatv/zsh-prompt-benchmark.git || true
 zplug init
 
 yavm init pyenv nodejs
@@ -150,6 +157,7 @@ alias -s {py,md}=vim
 alias -s git='git clone'
 
 alias make_venv='python3 -m venv .venv'
+alias make_venv2='virtualenv .venv'
 alias activate='source .venv/bin/activate'
 alias de='deactivate'
 
@@ -162,6 +170,9 @@ if [[ -z "$TMUX" && "$TERM" = "alacritty" ]]; then
   default
 fi
 
+# NOTE: Although the $commands variable is faster to access, it costs a few ms
+# (~3ms) when we first reference it. Calling whence actually saves time, even
+# though it's significantly slower when you run it hundreds of times.
 # if (( ! $+commands[sudoedit] )); then
 if ! whence sudoedit >/dev/null; then
   alias sudoedit='sudo -e'
@@ -278,6 +289,12 @@ bindkey '^[b' backward-word # alt-b
 bindkey '^[d' kill-word # alt-d
 bindkey "^[[Z" reverse-menu-complete # shift-tab
 
+if [[ -f "/usr/local/opt/fzf/shell/key-bindings.zsh" ]]; then
+  source "/usr/local/opt/fzf/shell/key-bindings.zsh"
+elif [[ -f "/usr/share/fzf/key-bindings.zsh" ]]; then
+  source "/usr/share/fzf/key-bindings.zsh"
+fi
+
 # History file and size.
 if [[ ! -d "${XDG_DATA_HOME:-$HOME/.local/share}" ]]; then
   mkdir -p "${XDG_DATA_HOME:-$HOME/.local/share}"
@@ -318,8 +335,3 @@ setopt hist_beep
 
 # FZF
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude .git'
-
-# ------ Keep the following stuff at the bottom of the file --------
-
-# Initialize FZF (keep last for keybindings)
-[[ -f "$HOME/.fzf.zsh" ]] && source "$HOME/.fzf.zsh"

@@ -24,7 +24,7 @@ hashivim/vim-terraform
 
 # Git
 tpope/vim-git
-airblade/vim-gitgutter
+# airblade/vim-gitgutter
 tpope/vim-fugitive
 tpope/vim-rhubarb
 

@@ -13,7 +13,7 @@ _zplug_init() {
 
 _zsh_re_compinit() {
   [[ -f "$compdump_file" ]] && rm "$compdump_file"
-  autoload -Uz compinit && compinit -d $compdump_file
+  autoload -Uz compinit && compinit -d "$compdump_file" && zcompile "$compdump_file"
 }
 
 _zplug_add_plugin() {

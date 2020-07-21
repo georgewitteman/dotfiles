@@ -3,76 +3,76 @@
 local N=5000
 local i
 
-start_prof_timer '[[ ]]'
+start_timer '[[ ]]'
 for i in {1..$N}; do
   if [[ $i -eq 10 ]]; then; fi
 done
-end_prof_timer
+end_timer
 
-start_prof_timer '[ ]'
+start_timer '[ ]'
 for i in {1..$N}; do
   if [ $i -eq 10 ]; then; fi
 done
-end_prof_timer
+end_timer
 
-start_prof_timer '(( ))'
+start_timer '(( ))'
 for i in {1..$N}; do
   if (( $i == 10 )); then; fi
 done
-end_prof_timer
+end_timer
 
-start_prof_timer '[ ]'
+start_timer '[ ]'
 for i in {1..$N}; do
   if [ $i -eq 10 ]; then; fi
 done
-end_prof_timer
+end_timer
 
-start_prof_timer '[[ ]]'
+start_timer '[[ ]]'
 for i in {1..$N}; do
   if [[ $i -eq 10 ]]; then; fi
 done
-end_prof_timer
+end_timer
 
-start_prof_timer 'VAR=1'
+start_timer 'VAR=1'
 repeat $N { _TEST_VAR=1 }
-end_prof_timer
+end_timer
 
-start_prof_timer 'export VAR=1'
+start_timer 'export VAR=1'
 repeat $N { export _TEST_VAR=1 }
-end_prof_timer
+end_timer
 
-start_prof_timer 'typeset -gx VAR=1'
+start_timer 'typeset -gx VAR=1'
 repeat $N { typeset -gx _TEST_VAR=1 }
-end_prof_timer
+end_timer
 
-start_prof_timer 'VAR=1 once'
+start_timer 'VAR=1 once'
 _TEST_VAR=1
-end_prof_timer
+end_timer
 
-start_prof_timer 'export VAR=1 once'
+start_timer 'export VAR=1 once'
 export _TEST_VAR=1
-end_prof_timer
+end_timer
 
-# start_prof_timer 'source'
+# start_timer 'source'
 # repeat $N { source "$HOME/.zshenv" }
-# end_prof_timer
+# end_timer
 
-# start_prof_timer '.'
+# start_timer '.'
 # repeat $N { . "$HOME/.zshenv" }
-# end_prof_timer
+# end_timer
 
-# start_prof_timer 'source'
+# start_timer 'source'
 # repeat $N { source "$HOME/.zshenv" }
-# end_prof_timer
+# end_timer
 
-start_prof_timer 'path=("$HOME/.local/bin" $path)'
+start_timer 'path=("$HOME/.local/bin" $path)'
 repeat $N path=("$HOME/.local/bin" $path)
-end_prof_timer $N
+end_timer $N
 
-start_prof_timer 'path+=("$HOME/.local/bin")'
+start_timer 'path+=("$HOME/.local/bin")'
 repeat $N path+=("$HOME/.local/bin")
-end_prof_timer $N
+end_timer $N
 
-start_prof_timer 'PATH="$HOME/.local/bin:$PATH"'
+start_timer 'PATH="$HOME/.local/bin:$PATH"'
 repeat $N PATH="$HOME/.local/bin:$PATH"
-end_prof_timer $N
+end_timer $N
