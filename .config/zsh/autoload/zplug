@@ -3,21 +3,20 @@
 local plugins_path="${XDG_CONFIG_HOME:-$HOME/.config}/zsh/plugins"
 local compdump_file="${COMPDUMP_FILE:-${XDG_CACHE_HOME:-$HOME/.cache}/zcompdump}"
 
-_init() {
-  for plugin_path in $plugins_path/*(/N); do
-    local plugin_name=${plugin_path##*/}
-    source "$plugin_path"/*.plugin.zsh
-    # fpath=("$plugin_path" $fpath)
+_zplug_init() {
+  local plugin_file
+  for plugin_file in "$plugins_path"/*/*.plugin.zsh(.N); do
+    source "$plugin_file"
   done
   autoload -Uz compinit && compinit -C -d "$compdump_file"
 }
 
-_re_compinit() {
+_zsh_re_compinit() {
   [[ -f "$compdump_file" ]] && rm "$compdump_file"
   autoload -Uz compinit && compinit -d $compdump_file
 }
 
-_add_plugin() {
+_zplug_add_plugin() {
   local plugin_url="$1"
   # Remove the beginning of the URL and any extension (like .git)
   local plugin_name="${plugin_url:t:r}"
@@ -27,54 +26,36 @@ _add_plugin() {
     echo "Installing $plugin_name"
     echo_run git clone "$plugin_url" "$plugin_path"
     [[ "$?" -ne 0 ]] && return 1
-    _re_compinit
+    _zsh_re_compinit
   fi
 }
 
-_usage() {
-  echo "Update zsh plugins"
-  echo ""
-  echo "Usage: $command_name update"
-  echo "       $command_name add <git-url>"
-  echo "       $command_name init"
-  echo "       $command_name reinit"
-  echo "       $command_name help | -h | --help"
-  echo ""
-  echo "Options:"
-  echo "  -h, --help     Show this screen."
-  echo ""
-}
-
-local command_name="$0"
-local action="$1"
-
-case $action in
+case $1 in
   update)
     _zplug_update_plugins "$plugins_path"
-    _re_compinit
+    _zsh_re_compinit
     ;;
 
   add)
-    shift
-    _add_plugin "$@"
+    _zplug_add_plugin "${@[2,-1]}"
     ;;
 
   init)
-    _init
+    _zplug_init
     return "$?"
     ;;
 
   reinit)
-    _re_compinit
+    _zsh_re_compinit
     return "$?"
     ;;
 
   help | --help | -h)
-    _usage
+    _zplug_usage
     ;;
 
   *)
-    _usage
+    _zplug_usage
     return 1
     ;;
 esac

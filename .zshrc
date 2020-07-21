@@ -55,8 +55,8 @@
 
 export EDITOR='vim'
 
-# No duplicates in path
-typeset -U path
+# No duplicates in $path and $fpath
+typeset -U path fpath
 
 # Homebrew paths
 path=("/usr/local/bin" "/usr/local/sbin" $path)
@@ -75,42 +75,39 @@ path=("/usr/local/bin" "/usr/local/sbin" $path)
 #   eval "$(pyenv init - --no-rehash zsh)"
 # fi
 
-if [[ ! -f "$HOME/.local/bin" ]]; then
-  mkdir -p "$HOME/.local/bin"
-fi
+[[ ! -d "$HOME/.local/bin" ]] && mkdir -p "$HOME/.local/bin"
 path=("$HOME/.local/bin" $path)
 
 # Add arcanist to path if it's installed
-[[ -d ~/.phabricator/arcanist/bin ]] && path=("$HOME/.phabricator/arcanist/bin" $path)
+[[ -d "$HOME/.phabricator/arcanist/bin" ]] && path=("$HOME/.phabricator/arcanist/bin" $path)
 
 # ASDF (needs to be above the fpath set for asdf completions below because we
 # need the $ASDF_DIR variable
-[[ -f ~/.asdf/asdf.sh ]] && source ~/.asdf/asdf.sh
+if [[ -f "$HOME/.asdf/asdf.sh" ]]; then
+  export ASDF_DIR="$HOME/.asdf"
+  path=("${ASDF_DIR}/bin" $path)
+  fpath=("${ASDF_DIR}/completions" $fpath)
+  source "${ASDF_DIR}/lib/asdf.sh"
+  # source "$HOME/.asdf/asdf.sh"
+  # path=(${path:#$ASDF_USER_SHIMS})
+fi
 
 # Rust
 [[ -d "$HOME"/.cargo ]] && path=("$HOME/.cargo/bin" $path)
 
-# No duplicates in fpath
-typeset -U fpath
-
 # Set up fpath for my autoloaded functions
 fpath=(${XDG_CONFIG_HOME:-$HOME/.config}/zsh/autoload/ $fpath)
-autoload -Uz ${XDG_CONFIG_HOME:-$HOME/.config}/zsh/autoload/**/*
-
-# Set up fpath for asdf completions
-[[ -n "$ASDF_DIR" ]] && [[ -d "$ASDF_DIR" ]] && fpath=($ASDF_DIR/completions $fpath)
+autoload -Uz ${XDG_CONFIG_HOME:-$HOME/.config}/zsh/autoload/*
 
 [[ -d "/usr/share/zsh/site-functions" ]] && fpath+=("/usr/share/zsh/site-functions")
 
 zplug add git@github.com:georgewitteman/zsh-prompt.git || true
 zplug add git@github.com:georgewitteman/zsh-ctrl-z.git || true
-# zplug add git@github.com:georgewitteman/zsh-pyenv.git || true
 zplug add git@github.com:georgewitteman/zsh-yavm.git || true
-zplug add git@github.com:romkatv/zsh-prompt-benchmark.git || true
+# zplug add git@github.com:romkatv/zsh-prompt-benchmark.git || true
 zplug init
 
-# yavm init python
-yavm init pyenv asdf-golang nodejs
+yavm init pyenv nodejs
 preexec_functions+=(yavm_set_path)
 
 if [[ -n "$VIRTUAL_ENV" ]]; then
@@ -142,7 +139,7 @@ export PAGER=less
 export LESS=-iRFXMx4
 
 # [r]eload [c]onfig
-alias rc='echo_eval "path=() && exec $SHELL --login --interactive"'
+alias rc='echo_eval "path=(); fpath=(); exec $SHELL --login --interactive"'
 # [e]dit [c]onfig
 alias ec='$EDITOR ~/.zshrc'
 
@@ -157,7 +154,7 @@ alias activate='source .venv/bin/activate'
 alias de='deactivate'
 
 # Tmux sessions
-alias default='new_or_switch_tmux default ~/'
+alias default="new_or_switch_tmux default $HOME"
 alias misc='default'
 
 if [[ -z "$TMUX" && "$TERM" = "alacritty" ]]; then
@@ -165,12 +162,14 @@ if [[ -z "$TMUX" && "$TERM" = "alacritty" ]]; then
   default
 fi
 
-if (( ! $+commands[sudoedit] )); then
+# if (( ! $+commands[sudoedit] )); then
+if ! whence sudoedit >/dev/null; then
   alias sudoedit='sudo -e'
 fi
 
 # Always use local package jest
-if (( $+commands[yarn] )); then
+# if (( $+commands[yarn] )); then
+if whence yarn >/dev/null; then
   alias jest='yarn run jest'
 fi
 
@@ -179,18 +178,18 @@ alias ls='ls -F'
 alias ll='ls -l'
 alias la='ls -la'
 
-# Kubernetes
-if (( $+commands[kubectl] )); then
+# if (( $+commands[kubectl] )); then
+if whence kubectl >/dev/null; then
   alias k='kubectl'
 fi
 
-# Terraform
-if (( $+commands[terraform] )); then
+# if (( $+commands[terraform] )); then
+if whence terraform >/dev/null; then
   alias t='terraform'
 fi
 
-# Git
-if (( $+commands[git] )); then
+# if (( $+commands[git] )); then
+if whence git >/dev/null; then
   alias gs='echo_run status'
   alias gf='git fetch && g'
   alias develop='master'
@@ -198,8 +197,8 @@ if (( $+commands[git] )); then
   alias gdiff='echo_run git diff'
 fi
 
-# yadm
-if (( $+commands[yadm] )); then
+# if (( $+commands[yadm] )); then
+if whence yadm >/dev/null; then
   alias y='yadm'
   alias ys='echo_run yadm status'
   alias ypush='echo_run yadm push'
@@ -208,7 +207,8 @@ fi
 
 alias c='clear'
 
-if (( $+commands[brew] )); then
+# if (( $+commands[brew] )); then
+if whence brew >/dev/null; then
   compdef brew_helper='brew'
   alias brew='brew_helper'
 fi
@@ -245,7 +245,7 @@ setopt cd_silent
 
 # The time the shell waits, in hundredths of seconds, for another key to be
 # pressed when reading bound multi-character sequences. Useful for vim mode
-export KEYTIMEOUT=10
+KEYTIMEOUT=10
 
 # NOTE: If you want to see what a certain keypress makes do CTRL-V <KEYPRESS>
 
@@ -286,7 +286,7 @@ HISTFILE="${XDG_DATA_HOME:-$HOME/.local/share}/.zsh_history"
 HISTSIZE=10000000
 SAVEHIST=10000000
 # make some commands not show up in history
-export HISTIGNORE="ls:ll:la:cd:cd -:pwd:exit:date:* --help"
+HISTIGNORE="ls:ll:la:cd:cd -:pwd:exit:date:* --help"
 
 # History command configuration
 # Treat the '!' character specially during expansion.
@@ -322,4 +322,4 @@ export FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude .git'
 # ------ Keep the following stuff at the bottom of the file --------
 
 # Initialize FZF (keep last for keybindings)
-[[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
+[[ -f "$HOME/.fzf.zsh" ]] && source "$HOME/.fzf.zsh"

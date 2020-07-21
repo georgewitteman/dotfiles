@@ -1,0 +1,13 @@
+#!/usr/bin/env zsh
+
+echo "Update zsh plugins"
+echo ""
+echo "Usage: zplug update"
+echo "       zplug add <git-url>"
+echo "       zplug init"
+echo "       zplug reinit"
+echo "       zplug help | -h | --help"
+echo ""
+echo "Options:"
+echo "  -h, --help     Show this screen."
+echo ""
