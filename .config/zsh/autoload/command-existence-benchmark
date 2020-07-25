@@ -30,9 +30,9 @@ echo '$+commands:'
 time (repeat $N { (( $+commands[$cmd] )) })
 
 echo
-start-prof-timer '$+commands'
+start-timer 'first $+commands'
 { (( $+commands[$cmd] )) }
-end-prof-timer
-start-prof-timer '$+commands'
+end-timer
+start-timer 'second $+commands'
 { (( $+commands[$cmd] )) }
-end-prof-timer
+end-timer
