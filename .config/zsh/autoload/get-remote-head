@@ -2,11 +2,11 @@
 
 [ -d .git ] || git rev-parse --git-dir > /dev/null 2>&1
 if (( $status )); then
-  exit 128
+  return 128
 fi
 
 GIT_HEAD="$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')" 2>/dev/null
 if [[ "$GIT_HEAD" = "" ]]; then
-  GIT_HEAD="${$(git remote show origin | grep 'HEAD branch' | cut -d ':' -f 2)[1,-1]}"
+  GIT_HEAD="${$(git remote show origin | grep 'HEAD branch' | cut -d ':' -f 2)[2,-1]}"
 fi
 echo "$GIT_HEAD"
