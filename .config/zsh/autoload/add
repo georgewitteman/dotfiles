@@ -18,4 +18,3 @@ elif [[ "$#" -eq 0 ]] && [[ "$cmd" = "yadm" ]]; then
 fi
 
 echo_run $cmd add --verbose "$@"
-status
