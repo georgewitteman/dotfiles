@@ -262,6 +262,10 @@ KEYTIMEOUT=10
 
 zmodload zsh/terminfo
 
+# Default: WORDCHARS="*?_-.[]~=/&;!#$%^(){}<>"
+# Remove the / character from the $WORDCHARS
+WORDCHARS="${WORDCHARS/\//}"
+
 autoload -U up-line-or-beginning-search down-line-or-beginning-search
 zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
