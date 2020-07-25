@@ -1,0 +1,4 @@
+#!/usr/bin/env zsh
+
+PS4="%B%D{%H:%M:%S.%9.} +%N:%i>%b "
+echo "Now run set -x"

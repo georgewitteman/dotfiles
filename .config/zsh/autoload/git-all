@@ -2,4 +2,4 @@
 #
 # Stage all unstaged.
 
-echo_run git add --all
+echo-run git add --all

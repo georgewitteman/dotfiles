@@ -3,76 +3,76 @@
 local N=5000
 local i
 
-start_timer '[[ ]]'
+start-timer '[[ ]]'
 for i in {1..$N}; do
   if [[ $i -eq 10 ]]; then; fi
 done
-end_timer
+end-timer
 
-start_timer '[ ]'
+start-timer '[ ]'
 for i in {1..$N}; do
   if [ $i -eq 10 ]; then; fi
 done
-end_timer
+end-timer
 
-start_timer '(( ))'
+start-timer '(( ))'
 for i in {1..$N}; do
   if (( $i == 10 )); then; fi
 done
-end_timer
+end-timer
 
-start_timer '[ ]'
+start-timer '[ ]'
 for i in {1..$N}; do
   if [ $i -eq 10 ]; then; fi
 done
-end_timer
+end-timer
 
-start_timer '[[ ]]'
+start-timer '[[ ]]'
 for i in {1..$N}; do
   if [[ $i -eq 10 ]]; then; fi
 done
-end_timer
+end-timer
 
-start_timer 'VAR=1'
+start-timer 'VAR=1'
 repeat $N { _TEST_VAR=1 }
-end_timer
+end-timer
 
-start_timer 'export VAR=1'
+start-timer 'export VAR=1'
 repeat $N { export _TEST_VAR=1 }
-end_timer
+end-timer
 
-start_timer 'typeset -gx VAR=1'
+start-timer 'typeset -gx VAR=1'
 repeat $N { typeset -gx _TEST_VAR=1 }
-end_timer
+end-timer
 
-start_timer 'VAR=1 once'
+start-timer 'VAR=1 once'
 _TEST_VAR=1
-end_timer
+end-timer
 
-start_timer 'export VAR=1 once'
+start-timer 'export VAR=1 once'
 export _TEST_VAR=1
-end_timer
+end-timer
 
-# start_timer 'source'
+# start-timer 'source'
 # repeat $N { source "$HOME/.zshenv" }
-# end_timer
+# end-timer
 
-# start_timer '.'
+# start-timer '.'
 # repeat $N { . "$HOME/.zshenv" }
-# end_timer
+# end-timer
 
-# start_timer 'source'
+# start-timer 'source'
 # repeat $N { source "$HOME/.zshenv" }
-# end_timer
+# end-timer
 
-start_timer 'path=("$HOME/.local/bin" $path)'
+start-timer 'path=("$HOME/.local/bin" $path)'
 repeat $N path=("$HOME/.local/bin" $path)
-end_timer $N
+end-timer $N
 
-start_timer 'path+=("$HOME/.local/bin")'
+start-timer 'path+=("$HOME/.local/bin")'
 repeat $N path+=("$HOME/.local/bin")
-end_timer $N
+end-timer $N
 
-start_timer 'PATH="$HOME/.local/bin:$PATH"'
+start-timer 'PATH="$HOME/.local/bin:$PATH"'
 repeat $N PATH="$HOME/.local/bin:$PATH"
-end_timer $N
+end-timer $N

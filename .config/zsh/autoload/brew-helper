@@ -12,10 +12,10 @@ local ret="$status"
 
 if [[ "$1" = "install" ]]; then
   echo
-  echo_info "Don't forget to add this to bootstrap_macos."
+  echo-info "Don't forget to add this to bootstrap_macos."
 elif [[ "$1" = "uninstall" ]]; then
   echo
-  echo_info "Don't forget to remove this from bootstrap_macos."
+  echo-info "Don't forget to remove this from bootstrap_macos."
 fi
 
 return $ret

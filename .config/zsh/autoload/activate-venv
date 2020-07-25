@@ -13,7 +13,7 @@ fi
 
 if [[ -n "$VIRTUAL_ENV" ]]; then
   # In a different virtual_env
-  save_virtual_env
+  save-virtual-env
 fi
 
-echo_run source "$venv/bin/activate"
+echo-run source "$venv/bin/activate"

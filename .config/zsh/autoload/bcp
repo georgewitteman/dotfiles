@@ -8,6 +8,6 @@ local uninst=$(brew leaves | eval "fzf ${FZF_DEFAULT_OPTS} --multi --header='[br
 
 if [[ $uninst ]]; then
   for prog in $(echo $uninst); do
-    echo_run brew uninstall $prog
+    echo-run brew uninstall $prog
   done
 fi

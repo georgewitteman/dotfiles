@@ -146,7 +146,7 @@ export PAGER=less
 export LESS=-iRFXMx4
 
 # [r]eload [c]onfig
-alias rc='echo_eval "path=(); fpath=(); exec $SHELL --login --interactive"'
+alias rc='echo-eval "path=(); fpath=(); exec $SHELL --login --interactive"'
 # [e]dit [c]onfig
 alias ec='$EDITOR ~/.zshrc'
 
@@ -156,13 +156,13 @@ alias -s {py,md}=vim
 # Paste in a git repository url and it will automatically clone it
 alias -s git='git clone'
 
-alias make_venv='python3 -m venv .venv'
-alias make_venv2='virtualenv .venv'
+alias make-venv='python3 -m venv .venv'
+alias make-venv2='virtualenv .venv'
 alias activate='source .venv/bin/activate'
 alias de='deactivate'
 
 # Tmux sessions
-alias default="new_or_switch_tmux default $HOME"
+alias default="new-or-switch-tmux default $HOME"
 alias misc='default'
 
 if [[ -z "$TMUX" && "$TERM" = "alacritty" ]]; then
@@ -201,27 +201,27 @@ fi
 
 # if (( $+commands[git] )); then
 if whence git >/dev/null; then
-  alias gs='echo_run status'
+  alias gs='echo-run status'
   alias gf='git fetch && g'
   alias develop='master'
-  alias switch='echo_run git switch'
-  alias gdiff='echo_run git diff'
+  alias switch='echo-run git switch'
+  alias gdiff='echo-run git diff'
 fi
 
 # if (( $+commands[yadm] )); then
 if whence yadm >/dev/null; then
   alias y='yadm'
-  alias ys='echo_run yadm status'
-  alias ypush='echo_run yadm push'
-  alias ydiff='echo_run yadm diff'
+  alias ys='echo-run yadm status'
+  alias ypush='echo-run yadm push'
+  alias ydiff='echo-run yadm diff'
 fi
 
 alias c='clear'
 
 # if (( $+commands[brew] )); then
 if whence brew >/dev/null; then
-  compdef brew_helper='brew'
-  alias brew='brew_helper'
+  compdef brew-helper='brew'
+  alias brew='brew-helper'
 fi
 
 # Color variables

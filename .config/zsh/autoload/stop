@@ -5,4 +5,4 @@ if [ "$VIRTUAL_ENV" = "" ]; then
   return 1
 fi
 
-echo_run deactivate
+echo-run deactivate

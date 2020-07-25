@@ -1,5 +1,3 @@
-function take() {
-  mkdir -p $@ && cd ${@:$#}
-}
+#!/usr/bin/env zsh
 
-# vi:filetype=zsh
+mkdir -p $@ && cd ${@:$#}

@@ -1,7 +1,7 @@
-#!/bin/sh
+#!/usr/bin/env zsh
 #
 # Sets up your branch to track a remote branch. Assumes you mean
 # `origin/$branch-name`.
 
 branch=$(git rev-parse --abbrev-ref HEAD)
-echo_run git branch "$branch" --set-upstream-to "origin/$branch"
+echo-run git branch "$branch" --set-upstream-to "origin/$branch"

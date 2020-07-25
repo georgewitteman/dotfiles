@@ -3,7 +3,7 @@
 local plugins_path="${XDG_CONFIG_HOME:-$HOME/.config}/zsh/plugins"
 local compdump_file="${COMPDUMP_FILE:-${XDG_CACHE_HOME:-$HOME/.cache}/zcompdump}"
 
-_zplug_init() {
+_zplug-init() {
   local plugin_file
   for plugin_file in "$plugins_path"/*/*.plugin.zsh(.N); do
     source "$plugin_file"
@@ -11,12 +11,12 @@ _zplug_init() {
   autoload -Uz compinit && compinit -C -d "$compdump_file"
 }
 
-_zsh_re_compinit() {
+_zsh-re-compinit() {
   [[ -f "$compdump_file" ]] && rm "$compdump_file"
   autoload -Uz compinit && compinit -d "$compdump_file" && zcompile "$compdump_file"
 }
 
-_zplug_add_plugin() {
+_zplug-add-plugin() {
   local plugin_url="$1"
   # Remove the beginning of the URL and any extension (like .git)
   local plugin_name="${plugin_url:t:r}"
@@ -26,36 +26,36 @@ _zplug_add_plugin() {
     echo "Installing $plugin_name"
     echo_run git clone "$plugin_url" "$plugin_path"
     [[ "$?" -ne 0 ]] && return 1
-    _zsh_re_compinit
+    _zsh-re-compinit
   fi
 }
 
 case $1 in
   update)
-    _zplug_update_plugins "$plugins_path"
-    _zsh_re_compinit
+    _zplug-update-plugins "$plugins_path"
+    _zsh-re-compinit
     ;;
 
   add)
-    _zplug_add_plugin "${@[2,-1]}"
+    _zplug-add-plugin "${@[2,-1]}"
     ;;
 
   init)
-    _zplug_init
+    _zplug-init
     return "$?"
     ;;
 
   reinit)
-    _zsh_re_compinit
+    _zsh-re-compinit
     return "$?"
     ;;
 
   help | --help | -h)
-    _zplug_usage
+    _zplug-usage
     ;;
 
   *)
-    _zplug_usage
+    _zplug-usage
     return 1
     ;;
 esac

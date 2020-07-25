@@ -1,4 +1,4 @@
 #! /usr/bin/env zsh
 
-echo_run rmnm
-echo_run yarn install
+echo-run rmnm
+echo-run yarn install

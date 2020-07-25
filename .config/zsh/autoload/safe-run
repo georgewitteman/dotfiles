@@ -16,4 +16,4 @@ read SAFE_RUN_REPLY >&2
 if ! [ "$SAFE_RUN_REPLY" != "${SAFE_RUN_REPLY#[Yy]}" ]; then
   return 1
 fi
-echo_run $@
+echo-run $@

@@ -1,32 +1,32 @@
 #!/usr/bin/env zsh
 
-if ! in_git_repo; then
+if ! in-git-repo; then
   echo_err "Not in git repository."
   return 128
 fi
 
 if [[ "$1" == "" ]]; then
-  echo_info -n "Getting remote HEAD... "
+  echo-info -n "Getting remote HEAD... "
   GIT_HEAD="$(get_remote_head)"
   echo $GIT_HEAD
 
-  echo_run git fetch --quiet && \
-  echo_run git rebase origin/$GIT_HEAD
+  echo-run git fetch --quiet && \
+  echo-run git rebase origin/$GIT_HEAD
   return $?
 fi
 
 if [[ ("$1" == "-i" || "$1" == "--interactive") && "$#" -le 1 ]]; then
-  echo_info -n "Getting remote HEAD... "
+  echo-info -n "Getting remote HEAD... "
   GIT_HEAD="$(get_remote_head)"
   echo $GIT_HEAD
 
-  echo_run git fetch --quiet && \
-  echo_run git rebase --interactive origin/$GIT_HEAD
+  echo-run git fetch --quiet && \
+  echo-run git rebase --interactive origin/$GIT_HEAD
   return $?
 fi
 
 if [[ "$1" == "--continue" && "$#" -le 1 ]]; then
-  echo_run git rebase --continue
+  echo-run git rebase --continue
   return $?
 fi
 
@@ -35,8 +35,8 @@ if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
   return
 fi
 
-echo_run git fetch --quiet && \
-echo_run git rebase $@
+echo-run git fetch --quiet && \
+echo-run git rebase $@
 
 # if needs_git_cleanup; then
 #   git_cleanup

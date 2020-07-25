@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-if ! in_git_repo; then
+if ! in-git-repo; then
   return 128
 fi
 

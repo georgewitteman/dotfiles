@@ -1,8 +1,8 @@
 #!/usr/bin/env zsh
 
-if ! is_clean_repo; then
+if ! is-clean-repo; then
   echo "${fg[yellow]}Warning:$reset_color You have uncommitted changes. Commit or stash your changes."
-  echo_run git status
+  echo-run git status
   return 1
 fi
 
@@ -25,5 +25,5 @@ if [ "$branch_name" = "*" ]; then
   echo "$reset_color"
   return
 fi &&
-echo_run git checkout $branch_name || return "$status"
-git_show --quiet
+echo-run git checkout $branch_name || return "$status"
+git-show --quiet

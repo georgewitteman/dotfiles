@@ -15,8 +15,8 @@ for branch in $branches; do
     continue
   fi
 
-  git_show --quiet "refs/remotes/origin/$branch"
-  safe_run git push origin --delete "$branch"
+  git-show --quiet "refs/remotes/origin/$branch"
+  safe-run git push origin --delete "$branch"
   if [[ "$status" -ne 0 ]]; then
     echo "Not deleting..."
   fi

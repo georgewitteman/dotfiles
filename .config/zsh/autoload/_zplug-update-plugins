@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-_update_plugin() {
+_update-plugin() {
   local dir="$1"
   local plugin_name=${dir##*/}
   if [[ -L "$dir" ]] || [[ ! -d "$dir/.git" ]]; then
@@ -29,7 +29,7 @@ _update_plugin() {
 local plugins_path="$1"
 (
 for dir in $plugins_path/*(/N); do
-  ( _update_plugin "$dir" ) &
+  ( _update-plugin "$dir" ) &
 done
 wait
 )

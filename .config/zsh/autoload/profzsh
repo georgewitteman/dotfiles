@@ -1,20 +1,18 @@
-profzsh() {
-  local start_time shell now startup_diff max_time time_color
-  zmodload zsh/datetime
-  shell=$SHELL
+#!/usr/bin/env zsh
 
-  # login interactive
-  start_time=$EPOCHREALTIME
+local start_time shell now startup_diff max_time time_color
+zmodload zsh/datetime
+shell=$SHELL
 
-  ZPROF=true $shell "$@" -c 'zprof; exit'
+# login interactive
+start_time=$EPOCHREALTIME
 
-  time_color="${fg_bold[default]}"
-  startup_diff=$((($EPOCHREALTIME * 1000) - ($start_time * 1000)))
+ZPROF=true $shell "$@" -c 'zprof; exit'
 
-  (( $startup_diff >= 100 )) && \
-    time_color="${fg_bold[red]}"
+time_color="${fg_bold[default]}"
+startup_diff=$((($EPOCHREALTIME * 1000) - ($start_time * 1000)))
 
-  echo "'zsh $@' startup took ${time_color}${startup_diff[0,8]}ms${reset_color}"
-}
+(( $startup_diff >= 100 )) && \
+  time_color="${fg_bold[red]}"
 
-# vi:ft=zsh
+echo "'zsh $@' startup took ${time_color}${startup_diff[0,8]}ms${reset_color}"

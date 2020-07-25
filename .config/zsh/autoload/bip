@@ -9,6 +9,6 @@ local inst=$(brew search | eval "fzf ${FZF_DEFAULT_OPTS} --multi --header='[brew
 
 if [[ $inst ]]; then
   for prog in $(echo $inst); do
-    echo_run brew install $prog
+    echo-run brew install $prog
   done
 fi

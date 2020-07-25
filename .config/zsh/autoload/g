@@ -8,6 +8,6 @@ else
     printf "Not in a git repository.\n"
     return 128
   fi
-  echo_run git status && \
-  echo_run git stash list
+  echo-run git status && \
+  echo-run git stash list
 fi

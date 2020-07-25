@@ -1,0 +1,11 @@
+#!/usr/bin/env zsh
+
+local exports_dir="$HOME/.gnupg/.exports"
+mkdir -p "$exports_dir"
+echo "Exporting to $exports_dir"
+echo-run gpg --armor --export > "$exports_dir/pgp-public-keys.asc"
+echo-run gpg --armor --export-secret-keys > "$exports_dir/pgp-private-keys.asc"
+echo-run gpg --export-ownertrust > "$exports_dir/pgp-ownertrust.asc"
+echo-run ls -l "$exports_dir"
+echo-run yadm encrypt
+echo-run yadm status

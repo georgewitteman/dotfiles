@@ -1,12 +1,12 @@
 #!/usr/bin/env zsh
 
 local cmd="git"
-if ! in_git_repo; then
+if ! in-git-repo; then
   echo "Not in git repository. Using yadm."
   cmd="yadm"
 fi
 
-if is_clean_repo $cmd; then
+if is-clean-repo $cmd; then
   echo "There are no changes to be amended."
   return 1
 fi
@@ -27,5 +27,5 @@ if [[ "$current_commit_author" != "$repo_email" ]]; then
 fi
 
 local prev_head="$($cmd rev-parse HEAD)"
-echo_run $cmd commit --amend --no-edit "$@"
+echo-run $cmd commit --amend --no-edit "$@"
 echo "Use '$cmd reset $prev_head' if you want to un-amend."

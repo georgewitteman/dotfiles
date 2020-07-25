@@ -1,19 +1,19 @@
 #!/usr/bin/env zsh
 
-if ! in_git_repo; then
-  echo_err "Not in git repository."
+if ! in-git-repo; then
+  echo-err "Not in git repository."
   return 128
 fi
 
-echo_info -n "Getting remote HEAD... "
-GIT_HEAD="$(get_remote_head)"
+echo-info -n "Getting remote HEAD... "
+GIT_HEAD="$(get-remote-head)"
 echo $GIT_HEAD
 
-echo_run git checkout --quiet $GIT_HEAD && \
-echo_run git fetch --quiet --progress --force --prune --tags && \
-echo_run git merge --quiet --ff-only origin/$GIT_HEAD && \
-git_show --quiet
+echo-run git checkout --quiet $GIT_HEAD && \
+echo-run git fetch --quiet --progress --force --prune --tags && \
+echo-run git merge --quiet --ff-only origin/$GIT_HEAD && \
+git-show --quiet
 
-# if needs_git_cleanup; then
-#   git_cleanup
+# if needs-git-cleanup; then
+#   git-cleanup
 # fi

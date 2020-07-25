@@ -5,11 +5,11 @@ local MANIFEST="$VIM_DIR/plugins"
 local PLUGINS_DIR="${VIM_PLUGINS_DIR:-$VIM_DIR/pack/mine/start}"
 local COMMENT="^ *#"
 
-_edit_manifest() {
+_edit-manifest() {
   "${EDITOR:-vim}" "$MANIFEST"
 }
 
-_get_repo_url() {
+_get-repo-url() {
   local repo="$1"
   [[ "$repo" = git@github.com:* ]] && echo "$repo" && return
   [[ "$repo" = http://* || "$repo" = https://* ]] && echo "$repo.git" && return
@@ -19,7 +19,7 @@ _get_repo_url() {
   # Otherwise, it's a local repo
 }
 
-_install_plugin() {
+_install-plugin() {
   local line="$1"
   local plugin_name="${line##*/}"
 
@@ -37,7 +37,7 @@ _install_plugin() {
   echo "$plugin_name: installed"
 }
 
-_install_missing_plugins() {
+_install-missing-plugins() {
   (
   # Running this in a subshell because for some reason that's the only way to
   # reliably not have the job notifications show up. I think it might be
@@ -45,14 +45,14 @@ _install_missing_plugins() {
   # wait command requires job control to be on to work properly
   for line in "${(@f)"$(<$MANIFEST)"}"; do
     ([[ -z "${line// }" ]] || [[ "$line" =~ "$COMMENT" ]]) && continue
-    _install_plugin "$line" &
+    _install-plugin "$line" &
   done
   wait
   )
-  _update_help_tags
+  _update-help-tags
 }
 
-_uninstall_plugin() {
+_uninstall-plugin() {
   local dir="$1"
   [[ -z "$dir" ]] && return 1
   local plugin_name=${dir##*/}
@@ -61,16 +61,16 @@ _uninstall_plugin() {
   echo "$plugin_name: uninstalled"
 }
 
-_uninstall_unwanted_plugins() {
+_uninstall-unwanted-plugins() {
   local did_uninstall=0
   # The '(N)' tells zsh to not error when it doesn't find any directories and
   # the '(/)' tells it to only look for directories
   for dir in $PLUGINS_DIR/*(/N); do
-    _uninstall_plugin "$dir"
+    _uninstall-plugin "$dir"
     [[ "$?" -eq 0 ]] && did_uninstall=1
   done
   [[ "$did_uninstall" -ne 1 ]] && echo "No plugins to uninstall" && return
-  _update_help_tags
+  _update-help-tags
 }
 
 _update_plugin() {
@@ -107,7 +107,7 @@ _update_plugin() {
   fi
 }
 
-_update_plugins() {
+_update-plugins() {
   local quieter="$1"
   [[ -n "$quieter" ]] && shift
   (
@@ -121,20 +121,20 @@ _update_plugins() {
   for dir in $PLUGINS_DIR/*(/N); do
     plugin_name=${dir##*/}
     [[ -n "$1" ]] && [[ "$1" != "$plugin_name" ]] && continue
-    _update_plugin "$dir" "$quieter" &
+    _update-plugin "$dir" "$quieter" &
   done
   for line in "${(@f)"$(<$MANIFEST)"}"; do
     ([[ -z "${line// }" ]] || [[ "$line" =~ "$COMMENT" ]]) && continue
     local plugin_name=${line##*/}
     [[ -d "$PLUGINS_DIR/$plugin_name" ]] && continue
-    _install_plugin "$line" &
+    _install-plugin "$line" &
   done
   wait
   )
-  _update_help_tags
+  _update-help-tags
 }
 
-_update_help_tags() {
+_update-help-tags() {
   # -E starts vim in improved ex mode
   # -s starts vim in silent/batch mode, but only when vim was started in ex
   #    mode
@@ -161,21 +161,21 @@ local action="$1"
 
 case $action in
   edit)
-    _edit_manifest
-    _install_missing_plugins
+    _edit-manifest
+    _install-missing-plugins
     ;;
 
   install)
-    _install_missing_plugins
+    _install-missing-plugins
     ;;
 
   clean)
-    _uninstall_unwanted_plugins
+    _uninstall-unwanted-plugins
     ;;
 
   update)
     shift
-    _update_plugins "$@"
+    _update-plugins "$@"
     ;;
 
   help | --help | -h)

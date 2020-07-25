@@ -21,7 +21,7 @@ fi
 local nose_profile_dir
 for nose_profile_dir in "$VIRTUAL_ENV"/lib/python*/site-packages/nose_profile*/(N); do
   # nose_profile just doesn't work, so lets just get rid of it so we don't always see that error
-  [[ -d "$nose_profile_dir" ]] && echo_run rm -rf "$nose_profile_dir"
+  [[ -d "$nose_profile_dir" ]] && echo-run rm -rf "$nose_profile_dir"
 done
 
 local arg nose_args=()
@@ -35,7 +35,7 @@ done
 # fi
 
 (
-  # echo_run pushd "$run_dir"
-  echo_run TZ=UTC nosetests "${nose_args[@]}" # "${file_or_dir##${run_dir}/}"
-  # echo_run popd
+  # echo-run pushd "$run_dir"
+  echo-run TZ=UTC nosetests "${nose_args[@]}" # "${file_or_dir##${run_dir}/}"
+  # echo-run popd
 )

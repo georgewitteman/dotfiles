@@ -1,0 +1,11 @@
+#!/usr/bin/env zsh
+
+(
+local tf_dir="$HOME/Code/infra/terraform"
+
+echo-run cd "$tf_dir"
+echo-run terraform fmt
+echo-run yadm encrypt
+echo-run yadm add .
+echo-run yadm add "$HOME/.config/yadm/files.gpg"
+)

@@ -1,4 +1,4 @@
 #!/usr/bin/env zsh
 
-echo_eval "${(q-)@}"
+echo-eval "${(q-)@}"
 # $@ # Also works

@@ -2,9 +2,9 @@
 
 if command -v brew >/dev/null 2>&1; then
   brew update && \
-  safe_run brew upgrade
+  safe-run brew upgrade
 elif command -v pacman >/dev/null 2>&1; then
-  safe_run sudo pacman -Syu
+  safe-run sudo pacman -Syu
 else
   echo "${fg[yellow]}Warning:${reset_color} Don't know how to upgrade the current OS."
 fi

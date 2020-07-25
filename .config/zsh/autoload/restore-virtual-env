@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 if command -v deactivate >/dev/null 2>&1; then
-  echo_run deactivate
+  echo-run deactivate
 fi
 
 __SAVED_VIRTUAL_ENVS=(${__SAVED_VIRTUAL_ENVS:-})
@@ -9,5 +9,5 @@ local next_virtual_env="${__SAVED_VIRTUAL_ENVS[-1]}"
 if [[ -n "$next_virtual_env" ]]; then
   echo "Restoring \"$next_virtual_env\"."
   __SAVED_VIRTUAL_ENVS=(${__SAVED_VIRTUAL_ENVS[1,-2]})
-  echo_run source "$next_virtual_env"/bin/activate
+  echo-run source "$next_virtual_env"/bin/activate
 fi

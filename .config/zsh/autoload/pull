@@ -1,12 +1,12 @@
 #!/usr/bin/env zsh
 
 local cmd="git"
-if ! in_git_repo; then
-  echo_info "Not in git repository. Using yadm."
+if ! in-git-repo; then
+  echo-info "Not in git repository. Using yadm."
   cmd="yadm"
 fi
 
-echo_run "$cmd" pull "$@"
+echo-run "$cmd" pull "$@"
 
 # if needs_git_cleanup; then
 #   git_cleanup

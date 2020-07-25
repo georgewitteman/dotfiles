@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-start_timer "$@"
+start-timer "$@"
 "$@" >/dev/null 2>&1
 echo >&2
-end_timer >&2
+end-timer >&2

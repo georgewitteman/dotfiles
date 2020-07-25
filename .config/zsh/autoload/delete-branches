@@ -7,8 +7,8 @@ for branch in $(git for-each-ref --sort=committerdate refs/heads --format='%(ref
     continue
   fi
 
-  git_show --quiet "$branch"
-  safe_run git branch -D "$branch"
+  git-show --quiet "$branch"
+  safe-run git branch -D "$branch"
   if [[ "$status" -ne 0 ]]; then
     echo "Not deleting..."
   fi
