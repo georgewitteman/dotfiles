@@ -9,7 +9,7 @@ for file in "$@"; do
 done
 
 if ! op list users >/dev/null 2>&1; then
-  echo-run op-signin
+  echo-run op-signin || return "$?"
 fi
 
 if ! chezmoi verify "$@"; then
