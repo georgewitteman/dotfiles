@@ -22,6 +22,12 @@ case "$command" in
   'cd')
     echo-run cd "$(chezmoi source-path "$@")"
     ;;
+  status)
+    echo-run chezmoi git -- status "$@"
+    ;;
+  commit)
+    echo-run chezmoi git -- commit "$@"
+    ;;
   *)
     if (( $+functions[dotfiles-$command] )); then
       "dotfiles-$command" "$@"
