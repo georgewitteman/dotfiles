@@ -1,0 +1,25 @@
+#!/usr/bin/env zsh
+
+if [[ -z "$1" ]]; then
+  echo "usage: ${0:t} <.eml file>"
+  return 1
+fi
+
+eml_file="${1:a}"
+if [[ ! -f "${eml_file}" ]]; then
+  echo "Email file must be a normal file (not a directory)."
+  return 1
+fi
+
+tmp_file="$(mktemp -t "${eml_file:t}").html"
+
+echo-run pip3 install --quiet emails || { echo 'Failed to install emails package.'; return 1 }
+
+echo-run python3 -c "from emails.loader import from_rfc822; \
+print(from_rfc822(open(${(qqq)eml_file}).read()).html)" > "$tmp_file"
+if [[ "$?" -ne 0 ]]; then
+  echo "Failed to generate html file."
+  return 1
+fi
+
+echo-run open "$tmp_file"
