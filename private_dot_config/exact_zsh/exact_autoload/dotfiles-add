@@ -1,0 +1,12 @@
+#!/usr/bin/env zsh
+
+echo-run chezmoi add -r "$@" || return "$?"
+
+local files=() file
+for file in "$@"; do
+  if [[ -e "$file" ]]; then
+    files+=("$(chezmoi source-path "${file:a}")")
+  fi
+done
+
+echo-run chezmoi git -- add "${files[@]}"

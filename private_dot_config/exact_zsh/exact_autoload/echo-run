@@ -1,0 +1,5 @@
+#!/usr/bin/env zsh
+
+# q- quotes properly. D transforms home directories into ~
+echo-eval "${(q-)@}"
+# $@ # Also works

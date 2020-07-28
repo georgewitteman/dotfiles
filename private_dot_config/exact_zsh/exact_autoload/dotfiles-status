@@ -1,0 +1,3 @@
+#!/usr/bin/env zsh
+echo-run chezmoi diff --no-pager
+echo-run chezmoi git -- status "$@"

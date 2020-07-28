@@ -1,0 +1,10 @@
+#!/usr/bin/env zsh
+
+echo-run chezmoi add -r "$HOME/.config/zsh/autoload"
+echo-run chezmoi add -r "$HOME/.zshrc" "$HOME/.zshenv"
+echo-run chezmoi add -r "$HOME/.config/alacritty/alacritty.yml"
+echo-run chezmoi add -r "$HOME/.config/git"
+echo-run chezmoi add -r "$HOME/.local/bin"
+
+echo-run chezmoi git -- add .
+echo-run chezmoi git -- status

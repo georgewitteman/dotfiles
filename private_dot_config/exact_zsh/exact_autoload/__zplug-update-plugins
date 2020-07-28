@@ -1,0 +1,35 @@
+#!/usr/bin/env zsh
+
+__update-plugin() {
+  local dir="$1"
+  local plugin_name=${dir##*/}
+  if [[ -L "$dir" ]] || [[ ! -d "$dir/.git" ]]; then
+    echo "$plugin_name: not updating, local plugin"
+    return 1
+  fi
+
+  cd "$dir"
+  local branch="$(git rev-parse --abbrev-ref --symbolic-full-name HEAD)"
+
+  if [[ "$branch" == "HEAD" ]]; then
+    echo "$plugin_name: not updating, detached HEAD"
+    return 1
+  fi
+
+  local start_commit="$(git rev-parse HEAD)"
+  git pull --quiet || { echo "$plugin_name: failed to pull"; return 1 }
+
+  local commits=$(git rev-list --count "$start_commit"..."HEAD")
+  [[ "$commits" -eq 0 ]] && echo "$plugin_name: nothing to update" && return 1
+
+  local log="\n$(git log --oneline "$start_commit"..."HEAD")\n"
+  echo "$plugin_name: updated $commits commit(s)$log"
+}
+
+local plugins_path="$1"
+(
+for dir in $plugins_path/*(/N); do
+  ( __update-plugin "$dir" ) &
+done
+wait
+)

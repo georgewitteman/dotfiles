@@ -1,8 +1,0 @@
-#!/usr/bin/env zsh
-
-if [ "$VIRTUAL_ENV" = "" ]; then
-  echo "Not inside a virtual environment."
-  return 1
-fi
-
-echo-run deactivate

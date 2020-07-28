@@ -1,0 +1,29 @@
+#!/usr/bin/env zsh
+
+if [[ -z "$1" ]] ; then
+  echo "usage: ${0:t} <venv name>" >&2
+  return 1
+fi
+
+local venv_name="${1}"
+local venv_root="${venv_name:a:h}"
+until [[ "$venv_root" = "/" || -f "${venv_root}/${venv_name}/bin/activate" ]]; do
+  venv_root="${venv_root:a:h}"
+done
+
+if [[ ! -f "${venv_root}/${venv_name}/bin/activate" ]]; then
+  echo "Couldn't find a valid venv for '${venv_name}'"
+  return 1
+fi
+
+if [[ -n "$VIRTUAL_ENV" ]] && [[ "$VIRTUAL_ENV" = "${venv_root}/${venv_name}" ]]; then
+  # Already in venv
+  return
+fi
+
+if [[ -n "$VIRTUAL_ENV" ]]; then
+  # In a different virtual_env
+  save-virtual-env
+fi
+
+echo-run source "${venv_root}/${venv_name}/bin/activate"

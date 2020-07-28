@@ -1,7 +1,0 @@
-#!/usr/bin/env zsh
-
-local exports_dir="$HOME/.gnupg/.exports"
-echo-run yadm decrypt
-echo-run gpg --import "$exports_dir/pgp-public-keys.asc"
-echo-run gpg --import "$exports_dir/pgp-private-keys.asc"
-echo-run gpg --import-ownertrust "$exports_dir/pgp-ownertrust.asc"

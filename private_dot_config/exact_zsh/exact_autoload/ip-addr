@@ -1,0 +1,3 @@
+#!/usr/bin/env zsh
+
+curl -s -H "Accept: application/json" "https://ipinfo.io/${1:-}" | jq "del(.loc, .postal, .readme)"

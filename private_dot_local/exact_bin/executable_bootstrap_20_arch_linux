@@ -1,0 +1,94 @@
+#!/usr/bin/env zsh
+
+set -e
+source "$HOME/.zshrc"
+
+if (( ! $+commands[pacman] )); then
+  echo-warn "The 'pacman' command is not available. Skipping arch"
+  exit
+fi
+
+install-aur-package() {
+  if command -v "$1" >/dev/null 2>&1; then
+    echo-ok "Already installed $1"
+    return
+  fi
+
+  aur-install $1
+}
+
+echo-run sudo pacman --sync --refresh
+
+# echo_run sudo pacman --sync --refresh --sysupgrade
+echo-run sudo pacman --query --upgrades || true
+echo-warn "Skipping 'pacman -Syu' since it might be slow and requires human intervention."
+
+local pacman_list=($(sudo pacman --query --quiet))
+
+local desired_packages=(
+  alacritty
+  alsa-utils
+  bashtop
+  ctags
+  docker
+  fd
+  firefox
+  fzf
+  git
+  glances
+  htop
+  jq
+  kubectl
+  lightdm
+  lightdm-gtk-greeter
+  minikube
+  noto-fonts-emoji
+  numlockx
+  ripgrep
+  terraform
+  tldr
+  tmux
+  vim
+  virtualbox
+  wget
+  wmctrl
+  xdg-utils
+  zsh
+)
+
+local pkgs_to_install=()
+local installed_pkgs=()
+local pkg
+for pkg in $desired_packages; do
+  if (($pacman_list[(Ie)$pkg])); then
+    installed_pkgs+=("$pkg")
+  else
+    pkgs_to_install+=("$pkg")
+  fi
+done
+
+if [[ "${#installed_pkgs}" -ne 0 ]]; then
+  echo-ok "Already installed: $installed_pkgs"
+fi
+
+if [[ "${#pkgs_to_install}" -ne 0 ]]; then
+  echo-run sudo pacman --quiet --sync --noconfirm $pkgs_to_install
+else
+  echo-ok "No more packages from official repositories to install."
+fi
+
+if (( $pacman_list[(Ie)yay] )); then
+  echo-ok "yay already installed."
+else
+  install-aur-package yay
+fi
+
+if (( $pacman_list[(Ie)ytop] )); then
+  echo-ok "ytop already installed."
+else
+  install-aur-package ytop
+fi
+
+echo-run sudo systemctl enable lightdm.service
+echo-run sudo systemctl enable docker.service
+echo-run sudo usermod -aG docker $USER

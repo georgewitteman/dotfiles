@@ -1,0 +1,22 @@
+#!/usr/bin/env zsh
+
+set -e
+source "$HOME/.zshrc"
+
+if (( $+commands[tmux] )); then
+  echo-info "Installing tmux terminfo file"
+  echo-run tic -x $XDG_CONFIG_HOME/tmux/tmux.terminfo
+
+  echo-info "Installing, updating, and cleaning tmux plugins"
+
+  if [ ! -d "${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tpm" ]; then
+    echo-run git clone https://github.com/tmux-plugins/tpm \
+      "${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tpm"
+  fi
+
+  echo-run ${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tpm/bin/install_plugins
+  echo-run ${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tpm/bin/update_plugins all
+  echo-run ${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tpm/bin/clean_plugins
+else
+  echo-warn "tmux not installed."
+fi

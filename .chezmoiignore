@@ -1,0 +1,10 @@
+.config/zsh/plugins
+.config/tmux/plugins
+.config/tmux/tpm
+.vim/pack
+README.md
+tags
+
+{{ if ne .class "personal" }}
+.config/zsh/autoload/terraform
+{{ end }}

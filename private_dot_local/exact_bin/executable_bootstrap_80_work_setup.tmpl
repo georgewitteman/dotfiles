@@ -1,0 +1,22 @@
+#!/usr/bin/env zsh
+
+set -e
+source "$HOME/.zshrc"
+
+WORK_EMAIL="{{ .work.email }}"
+WORK_PATH="{{ .work.path }}"
+WORK_SIGNINGKEY="{{ .work.signingkey }}"
+
+if [[ -z "$WORK_PATH" || -z "$WORK_SIGNINGKEY" || -z "$WORK_EMAIL" ]]; then
+  echo-warn "Skipping work setup because email, path, or signingkey not set in config."
+fi
+
+local repo
+for repo in "$WORK_PATH"/*(/N); do
+  if [[ -d "${repo}/.git" ]]; then
+    echo-run cd "${repo:a}"
+    echo-run git config user.email "$WORK_EMAIL"
+    echo-run git config user.signingkey "$WORK_SIGNINGKEY"
+    echo
+  fi
+done

@@ -1,0 +1,20 @@
+#!/usr/bin/env zsh
+
+local cmd="git"
+if ! in-git-repo; then
+  echo "Not in a git repository. Using dotfiles."
+  cmd="dotfiles"
+fi
+
+if [[ "$#" -eq 0 ]] && [[ "$cmd" != "dotfiles" ]]; then
+  local rel_path="$(realpath --relative-to="$PWD" "$(git rev-parse --show-toplevel)")"
+  echo-run git add "$rel_path"
+  status
+  return $?
+elif [[ "$#" -eq 0 ]] && [[ "$cmd" = "dotfiles" ]]; then
+  echo-run yadm add --update
+  echo-run yadm status
+  return $?
+fi
+
+echo-run $cmd add --verbose "$@"

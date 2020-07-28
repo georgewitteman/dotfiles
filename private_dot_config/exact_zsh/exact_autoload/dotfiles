@@ -1,0 +1,49 @@
+#!/usr/bin/env zsh
+
+local usage="Wrapper for chezmoi.
+
+Usage:
+  ${0:t} -h | --help           Show usage and exit.
+"
+
+local command="$1"
+if [[ -z "$command" ]]; then
+  echo "$usage"
+  return 1
+fi
+
+shift
+
+case "$command" in
+  -h | --help)
+    echo "$usage"
+    return 1
+    ;;
+  'cd')
+    echo-run cd "$(chezmoi source-path "$@")"
+    ;;
+  amend)
+    echo-run chezmoi git -- commit --amend --no-edit "$@"
+    ;;
+  commit)
+    echo-run chezmoi git -- commit "$@"
+    ;;
+  pull)
+    echo-run chezmoi pull "$@"
+    ;;
+  push)
+    echo-run chezmoi git -- push "$@"
+    ;;
+  git)
+    echo-run chezmoi git -- "$@"
+    ;;
+  'log')
+    echo-run chezmoi git -- log "$@"
+    ;;
+  *)
+    if (( $+functions[dotfiles-$command] )); then
+      "dotfiles-$command" "$@"
+    else
+      echo-run chezmoi "$command" "$@"
+    fi
+esac

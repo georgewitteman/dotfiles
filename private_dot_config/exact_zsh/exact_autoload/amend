@@ -1,0 +1,32 @@
+#!/usr/bin/env zsh
+
+local cmd="git"
+if ! in-git-repo; then
+  echo "Not in git repository. Using dotfiles."
+  echo-run dotfiles amend
+  return "$?"
+fi
+
+if is-clean-repo $cmd; then
+  echo "There are no changes to be amended."
+  return 1
+fi
+
+local current_commit_author="$($cmd show --no-patch --format='%ae')"
+local repo_email="$($cmd config --get user.email)"
+if [[ "$cmd" = "yadm" ]] && [[ -z "$repo_email" ]]; then
+  repo_email="$(yadm gitconfig --global --get user.email)"
+elif [[ -z "$repo_email" ]]; then
+  repo_email="$($cmd config --global --get user.email)"
+fi
+
+if [[ "$current_commit_author" != "$repo_email" ]]; then
+  echo "Are you sure you want to amend a commit that you don't own?"
+  echo "Current commit author email: $current_commit_author"
+  echo "Your email: $repo_email"
+  return 1
+fi
+
+local prev_head="$($cmd rev-parse HEAD)"
+echo-run $cmd commit --amend --no-edit "$@"
+echo "Use '$cmd reset $prev_head' if you want to un-amend."

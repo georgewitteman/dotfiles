@@ -1,0 +1,8 @@
+#!/usr/bin/env zsh
+
+CLOUDFLARE_EMAIL="{{ .email }}" \
+CLOUDFLARE_API_KEY="{{ (onepassword "dyulx35qcveyzpgdij2j3vvd4y" .vault).details.password }}" \
+DNSIMPLE_TOKEN="{{ (onepassword "pgfgdbtj3bgbfphzkhdxrkp44m" .vault).details.password }}" \
+DNSIMPLE_ACCOUNT="{{ (onepassword "uvbhjdlqczaolpwzje7c6nc2xq" .vault).details.password }}" \
+GITHUB_TOKEN="{{ (onepassword "sjrmyfeywna6zje7uf7oekhnoi" .vault).details.password }}" \
+command terraform "$@"

@@ -1,0 +1,21 @@
+#!/usr/bin/env zsh
+
+if [[ "$#" -ne 2 ]]; then
+  echo "usage: ${0:t} <source> <dest>"
+fi
+local src="$1"
+local dest="$2"
+
+if [[ ! -e "$src" ]]; then
+  echo-err "Source doesn't exist: ${(D)src}"
+  return 1
+fi
+
+if [[ -e "$dst" ]]; then
+  echo-err "Destination already exists: ${(D)dst}"
+  return 1
+fi
+
+echo-run mv "$1" "$2" || return "$?"
+echo-run chezmoi add "$2" || return "$?"
+echo-run chezmoi rm --force "$1" || return "$?"

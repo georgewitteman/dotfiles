@@ -1,0 +1,11 @@
+#!/usr/bin/env zsh
+
+if [[ "$@" = "--staged" ]]; then
+  echo-run chezmoi git -- diff HEAD
+else
+  if ! op list users >/dev/null 2>&1; then
+    echo-run op-signin
+  fi
+
+  echo-run chezmoi diff "$@"
+fi

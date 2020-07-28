@@ -1,8 +1,0 @@
-#!/usr/bin/env zsh
-
-if [[ "$#" -ne 0 ]]; then
-  echo-run yadm add "$@"
-  return $?
-fi
-
-echo-run yadm add --update --verbose

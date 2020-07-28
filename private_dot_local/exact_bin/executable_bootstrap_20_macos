@@ -1,0 +1,85 @@
+#!/usr/bin/env zsh
+
+set -e
+source "$HOME/.zshrc"
+
+if [[ ! "$OSTYPE" =~ "darwin" ]]; then
+  echo-warn "Not on macOS. Skipping macOS."
+  exit
+fi
+
+# install homebrew if it's missing
+if (( ! $+commands[brew] )); then
+  echo-info "Installing homebrew"
+  echo-eval '/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
+fi
+
+echo-run command brew update
+
+# echo-run command brew upgrade
+echo-run command brew outdated
+echo-warn "Skipping 'brew upgrade' since it's kind of slow."
+
+local brew_list=($(command brew list -1))
+
+if (( $brew_list[(Ie)universal-ctags] )); then
+  echo-ok "universal-ctags already installed"
+else
+  echo-run command brew install --HEAD universal-ctags/universal-ctags/universal-ctags
+fi
+
+if (( $brew_list[(Ie)vim] )); then
+  echo-ok 'vim already installed'
+else
+  echo-run command brew install --HEAD vim
+fi
+
+local formulas=(
+  awscli
+  bat
+  curl
+  diff-so-fancy
+  exa
+  fd
+  fzf
+  git
+  gnupg
+  httpie
+  hyperfine
+  jq
+  neovim
+  parquet-tools
+  pgcli
+  pinentry-mac
+  ripgrep
+  rsync
+  shellcheck
+  tealdeer
+  terraform
+  tmux
+  trash
+  tree
+  wget
+  zsh
+)
+
+local formulas_to_install=()
+local installed_formulas=()
+local formula
+for formula in $formulas; do
+  if (($brew_list[(Ie)$formula])); then
+    installed_formulas+=("$formula")
+  else
+    formulas_to_install+=("$formula")
+  fi
+done
+
+if [[ "${#installed_formulas}" -ne 0 ]]; then
+  echo-ok "Already installed: $installed_formulas"
+fi
+
+if [[ "${#formulas_to_install}" -ne 0 ]]; then
+  echo-run command brew install $formulas_to_install
+else
+  echo-ok "No more formulas to install."
+fi

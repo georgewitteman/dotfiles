@@ -1,0 +1,7 @@
+#!/usr/bin/env zsh
+
+set -e
+source "$HOME/.zshrc"
+
+echo-info "REMINDERS:"
+echo-info " - No reminders now!"
