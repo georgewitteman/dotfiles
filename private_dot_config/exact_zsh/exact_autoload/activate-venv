@@ -5,18 +5,22 @@ if [[ -z "$1" ]] ; then
   return 1
 fi
 
-local venv_name="${1}"
-local venv_root="${venv_name:a:h}"
-until [[ "$venv_root" = "/" || -f "${venv_root}/${venv_name}/bin/activate" ]]; do
-  venv_root="${venv_root:a:h}"
+local venv_dir="${1:a}"
+until [[ "${venv_dir}" = "/" || -f "${venv_dir}/${1}/bin/activate" ]]; do
+  venv_dir="${venv_dir:h}"
 done
 
-if [[ ! -f "${venv_root}/${venv_name}/bin/activate" ]]; then
-  echo "Couldn't find a valid venv for '${venv_name}'"
+local venv_path
+
+if [[ -f "${venv_dir}/${1}/bin/activate" ]]; then
+  venv_path="${venv_dir}/${1}"
+  venv_path="${venv_path:a}"
+else
+  echo "Couldn't find a valid venv for '${1}'"
   return 1
 fi
 
-if [[ -n "$VIRTUAL_ENV" ]] && [[ "$VIRTUAL_ENV" = "${venv_root}/${venv_name}" ]]; then
+if [[ -n "$VIRTUAL_ENV" ]] && [[ "$VIRTUAL_ENV" = "${venv_path}" ]]; then
   # Already in venv
   return
 fi
@@ -26,4 +30,4 @@ if [[ -n "$VIRTUAL_ENV" ]]; then
   save-virtual-env
 fi
 
-echo-run source "${venv_root}/${venv_name}/bin/activate"
+echo-run source "${venv_path}/bin/activate"
