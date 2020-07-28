@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 if ! in-git-repo; then
-  echo-err "Not in git repository."
+  echo-err "Not in a git repository."
   return 128
 fi
 
@@ -13,7 +13,3 @@ echo-run git checkout --quiet $GIT_HEAD && \
 echo-run git fetch --quiet --progress --force --prune --tags && \
 echo-run git merge --quiet --ff-only origin/$GIT_HEAD && \
 git-show --quiet
-
-# if needs-git-cleanup; then
-#   git-cleanup
-# fi

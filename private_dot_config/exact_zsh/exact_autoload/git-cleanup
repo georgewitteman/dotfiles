@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 if ! in-git-repo; then
-  echo "Not in git repository."
+  echo-err "Not in a git repository."
   return 128
 fi
 

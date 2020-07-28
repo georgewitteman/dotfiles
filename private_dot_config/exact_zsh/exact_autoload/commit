@@ -1,13 +1,3 @@
 #!/usr/bin/env zsh
 
-local cmd="git"
-if ! in-git-repo; then
-  echo "Not in a git repository. Using dotfiles."
-  cmd="dotfiles"
-fi
-
-echo-run $cmd commit "$@"
-
-# if needs_git_cleanup; then
-#   git_cleanup
-# fi
+echo-run git commit "$@"

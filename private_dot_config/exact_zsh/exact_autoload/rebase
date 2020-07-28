@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 if ! in-git-repo; then
-  echo_err "Not in git repository."
+  echo-err "Not in a git repository."
   return 128
 fi
 
@@ -36,8 +36,4 @@ if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
 fi
 
 echo-run git fetch --quiet && \
-echo-run git rebase $@
-
-# if needs_git_cleanup; then
-#   git_cleanup
-# fi
+echo-run git rebase "$@"

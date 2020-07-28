@@ -1,33 +1,28 @@
 #!/usr/bin/env zsh
 
-local cmd="git"
-local run_cmd="echo-run"
 if ! in-git-repo; then
-  echo-info "Not in git repository. Using dotfiles."
-  echo-run dotfiles push "$@"
-  return "$?"
+  echo-err "Not in a git repository."
+  return 128
 fi
 
-local head=$($cmd rev-parse --abbrev-ref HEAD)
+local head=$(git rev-parse --abbrev-ref HEAD)
 
 if [[ "$head" == "HEAD" ]]; then
   echo-err "You are not on the HEAD of a branch."
   return 1
 fi
 
-if [[ ! -z "$($cmd status --porcelain)" ]]; then
+if [[ ! -z "$(git status --porcelain)" ]]; then
   echo-err "There are uncommitted files."
-  echo-run $cmd status
+  echo-run git status
   return 1
 fi
 
 local args=("$@")
 
-local remote="$($cmd rev-parse --abbrev-ref --symbolic-full-name @{upstream} 2>/dev/null)"
+local remote="$(git rev-parse --abbrev-ref --symbolic-full-name @{upstream} 2>/dev/null)"
 if [[ -z "$remote" ]]; then
-  echo-warn "This branch is not yet tracked on a remote."
   args+=("--set-upstream" "origin" "$head")
-  run_cmd="safe-run"
 fi
 
-$run_cmd $cmd push $args
+echo-run git push $args
