@@ -1,9 +1,26 @@
 #!/usr/bin/env zsh
 
+if ! whence python3 >/dev/null; then
+  echo "You need to have python3 installed."
+  return 1
+fi
+
 if [[ -z "$1" ]]; then
   echo "usage: ${0:t} <.eml file>"
   return 1
 fi
+
+local venv_dir="${XDG_DATA_HOME:-$HOME/.local/share}/eml-to-html/venv"
+
+if [[ ! -f "$venv_dir/bin/activate" ]]; then
+  echo-run mkdir -p "${venv_dir:a:h}"
+  echo-run python3 -m venv "$venv_dir" || { echo 'Failed to create venv'; return 1 }
+fi
+
+activate-venv "$venv_dir" || { echo 'Failed to activate venv'; return 1 }
+
+echo-run pip3 install --quiet --upgrade pip || true
+echo-run pip3 install --quiet emails || { echo 'Failed to install emails package.'; return 1 }
 
 eml_file="${1:a}"
 if [[ ! -f "${eml_file}" ]]; then
@@ -13,8 +30,6 @@ fi
 
 tmp_file="$(mktemp -t "${eml_file:t}").html"
 
-echo-run pip3 install --quiet emails || { echo 'Failed to install emails package.'; return 1 }
-
 echo-run python3 -c "from emails.loader import from_rfc822; \
 print(from_rfc822(open(${(qqq)eml_file}).read()).html)" > "$tmp_file"
 if [[ "$?" -ne 0 ]]; then
@@ -23,3 +38,5 @@ if [[ "$?" -ne 0 ]]; then
 fi
 
 echo-run open "$tmp_file"
+
+restore-virtual-env
