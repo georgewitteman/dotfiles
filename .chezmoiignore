@@ -5,6 +5,10 @@
 README.md
 tags
 
+{{ if ne .class "work" }}
+.local/bin/bootstrap_81_snowsql_install
+{{ end }}
+
 {{ if ne .class "personal" }}
 .config/zsh/autoload/terraform
 {{ end }}
