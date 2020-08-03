@@ -160,7 +160,7 @@ alias ec='$EDITOR ~/.zshrc'
 #                 `$ <file_name><CR>`
 alias -s {py,md}=vim
 # Paste in a git repository url and it will automatically clone it
-alias -s git='git clone'
+alias -s git='clone'
 
 alias make-venv='python3 -m venv .venv'
 alias make-venv2='virtualenv .venv'
@@ -213,6 +213,7 @@ if whence git >/dev/null; then
   alias gb='git-branch'
   alias develop='master'
   alias switch='echo-run git switch'
+  alias restore='echo-run git restore'
 fi
 
 alias dotf="dotfiles"
