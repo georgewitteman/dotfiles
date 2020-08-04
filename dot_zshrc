@@ -317,28 +317,16 @@ HISTIGNORE="ls:ll:la:cd:cd -:pwd:exit:date:* --help"
 setopt bang_hist
 # Write the history file in the ":start:elapsed;command" format.
 setopt extended_history
-# Write to the history file immediately, not when the shell exits.
-setopt inc_append_history
 # Share history between all sessions.
 setopt share_history
-# Expire duplicate entries first when trimming history.
-setopt hist_expire_dups_first
-# Don't record an entry that was just recorded again.
-setopt hist_ignore_dups
 # Delete old recorded entry if new entry is a duplicate.
 setopt hist_ignore_all_dups
-# Do not display a line previously found.
-setopt hist_find_no_dups
 # Don't record an entry starting with a space.
 setopt hist_ignore_space
-# Don't write duplicate entries in the history file.
-setopt hist_save_no_dups
 # Remove superfluous blanks before recording entry.
 setopt hist_reduce_blanks
 # Don't execute immediately upon history expansion.
 setopt hist_verify
-# Beep when accessing nonexistent history.
-setopt hist_beep
 
 # FZF
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude .git'
