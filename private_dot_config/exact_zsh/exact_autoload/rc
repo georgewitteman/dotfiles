@@ -1,0 +1,12 @@
+#!/usr/bin/env zsh
+
+# [r]eload [c]onfig
+
+if [[ -n "$(jobs)" ]]; then
+  echo-err "Close background jobs before reloading zsh."
+  return 1
+fi
+
+echo-run zplug reinit
+echo-eval 'path=(); fpath=()'
+echo-run exec "$SHELL" --login --interactive
