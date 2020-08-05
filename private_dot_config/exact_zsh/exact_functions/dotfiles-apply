@@ -15,8 +15,7 @@ fi
 if ! chezmoi verify "$@"; then
   echo-run chezmoi diff --no-pager "$@" || { echo-warn "diff failed"; return }
   safe-run chezmoi apply "$@" || { echo-info "You can run 'dotfiles add ${(D)@:-.}' to update the source."; return }
-  echo-run zplug reinit
-  echo-run 'exec' "$SHELL" --login --interactive
+  rc
 else
   echo-info "Nothing to apply."
 fi
