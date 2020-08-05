@@ -4,7 +4,7 @@ set -e
 source "$HOME/.zshrc"
 
 if whence snowsql >/dev/null; then
-  echo-info 'Skipping snowsql because it is already installed'
+  echo-info 'Skipping snowsql because it is already installed.'
   return
 fi
 
@@ -15,4 +15,7 @@ echo-run curl -O 'https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/
 
 echo-run installer -pkg 'snowsql-1.2.7-darwin_x86_64.pkg' -target CurrentUserHomeDirectory
 
-echo-warn "Snowflake modifies .zshrc. Probably want to remove its changes."
+echo-run ln -s "$HOME/Applications/SnowSQL.app/Contents/MacOS/snowsql" '/usr/local/bin/snowsql'
+
+echo-info "Cleaning up temporary directory."
+echo-run rm -rf "$tmpdir"

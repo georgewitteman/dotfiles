@@ -1,3 +1,4 @@
+#!/usr/bin/env zsh
 # Load Order         Interactive  Interactive  Script
 # Startup            Only login   Always
 # ------------------ -----------  -----------  ------

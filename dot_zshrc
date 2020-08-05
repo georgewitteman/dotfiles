@@ -63,23 +63,21 @@ typeset -U path fpath
 path=("/usr/local/bin" "/usr/local/sbin" $path)
 
 # Snowflake paths
-if [[ -d "$HOME/Applications/SnowSQL.app/Contents/MacOS" ]]; then
-  path=("$HOME/Applications/SnowSQL.app/Contents/MacOS" $path)
-fi
 
-# The ~/.pyenv/versions file is saved in yadm, so use the bin directory to
-# check if pyenv is installed
-# if [[ -d "$HOME/.pyenv/bin" ]]; then
-#   export PYENV_ROOT="$HOME/.pyenv"
-#   export PYENV_SHELL="zsh"
-#   [[ -d "$PYENV_ROOT/bin" ]] && path=("$PYENV_ROOT/bin" $path)
-#   # [[ -d "$PYENV_ROOT/shims" ]] && path=("$PYENV_ROOT/shims" $path)
-# fi
 # Leaving this here so other install scripts think that it's here, since I'm
 # setting the path manually
+# ====================
 # if command -v pyenv 1>/dev/null 2>&1; then
 #   eval "$(pyenv init - --no-rehash zsh)"
 # fi
+# ====================
+
+# Leave this here so that the snowsql installer thinks that it's already here
+# and doesn't add the path. The bootstrap script that installs snowsql links
+# the binary to /usr/local/bin/snowsql.
+# ====================
+# added by Snowflake SnowSQL installer v1.2
+# ====================
 
 [[ ! -d "$HOME/.local/bin" ]] && mkdir -p "$HOME/.local/bin"
 path=("$HOME/.local/bin" $path)
@@ -91,20 +89,6 @@ fi
 
 # Add arcanist to path if it's installed
 [[ -d "$HOME/.phabricator/arcanist/bin" ]] && path=("$HOME/.phabricator/arcanist/bin" $path)
-
-# ASDF (needs to be above the fpath set for asdf completions below because we
-# need the $ASDF_DIR variable
-# if [[ -f "$HOME/.asdf/asdf.sh" ]]; then
-#   export ASDF_DIR="$HOME/.asdf"
-#   path=("${ASDF_DIR}/bin" $path)
-#   fpath+=("${ASDF_DIR}/completions")
-#   source "${ASDF_DIR}/lib/asdf.sh"
-#   # source "$HOME/.asdf/asdf.sh"
-#   # path=(${path:#$ASDF_USER_SHIMS})
-# fi
-
-# Rust
-# [[ -d "$HOME"/.cargo ]] && path=("$HOME/.cargo/bin" $path)
 
 # Set up fpath for my autoloaded functions
 fpath+=("${XDG_CONFIG_HOME:-$HOME/.config}/zsh/autoload/")
@@ -139,8 +123,6 @@ export LS_COLORS="di=34:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30
 # Fixes gpg when "GPG Suite" is not installed (i.e. gpg is installed from homebrew)
 export GPG_TTY="$TTY"
 
-export PAGER=less
-
 # This affects every invocation of `less`.
 #
 #   -i   case-insensitive search unless search string contains uppercase letters
@@ -151,10 +133,10 @@ export PAGER=less
 #   -x4  tabs are 4 instead of 8
 export LESS=-iRFXMx4
 
+export PAGER=less
+
 # [r]eload [c]onfig
 alias rc='echo-eval "path=(); fpath=(); exec $SHELL --login --interactive"'
-# [e]dit [c]onfig
-alias ec='$EDITOR ~/.zshrc'
 
 # Suffix aliases: Open the file in preferred program just by typing
 #                 `$ <file_name><CR>`
@@ -165,7 +147,6 @@ alias -s git='clone'
 alias make-venv='python3 -m venv .venv'
 alias make-venv2='virtualenv .venv'
 alias activate='activate-venv .venv'
-alias de='deactivate'
 
 # Tmux sessions
 alias default="new-or-switch-tmux default $HOME"
@@ -209,15 +190,11 @@ fi
 if whence git >/dev/null; then
   alias g='git-helper'
   alias gs='echo-run status'
-  alias gf='git fetch && g'
   alias gb='git-branch'
   alias develop='master'
   alias switch='echo-run git switch'
   alias restore='echo-run git restore'
 fi
-
-alias dotf="dotfiles"
-alias d="dotfiles"
 
 alias c='clear'
 
@@ -269,6 +246,9 @@ zmodload zsh/terminfo
 # Remove the / character from the $WORDCHARS
 WORDCHARS="${WORDCHARS/\//}"
 
+# Use emacs keybindings
+bindkey -e
+
 autoload -U up-line-or-beginning-search down-line-or-beginning-search
 zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
@@ -302,15 +282,10 @@ elif [[ -f "/usr/share/fzf/key-bindings.zsh" ]]; then
   source "/usr/share/fzf/key-bindings.zsh"
 fi
 
-# History file and size.
-if [[ ! -d "${XDG_DATA_HOME:-$HOME/.local/share}" ]]; then
-  mkdir -p "${XDG_DATA_HOME:-$HOME/.local/share}"
-fi
-HISTFILE="${XDG_DATA_HOME:-$HOME/.local/share}/.zsh_history"
-HISTSIZE=10000000
-SAVEHIST=10000000
 # make some commands not show up in history
 HISTIGNORE="ls:ll:la:cd:cd -:pwd:exit:date:* --help"
+HISTSIZE=10000000
+SAVEHIST=10000000
 
 # History command configuration
 # Treat the '!' character specially during expansion.
