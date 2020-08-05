@@ -1,0 +1,19 @@
+#!/usr/bin/env zsh
+
+local compdump_file="$1"
+
+if [[ -z "$compdump_file" ]]; then
+  echo-err "Usage: ${0:t} <compdump file>"
+  return 1
+fi
+
+[[ -f "$compdump_file" ]] && rm "$compdump_file"
+autoload -Uz compinit && echo-run compinit -d "$compdump_file"
+
+autoload -Uz zrecompile
+echo-run zrecompile -p -q "$compdump_file"
+
+local zfile
+for zfile in ${ZDOTDIR:-${HOME}}/.z(shenv|profile|shrc|login|logout)(N-.); do
+  echo-run zrecompile -p -q "${zfile}" || return 1
+done

@@ -54,14 +54,6 @@
 #  - /etc/zlogin: Run for login shells
 #  - ~/.zlogin: Run for login shells
 
-export EDITOR="vim"
-
-# No duplicates in $path and $fpath
-typeset -U path fpath
-
-# Homebrew paths
-path=(/usr/local/{bin,sbin} "${path[@]}")
-
 # Leaving this here so other install scripts think that it's here, since I'm
 # setting the path manually.
 # ====================
@@ -76,6 +68,14 @@ path=(/usr/local/{bin,sbin} "${path[@]}")
 # ====================
 # added by Snowflake SnowSQL installer v1.2
 # ====================
+
+export EDITOR="vim"
+
+# No duplicates in $path and $fpath
+typeset -U path fpath
+
+# Homebrew paths
+path=(/usr/local/{bin,sbin} "${path[@]}")
 
 [[ ! -d "$HOME/.local/bin" ]] && mkdir -p "$HOME/.local/bin"
 path=("$HOME/.local/bin" "${path[@]}")
@@ -98,7 +98,7 @@ if [[ -d "/usr/share/zsh/site-functions" ]]; then
   fpath=("/usr/share/zsh/site-functions" "${fpath[@]}")
 fi
 
-zplug add git@github.com:romkatv/zsh-prompt-benchmark.git || true
+# zplug add git@github.com:romkatv/zsh-prompt-benchmark.git || true
 zplug add git@github.com:georgewitteman/zsh-prompt.git || true
 zplug add git@github.com:georgewitteman/zsh-ctrl-z.git || true
 zplug add git@github.com:georgewitteman/zsh-yavm.git || true
@@ -175,7 +175,7 @@ alias la='ls -la'
 
 # if (( $+commands[kubectl] )); then
 if whence kubectl >/dev/null; then
-  alias k='kubectl'
+  # alias k='kubectl'
 fi
 
 # if (( $+commands[terraform] )); then
