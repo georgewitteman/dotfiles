@@ -65,7 +65,7 @@ path=("/usr/local/bin" "/usr/local/sbin" $path)
 # Snowflake paths
 
 # Leaving this here so other install scripts think that it's here, since I'm
-# setting the path manually
+# setting the path manually.
 # ====================
 # if command -v pyenv 1>/dev/null 2>&1; then
 #   eval "$(pyenv init - --no-rehash zsh)"
@@ -134,9 +134,6 @@ export GPG_TTY="$TTY"
 export LESS=-iRFXMx4
 
 export PAGER=less
-
-# [r]eload [c]onfig
-alias rc='echo-eval "path=(); fpath=(); exec $SHELL --login --interactive"'
 
 # Suffix aliases: Open the file in preferred program just by typing
 #                 `$ <file_name><CR>`
