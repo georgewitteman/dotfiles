@@ -93,29 +93,33 @@ font:
 # My Customized Nord
 colors:
   primary:
-    background: '0x2E3440'
-    foreground: '0xD8DEE9'
+    background: '#2E3440'
+    foreground: '#D8DEE9'
+
+  selection:
+    # text: CellForeground
+    background: '#434C5E'
 
   normal:
-    black:   '0x3B4252'
-    red:     '0xBF616A'
-    green:   '0xA3BE8C'
-    # yellow:  '0xD08770'
-    yellow:  '0xD0AE70'
-    blue:    '0x5E81AC'
-    magenta: '0xB48EAD'
-    cyan:    '0x88C0D0'
-    white:   '0xE5E9F0'
+    black:   '#3B4252'
+    red:     '#BF616A'
+    green:   '#A3BE8C'
+    # yellow:  '#D08770'
+    yellow:  '#D0AE70'
+    blue:    '#5E81AC'
+    magenta: '#B48EAD'
+    cyan:    '#88C0D0'
+    white:   '#E5E9F0'
 
   bright:
-    black:   '0x4C566A'
-    red:     '0xD96F7A'
-    green:   '0xBBD9A0'
-    yellow:  '0xEBCB8B'
-    blue:    '0x81A1C1'
-    magenta: '0xCFA3C7'
-    cyan:    '0x92CFE0'
-    white:   '0xECEFF4'
+    black:   '#4C566A'
+    red:     '#D96F7A'
+    green:   '#BBD9A0'
+    yellow:  '#EBCB8B'
+    blue:    '#81A1C1'
+    magenta: '#CFA3C7'
+    cyan:    '#92CFE0'
+    white:   '#ECEFF4'
 
 # # Default Nord
 # colors:
