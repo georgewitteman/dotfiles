@@ -90,34 +90,110 @@ font:
   # effect.
   use_thin_strokes: true
 
-# Colors (Nord)
+# My Customized Nord
 colors:
-  # Default colors
   primary:
     background: '0x2E3440'
     foreground: '0xD8DEE9'
 
-  # Normal colors
   normal:
     black:   '0x3B4252'
     red:     '0xBF616A'
     green:   '0xA3BE8C'
-    yellow:  '0xEBCB8B'
-    blue:    '0x81A1C1'
+    # yellow:  '0xD08770'
+    yellow:  '0xD0AE70'
+    blue:    '0x5E81AC'
     magenta: '0xB48EAD'
     cyan:    '0x88C0D0'
     white:   '0xE5E9F0'
 
-  # Bright colors
   bright:
     black:   '0x4C566A'
-    red:     '0xBF616A'
-    green:   '0xA3BE8C'
+    red:     '0xD96F7A'
+    green:   '0xBBD9A0'
     yellow:  '0xEBCB8B'
     blue:    '0x81A1C1'
-    magenta: '0xB48EAD'
-    cyan:    '0x8FBCBB'
+    magenta: '0xCFA3C7'
+    cyan:    '0x92CFE0'
     white:   '0xECEFF4'
+
+# # Default Nord
+# colors:
+#   primary:
+#     background: '0x2E3440'
+#     foreground: '0xD8DEE9'
+
+#   normal:
+#     black:   '0x3B4252'
+#     red:     '0xBF616A'
+#     green:   '0xA3BE8C'
+#     yellow:  '0xEBCB8B'
+#     blue:    '0x81A1C1'
+#     magenta: '0xB48EAD'
+#     cyan:    '0x88C0D0'
+#     white:   '0xE5E9F0'
+
+#   bright:
+#     black:   '0x4C566A'
+#     red:     '0xBF616A'
+#     green:   '0xA3BE8C'
+#     yellow:  '0xEBCB8B'
+#     blue:    '0x81A1C1'
+#     magenta: '0xB48EAD'
+#     cyan:    '0x8FBCBB'
+#     white:   '0xECEFF4'
+
+# VGA
+# colors:
+#   primary:
+#     background: '0x000000'
+#     foreground: '0xffffff'
+
+#   normal:
+#     black: '0x000000'
+#     red: '0xAA0000'
+#     green: '0x00AA00'
+#     yellow: '0xAA5500'
+#     blue: '0x0000AA'
+#     magenta: '0xAA00AA'
+#     cyan: '0x00AAAA'
+#     white: '0xAAAAAA'
+
+#   bright:
+#     black: '0x555555'
+#     red: '0xFF5555'
+#     green: '0x55FF55'
+#     yellow: '0xFFFF55'
+#     blue: '0x5555FF'
+#     magenta: '0xFF55FF'
+#     cyan: '0x55FFFF'
+#     white: '0xFFFFFF'
+
+# macOS Terminal
+# colors:
+#   primary:
+#     background: '#2E3440'
+#     foreground: '#D8DEE9'
+
+#   normal:
+#     black: '#000000'
+#     red: '#C23621'
+#     green: '#24bc24'
+#     yellow: '#adad27'
+#     blue: '#492ee1'
+#     magenta: '#d338d3'
+#     cyan: '#33bbc8'
+#     white: '#bbbbbb'
+
+#   bright:
+#     black: '#818383'
+#     red: '#fc391f'
+#     green: '#32e722'
+#     yellow: '#e9ec23'
+#     blue: '#5833ff'
+#     magenta: '#f935f9'
+#     cyan: '#14f0f0'
+#     white: '#e9ebeb'
 
 # Key bindings
 #
