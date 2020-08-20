@@ -90,6 +90,11 @@ if [[ -d "$HOME/.phabricator/arcanist/bin" ]]; then
   path=("$HOME/.phabricator/arcanist/bin" "${path[@]}")
 fi
 
+# Rust
+if [[ -d "$HOME/.cargo/bin" ]]; then
+  path=("$HOME/.cargo/bin" "${path[@]}")
+fi
+
 # Set up fpath for my autoloaded functions
 fpath=("${XDG_CONFIG_HOME:-$HOME/.config}/zsh/functions/" "${fpath[@]}")
 autoload -Uz ${XDG_CONFIG_HOME:-$HOME/.config}/zsh/functions/*
