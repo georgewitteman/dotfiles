@@ -32,6 +32,7 @@
 	editor = vim
 [diff]
 	tool = vimdiff
+	colorMoved = default
 [merge]
 	tool = vimdiff
 	conflictstyle = diff3
