@@ -43,6 +43,7 @@ local formulas=(
   fd
   fzf
   git
+  git-secrets
   gnupg
   httpie
   hyperfine

@@ -12,4 +12,4 @@ echo-run rm "$terminfo_file"
 
 echo-eval "curl --silent \\
     https://raw.githubusercontent.com/alacritty/alacritty/master/extra/completions/_alacritty > \\
-    $HOME/.config/zsh/autoload/_alacritty"
+    $HOME/.config/zsh/functions/_alacritty"
