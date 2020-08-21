@@ -12,7 +12,7 @@ fi
 
 # Using 'command ls' here because regular ls is aliased to add color and
 # formatting.
-local files=($(command ls "$HOME/.local/bin" | sort | grep bootstrap_))
+local files=($(command ls "$HOME/.local/bin" | sort | grep bootstrap-))
 
 local i
 for i in {1..${#files}}; do
