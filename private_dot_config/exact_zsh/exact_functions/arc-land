@@ -6,18 +6,17 @@ if ! is-clean-repo; then
   return 1
 fi
 
-if [[ "$#" -eq 0 ]]; then
-  echo -n "Getting remote HEAD... "
-  GIT_HEAD="$(get-remote-head)"
-  echo $GIT_HEAD
+local arc_args=()
 
-  echo-run arc land --onto "$GIT_HEAD"
-elif [[ "$1" =~ "^D[0-9]+$" ]]; then
-  echo -n "Getting remote HEAD... "
-  GIT_HEAD="$(get-remote-head)"
-  echo $GIT_HEAD
+echo -n "Getting remote HEAD... "
+local git_head="$(get-remote-head)"
+echo $git_head
 
-  echo-run arc land "${@[2,-1]}" --revision "$1" --onto "$GIT_HEAD"
-else
-  echo-run arc land "$@"
+arc_args+=('--onto' "${git_head}")
+
+if [[ "$1" =~ "^D[0-9]+$" ]]; then
+  arc_args+=('--revision' "$1")
+  shift
 fi
+
+echo-run arc land "${arc_args[@]}" "$@"
