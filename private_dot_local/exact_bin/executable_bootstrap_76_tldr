@@ -1,0 +1,7 @@
+#!/usr/bin/env zsh
+
+set -e
+autoload -U colors && colors
+source "$HOME/.zshrc"
+
+echo-run tldr --update
