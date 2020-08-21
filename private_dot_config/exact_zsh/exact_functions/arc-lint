@@ -1,0 +1,2 @@
+#!/usr/bin/env zsh
+echo-run arc lint --apply-patches

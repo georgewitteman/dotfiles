@@ -1,0 +1,116 @@
+#!/usr/bin/env zsh
+
+local PRG_NAME="${0:t}"
+usage(){
+  # http://docopt.org/
+  echo "Generate a differential diff or revision."
+  echo ""
+  echo "Usage:"
+  echo "  $PRG_NAME -h | --help"
+  echo "  $PRG_NAME [options]"
+  echo ""
+  echo "Options:"
+  echo "  -h --help             Show usage and exit."
+  echo "  -m=MSG --message=MSG  Message to include in the diff update."
+  echo "  -a --amend            Whether to amend the current commit/diff or create a new one."
+  echo "  --plan-changes        Create or update a revision without requesting a code review."
+  echo "  --no-verify           Skip pre-commit hooks."
+  echo "  --skip-staging        Don't upload to staging repository."
+  echo "  -r --rebase           Rebase before pushing to Phabricator"
+  echo ""
+}
+
+local message amend draft no_verify rebase skip_staging
+
+local args arg
+zparseopts -A args -E -D -F -- m: a h r -help -message: -amend \
+  -draft -no-verify -skip-staging -rebase || return "$status"
+
+for arg in ${(k)args}; do
+  case "$arg" in
+    -h | --help) usage; return ;;
+    -m | --message) message="${args[$arg]}" ;;
+    -a | --amend) amend=1 ;;
+    -r | --rebase) rebase=1 ;;
+    --skip-staging) skip_staging=1 ;;
+    --draft) draft=1 ;;
+    --no-verify) no_verify=1 ;;
+  esac
+done
+
+if is-clean-repo && [[ -z "$amend" ]]; then
+  echo-err "No changes to add. Did you mean 'arc-diff -a'?"
+  return 1
+fi
+
+# Add files
+echo-run git add --all || return "$status"
+
+# Commit
+local commit_run_cmd="echo-run"
+local git_options=()
+if [[ -n "$no_verify" ]]; then
+  git_options+=(--no-verify)
+fi
+if [[ -n "$amend" ]]; then
+  git_options+=('--amend' '--no-edit')
+else
+  git_options+=('--message' '<revision title>' '--no-edit')
+fi
+
+if [[ -n "$amend" ]]; then
+  local current_commit_author="$(git show --no-patch --format='%ae')"
+  local repo_email="$(git config --get user.email)"
+  if [[ -z "$repo_email" ]]; then
+    repo_email="$(git config --global --get user.email)"
+  fi
+
+  if [[ "$current_commit_author" != "$repo_email" ]]; then
+    echo-warn "Are you sure you want to amend a commit that you don't own?"
+    echo-warn "Current commit author email: $current_commit_author"
+    echo-warn "Your email: $repo_email"
+    commit_run_cmd="safe-run"
+  fi
+fi
+
+if [[ -z "$amend" ]]; then
+  local current_commit_author="$(git show --no-patch --format='%ae')"
+  local repo_email="$(git config --get user.email)"
+  if [[ -z "$repo_email" ]]; then
+    repo_email="$(git config --global --get user.email)"
+  fi
+
+  if [[ "$current_commit_author" = "$repo_email" ]]; then
+    echo-warn "Are you sure you want to create a new commit? You own the current commit."
+    echo-warn "Current commit summary: $(git show --quiet --format='%s')"
+    commit_run_cmd="safe-run"
+  fi
+fi
+
+local prev_head="$(git rev-parse HEAD)"
+"$commit_run_cmd" git commit "${git_options[@]}" || return "$status"
+if [[ -n "$amend" ]]; then
+  echo-info "Use 'git reset $prev_head' if you want to un-amend."
+fi
+
+if [[ -n "$rebase" ]]; then
+  echo-info "Rebasing off of master branch."
+  echo-run rebase || return "$status"
+fi
+
+# Arc Diff
+local arc_options=()
+
+# When linting git repositories, amend HEAD with all patches suggested by lint
+# without prompting.
+arc_options+=('--amend-all')
+
+[[ -n "$draft" ]] && arc_options+=('--draft')
+[[ -n "$skip_staging" ]] && arc_options+=('--skip-staging')
+[[ -n "$no_verify" ]] && arc_options+=('--nolint' '--nounit')
+[[ -n "$message" ]] && arc_options+=('--message' "$message")
+
+echo-run arc diff HEAD^ ${arc_options[@]} || return "$status"
+
+# Update the commit message from whatever's in phabricator
+echo-run arc amend
