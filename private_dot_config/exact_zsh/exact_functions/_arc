@@ -1,0 +1,15 @@
+#compdef arc
+
+_arc() {
+  local args
+
+  args="$(echo | arc shell-complete --current "$(( CURRENT - 1 ))" -- "${words[@]}" 2>/dev/null)"
+
+  if [[ "$status" -ne 0 ]]; then
+    return "$status"
+  elif [[ "$args" == "<compgen:file>" ]]; then
+    _files
+  elif [[ -n "$args" ]]; then
+    _values 'arc' ${(ps:\n:)args}
+  fi
+}
