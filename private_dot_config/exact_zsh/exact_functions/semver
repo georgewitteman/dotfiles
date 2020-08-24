@@ -83,11 +83,11 @@ fi
 local new_major="${major}" new_minor="${minor}" new_patch="${patch}"
 if [[ -n "$major" && "$bump_type" = "major" ]]; then
   new_major="$(( major + 1 ))"
-  new_minor=0
-  new_patch=0
+  [[ -n "$new_minor" && "$new_minor" -ne 0 ]] && new_minor=0
+  [[ -n "$new_patch" && "$new_patch" -ne 0 ]] && new_patch=0
 elif [[ -n "$minor" && "$bump_type" = "minor" ]]; then
   new_minor="$(( minor + 1 ))"
-  new_patch=0
+  [[ -n "$new_patch" && "$new_patch" -ne 0 ]] && new_patch=0
 elif [[ -n "$patch" && "$bump_type" = "patch" ]]; then
   new_patch="$(( patch + 1 ))"
 else
