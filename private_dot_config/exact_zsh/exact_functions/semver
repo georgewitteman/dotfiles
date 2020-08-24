@@ -5,11 +5,19 @@ local USAGE="Increment semantic versions.
 Usage:
   ${0:t} -h | --help
   ${0:t} [--major|--minor|--patch] <version string>
+  ${0:t} [options] <version string>
+
+Options:
+  --no-padding   Don't pad numbers with 0 to keep their string length.
+  --keep-suffix  Keep the existing suffix.
+  --major        Major version bump.
+  --minor        Minor version bump.
+  --patch        Patch version bump.
 "
 
-local args arg bump_type="default" new_suffix=""
+local args arg bump_type="default" new_suffix="" no_padding
 zparseopts -A args -E -D -F -- h -help -major -minor -patch \
-  -keep-padding -suffix: -keep-suffix || return "$status"
+  -keep-padding -suffix: -keep-suffix -no-padding || return "$status"
 
 for arg in ${(k)args}; do
   case "$arg" in
@@ -17,7 +25,7 @@ for arg in ${(k)args}; do
     --major) bump_type="major" ;;
     --minor) bump_type="minor" ;;
     --patch) bump_type="patch" ;;
-    --keep-padding) should_keep_padding=1 ;;
+    --no-padding) no_padding=1 ;;
     --suffix) new_suffix="${args[$arg]}" ;;
     --keep-suffix) unset new_suffix ;;
   esac
@@ -75,8 +83,11 @@ fi
 local new_major="${major}" new_minor="${minor}" new_patch="${patch}"
 if [[ -n "$major" && "$bump_type" = "major" ]]; then
   new_major="$(( major + 1 ))"
+  new_minor=0
+  new_patch=0
 elif [[ -n "$minor" && "$bump_type" = "minor" ]]; then
   new_minor="$(( minor + 1 ))"
+  new_patch=0
 elif [[ -n "$patch" && "$bump_type" = "patch" ]]; then
   new_patch="$(( patch + 1 ))"
 else
@@ -85,14 +96,16 @@ else
 fi
 
 # Check padding. A version part should never be shorter after incrementing.
-if [[ -n "$major" && "${(l:${#major}::0:)new_major}" -eq "$new_major" ]]; then
-  new_major="${(l:${#major}::0:)new_major}"
-fi
-if [[ -n "$minor" && "${(l:${#minor}::0:)new_minor}" -eq "$new_minor" ]]; then
-  new_minor="${(l:${#minor}::0:)new_minor}"
-fi
-if [[ -n "$patch" && "${(l:${#patch}::0:)new_patch}" -eq "$new_patch" ]]; then
-  new_patch="${(l:${#patch}::0:)new_patch}"
+if [[ -z "$no_padding" ]]; then
+  if [[ "$new_major" != "$major" && "${(l:${#major}::0:)new_major}" -eq "$new_major" ]]; then
+    new_major="${(l:${#major}::0:)new_major}"
+  fi
+  if [[ "$new_minor" != "$minor" && "${(l:${#minor}::0:)new_minor}" -eq "$new_minor" ]]; then
+    new_minor="${(l:${#minor}::0:)new_minor}"
+  fi
+  if [[ "$new_patch" != "$patch" && "${(l:${#patch}::0:)new_patch}" -eq "$new_patch" ]]; then
+    new_patch="${(l:${#patch}::0:)new_patch}"
+  fi
 fi
 
 echo "${prefix}${new_major}${new_minor:+.}${new_minor}${new_patch:+.}${new_patch}${new_suffix-${suffix}}"
