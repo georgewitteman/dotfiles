@@ -1,0 +1,27 @@
+#!/usr/bin/env zsh
+
+local USAGE="Change the author of a commit.
+
+Usage:
+  ${0:t} -h | --help
+  ${0:t} --name <name> --email <email>
+"
+
+local args arg new_name new_email
+zparseopts -A args -E -D -F -- h -help -name: -email: || return "$status"
+
+for arg in ${(k)args}; do
+  case "$arg" in
+    -h | --help) echo "$USAGE"; return ;;
+    --name) new_name="${args[$arg]}" ;;
+    --email) new_email="${args[$arg]}" ;;
+  esac
+done
+
+if [[ -z "$new_name" || -z "$new_email" ]]; then
+  echo-err 'A name and email are required.'
+  echo "$USAGE"
+  return 1
+fi
+
+echo-run git commit --amend --author="${new_name} <${new_email}>"
