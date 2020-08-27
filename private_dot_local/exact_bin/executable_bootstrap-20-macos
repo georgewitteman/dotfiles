@@ -16,9 +16,9 @@ fi
 
 echo-run command brew update
 
-# echo-run command brew upgrade
-echo-run command brew outdated
-echo-warn "Skipping 'brew upgrade' since it's kind of slow."
+echo-run command brew upgrade
+# echo-run command brew outdated
+# echo-warn "Skipping 'brew upgrade' since it's kind of slow."
 
 local brew_list=($(command brew list -1))
 
@@ -36,29 +36,21 @@ fi
 
 local formulas=(
   awscli
-  bat
   curl
-  diff-so-fancy
-  exa
   fd
   fzf
   git
   git-secrets
   gnupg
-  httpie
   hyperfine
   jq
-  neovim
-  parquet-tools
   pgcli
   pinentry-mac
   ripgrep
   rsync
-  shellcheck
   tealdeer
   terraform
   tmux
-  trash
   tree
   wget
   zsh
