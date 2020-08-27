@@ -14,7 +14,8 @@ if (( ! $+commands[brew] )); then
   echo-eval '/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
 fi
 
-echo-run command brew update
+# Don't need to explicitly run update if we're running upgrade
+# echo-run command brew update
 
 echo-run command brew upgrade
 # echo-run command brew outdated
