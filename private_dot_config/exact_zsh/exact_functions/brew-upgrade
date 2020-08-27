@@ -1,0 +1,3 @@
+#!/usr/bin/env zsh
+
+echo-run brew upgrade --ignore-pinned --display-times "$@"
