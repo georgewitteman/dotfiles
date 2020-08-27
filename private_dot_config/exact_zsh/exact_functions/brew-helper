@@ -10,7 +10,9 @@ fi
 command brew "$@"
 local ret="$status"
 
-zplug reinit
+if [[ "$1" = "install" || "$1" = "upgrade" || "$1" = "uninstall" ]]; then
+  zplug reinit
+fi
 
 if [[ "$1" = "install" ]]; then
   echo
