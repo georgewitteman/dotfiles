@@ -108,7 +108,6 @@ fi
 
 # zplug add git@github.com:romkatv/zsh-prompt-benchmark.git || true
 zplug add git@github.com:georgewitteman/zsh-prompt.git || true
-zplug add git@github.com:georgewitteman/zsh-ctrl-z.git || true
 zplug add git@github.com:georgewitteman/zsh-yavm.git || true
 zplug init
 
