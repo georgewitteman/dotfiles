@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 local plugins_path="${XDG_CONFIG_HOME:-$HOME/.config}/zsh/plugins"
-local compdump_file="${COMPDUMP_FILE:-${XDG_CACHE_HOME:-$HOME/.cache}/zcompdump}"
+local compdump_file="${ZDOTDIR:-${HOME}}/.zcompdump"
 
 __zplug-init() {
   local plugin_file
