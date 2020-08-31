@@ -1,5 +1,5 @@
 function s:PsqlQuery(svc)
-  let cmd = 'psql_query ' . a:svc . ' ' . expand('%:p')
+  let cmd = 'psql-query ' . a:svc . ' ' . expand('%:p')
   if exists(':Dispatch')
     execute 'Dispatch! ' . cmd
   else
