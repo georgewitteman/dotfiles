@@ -111,7 +111,7 @@ zplug add git@github.com:georgewitteman/zsh-prompt.git || true
 zplug add git@github.com:georgewitteman/zsh-yavm.git || true
 zplug init
 
-yavm init pyenv nodejs
+yavm init pyenv nodejs golang
 preexec_functions+=(yavm_set_path)
 
 if [[ -n "$VIRTUAL_ENV" ]]; then

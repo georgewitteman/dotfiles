@@ -48,7 +48,6 @@ local formulas=(
   pinentry-mac
   ripgrep
   rsync
-  tealdeer
   terraform
   tmux
   tree
