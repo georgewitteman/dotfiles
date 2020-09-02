@@ -1,4 +1,4 @@
 #!/usr/bin/env zsh
 
-echo -n "${fg[yellow]}WARNING:${reset_color} "
+echo -n "${bg[yellow]}${fg[brwhite]} WARNING ${reset_color} "
 echo "$@"

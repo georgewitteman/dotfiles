@@ -213,16 +213,24 @@ fi
   local lc=$'\e[' rc=m k
   typeset -A color
   color=(
-    [none]=00         [bold]=01
-    [fg-black]=30     [bg-black]=40
-    [fg-red]=31       [bg-red]=41
-    [fg-green]=32     [bg-green]=42
-    [fg-yellow]=33    [bg-yellow]=43
-    [fg-blue]=34      [bg-blue]=44
-    [fg-magenta]=35   [bg-magenta]=45
-    [fg-cyan]=36      [bg-cyan]=46
-    [fg-white]=37     [bg-white]=47
-    [fg-default]=39   [bg-default]=49
+    [none]=00           [bold]=01
+    [fg-black]=30       [bg-black]=40
+    [fg-red]=31         [bg-red]=41
+    [fg-green]=32       [bg-green]=42
+    [fg-yellow]=33      [bg-yellow]=43
+    [fg-blue]=34        [bg-blue]=44
+    [fg-magenta]=35     [bg-magenta]=45
+    [fg-cyan]=36        [bg-cyan]=46
+    [fg-white]=37       [bg-white]=47
+    [fg-default]=39     [bg-default]=49
+    [fg-brblack]=90     [bg-brblack]=100
+    [fg-brred]=91       [bg-brred]=101
+    [fg-brgreen]=92     [bg-brgreen]=102
+    [fg-bryellow]=93    [bg-bryellow]=103
+    [fg-brblue]=94      [bg-brblue]=104
+    [fg-brmagenta]=95   [bg-brmagenta]=105
+    [fg-brcyan]=96      [bg-brcyan]=106
+    [fg-brwhite]=97     [bg-brwhite]=107
   )
 
   typeset -Hg reset_color bold_color
