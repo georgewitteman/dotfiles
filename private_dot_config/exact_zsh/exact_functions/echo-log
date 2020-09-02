@@ -1,0 +1,27 @@
+#!/usr/bin/env zsh
+
+local log_level="$1"
+local log_color="blue"
+shift
+
+case "$log_level" in
+  DEBUG) log_color="cyan";;
+  OK | SUCCESS)
+    log_level="OK"
+    log_color="green"
+    ;;
+  WARN) log_color="yellow";;
+  ERROR | ERR)
+    log_level="ERROR"
+    log_color="red"
+    ;;
+  INFO) log_color="blue";;
+  *)
+    set -- "$log_level" "$@"
+    log_level="INFO"
+    log_color="blue"
+    ;;
+esac
+
+echo -n "${bg[${log_color}]}${fg[brwhite]} ${log_level} ${reset_color} "
+echo "$@"

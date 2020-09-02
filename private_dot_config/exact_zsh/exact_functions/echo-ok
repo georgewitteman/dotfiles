@@ -1,4 +1,3 @@
 #!/usr/bin/env zsh
 
-echo -n "${bg[green]}${fg[brwhite]} SUCCESS ${reset_color} "
-echo "$@"
+echo-log OK "$@"

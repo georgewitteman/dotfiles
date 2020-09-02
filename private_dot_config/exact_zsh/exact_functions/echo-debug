@@ -1,3 +1,3 @@
 #!/usr/bin/env zsh
 
-echo "${bg[cyan]}${fg[brwhite]} DEBUG ${reset_color} $@"
+echo-log DEBUG "$@"
