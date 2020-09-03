@@ -283,8 +283,6 @@ KEYTIMEOUT=10
 
 # NOTE: If you want to see what a certain keypress makes do CTRL-V <KEYPRESS>
 
-zmodload zsh/terminfo
-
 # Default: WORDCHARS="*?_-.[]~=/&;!#$%^(){}<>"
 # Remove the / character from the $WORDCHARS
 WORDCHARS="${WORDCHARS/\//}"
@@ -297,10 +295,8 @@ zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
 bindkey '^P' up-line-or-beginning-search
 bindkey '^N' down-line-or-beginning-search
-[[ "${terminfo[kcuu1]}" != "" ]] && \
-  bindkey "${terminfo[kcuu1]}" up-line-or-beginning-search
-[[ "${terminfo[kcud1]}" != "" ]] && \
-  bindkey "${terminfo[kcud1]}" down-line-or-beginning-search
+bindkey "^[[A" up-line-or-beginning-search
+bindkey "^[[B" down-line-or-beginning-search
 
 # Perform history expansion and insert a space into the buffer. If you type a
 # space after a command that starts with ! (or ^) to refer to (part of) a
@@ -319,10 +315,34 @@ bindkey '^[b' backward-word # alt-b
 bindkey '^[d' kill-word # alt-d
 bindkey "^[[Z" reverse-menu-complete # shift-tab
 
-if [[ -f "/usr/local/opt/fzf/shell/key-bindings.zsh" ]]; then
-  source "/usr/local/opt/fzf/shell/key-bindings.zsh"
-elif [[ -f "/usr/share/fzf/key-bindings.zsh" ]]; then
-  source "/usr/share/fzf/key-bindings.zsh"
+if whence fzf >/dev/null && whence fd >/dev/null; then
+  fzf-file-widget() {
+    local -A matched_words current_word
+    autoload -U match-words-by-style && match-words-by-style -w shell
+    if [[ "${LBUFFER[-1]}" != " " ]]; then
+      current_word="${matched_words[word-before-cursor]}"
+    fi
+    local path="$(fd --hidden --exclude .git | fzf --query "$current_word")"
+    if [[ "$status" != 0 || -z "$path" ]]; then
+      return
+    fi
+    LBUFFER="${matched_words[start]}${matched_words[ws-before-cursor]}${path}"
+    zle reset-prompt
+  }
+  zle -N fzf-file-widget
+  bindkey '^T' fzf-file-widget
+
+  fzf-select-history() {
+    local command="$(fc -l -n 1 | tail -r | fzf --query "$LBUFFER")"
+    if [[ "$status" != 0 || -z "$command" ]]; then
+      return
+    fi
+    BUFFER="$command"
+    CURSOR=$#BUFFER
+    zle reset-prompt
+  }
+  zle -N fzf-select-history
+  bindkey '^R' fzf-select-history
 fi
 
 # make some commands not show up in history
