@@ -1,5 +1,5 @@
-# _PROF_START_TIME="$EPOCHREALTIME"
 #!/usr/bin/env zsh
+# _PROF_START_TIME="$EPOCHREALTIME"
 # Load Order         Interactive  Interactive  Script
 # Startup            Only login   Always
 # ------------------ -----------  -----------  ------
@@ -70,15 +70,59 @@
 # added by Snowflake SnowSQL installer v1.2
 # ====================
 
+# Setting all of this here because it should cover all the use cases I care
+# about. There isn't a case where I run a non-interactive login shell and need
+# this set up, and any scripts should have their $PATH set already, since macOS
+# sets the path in /etc/zprofile and not /etc/zshenv.
+if [[ "$OSTYPE" = "darwin"* ]]; then
+  typeset -U path
+  typeset -gx PATH
+  # typeset file
+
+  # Setup default PATH just like /etc/zprofile does
+  # path=("${(f)$(</etc/paths)}" ${path[@]})
+  # for file in /etc/paths.d/*(N); do
+  #   path=("${(f)$(<${file})}" ${path[@]})
+  # done
+  # unset file
+  # if [[ -x "/usr/libexec/path_helper" ]]; then
+  #   eval $(/usr/libexec/path_helper -s)
+  # fi
+  path=("/usr/local/bin" "/usr/bin" "/bin" "/usr/sbin" "/sbin" ${path[@]})
+fi
+
+# Locale setup
+export LC_ALL="en_US.UTF-8"
+export LANG="en_US.UTF-8"
+
+# Correctly display UTF-8 with combining characters.
+setopt COMBINING_CHARS
+
+# Disable the log builtin, so we don't conflict with /usr/bin/log.
+disable log
+
+if [[  -d "$HOME/.local/bin" ]]; then
+  path=("$HOME/.local/bin" "${path[@]}")
+fi
+
+if ! whence fzf >/dev/null && [[ -d "/usr/local/opt/fzf/bin" ]]; then
+  path=("/usr/local/opt/fzf/bin" "${path[@]}")
+fi
+
+if [[ -d "$HOME/.phabricator/arcanist/bin" ]]; then
+  path=("$HOME/.phabricator/arcanist/bin" "${path[@]}")
+fi
+
+# Rust
+if [[ -d "$HOME/.cargo/bin" ]]; then
+  path=("$HOME/.cargo/bin" "${path[@]}")
+fi
+
 typeset -U fpath
 
 # Set up fpath for my autoloaded functions
 fpath=("${XDG_CONFIG_HOME:-$HOME/.config}/zsh/functions/" "${fpath[@]}")
 autoload -Uz ${XDG_CONFIG_HOME:-$HOME/.config}/zsh/functions/*
-
-if [[ -d "/usr/share/zsh/site-functions" ]]; then
-  fpath=("/usr/share/zsh/site-functions" "${fpath[@]}")
-fi
 
 # zplug add git@github.com:romkatv/zsh-prompt-benchmark.git || true
 zplug add git@github.com:georgewitteman/zsh-prompt.git || true
@@ -140,13 +184,11 @@ fi
 # NOTE: Although the $commands variable is faster to access, it costs a few ms
 # (~3ms) when we first reference it. Calling whence actually saves time, even
 # though it's significantly slower when you run it hundreds of times.
-# if (( ! $+commands[sudoedit] )); then
 if ! whence sudoedit >/dev/null; then
   alias sudoedit='sudo -e'
 fi
 
 # Always use local package jest
-# if (( $+commands[yarn] )); then
 if whence yarn >/dev/null; then
   alias jest='yarn run jest'
 fi
@@ -156,17 +198,14 @@ alias ls='ls -F'
 alias ll='ls -l'
 alias la='ls -la'
 
-# if (( $+commands[kubectl] )); then
 if whence kubectl >/dev/null; then
   # alias k='kubectl'
 fi
 
-# if (( $+commands[terraform] )); then
 if whence terraform >/dev/null; then
   alias t='terraform'
 fi
 
-# if (( $+commands[git] )); then
 if whence git >/dev/null; then
   alias g='git-helper'
   alias gs='echo-run status'
@@ -178,7 +217,6 @@ fi
 
 alias c='clear'
 
-# if (( $+commands[brew] )); then
 if whence brew >/dev/null; then
   compdef brew-helper='brew'
   alias brew='brew-helper'
@@ -325,6 +363,8 @@ if whence fzf >/dev/null && whence fd >/dev/null; then
   }
   zle -N fzf-select-history
   bindkey '^R' fzf-select-history
+
+  export FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude .git'
 fi
 
 # make some commands not show up in history
@@ -348,9 +388,6 @@ setopt hist_ignore_space
 setopt hist_reduce_blanks
 # Don't execute immediately upon history expansion.
 setopt hist_verify
-
-# FZF
-export FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude .git'
 
 # echo ".zshrc took $(( (EPOCHREALTIME - _PROF_START_TIME) * 1000 )) ms"
 # unset _PROF_START_TIME
