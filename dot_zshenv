@@ -1,3 +1,5 @@
+# zmodload zsh/datetime
+# _PROF_START_TIME="$EPOCHREALTIME"
 #!/usr/bin/env zsh
 # Load Order         Interactive  Interactive  Script
 # Startup            Only login   Always
@@ -46,3 +48,10 @@ export XDG_DATA_HOME="$HOME/.local/share"
 # Don't write python pyc files, because they're not necessary and clutter
 # directories with binary files
 export PYTHONDONTWRITEBYTECODE=1
+
+if [[ "$OSTYPE" = "darwin"* ]]; then
+  # This causes zsh not to run /etc/{zshenv,zprofile,zshrc}
+  unsetopt GLOBAL_RCS
+fi
+# echo ".zshenv took $(( (EPOCHREALTIME - _PROF_START_TIME) * 1000 )) ms"
+# unset _PROF_START_TIME

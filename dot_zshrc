@@ -1,3 +1,4 @@
+# _PROF_START_TIME="$EPOCHREALTIME"
 #!/usr/bin/env zsh
 # Load Order         Interactive  Interactive  Script
 # Startup            Only login   Always
@@ -69,34 +70,7 @@
 # added by Snowflake SnowSQL installer v1.2
 # ====================
 
-export EDITOR="vim"
-
-# No duplicates in $path and $fpath
-typeset -U path fpath
-
-# Homebrew paths
-export HOMEBREW_PREFIX="/usr/local";
-export HOMEBREW_CELLAR="/usr/local/Cellar";
-export HOMEBREW_REPOSITORY="/usr/local/Homebrew";
-path=("${HOMEBREW_PREFIX}/"{bin,sbin} "${path[@]}")
-
-[[ ! -d "$HOME/.local/bin" ]] && mkdir -p "$HOME/.local/bin"
-path=("$HOME/.local/bin" "${path[@]}")
-
-# if (( ! $+commands[fzf] )) && [[ -d "/usr/local/opt/fzf/bin" ]]; then
-if ! whence fzf >/dev/null && [[ -d "/usr/local/opt/fzf/bin" ]]; then
-  path=("/usr/local/opt/fzf/bin" "${path[@]}")
-fi
-
-# Add arcanist to path if it's installed
-if [[ -d "$HOME/.phabricator/arcanist/bin" ]]; then
-  path=("$HOME/.phabricator/arcanist/bin" "${path[@]}")
-fi
-
-# Rust
-if [[ -d "$HOME/.cargo/bin" ]]; then
-  path=("$HOME/.cargo/bin" "${path[@]}")
-fi
+typeset -U fpath
 
 # Set up fpath for my autoloaded functions
 fpath=("${XDG_CONFIG_HOME:-$HOME/.config}/zsh/functions/" "${fpath[@]}")
@@ -122,6 +96,8 @@ if [[ -n "$VIRTUAL_ENV" ]]; then
   # sets the path.
   source "$VIRTUAL_ENV/bin/activate"
 fi
+
+export EDITOR="vim"
 
 export CLICOLOR=1
 export LSCOLORS="exfxcxdxbxegedabagacad"
@@ -333,7 +309,7 @@ if whence fzf >/dev/null && whence fd >/dev/null; then
   bindkey '^T' fzf-file-widget
 
   fzf-select-history() {
-    local command="$(fc -l -n 1 | tail -r | fzf --query "$LBUFFER")"
+    local command="$(fc -l -n 1 | fzf --tiebreak index --tac --query "$LBUFFER")"
     if [[ "$status" != 0 || -z "$command" ]]; then
       return
     fi
@@ -346,6 +322,7 @@ if whence fzf >/dev/null && whence fd >/dev/null; then
 fi
 
 # make some commands not show up in history
+HISTFILE="${ZDOTDIR:-$HOME}/.zsh_history"
 HISTIGNORE="ls:ll:la:cd:cd -:pwd:exit:date:* --help"
 HISTSIZE=10000000
 SAVEHIST=10000000
@@ -368,3 +345,6 @@ setopt hist_verify
 
 # FZF
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude .git'
+
+# echo ".zshrc took $(( (EPOCHREALTIME - _PROF_START_TIME) * 1000 )) ms"
+# unset _PROF_START_TIME
