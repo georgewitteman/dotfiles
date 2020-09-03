@@ -1,4 +1,0 @@
-#!/usr/bin/env zsh
-
-echo-log ERROR "$@"
-return 1

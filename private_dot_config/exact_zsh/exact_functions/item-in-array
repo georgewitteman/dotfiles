@@ -1,9 +1,0 @@
-#!/usr/bin/env zsh
-
-# Usage: item-in-array ITEM_TO_SEARCH ARRAY_ITEM...
-
-local item="$1"
-shift
-if [[ ${@[(ie)$item]} -gt $# ]]; then
-  return 1
-fi
