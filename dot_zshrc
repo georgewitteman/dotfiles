@@ -342,16 +342,62 @@ bindkey "^[[Z" reverse-menu-complete # shift-tab
 
 if whence fzf >/dev/null && whence fd >/dev/null; then
   fzf-file-widget() {
-    local -A matched_words current_word
-    autoload -U match-words-by-style && match-words-by-style -w shell
-    if [[ "${LBUFFER[-1]}" != " " ]]; then
+    # Need extended_glob for trimming $current_word
+    setopt localoptions extended_glob
+    local -A matched_words
+    local current_word lbuffer rbuffer
+    autoload -U match-words-by-style && match-words-by-style
+    # echo
+    # echo-assoc-array matched_words
+
+    if [[ -n "${matched_words[ws-before-cursor]}" && -n "${matched_words[ws-after-cursor]}" ]] || \
+      [[ -n "${matched_words[ws-before-cursor]}" && "${#RBUFFER}" = 0 ]] || \
+      [[ -n "${matched_words[ws-after-cursor]}" && "${#LBUFFER}" = 0 ]]; then
+      # echo "whitespace on both sides or at beginning or end"
+      lbuffer="$LBUFFER"
+      rbuffer="$RBUFFER"
+    elif [[ -n "${matched_words[ws-before-cursor]}" || ( "$CURSOR" = 0 && -z "${matched_words[ws-after-cursor]}" ) ]]; then
+      # echo 'beginning of a word'
+      current_word="${matched_words[word-after-cursor]}"
+      lbuffer="$LBUFFER"
+      rbuffer="${BUFFER[$(( CURSOR + ${#matched_words[word-after-cursor]} + 1 )),-1]}"
+    elif [[ -n "${matched_words[ws-after-cursor]}" || "$CURSOR" = "${#BUFFER}" ]]; then
+      # echo 'at end of word'
       current_word="${matched_words[word-before-cursor]}"
+      lbuffer="${BUFFER[1,$(( CURSOR - ${#matched_words[word-before-cursor]} ))]}"
+      rbuffer="$RBUFFER"
+    else
+      # echo 'inside word'
+      current_word="${matched_words[word-before-cursor]}${matched_words[word-after-cursor]}"
+      lbuffer="${matched_words[start]}${matched_words[ws-before-word]}"
+      rbuffer="${matched_words[ws-after-word]}${matched_words[end]}"
     fi
+    # Trim leading and trailing whitespace
+    current_word="${${current_word##[[:space:]]##}%%[[:space:]]##}"
+    # echo "#matched_words[word-before-cursor]: ${#matched_words[word-before-cursor]}"
+    # echo "#matched_words[word-after-cursor]: ${#matched_words[word-after-cursor]}"
+    # echo "#matched_words[ws-before-cursor]: ${#matched_words[ws-before-cursor]}"
+    # echo "#matched_words[ws-after-cursor]: ${#matched_words[ws-after-cursor]}"
+    # echo "LBUFFER: '$LBUFFER'"
+    # echo "RBUFFER: '$RBUFFER'"
+    # echo "LBUFFER-len: ${#LBUFFER}"
+    # echo "RBUFFER-len: ${#RBUFFER}"
+    # echo "cursor: $CURSOR"
+    # echo "buflen: ${#BUFFER}"
+    # echo "current_word: '$current_word'"
+    # echo "lbuffer: '$lbuffer'"
+    # echo "rbuffer: '$rbuffer'"
+    # zle reset-prompt
+    # return
+
     local path="$(fd --hidden --exclude .git | fzf --query "$current_word")"
     if [[ "$status" != 0 || -z "$path" ]]; then
+      zle reset-prompt
       return
     fi
-    LBUFFER="${matched_words[start]}${matched_words[ws-before-cursor]}${path}"
+
+    LBUFFER="${lbuffer}${path}"
+    RBUFFER="$rbuffer"
     zle reset-prompt
   }
   zle -N fzf-file-widget
