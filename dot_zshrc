@@ -297,6 +297,9 @@ setopt pushd_silent
 # Don't print the new working directory after cd-ing
 setopt cd_silent
 
+# Allow comments in the interactive shell
+setopt interactive_comments
+
 # The time the shell waits, in hundredths of seconds, for another key to be
 # pressed when reading bound multi-character sequences. Useful for vim mode
 KEYTIMEOUT=10
