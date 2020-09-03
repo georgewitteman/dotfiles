@@ -222,11 +222,13 @@ if whence brew >/dev/null; then
   alias brew='brew-helper'
 fi
 
-alias echo-debug="echo-log DEBUG"
-alias echo-err="echo-log ERROR"
-alias echo-info="echo-log INFO"
-alias echo-ok="echo-log OK"
-alias echo-warn="echo-log WARN"
+# Setting these as functions so they're available in autloaded functions that
+# were autoloaded with the -U flag
+echo-debug() { echo-log DEBUG "$@" }
+echo-err() { echo-log ERROR "$@" }
+echo-info() { echo-log INFO "$@" }
+echo-ok() { echo-log OK "$@" }
+echo-warn() { echo-log WARN "$@" }
 
 # Color variables
 () {
