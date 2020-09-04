@@ -74,9 +74,9 @@
 # about. There isn't a case where I run a non-interactive login shell and need
 # this set up, and any scripts should have their $PATH set already, since macOS
 # sets the path in /etc/zprofile and not /etc/zshenv.
+typeset -U path
+typeset -gx PATH
 if [[ "$OSTYPE" = "darwin"* ]]; then
-  typeset -U path
-  typeset -gx PATH
   # typeset file
 
   # Setup default PATH just like /etc/zprofile does
