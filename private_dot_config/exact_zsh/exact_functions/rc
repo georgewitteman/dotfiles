@@ -2,11 +2,12 @@
 
 # [r]eload [c]onfig
 
+echo-run zplug reinit
+
 if [[ -n "$(jobs)" ]]; then
-  echo-err "Close background jobs before reloading zsh."
+  echo-warn "Current shell has backgrounded jobs. Not restarting ${SHELL}."
   return 1
 fi
 
-echo-run zplug reinit
 echo-eval 'path=(); fpath=()'
 echo-run exec "$SHELL" --login --interactive

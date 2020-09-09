@@ -13,16 +13,12 @@
 [grep]
 	lineNumber = true
 [alias]
+	s = status
 	st = status
-	b = branch
-	co = checkout
-	s = status -s
 	patch = !git --no-pager diff --no-color
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
 	base = !sh -c \"git show-branch | grep '*' | grep -v '$(git rev-parse --abbrev-ref HEAD)' | head -n1 | sed 's/.*\\[\\(.*\\)\\].*/\\1/' | sed 's/[\\^~].*//'\"
-	br = for-each-ref --sort=-committerdate refs/heads/ --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(color:red)%(objectname:short)%(color:reset) - %(contents:subject) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))'
-	# Switch to a branch, creating it if necessary
-	go = switch --create
+	br = for-each-ref --sort=-committerdate refs/heads/ --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(color:green)%(committerdate:relative)%(color:reset) - %(contents:subject) - %(authorname) (%(color:red)%(objectname:short)%(color:reset))'
 	stash-untracked = "!f() {    \
 		git stash;               \
 		git stash -u;            \
@@ -44,3 +40,5 @@
 	rebase = true
 [commit]
 	gpgsign = true
+
+# vim: ft=gitconfig
