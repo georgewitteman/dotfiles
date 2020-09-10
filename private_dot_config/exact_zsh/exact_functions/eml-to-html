@@ -17,6 +17,7 @@ if [[ ! -f "$venv_dir/bin/activate" ]]; then
   echo-run python3 -m venv "$venv_dir" || { echo 'Failed to create venv'; return 1 }
 fi
 
+save-venv
 activate-venv "$venv_dir" || { echo 'Failed to activate venv'; return 1 }
 
 echo-run pip3 install --quiet --upgrade pip || true
@@ -39,4 +40,5 @@ fi
 
 echo-run open "$tmp_file"
 
-restore-virtual-env
+deactivate
+restore-venv
