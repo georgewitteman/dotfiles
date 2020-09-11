@@ -242,3 +242,7 @@ if executable('rg')
 
   let g:ackprg = 'rg --vimgrep'
 endif
+
+" Default to treating /bin/sh as POSIX shell (not the super duper old bourne
+" shell)
+let g:is_posix = 1

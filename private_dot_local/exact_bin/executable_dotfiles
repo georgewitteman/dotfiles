@@ -19,20 +19,19 @@ shift
 case "$command" in
   -h | --help)
     echo "$usage"
-    return 1
+    return
     ;;
   apply)
-    if ! chezmoi verify "$@"; then
-      if ! echo-run chezmoi diff --no-pager "$@"; then
-        echo-warn "diff failed"
-        return 1
-      fi
-      if ! safe-run chezmoi apply "$@"; then
-        echo-info "You can run 'dotfiles add ${@}' to update the source."
-        return
-      fi
-    else
+    if chezmoi verify ; then
       echo-info "Nothing to apply."
+    fi
+    if ! echo-run chezmoi diff --no-pager "$@"; then
+      echo-warn "Error showing diff. Are you signed in to 1Password?"
+      return 1
+    fi
+    if ! safe-run chezmoi apply "$@"; then
+      echo-info "You can run 'dotfiles add ${@}' to update the source."
+      return
     fi
     ;;
   *)

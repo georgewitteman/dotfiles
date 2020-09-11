@@ -14,6 +14,7 @@
 #
 # Output the command to stderr so we can pipe the result of this to other
 # commands.
+
 export ECHO_EVAL_LEVEL="$(( ${ECHO_EVAL_LEVEL:-0} + 1))"
 
 echo -n "\033[1;34m"
@@ -33,11 +34,14 @@ fi
 
 echo -n "${prompt_char} ${@}\033[0m\n" >&2
 
-if [[ "$ECHO_RUN_DEBUG" == "1" ]]; then
-  export ECHO_EVAL_LEVEL="$(( ECHO_EVAL_LEVEL - 1))"
-  return "$ECHO_RUN_DEBUG_RETURN"
-fi
+# This is here so that we always decrement $ECHO_EVAL_LEVEL after running the
+# command, even if it's something like 'return 1'
+() {
+  eval "$@"
+} "$@"
 
-eval "$@"
+local retval="$?"
 
 export ECHO_EVAL_LEVEL="$(( ECHO_EVAL_LEVEL - 1))"
+
+return "$retval"
