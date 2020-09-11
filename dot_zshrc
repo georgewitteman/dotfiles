@@ -76,6 +76,15 @@ zplug init
 yavm init pyenv nodejs golang
 preexec_functions+=(yavm_set_path)
 
+if [[ -n "$VIRTUAL_ENV" ]]; then
+  # Allows you to `rc` (reload config, see aliases below) from inside a virtual
+  # environment without losing the virtual environment. Normally `exec` keeps
+  # all environment variables, but certain ones get overwritten during zsh
+  # initialization. This reinitializes them. Keep this after anything else that
+  # sets the path.
+  source "$VIRTUAL_ENV/bin/activate"
+fi
+
 export EDITOR="vim"
 
 export CLICOLOR=1
@@ -113,11 +122,6 @@ alias rc="echo-run restart-zsh"
 # Tmux sessions
 alias default="new-or-switch-tmux default ${HOME}"
 alias misc='default'
-
-if [[ -z "$TMUX" && "$TERM" = "alacritty" ]]; then
-  # Always open tmux when starting Alacritty
-  default
-fi
 
 if ! command -v sudoedit &>/dev/null; then
   alias sudoedit='sudo -e'
@@ -387,11 +391,7 @@ setopt hist_reduce_blanks
 # Don't execute immediately upon history expansion.
 setopt hist_verify
 
-if [[ -n "$VIRTUAL_ENV" ]]; then
-  # Allows you to `rc` (reload config, see aliases below) from inside a virtual
-  # environment without losing the virtual environment. Normally `exec` keeps
-  # all environment variables, but certain ones get overwritten during zsh
-  # initialization. This reinitializes them. Keep this after anything else that
-  # sets the path.
-  source "$VIRTUAL_ENV/bin/activate"
+if [[ -z "$TMUX" && "$TERM" = "alacritty" ]]; then
+  # Always open tmux when starting Alacritty
+  default
 fi
