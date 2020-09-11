@@ -33,5 +33,3 @@ eval "$function_name() {
   }
   $function_name \\\"\\\$@\\\"\"
 }"
-
-# vim: ft=zsh:

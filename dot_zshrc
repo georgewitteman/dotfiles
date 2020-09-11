@@ -24,36 +24,6 @@
 # `.zshrc' is sourced in interactive shells. It should contain commands to set
 # up aliases, functions, options, key bindings, etc.
 
-# ----- NOTES FROM DOCUMENTATION ----------------------------
-#
-# WHY USE [[ ]] INSTEAD OF [ ]: Second aside for users of sh: you may remember
-# that tests in sh used a single pair of brackets, `if [ ... ]; then ...', or
-# equivalently as a command called test, `if test ...; then ...'. The Korn
-# shell was deliberately made to be different, and zsh follows that. The reason
-# is that `[[' is treated specially, which allows the shell to do some extra
-# checks and allows more natural syntax. For example, you may know that in sh
-# it's dangerous to test a parameter which may be empty: `[ $var = foo ]' will
-# fail if $var is empty, because in that case the word is missed out and the
-# shell never knows it was supposed to be there; with `[[ ... ]]', this is
-# quite safe because the shell is aware there's a word before the `=', even if
-# it's empty. Also, you can use `&&' and `||' to mean logical `and' and `or',
-# which agrees with the usual UNIX/C convention; in sh, they would have been
-# taken as starting a new command, not as part of the test, and you have to use
-# the less clear `-a' and `-o'. Actually, zsh provides the old form of test for
-# backward compatibility, but things will work a lot more smoothly if you don't
-# use it.
-#
-# STARTUP FILE ORDER AND PURPOSE: Certain options from earlier startup files
-# can prevent later startup files from running
-#  - /etc/zshenv: Always run for every zsh
-#  - ~/.zshenv: Usually run for every zsh
-#  - /etc/profile: Run for login shells
-#  - ~/.zprofile: Run for login shells
-#  - /etc/zshrc: Run for interactive shells
-#  - ~/.zshrc: Run for interactive shells
-#  - /etc/zlogin: Run for login shells
-#  - ~/.zlogin: Run for login shells
-
 # Leaving this here so other install scripts think that it's here, since I'm
 # setting the path manually.
 # ====================
@@ -97,7 +67,7 @@ fi
 
 # Set up fpath for my autoloaded functions
 fpath=("${XDG_CONFIG_HOME:-${HOME}/.config}/zsh/functions/" "${fpath[@]}")
-autoload -Uz ${XDG_CONFIG_HOME:-${HOME}/.config}/zsh/functions/*
+autoload -Uz "${XDG_CONFIG_HOME:-${HOME}/.config}"/zsh/functions/[A-Za-z]*
 
 zplug add git@github.com:georgewitteman/zsh-prompt.git || true
 zplug add git@github.com:georgewitteman/zsh-yavm.git || true

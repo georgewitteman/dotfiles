@@ -1,7 +1,6 @@
 #compdef zplug
 
 _zplug() {
-  local plugins_path="${XDG_CONFIG_HOME:-$HOME/.config}/zsh/plugins"
   if [[ "${#words}" -eq 2 ]]; then
     local -a subcmds
     subcmds=()
