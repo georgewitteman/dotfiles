@@ -22,15 +22,16 @@ case "$command" in
     return
     ;;
   apply)
-    if chezmoi verify ; then
+    if echo-run chezmoi verify ; then
       echo-info "Nothing to apply."
+      return
     fi
-    if ! echo-run chezmoi diff --no-pager "$@"; then
+    if ! echo-run chezmoi diff --no-pager; then
       echo-warn "Error showing diff. Are you signed in to 1Password?"
       return 1
     fi
-    if ! safe-run chezmoi apply "$@"; then
-      echo-info "You can run 'dotfiles add ${@}' to update the source."
+    if ! safe-run chezmoi apply; then
+      echo-info "You can run 'dotfiles add <file>...' to update the source."
       return
     fi
     ;;

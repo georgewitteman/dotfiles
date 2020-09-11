@@ -8,8 +8,8 @@ fi
 if [ "$#" -eq 0 ]; then
   rel_path="$(realpath --relative-to="$PWD" "$(git rev-parse --show-toplevel)")"
   echo-run git add "$rel_path"
-  status
-  return $?
+  git status
+  return "$?"
 fi
 
 echo-run git add --verbose "$@"
