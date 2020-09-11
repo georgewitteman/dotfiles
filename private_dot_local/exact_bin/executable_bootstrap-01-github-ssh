@@ -1,7 +1,6 @@
 #!/usr/bin/env zsh
 
 set -e
-source "$HOME/.zshrc"
 
 if ! ssh-keygen -F github.com >/dev/null 2>&1; then
   # https://docs.github.com/en/github/authenticating-to-github/githubs-ssh-key-fingerprints

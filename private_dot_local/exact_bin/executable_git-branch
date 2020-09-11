@@ -1,0 +1,29 @@
+#!/usr/bin/env zsh
+
+if ! is-clean-repo; then
+  echo-warn "You have uncommitted changes. Commit or stash your changes."
+  echo-run git status
+  return 1
+fi
+
+local branches branch
+branches=$(
+  git \
+    --no-pager \
+    branch \
+    --sort=-committerdate \
+    --format="%(if)%(HEAD)%(then)*%(else) %(end) %(refname:short) (%(committerdate:relative))"
+) &&
+branch=$(
+  echo "$branches" |
+  fzf --no-multi --nth=1,2 \
+    --preview="git show --color=always {1}" --preview-window="70%"
+) &&
+branch_name=$(echo "$branch" | awk '{print $1}' | sed "s/.* //") &&
+if [ "$branch_name" = "*" ]; then
+  echo -n "Already on branch $bold_color$(echo "$branch" | awk '{print $2}' | sed 's/.* //')"
+  echo "$reset_color"
+  return
+fi &&
+echo-run git checkout $branch_name || return "$status"
+git-show --quiet

@@ -1,7 +1,6 @@
 #!/usr/bin/env zsh
 
 set -e
-source "$HOME/.zshrc"
 
 local zsh_path="$(which zsh)"
 if (( $+commands[brew] )); then

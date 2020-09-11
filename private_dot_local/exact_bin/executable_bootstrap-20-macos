@@ -1,7 +1,6 @@
 #!/usr/bin/env zsh
 
 set -e
-source "$HOME/.zshrc"
 
 if [[ ! "$OSTYPE" =~ "darwin" ]]; then
   echo-warn "Not on macOS. Skipping macOS."
@@ -48,6 +47,7 @@ local formulas=(
   pinentry-mac
   ripgrep
   rsync
+  shellcheck
   terraform
   tmux
   tree

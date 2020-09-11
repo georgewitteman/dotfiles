@@ -1,6 +1,5 @@
 #!/usr/bin/env zsh
 
 set -e
-source "$HOME/.zshrc"
 
 echo-run vplug update --quieter || true

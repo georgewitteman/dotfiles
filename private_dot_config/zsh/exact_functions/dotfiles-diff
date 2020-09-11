@@ -1,6 +1,0 @@
-#!/usr/bin/env zsh
-if ! op list users >/dev/null 2>&1; then
-  echo-run op-signin || return "$?"
-fi
-echo-run chezmoi diff --no-pager "$@"
-echo-run chezmoi git -- --no-pager diff HEAD

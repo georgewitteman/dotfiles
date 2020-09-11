@@ -1,7 +1,6 @@
 #!/usr/bin/env zsh
 
 set -e
-source "$HOME/.zshrc"
 
 if whence snowsql >/dev/null; then
   echo-info 'Skipping snowsql because it is already installed.'

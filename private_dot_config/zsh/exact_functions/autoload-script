@@ -1,0 +1,37 @@
+#!/usr/bin/env zsh
+
+local filename="$1"
+
+if [[ -z "$filename" ]]; then
+  echo "usage: ${0:t} <filename>"
+  return 1
+fi
+
+if [[ ! -f "$filename" ]]; then
+  echo-err "The file '${filename}' does not exist."
+  return 1
+fi
+
+# :r gets rid of any extension
+local function_name="${filename:t:r}"
+
+# This works by defining one function nested within the function. The outer
+# function is just a container for the inner function. When the outer function
+# runs it will create a new function (with the same name) with the body of the
+# function as the contents of the file. Then it will call that new function.
+#
+# The result of this is that the initial function definition is extremely
+# quick, the real function (i.e. the script) gets loaded when the function is
+# first called, and it doesn't get loaded again.
+#
+# Make sure the file read stays on its own line. There can be issues if there
+# are comments on the last line.
+eval "$function_name() {
+  eval \"
+  $function_name() {
+    \$(<${filename:a})
+  }
+  $function_name \\\"\\\$@\\\"\"
+}"
+
+# vim: ft=zsh:

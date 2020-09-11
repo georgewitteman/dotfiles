@@ -1,7 +1,6 @@
 #!/usr/bin/env zsh
 
 set -e
-source "$HOME/.zshrc"
 
 WORK_EMAIL="{{ .work.email }}"
 WORK_PATH="{{ .work.path }}"
@@ -23,3 +22,5 @@ for repo in "$WORK_PATH"/*(/N); do
     fi
   fi
 done
+
+# vim: ft=zsh:

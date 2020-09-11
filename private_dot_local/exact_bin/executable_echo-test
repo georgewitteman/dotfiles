@@ -1,0 +1,9 @@
+#!/usr/bin/env zsh
+
+local log_level
+for log_level in DEBUG OK SUCCESS WARN ERROR ERR INFO; do
+  echo-log "$log_level" "This is a ${log_level} log."
+done
+
+echo-run true
+echo-eval 'TESTVAR=second; echo -n first && echo "$TESTVAR"'

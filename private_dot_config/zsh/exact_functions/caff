@@ -1,7 +1,0 @@
-#!/usr/bin/env zsh
-
-tmux has-session -t caffeinate >/dev/null 2>&1
-[ $? != 0 ] && echo-run tmux new-session -d -s caffeinate -c "$HOME" -- caffeinate -d
-# sleep 0.5
-# local pane="$(tmux list-panes -t caffeinate -F '#P')"
-# echo_run tmux send-keys -t "caffeinate.${pane}" 'caffeinate -d' ENTER

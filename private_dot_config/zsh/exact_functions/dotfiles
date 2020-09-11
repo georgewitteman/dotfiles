@@ -1,43 +1,15 @@
 #!/usr/bin/env zsh
 
-local usage="Wrapper for chezmoi.
-
-Usage:
-  ${0:t} -h | --help           Show usage and exit.
-"
-
-local command="$1"
-if [[ -z "$command" ]]; then
-  echo "$usage"
-  return 1
+if [[ -z "${OP_SESSION_my:-}" ]]; then
+  echo-run op-signin || return "$?"
 fi
 
-shift
-
-case "$command" in
-  -h | --help)
-    echo "$usage"
-    return 1
-    ;;
+case "$1" in
   'cd')
+    shift
     echo-run cd "$(chezmoi source-path "$@")"
     ;;
-  status)
-    echo-run chezmoi git -- status "$@"
-    ;;
-  commit)
-    echo-run chezmoi git -- commit "$@"
-    ;;
-  pull)
-    echo-run chezmoi git -- pull "$@"
-    ;;
-  push)
-    echo-run chezmoi git -- push "$@"
-    ;;
   *)
-    if (( $+functions[dotfiles-$command] )); then
-      "dotfiles-$command" "$@"
-    else
-      echo-run chezmoi "$command" "$@"
-    fi
+    command dotfiles "$@"
+    ;;
 esac

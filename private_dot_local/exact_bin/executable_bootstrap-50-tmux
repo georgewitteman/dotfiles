@@ -1,7 +1,6 @@
 #!/usr/bin/env zsh
 
 set -e
-source "$HOME/.zshrc"
 
 if (( $+commands[tmux] )); then
   echo-info "Installing tmux terminfo file"

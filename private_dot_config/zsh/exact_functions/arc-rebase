@@ -1,3 +1,0 @@
-#!/usr/bin/env zsh
-
-rebase && arc-diff -am "Rebase" "$@"

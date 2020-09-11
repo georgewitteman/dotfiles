@@ -1,0 +1,27 @@
+#!/bin/sh
+
+log_level="$1"
+log_color="\033[44m"
+shift
+
+case "$log_level" in
+  DEBUG) log_color="\033[46m";;
+  OK | SUCCESS)
+    log_level="OK"
+    log_color="\033[42m"
+    ;;
+  WARN) log_color="\033[43m";;
+  ERROR | ERR)
+    log_level="ERROR"
+    log_color="\033[41m"
+    ;;
+  INFO) log_color="\033[44m";;
+  *)
+    set -- "$log_level" "$@"
+    log_level="INFO"
+    log_color="\033[44m"
+    ;;
+esac
+
+printf "%b\033[97m %s \033[0m " "$log_color" "$log_level"
+echo "$@"

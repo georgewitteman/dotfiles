@@ -1,0 +1,15 @@
+#!/bin/sh
+
+if ! in-git-repo; then
+  echo-err "Not in a git repository."
+  return 128
+fi
+
+if [ "$#" -eq 0 ]; then
+  rel_path="$(realpath --relative-to="$PWD" "$(git rev-parse --show-toplevel)")"
+  echo-run git add "$rel_path"
+  status
+  return $?
+fi
+
+echo-run git add --verbose "$@"

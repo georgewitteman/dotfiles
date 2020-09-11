@@ -1,8 +1,6 @@
 #!/usr/bin/env zsh
 
 set -e
-autoload -U colors && colors
-source "$HOME/.zshrc"
 
 sudo echo "$SHELL" > /dev/null
 if [[ $status -ne 0 ]]; then

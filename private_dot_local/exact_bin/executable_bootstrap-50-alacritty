@@ -1,7 +1,6 @@
 #!/usr/bin/env zsh
 
 set -e
-source "$HOME/.zshrc"
 
 local terminfo_file="$(mktemp)"
 echo-eval "curl --silent \\

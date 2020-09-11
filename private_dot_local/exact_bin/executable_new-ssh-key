@@ -1,26 +1,27 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 FILENAME=id_rsa
-PASSPHRASE=
 DEFAULT_EMAIL=george@witteman.me
 
-if [ -r ${HOME}/.ssh/${FILENAME}.pub ]; then
+if [ -r "${HOME}/.ssh/${FILENAME}.pub" ]; then
   echo "Backing up old keys to ~/.ssh/id_rsa.bak and ~/.ssh/id_rsa.pub.bak"
-  mv ~/.ssh/id_rsa ~/.ssh/id_rsa.bak
-  mv ~/.ssh/id_rsa.pub ~/.ssh/id_rsa.pub.bak
+  echo-run mv ~/.ssh/id_rsa ~/.ssh/id_rsa.bak
+  echo-run mv ~/.ssh/id_rsa.pub ~/.ssh/id_rsa.pub.bak
 fi
 
-read -p "Email: " EMAIL
+printf "Email: "
+read -r EMAIL
 
-if [[ -z "${EMAIL}" ]]; then
-  EMAIL="${DEFAULT_EMAIL}"
+if [ -z "$EMAIL" ]; then
+  EMAIL="$DEFAULT_EMAIL"
 fi
 
-ssh-keygen -C ${EMAIL} -N "" -b 2048 -t rsa -f ${HOME}/.ssh/${FILENAME} || exit 1
+echo-run ssh-keygen -C "$EMAIL" -N "" -b 2048 -t rsa -f "${HOME}/.ssh/${FILENAME}" || exit 1
 
 echo
 
-read -p "Enter the server url (user@host): " SERVER
+printf "Enter the server url (user@host): "
+read -r SERVER
 
 if [ -z "$SERVER" ]; then
   echo "Server empty, not copying"
@@ -28,18 +29,11 @@ if [ -z "$SERVER" ]; then
   exit 1
 fi
 
-echo ssh-copy-id ${SERVER}
-ssh-copy-id ${SERVER} || exit 1
+echo-run ssh-copy-id "$SERVER" || exit 1
 
-if [[ -x "$(command -v pbcopy)" ]]; then
+if [ -x "$(command -v pbcopy)" ]; then
   echo "Copying public key to clipboard."
   echo "Add key to GitHub here: https://github.com/settings/keys"
 
-  cat ${HOME}/.ssh/${FILENAME}.pub | pbcopy
-fi
-
-if [ $? -eq 0 ]; then
-  echo "Success"
-else
-  echo "Copying failed."
+  pbcopy < "${HOME}/.ssh/${FILENAME}.pub"
 fi
