@@ -76,15 +76,6 @@ zplug init
 yavm init pyenv nodejs golang
 preexec_functions+=(yavm_set_path)
 
-if [[ -n "$VIRTUAL_ENV" ]]; then
-  # Allows you to `rc` (reload config, see aliases below) from inside a virtual
-  # environment without losing the virtual environment. Normally `exec` keeps
-  # all environment variables, but certain ones get overwritten during zsh
-  # initialization. This reinitializes them. Keep this after anything else that
-  # sets the path.
-  source "$VIRTUAL_ENV/bin/activate"
-fi
-
 export EDITOR="vim"
 
 export CLICOLOR=1
@@ -395,3 +386,12 @@ setopt hist_ignore_space
 setopt hist_reduce_blanks
 # Don't execute immediately upon history expansion.
 setopt hist_verify
+
+if [[ -n "$VIRTUAL_ENV" ]]; then
+  # Allows you to `rc` (reload config, see aliases below) from inside a virtual
+  # environment without losing the virtual environment. Normally `exec` keeps
+  # all environment variables, but certain ones get overwritten during zsh
+  # initialization. This reinitializes them. Keep this after anything else that
+  # sets the path.
+  source "$VIRTUAL_ENV/bin/activate"
+fi
