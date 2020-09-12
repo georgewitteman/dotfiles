@@ -405,5 +405,5 @@ setopt hist_verify
 
 if [[ -z "$TMUX" && "$TERM" = "alacritty" && "$SHLVL" -eq 1 ]]; then
   # Always open tmux when starting Alacritty
-  default
+  new-or-switch-tmux default "$HOME"
 fi
