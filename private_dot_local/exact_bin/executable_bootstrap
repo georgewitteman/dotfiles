@@ -2,9 +2,10 @@
 
 set -e
 
-sudo echo "$SHELL" > /dev/null
-if [[ $status -ne 0 ]]; then
-  echo-info "We need sudo to do some stuff"
+if ! sudo --validate; then
+# sudo echo "$SHELL" > /dev/null
+# if [[ $status -ne 0 ]]; then
+  echo-info "We need sudo to do some stuff."
   return 1
 fi
 
@@ -16,7 +17,7 @@ local i
 for i in {1..${#files}}; do
   local file="${files[$i]}"
   echo "============================================================="
-  echo "Running: ${fg[green]}${file}${reset_color} (${i}/${#files})"
+  echo "Running: \033[32m${file}\033[0m (${i}/${#files})"
   echo "============================================================="
   "$HOME/.local/bin/$file"
   [[ "$i" -lt "${#files}" ]] && echo

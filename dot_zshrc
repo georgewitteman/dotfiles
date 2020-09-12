@@ -125,7 +125,7 @@ alias default="new-or-switch-tmux default ${HOME}"
 alias misc='default'
 
 if ! command -v sudoedit &>/dev/null; then
-  alias sudoedit='sudo -e'
+  alias sudoedit='sudo --edit'
 fi
 
 # Always use local package jest
