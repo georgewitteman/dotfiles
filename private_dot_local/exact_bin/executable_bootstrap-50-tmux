@@ -4,7 +4,7 @@ set -e
 
 if (( $+commands[tmux] )); then
   echo-info "Installing tmux terminfo file"
-  echo-run tic -x $XDG_CONFIG_HOME/tmux/tmux.terminfo
+  echo-run tic -x ${XDG_CONFIG_HOME:-${HOME}/.config}/tmux/tmux.terminfo
 
   echo-info "Installing, updating, and cleaning tmux plugins"
 

@@ -39,14 +39,24 @@
 # added by Snowflake SnowSQL installer v1.2
 # ====================
 
-typeset -U path fpath
+# XDG Base Directories
+# Where user-specific configurations should be written (analogous to /etc)
+export XDG_CONFIG_HOME="${HOME}/.config"
+# Where user-specific non-essential (cached) data should be written (analogous
+# to /var/cache)
+export XDG_CACHE_HOME="${HOME}/.cache"
+# Where user-specific data files should be written (analogous to /usr/share)
+export XDG_DATA_HOME="${HOME}/.local/share"
+
+# Don't write python pyc files, because they're not necessary and clutter
+# directories with binary files
+export PYTHONDONTWRITEBYTECODE=1
 
 # Locale setup
 export LC_ALL="en_US.UTF-8"
 export LANG="en_US.UTF-8"
 
-# Correctly display UTF-8 with combining characters.
-setopt COMBINING_CHARS
+typeset -U path fpath
 
 if [[ -d "${HOME}/.local/bin" ]]; then
   path=("${HOME}/.local/bin" "${path[@]}")

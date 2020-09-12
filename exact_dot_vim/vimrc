@@ -7,12 +7,12 @@ scriptencoding utf-8
 
 " Environment
 " Persistent Undo
-set undodir=$XDG_DATA_HOME/vim/undo
+set undodir=$HOME/.local/share/vim/undo
 set undofile " Automatically save undo history to an undo file. Stored in 'undodir'
-set directory=$XDG_DATA_HOME/vim/swap " List of dir names for the swap file
+set directory=$HOME/.local/share/vim/swap " List of dir names for the swap file
 set noswapfile " No swapfiles
-set backupdir=$XDG_DATA_HOME/vim/backup " List of dir names for the backup file
-set viminfo+='1000,n$XDG_DATA_HOME/vim/viminfo
+set backupdir=$HOME/.local/share/vim/backup " List of dir names for the backup file
+set viminfo+='1000,n$HOME/.local/share/vim/viminfo
 
 " Leader to <Space>
 let mapleader = "\<Space>"
