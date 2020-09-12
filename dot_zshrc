@@ -70,9 +70,20 @@ fi
 fpath=("${HOME}/.config/zsh/functions/" "${fpath[@]}")
 autoload -Uz "${HOME}/.config"/zsh/functions/[A-Za-z]*
 
-zplug add git@github.com:georgewitteman/zsh-prompt.git || true
-zplug add git@github.com:georgewitteman/zsh-yavm.git || true
-zplug init
+if [[ ! -d "${HOME}/.config/zsh/zsh-prompt" ]]; then
+  zplug add git@github.com:georgewitteman/zsh-prompt.git
+fi
+
+if [[ ! -d "${HOME}/.config/zsh/zsh-yavm" ]]; then
+  zplug add git@github.com:georgewitteman/zsh-yavm.git
+fi
+
+local plugin_file
+for plugin_file in "$HOME"/.config/zsh/*/*.plugin.zsh(N); do
+  source "$plugin_file"
+done
+unset plugin_file
+autoload -Uz compinit && compinit -C -d "${HOME}/.zcompdump"
 
 yavm init pyenv nodejs golang
 preexec_functions+=(yavm_set_path)
