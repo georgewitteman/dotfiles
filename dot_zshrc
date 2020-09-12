@@ -67,8 +67,8 @@ if [[ -d "${HOME}/.cargo/bin" ]]; then
 fi
 
 # Set up fpath for my autoloaded functions
-fpath=("${XDG_CONFIG_HOME:-${HOME}/.config}/zsh/functions/" "${fpath[@]}")
-autoload -Uz "${XDG_CONFIG_HOME:-${HOME}/.config}"/zsh/functions/[A-Za-z]*
+fpath=("${HOME}/.config/zsh/functions/" "${fpath[@]}")
+autoload -Uz "${HOME}/.config"/zsh/functions/[A-Za-z]*
 
 zplug add git@github.com:georgewitteman/zsh-prompt.git || true
 zplug add git@github.com:georgewitteman/zsh-yavm.git || true

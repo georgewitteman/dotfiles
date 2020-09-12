@@ -10,7 +10,7 @@ if [[ -z "$1" ]]; then
   return 1
 fi
 
-local venv_dir="${XDG_DATA_HOME:-$HOME/.local/share}/eml-to-html/venv"
+local venv_dir="${HOME}/.local/share/eml-to-html/venv"
 
 if [[ ! -f "$venv_dir/bin/activate" ]]; then
   echo-run mkdir -p "${venv_dir:a:h}"
