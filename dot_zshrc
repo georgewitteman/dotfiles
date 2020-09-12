@@ -392,7 +392,7 @@ setopt hist_reduce_blanks
 # Don't execute immediately upon history expansion.
 setopt hist_verify
 
-if [[ -z "$TMUX" && "$TERM" = "alacritty" ]]; then
+if [[ -z "$TMUX" && "$TERM" = "alacritty" && "$SHLVL" -eq 1 ]]; then
   # Always open tmux when starting Alacritty
   default
 fi
