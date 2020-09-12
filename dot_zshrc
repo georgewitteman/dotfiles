@@ -371,7 +371,7 @@ if command -v fzf &>/dev/null && command -v fd &>/dev/null; then
 fi
 
 # make some commands not show up in history
-HISTFILE="${ZDOTDIR:-${HOME}}/.zsh_history"
+HISTFILE="${HOME}/.local/share/zsh/history"
 HISTIGNORE="ls:ll:la:cd:cd -:pwd:exit:date:* --help"
 HISTSIZE=10000000
 SAVEHIST=10000000
