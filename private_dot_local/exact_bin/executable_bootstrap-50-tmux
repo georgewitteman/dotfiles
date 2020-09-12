@@ -2,20 +2,9 @@
 
 set -e
 
-if (( $+commands[tmux] )); then
+if command -v tmux &>/dev/null; then
   echo-info "Installing tmux terminfo file"
   echo-run tic -x "${HOME}/.config/tmux/tmux.terminfo"
-
-  echo-info "Installing, updating, and cleaning tmux plugins"
-
-  if [ ! -d "${HOME}/.config/tmux/tpm" ]; then
-    echo-run git clone https://github.com/tmux-plugins/tpm \
-      "${HOME}/.config/tmux/tpm"
-  fi
-
-  echo-run "$HOME/.config/tmux/tpm/bin/install_plugins"
-  echo-run "$HOME/.config/tmux/tpm/bin/update_plugins" all
-  echo-run "$HOME/.config/tmux/tpm/bin/clean_plugins"
 else
   echo-warn "tmux not installed."
 fi
