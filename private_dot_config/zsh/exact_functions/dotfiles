@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 if [[ -z "${OP_SESSION_my:-}" ]]; then
-  echo-run op-signin || return "$?"
+  echo-eval 'eval "$(op signin)"' || return "$?"
 fi
 
 case "$1" in
