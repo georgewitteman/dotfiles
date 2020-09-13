@@ -1,47 +1,11 @@
-#!/usr/bin/env zsh
+#!/bin/sh
 
-# This is used to allow echoing commands that have special characters like &&.
-# Instead of passing each param as an argument the entire command must be
-# passed as a string. If there are multiple string arguments they are
-# concatenated together by a space and eval'd as a whole.
-
-# Note: `arr=(a b c) && echo "${(j:-:)arr}"` --> "a-b-c"
-# http://zsh.sourceforge.net/Doc/Release/Expansion.html#Parameter-Expansion
-
-# From zsh docs: "If a q- is given (only a single q may appear), a minimal form
-# of single quoting is used that only quotes the string if needed to protect
-# special characters. Typically this form gives the most readable output."
-#
-# Output the command to stderr so we can pipe the result of this to other
-# commands.
-
-export ECHO_EVAL_LEVEL="$(( ${ECHO_EVAL_LEVEL:-0} + 1))"
-
-echo -n "\033[1;34m"
-
-local prompt_char="$"
-if [[ "$EUID" -eq 0 ]]; then
-  prompt_char="#"
+if [ -t 1 ]; then
+  printf "\033[1;34m" >&2
+fi
+printf '$ %s\n' "$*" >&2
+if [ -t 1 ]; then
+  printf "\033[0m" >&2
 fi
 
-if [[ "$ECHO_EVAL_LEVEL" -gt 1 ]]; then
-  prompt_char=">"
-  local x
-  for x in {2..${ECHO_EVAL_LEVEL}}; do
-    prompt_char="==${prompt_char}"
-  done
-fi
-
-echo -n "${prompt_char} ${@}\033[0m\n" >&2
-
-# This is here so that we always decrement $ECHO_EVAL_LEVEL after running the
-# command, even if it's something like 'return 1'
-() {
-  eval "$@"
-} "$@"
-
-local retval="$?"
-
-export ECHO_EVAL_LEVEL="$(( ECHO_EVAL_LEVEL - 1))"
-
-return "$retval"
+eval "$@"
