@@ -3,10 +3,6 @@
 local plugins_path="${HOME}/.config/zsh"
 local compdump_file="${HOME}/.zcompdump"
 
-echo-run() {
-  . $(whence -p echo-eval) "${(q-)@}"
-}
-
 zplug-usage() {
   echo "Update zsh plugins"
   echo ""
