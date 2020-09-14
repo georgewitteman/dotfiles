@@ -1,21 +1,9 @@
 #!/usr/bin/env zsh
 
 if ! command -v nosetests >/dev/null 2>&1; then
-  echo "Not inside a virtual environment with nosetests."
+  echo-err "The 'nosetests' command is not available."
   return 127
 fi
-
-# local file_or_dir="${@[-1]:a}" # :a resolves absolute path
-
-# if [[ -z "$file_or_dir" ]]; then
-#   echo "No file or directory specified."
-#   return
-# fi
-
-# local run_dir="$file_or_dir"
-# until [[ -f "${run_dir}/requirements.txt" ]] || [[ "$run_dir" = "$HOME" ]]; do
-#   run_dir="${run_dir:a:h}"
-# done
 
 # (N) ignores no matches. Default is to error
 local nose_profile_dir
@@ -30,12 +18,5 @@ nose_args+=('--nologcapture')
 for arg in "$@"; do
   nose_args+=("${arg/#$PWD\//}")
 done
-# if [[ "${#@[1,-2]}" -ne 0 ]]; then
-#   nose_args+=(${@[1,-2]})
-# fi
 
-(
-  # echo-run pushd "$run_dir"
-  echo-run TZ=UTC nosetests "${nose_args[@]}" # "${file_or_dir##${run_dir}/}"
-  # echo-run popd
-)
+TZ=UTC echo-run nosetests "${nose_args[@]}" # "${file_or_dir##${run_dir}/}"
