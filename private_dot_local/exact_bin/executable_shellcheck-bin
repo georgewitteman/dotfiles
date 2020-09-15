@@ -1,6 +1,8 @@
 #!/bin/sh
 
-for file in "$HOME"/.local/bin/*; do
+bin="${1:-${HOME}/.local/bin}"
+
+for file in "$bin"/*; do
   case $(head -1 "$file") in
     *bash*) echo-run shellcheck "$file";;
     */sh*) echo-run shellcheck "$file";;
