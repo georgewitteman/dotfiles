@@ -1,15 +1,15 @@
-#!/usr/bin/env zsh
+#!/bin/sh
 
 if ! in-git-repo; then
   echo-err "Not in a git repository."
   return 128
 fi
 
-echo-info -n "Getting remote HEAD... "
+printf "Getting remote HEAD... "
 GIT_HEAD="$(get-remote-head)"
-echo $GIT_HEAD
+echo "$GIT_HEAD"
 
-echo-run git checkout --quiet $GIT_HEAD && \
+echo-run git checkout --quiet "$GIT_HEAD" && \
 echo-run git fetch --quiet --progress --force --prune --tags && \
-echo-run git merge --quiet --ff-only origin/$GIT_HEAD && \
+echo-run git merge --quiet --ff-only "origin/${GIT_HEAD}" && \
 git-show --quiet

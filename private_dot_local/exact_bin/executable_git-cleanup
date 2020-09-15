@@ -1,13 +1,13 @@
-#!/usr/bin/env zsh
+#!/bin/sh
 
 if ! in-git-repo; then
   echo-err "Not in a git repository."
   return 128
 fi
 
-local git_dir="$(git rev-parse --git-dir)"
+git_dir="$(git rev-parse --git-dir)"
 
-if [[ -f "$git_dir/gc.log" ]]; then
+if [ -f "$git_dir/gc.log" ]; then
   echo-eval "cat $git_dir/gc.log && rm $git_dir/gc.log"
   echo-run git prune
 fi
