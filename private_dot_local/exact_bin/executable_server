@@ -2,8 +2,8 @@
 
 local port="${1:-8000}"
 
-if [[ "$1" = "-h" ]] || [[ "$1" = "--help" ]]; then
-  echo "usage: ${0:t} [PORT]"
+if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+  echo "usage: $(basename "$0") [PORT]"
   return 1
 fi
 

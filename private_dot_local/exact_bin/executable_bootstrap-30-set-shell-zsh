@@ -1,9 +1,9 @@
-#!/usr/bin/env zsh
+#!/bin/sh
 
 set -e
 
-local zsh_path="$(which zsh)"
-if (( $+commands[brew] )); then
+zsh_path="$(command -v zsh)"
+if command -v brew; then
   zsh_path="$(brew --prefix)/bin/zsh"
 fi
 
@@ -17,7 +17,7 @@ else
   echo "$zsh_path" | sudo tee -a /etc/shells >/dev/null
 fi
 
-if [[ "$SHELL" != "$zsh_path" ]]; then
+if [ "$SHELL" != "$zsh_path" ]; then
   echo-run chsh -s "$zsh_path"
 else
   echo-ok "User '$USER' already has $zsh_path as their shell"

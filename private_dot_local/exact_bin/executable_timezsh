@@ -1,8 +1,7 @@
-#!/usr/bin/env zsh
+#!/bin/sh
 
-local args=("$@")
-if [[ "$#" -eq 0 ]]; then
-  args=('--login' '--interactive')
+if [ "$#" -eq 0 ]; then
+  set -- '--login' '--interactive' "$@"
 fi
 
-echo-run hyperfine "${SHELL} ${args} -c exit"
+echo-run hyperfine "${SHELL} $* -c exit"

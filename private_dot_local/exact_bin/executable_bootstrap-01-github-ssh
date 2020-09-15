@@ -1,18 +1,18 @@
-#!/usr/bin/env zsh
+#!/bin/sh
 
 set -e
 
 if ! ssh-keygen -F github.com >/dev/null 2>&1; then
   # https://docs.github.com/en/github/authenticating-to-github/githubs-ssh-key-fingerprints
-  local expected_fingerprint="SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8"
-  local tmpfile="$(mktemp)"
+  expected_fingerprint="SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8"
+  tmpfile="$(mktemp)"
 
-  local keygen_output="$(echo-eval "ssh-keyscan -t rsa github.com 2>/dev/null | tee $tmpfile | ssh-keygen -lf - | cut -d ' ' -f 2")"
+  keygen_output="$(echo-eval "ssh-keyscan -t rsa github.com 2>/dev/null | tee $tmpfile | ssh-keygen -lf - | cut -d ' ' -f 2")"
 
   echo-info "Expected: $expected_fingerprint"
   echo-info "  Actual: $keygen_output"
 
-  if [[ "$expected_fingerprint" != "$keygen_output" ]]; then
+  if [ "$expected_fingerprint" != "$keygen_output" ]; then
     echo-err "GitHub fingerprint check failed!"
     exit 1
   fi

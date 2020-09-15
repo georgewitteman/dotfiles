@@ -1,13 +1,13 @@
-#!/usr/bin/env zsh
+#!/bin/sh
 
 set -e
 
-if whence snowsql >/dev/null; then
+if command -v snowsql 2>/dev/null; then
   echo-info 'Skipping snowsql because it is already installed.'
   return
 fi
 
-local tmpdir="$(mktemp -d)"
+tmpdir="$(mktemp -d)"
 echo-run cd "$tmpdir"
 
 echo-run curl -O 'https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/darwin_x86_64/snowsql-1.2.7-darwin_x86_64.pkg'

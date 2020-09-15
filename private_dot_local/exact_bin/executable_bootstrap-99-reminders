@@ -1,6 +1,0 @@
-#!/usr/bin/env zsh
-
-set -e
-
-echo-info "REMINDERS:"
-echo-info " - No reminders now!"
