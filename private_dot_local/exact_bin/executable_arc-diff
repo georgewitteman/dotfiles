@@ -48,7 +48,7 @@ echo-run git add --all || return "$status"
 
 # Commit
 local commit_run_cmd="echo-run"
-local git_options=()
+local git_options=(--quiet)
 if [[ -n "$no_verify" ]]; then
   git_options+=(--no-verify)
 fi
