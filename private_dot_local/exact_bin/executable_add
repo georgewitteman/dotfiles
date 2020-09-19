@@ -6,9 +6,7 @@ if ! in-git-repo; then
 fi
 
 if [ "$#" -eq 0 ]; then
-  rel_path="$(realpath --relative-to="$PWD" "$(git rev-parse --show-toplevel)")"
-  echo-run git add "$rel_path"
-  git status
+  echo-run git add --verbose "$(git rev-parse --show-toplevel)"
   return "$?"
 fi
 
