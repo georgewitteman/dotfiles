@@ -114,7 +114,7 @@ export GPG_TTY="$TTY"
 #   -X   keep content on screen after exit
 #   -M   show more info at the bottom prompt line
 #   -x4  tabs are 4 instead of 8
-export LESS=-iRFMx4
+export LESS=-iRMx4
 
 export PAGER=less
 
@@ -292,7 +292,7 @@ KEYTIMEOUT=10
 # Remove the / character from the $WORDCHARS
 WORDCHARS="${WORDCHARS/\//}"
 
-# Use emacs keybindings
+# Use emacs keybindings. See all bindings with 'bindkey -L'
 bindkey -e
 
 autoload -U up-line-or-beginning-search down-line-or-beginning-search
@@ -302,6 +302,11 @@ bindkey '^P' up-line-or-beginning-search
 bindkey '^N' down-line-or-beginning-search
 bindkey "^[[A" up-line-or-beginning-search
 bindkey "^[[B" down-line-or-beginning-search
+
+autoload -U edit-command-line
+zle -N edit-command-line
+bindkey '^xe' edit-command-line
+bindkey '^x^e' edit-command-line
 
 # Perform history expansion and insert a space into the buffer. If you type a
 # space after a command that starts with ! (or ^) to refer to (part of) a
@@ -318,7 +323,10 @@ bindkey '^[f' forward-word # alt-f
 bindkey '^[[1;3D' backward-word # alt-left
 bindkey '^[b' backward-word # alt-b
 bindkey '^[d' kill-word # alt-d
-bindkey "^[[Z" reverse-menu-complete # shift-tab
+bindkey '^[#' pound-insert # alt-#
+bindkey '^[[Z' reverse-menu-complete # shift-tab
+bindkey '^[.' insert-last-word
+
 
 if command -v fzf &>/dev/null && command -v fd &>/dev/null; then
   fzf-file-widget() {
