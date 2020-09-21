@@ -1,105 +1,118 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 
-local PRG_NAME="${0:t}"
-usage(){
-  # http://docopt.org/
-  echo "Generate a differential diff or revision."
-  echo ""
-  echo "Usage:"
-  echo "  $PRG_NAME -h | --help"
-  echo "  $PRG_NAME [options]"
-  echo ""
-  echo "Options:"
-  echo "  -h --help             Show usage and exit."
-  echo "  -m=MSG --message=MSG  Message to include in the diff update."
-  echo "  -a --amend            Whether to amend the current commit/diff or create a new one."
-  echo "  --plan-changes        Create or update a revision without requesting a code review."
-  echo "  --no-verify           Skip pre-commit hooks."
-  echo "  --skip-staging        Don't upload to staging repository."
-  echo "  -r --rebase           Rebase before pushing to Phabricator"
-  echo ""
+set -o errexit
+set -o nounset
+
+USAGE="Generate a differential diff or revision.
+
+Usage:
+  $(basename "$0") -h | --help
+  $(basename "$0") --amend --message <message>
+
+Options:
+  -a, --amend           Whether to amend the current commit/diff or create a new one.
+  -h, --help            Show usage and exit.
+  -m, --message=<msg>   Message to include in the diff update.
+  --no-verify           Skip pre-commit hooks.
+  --plan-changes        Create or update a revision without requesting a code review.
+  -r, --rebase          Rebase before pushing to Phabricator.
+  --skip-staging        Don't upload to staging repository."
+
+message='' amend='' draft='' no_verify='' rebase='' skip_staging=''
+
+die() {
+  [ "$#" -ge 2 ] && echo-err "$2"
+  exit "$1"
 }
 
-local message amend draft no_verify rebase skip_staging
-
-local args arg
-zparseopts -A args -E -D -F -- m: a h r -help -message: -amend \
-  -draft -no-verify -skip-staging -rebase || return "$status"
-
-for arg in ${(k)args}; do
-  case "$arg" in
-    -h | --help) usage; return ;;
-    -m | --message) message="${args[$arg]}" ;;
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    -m?*) _value="${1##-?}"; _arg="${1%%${_value}}" ;;
+    -[[:alnum:]][[:alnum:]]*) _value="-${1##-?}"; _arg="${1%%${1##-?}}" ;;
+    --[[:alnum:]]*=*) _value="${1#--[[:alnum:]]*=}"; _arg="${1%%=${_value}}" ;;
+  esac
+  if [ -z "${_arg+x}" ] || [ -z "${_value+x}" ]; then
+    shift; set -- "$_arg" "$_value" "$@"
+  fi
+  unset _arg _value
+  case "$1" in
+    -h | --help) echo "$USAGE"; exit ;;
+    -m | --message)
+      [ "$#" -ge 2 ] || die 1 "${1} requires a value"
+      message="$2"
+      shift
+      ;;
     -a | --amend) amend=1 ;;
     -r | --rebase) rebase=1 ;;
     --skip-staging) skip_staging=1 ;;
     --draft) draft=1 ;;
     --no-verify) no_verify=1 ;;
+    --) shift; break ;;
+    -?*) die 1 "unknown option: ${1}" ;;
+    *) break ;;
   esac
+  shift
 done
 
+# echo "message: ${message}"
+# echo "amend: ${amend}"
+# echo "draft: ${draft}"
+# echo "no_verify: ${no_verify}"
+# echo "rebase: ${rebase}"
+# echo "skip_staging: ${skip_staging}"
+# exit
+
 if is-clean-repo && [[ -z "$amend" ]]; then
-  echo-err "No changes to add. Did you mean 'arc-diff -a'?"
-  return 1
+  die 1 "No changes to add. Did you mean 'arc-diff -a'?"
 fi
 
 # Add files
-echo-run git add --all || return "$status"
+echo-run git add --all || die "$?" "Failed to stage changes."
 
 # Commit
-local commit_run_cmd="echo-run"
-local git_options=(--quiet)
+commit_run_cmd="echo-run"
+git_options=(--quiet)
 if [[ -n "$no_verify" ]]; then
   git_options+=(--no-verify)
 fi
 if [[ -n "$amend" ]]; then
   git_options+=('--amend' '--no-edit')
 else
-  git_options+=('--message' '<revision title>' '--no-edit')
+  git_options+=('--message=<revision title>' '--no-edit')
 fi
 
-if [[ -n "$amend" ]]; then
-  local current_commit_author="$(git show --no-patch --format='%ae')"
-  local repo_email="$(git config --get user.email)"
-  if [[ -z "$repo_email" ]]; then
-    repo_email="$(git config --global --get user.email)"
-  fi
-
-  if [[ "$current_commit_author" != "$repo_email" ]]; then
-    echo-warn "Are you sure you want to amend a commit that you don't own?"
-    echo-warn "Current commit author email: $current_commit_author"
-    echo-warn "Your email: $repo_email"
-    commit_run_cmd="safe-run"
-  fi
+current_commit_author="$(git show --no-patch --format='%ae')"
+repo_email="$(git config --get user.email)"
+if [[ -z "$repo_email" ]]; then
+  repo_email="$(git config --global --get user.email)"
 fi
 
-if [[ -z "$amend" ]]; then
-  local current_commit_author="$(git show --no-patch --format='%ae')"
-  local repo_email="$(git config --get user.email)"
-  if [[ -z "$repo_email" ]]; then
-    repo_email="$(git config --global --get user.email)"
-  fi
-
-  if [[ "$current_commit_author" = "$repo_email" ]]; then
-    echo-warn "Are you sure you want to create a new commit? You own the current commit."
-    echo-warn "Current commit summary: $(git show --quiet --format='%s')"
-    commit_run_cmd="safe-run"
-  fi
+if [[ -n "$amend" && "$current_commit_author" != "$repo_email" ]]; then
+  echo-warn "Are you sure you want to amend a commit that you don't own?"
+  echo-warn "Current commit author email: $current_commit_author"
+  echo-warn "Your email: $repo_email"
+  commit_run_cmd="safe-run"
 fi
 
-local prev_head="$(git rev-parse HEAD)"
-"$commit_run_cmd" git commit "${git_options[@]}" || return "$status"
+if [[ -z "$amend" && "$current_commit_author" = "$repo_email" ]]; then
+  echo-warn "Are you sure you want to create a new commit? You own the current commit."
+  echo-warn "Current commit summary: $(git show --quiet --format='%s')"
+  commit_run_cmd="safe-run"
+fi
+
+prev_head="$(git rev-parse HEAD)"
+"$commit_run_cmd" git commit "${git_options[@]}" || die "$?" "Failed to commit changes to git."
 if [[ -n "$amend" ]]; then
   echo-info "Use 'git reset $prev_head' if you want to un-amend."
 fi
 
 if [[ -n "$rebase" ]]; then
   echo-info "Rebasing off of master branch."
-  echo-run rebase || return "$status"
+  echo-run rebase || die "$?" "Failed to rebase branch."
 fi
 
 # Arc Diff
-local arc_options=()
+arc_options=()
 
 # When linting git repositories, amend HEAD with all patches suggested by lint
 # without prompting.
@@ -110,7 +123,7 @@ arc_options+=('--amend-all')
 [[ -n "$no_verify" ]] && arc_options+=('--nolint' '--nounit')
 [[ -n "$message" ]] && arc_options+=('--message' "$message")
 
-echo-run arc diff HEAD^ ${arc_options[@]} || return "$status"
+echo-run arc diff HEAD^ "${arc_options[@]}" || die "$?" "Failed to create diff."
 
 # Update the commit message from whatever's in phabricator
-echo-run arc amend
+echo-run arc amend || die "$?" "Failed to update local commit message from Phabricator."
