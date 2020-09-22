@@ -117,6 +117,7 @@ export GPG_TTY="$TTY"
 export LESS=-iRMx4
 
 export PAGER=less
+export MANPAGER='less -is'
 
 # See ~/.local/bin/echo-eval for a description of this variable. We need to
 # unset it here whenever the shell resets
@@ -125,8 +126,6 @@ unset ECHO_EVAL_LEVEL
 # Paste in a git repository url and it will automatically clone it
 alias -s git='clone'
 
-alias make-venv='python3 -m venv .venv'
-alias make-venv2='virtualenv .venv'
 alias activate='activate-venv .venv'
 
 alias rc="echo-run restart-zsh"
@@ -174,7 +173,7 @@ if command -v arc &>/dev/null; then
   alias arc-rebase='rebase && arc-diff -am "Rebase"'
 fi
 
-if command -v shfmc &>/dev/null; then
+if command -v shfmt &>/dev/null; then
   alias my-shfmt="shfmt -i 2 -w -ci"
 fi
 
