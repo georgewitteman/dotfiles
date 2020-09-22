@@ -1,9 +1,10 @@
 #compdef arc-diff
 
 _arguments -s : \
-  '(-h --help)'{-h,--help}'[Show usage and exit]' \
   '(-a --amend)'{-a,--amend}'[Amend to the current commit]' \
+  '(-h --help)'{-h,--help}'[Show usage and exit]' \
   '(-m --message)'{-m=,--message=}'[The message for the diff update]::' \
+  '--no-verify[Skip pre-commit hooks]' \
   '--plan-changes[Create or update a revision without requesting a review]' \
+  '(-r, --rebase)'{-r,--rebase}'[Rebase off master before pushing to Phabricator]' \
   '--skip-staging[Skip pushing to staging area]' \
-  '--no-verify[Skip pre-commit hooks]'

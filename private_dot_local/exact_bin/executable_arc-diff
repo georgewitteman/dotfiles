@@ -27,12 +27,14 @@ die() {
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
-    -m?*) _value="${1##-?}"; _arg="${1%%${_value}}" ;;
-    -[[:alnum:]][[:alnum:]]*) _value="-${1##-?}"; _arg="${1%%${1##-?}}" ;;
-    --[[:alnum:]]*=*) _value="${1#--[[:alnum:]]*=}"; _arg="${1%%=${_value}}" ;;
+    -[[:alnum:]][[:alnum:]]*)
+      _value="-${1##-?}"
+      _arg="${1%%${1##-?}}"
+      ;;
   esac
-  if [ -z "${_arg+x}" ] || [ -z "${_value+x}" ]; then
-    shift; set -- "$_arg" "$_value" "$@"
+  if [ -n "${_arg:-}${_value:-}" ]; then
+    shift
+    set -- "$_arg" "$_value" "$@"
   fi
   unset _arg _value
   case "$1" in
