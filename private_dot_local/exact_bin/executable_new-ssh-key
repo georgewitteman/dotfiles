@@ -35,5 +35,5 @@ if [ -x "$(command -v pbcopy)" ]; then
   echo "Copying public key to clipboard."
   echo "Add key to GitHub here: https://github.com/settings/keys"
 
-  pbcopy < "${HOME}/.ssh/${FILENAME}.pub"
+  pbcopy <"${HOME}/.ssh/${FILENAME}.pub"
 fi

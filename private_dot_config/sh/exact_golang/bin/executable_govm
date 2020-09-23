@@ -1,0 +1,106 @@
+#!/bin/sh
+
+set -o errexit
+set -o nounset
+
+USAGE="Generate a differential diff or revision.
+
+Usage:
+  $(basename "$0") -h | --help
+  $(basename "$0") --list
+  $(basename "$0") --install <version>"
+
+die() {
+  [ "$#" -ge 2 ] && echo-err "$2"
+  exit "$1"
+}
+
+list_all() {
+  curl "https://go.googlesource.com/go/+refs" 2>/dev/null |
+    grep -E -o '\"/go/\+/refs/tags/go.+?\"' |
+    grep -E -o 'go[[:digit:]]+(\.[[:digit:]]+)+\b' |
+    tr -d 'go' |
+    sort -k 1,1n -k 2,2n -k 3,3n -t . |
+    uniq
+}
+
+get_platform() {
+  platform="$(uname | tr '[:upper:]' '[:lower:]')"
+
+  case "$platform" in
+    linux | darwin | freebsd)
+      echo "Platform '${platform}' supported!" >&2
+      ;;
+    *)
+      echo "Platform '${platform}' not supported!" >&2
+      exit 1
+      ;;
+  esac
+
+  printf "%s\n" "$platform"
+}
+
+get_arch() {
+  arch=""
+
+  case "$(uname -m)" in
+    x86_64 | amd64) arch="amd64" ;;
+    i686 | i386) arch="386" ;;
+    armv6l | armv7l) arch="armv6l" ;;
+    aarch64) arch="arm64" ;;
+    ppc64le) arch="ppc64le" ;;
+    *)
+      echo "Arch '$(uname -m)' not supported!" >&2
+      exit 1
+      ;;
+  esac
+
+  printf "%s\n" "$arch"
+}
+
+my_mktemp() {
+  tempdir=""
+  if [ "linux" = "$1" ]; then
+    tempdir=$(mktemp -d asdf-golang.XXXX)
+  else
+    tempdir=$(mktemp -dt asdf-golang.XXXX)
+  fi
+  printf "%s\n" "$tempdir"
+}
+
+install_golang() {
+  version="$1"
+  install_path="$2"
+  platform=$(get_platform)
+  arch=$(get_arch)
+  tempdir=$(my_mktemp "$platform")
+
+  echo-run curl "https://dl.google.com/go/go${version}.${platform}-${arch}.tar.gz" -o "${tempdir}/archive.tar.gz"
+
+  echo-run mkdir -p "$install_path"
+  echo-run tar -C "$install_path" -xzf "${tempdir}/archive.tar.gz"
+
+  echo-run rm -rf "${tempdir}"
+}
+
+install_version() {
+  install_golang "$1" "${HOME}/.local/share/yavm/installs/golang/${1}"
+}
+
+if [ "$#" -le 0 ]; then
+  echo "$USAGE"
+  exit 1
+fi
+
+case "$1" in
+  -h | --help)
+    echo "$USAGE"
+    ;;
+  --list)
+    list_all
+    ;;
+  --install)
+    install_version "$2"
+    ;;
+  *) die 1 "unknown option: ${1}" ;;
+esac

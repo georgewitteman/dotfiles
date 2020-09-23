@@ -22,7 +22,7 @@ case "$command" in
     return
     ;;
   apply)
-    if echo-run chezmoi verify ; then
+    if echo-run chezmoi verify; then
       echo-info "Nothing to apply."
       return
     fi
@@ -37,4 +37,5 @@ case "$command" in
     ;;
   *)
     echo-run chezmoi "$command" "$@"
+    ;;
 esac

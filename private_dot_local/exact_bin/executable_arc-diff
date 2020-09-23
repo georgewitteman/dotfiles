@@ -38,7 +38,10 @@ while [ "$#" -gt 0 ]; do
   fi
   unset _arg _value
   case "$1" in
-    -h | --help) echo "$USAGE"; exit ;;
+    -h | --help)
+      echo "$USAGE"
+      exit
+      ;;
     -m | --message)
       [ "$#" -ge 2 ] || die 1 "${1} requires a value"
       message="$2"
@@ -49,7 +52,10 @@ while [ "$#" -gt 0 ]; do
     --skip-staging) skip_staging=1 ;;
     --draft) draft=1 ;;
     --no-verify) no_verify=1 ;;
-    --) shift; break ;;
+    --)
+      shift
+      break
+      ;;
     -?*) die 1 "unknown option: ${1}" ;;
     *) break ;;
   esac

@@ -9,7 +9,7 @@ printf "Getting remote HEAD... "
 GIT_HEAD="$(get-remote-head)"
 echo "$GIT_HEAD"
 
-echo-run git checkout --quiet "$GIT_HEAD" && \
-echo-run git fetch --quiet --progress --force --prune --tags && \
-echo-run git merge --quiet --ff-only "origin/${GIT_HEAD}" && \
-git-show --quiet
+echo-run git checkout --quiet "$GIT_HEAD" &&
+  echo-run git fetch --quiet --progress --force --prune --tags &&
+  echo-run git merge --quiet --ff-only "origin/${GIT_HEAD}" &&
+  git-show --quiet

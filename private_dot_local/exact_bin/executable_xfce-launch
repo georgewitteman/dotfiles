@@ -26,7 +26,7 @@ if wmctrl -lx | tr -s ' ' | cut -d' ' -f1-3 | grep -i "$BNAME" | grep -q; then
   if [ "$ACTIVE_WIN" != "$LAUNCH_WIN" ]; then
     # launched app is not in focus, so raise and bring to focus
     for win in $(wmctrl -lx | tr -s ' ' | cut -d' ' -f1-3 | grep -i "$BNAME" | cut -d' ' -f1); do
-        wmctrl -i -a "$win"
+      wmctrl -i -a "$win"
     done
   fi
   exit

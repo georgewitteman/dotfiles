@@ -1,0 +1,135 @@
+#!/bin/sh
+
+for dir in "$HOME"/.config/sh/*/; do
+  [ -d "$dir" ] || continue
+
+  # shellcheck disable=SC1090
+  [ -r "${dir}init.sh" ] && . "${dir}init.sh"
+done
+
+# Tmux sessions
+alias default='new_or_switch_tmux default ${HOME}'
+alias misc='default'
+
+if ! command -v sudoedit >/dev/null; then
+  alias sudoedit='sudo --edit'
+fi
+
+# Always use local package jest
+if command -v yarn >/dev/null; then
+  alias jest='yarn run jest'
+fi
+
+if command -v git >/dev/null; then
+  git() {
+    if [ $# -gt 0 ]; then
+      command git "$@"
+    else
+      command git status
+    fi
+  }
+  alias g='git'
+  alias gs='echo_run git status'
+  alias gb='git-branch'
+  alias develop='master'
+  alias switch='echo_run git switch'
+  alias restore='echo_run git restore'
+  alias fetch='echo_run git fetch'
+  alias commit='echo_run git commit'
+  alias pull='echo_run git pull'
+  alias status='echo_run git status'
+fi
+
+if command -v arc >/dev/null; then
+  alias arc-lint="echo_run arc lint --apply-patches"
+  alias arc-rebase='rebase && arc-diff -am "Rebase"'
+fi
+
+if command -v shfmt >/dev/null; then
+  alias my-shfmt="shfmt -i 2 -w -ci"
+fi
+
+# 1Password
+if command -v op >/dev/null; then
+  alias op-signin="echo_eval 'eval \"\$(op signin)\"'"
+fi
+
+alias c='clear'
+
+if command -v brew >/dev/null; then
+  brew() {
+    if [ -n "$VIRTUAL_ENV" ]; then
+      echo-warn "Don't run brew from inside a venv. https://docs.brew.sh/Homebrew-and-Python"
+      return 1
+    fi
+    command brew "$@"
+  }
+  alias brew-upgrade='echo_run brew upgrade --ignore-pinned --display-times'
+fi
+
+autoload_script() {
+  # usage: autoload_script func_name /path/to/func_name
+  eval "${1}() {
+    eval \"
+      ${1}() {
+        \$(cat ${2})
+      }
+    ${1} \\\"\\\$@\\\"\"
+  }"
+}
+
+autoload_script echo_eval "${HOME}/.local/bin/echo-eval"
+autoload_script echo_run "${HOME}/.local/bin/echo-run"
+autoload_script safe_run "${HOME}/.local/bin/safe-run"
+
+take() {
+  # shellcheck disable=SC2164
+  mkdir -p "$1" && cd "$1"
+}
+
+new_or_switch_tmux() {
+  if ! tmux has-session -t "$1" >/dev/null 2>&1; then
+    tmux new-session -d -s "$1" -c "$2"
+  fi
+
+  if [ -z "$TMUX" ]; then
+    tmux attach-session -t "$1"
+  elif [ "$(tmux display-message -p '#S')" != "$1" ]; then
+    tmux switch-client -t "$1"
+  else
+    # shellcheck disable=SC2164
+    cd "$2"
+  fi
+}
+
+save_venv() {
+  if [ -z "$VIRTUAL_ENV" ]; then
+    return
+  fi
+
+  echo "Saving venv '${VIRTUAL_ENV}'."
+  SAVED_VENVS="${VIRTUAL_ENV}:${SAVED_VENVS:-}"
+  deactivate
+}
+
+restore_venv() {
+  if command -v deactivate >/dev/null 2>&1; then
+    echo_run deactivate
+  fi
+
+  if [ -n "${SAVED_VENVS:-}" ]; then
+    echo "Restoring '${SAVED_VENVS%%:*}'."
+    echo_run . "${SAVED_VENVS%%:*}/bin/activate"
+    SAVED_VENVS="${SAVED_VENVS#${SAVED_VENVS%%:*}:}"
+  fi
+}
+
+if [ -n "$VIRTUAL_ENV" ]; then
+  # Allows you to `rc` (reload config, see aliases below) from inside a virtual
+  # environment without losing the virtual environment. Normally `exec` keeps
+  # all environment variables, but certain ones get overwritten during zsh
+  # initialization. This reinitializes them. Keep this after anything else that
+  # sets the path.
+  # shellcheck disable=SC1090
+  . "$VIRTUAL_ENV/bin/activate"
+fi
