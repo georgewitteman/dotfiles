@@ -24,7 +24,7 @@ PATH="${HOME}/.cargo/bin:${HOME}/.phabricator/arcanist/bin:/usr/local/opt/fzf/bi
 
 for dir in "$HOME"/.config/sh/*/; do
   [ -d "$dir" ] || continue
-  PATH="${dir}bin:${PATH}"
+  [ -d "${dir}/bin" ] && PATH="${dir}bin:${PATH}"
 
   # shellcheck disable=SC1090
   [ -r "${dir}profile.sh" ] && . "${dir}profile.sh"
