@@ -124,6 +124,22 @@ restore_venv() {
   fi
 }
 
+dotfiles() {
+  if [ -z "${OP_SESSION_my:-}" ]; then
+    echo_eval 'eval "$(op signin)"' || return "$?"
+  fi
+
+  case "$1" in
+    'cd')
+      shift
+      echo_run cd "$(chezmoi source-path "$@")"
+      ;;
+    *)
+      command dotfiles "$@"
+      ;;
+  esac
+}
+
 if [ -n "$VIRTUAL_ENV" ]; then
   # Allows you to `rc` (reload config, see aliases below) from inside a virtual
   # environment without losing the virtual environment. Normally `exec` keeps
