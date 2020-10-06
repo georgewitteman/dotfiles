@@ -4,15 +4,15 @@ tag="$1"
 
 if [ -z "$tag" ]; then
   echo "Usage: $0 TAG"
-  return 1
+  exit 1
 fi
 
 if ! in-git-repo; then
   echo-err "Not in git repository."
-  return 128
+  exit 128
 fi
 
-echo-run git fetch --tags --force --prune --quiet || return "$?"
+echo-run git fetch --tags --force --prune --quiet || exit "$?"
 
-echo-run git tag -d "$tag" || return "$?"
-safe-run git push origin ":refs/tags/$tag" || return "$?"
+echo-run git tag -d "$tag" || exit "$?"
+safe-run git push origin ":refs/tags/$tag" || exit "$?"

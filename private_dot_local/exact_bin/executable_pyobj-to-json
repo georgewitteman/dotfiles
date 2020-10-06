@@ -19,7 +19,7 @@ if [[ -z "$pyobj" ]]; then
 fi
 
 if [[ -z "$pyobj" ]]; then
-  return
+  exit
 fi
 
 # The `-` means read from stdin
