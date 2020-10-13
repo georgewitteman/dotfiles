@@ -126,6 +126,7 @@ restore_venv() {
 
 dotfiles() {
   if [ -z "${OP_SESSION_my:-}" ]; then
+    # shellcheck disable=SC2016
     echo_eval 'eval "$(op signin)"' || return "$?"
   fi
 
@@ -138,6 +139,19 @@ dotfiles() {
       command dotfiles "$@"
       ;;
   esac
+}
+
+presentation_setup() {
+  new_home="$(mktemp -d)"
+  echo "Copying .terminfo to new HOME"
+  cp -r ~/.terminfo "${new_home}/.terminfo"
+  echo "Copying .vim to new HOME"
+  cp -r ~/.vim "${new_home}/.vim"
+  echo "Adding empty .zshrc"
+  touch "${new_home}/.zshrc"
+  cd "$new_home" || return
+  clear
+  HOME="$new_home" exec zsh -li
 }
 
 if [ -n "$VIRTUAL_ENV" ]; then

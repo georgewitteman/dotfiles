@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+build_regex() {
+  local IFS="|"
+  echo "($*)"
+}
+
+IFS=$'\n' read -r -d '' -a file_data < <(rg --glob '**/tests/**/test_*.py' --files-with-matches "$(build_regex "$@")" "$(git rev-parse --show-toplevel)")
+
+nose "${file_data[@]}" --match="$(build_regex "$@")"

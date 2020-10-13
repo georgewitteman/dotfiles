@@ -2,12 +2,12 @@
 
 if ! in-git-repo; then
   echo-err "Not in a git repository."
-  return 128
+  exit 128
 fi
 
 if [ "$#" -eq 0 ]; then
   echo-run git add --verbose "$(git rev-parse --show-toplevel)"
-  return "$?"
+  exit "$?"
 fi
 
 echo-run git add --verbose "$@"
