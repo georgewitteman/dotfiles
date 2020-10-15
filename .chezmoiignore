@@ -6,9 +6,9 @@ README.md
 tags
 
 {{ if ne .class "work" }}
-.local/bin/bootstrap_81_snowsql_install
+.local/bin/bootstrap-81-snowsql-install
 {{ end }}
 
 {{ if ne .class "personal" }}
-.config/zsh/autoload/terraform
+.config/zsh/terraform
 {{ end }}

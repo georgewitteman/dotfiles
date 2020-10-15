@@ -9,8 +9,8 @@ for dir in "$HOME"/.config/sh/*/; do
 done
 
 # Set up fpath for my autoloaded functions
-fpath=("${HOME}/.config/zsh/functions/" "${fpath[@]}")
-autoload -Uz "${HOME}/.config"/zsh/functions/[A-Za-z]*
+fpath=("${HOME}/.config/zsh/" "${fpath[@]}")
+autoload -Uz "${HOME}/.config"/zsh/[A-Za-z]*
 autoload -Uz compinit && compinit -C -d "${HOME}/.zcompdump"
 
 echo-eval() { echo_eval "$@" }
