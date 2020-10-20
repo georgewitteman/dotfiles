@@ -8,6 +8,7 @@ USAGE="Generate a differential diff or revision.
 Usage:
   $(basename "$0") -h | --help
   $(basename "$0") --amend --message <message>
+  $(basename "$0") [options]
 
 Options:
   -a, --amend           Whether to amend the current commit/diff or create a new one.
@@ -16,9 +17,10 @@ Options:
   --no-verify           Skip pre-commit hooks.
   --plan-changes        Create or update a revision without requesting a code review.
   -r, --rebase          Rebase before pushing to Phabricator.
-  --skip-staging        Don't upload to staging repository."
+  --skip-staging        Don't upload to staging repository.
+  --trace               Log debug info"
 
-message='' amend='' draft='' no_verify='' rebase='' skip_staging=''
+message='' amend='' draft='' no_verify='' rebase='' skip_staging='' trace=''
 
 die() {
   [ "$#" -ge 2 ] && echo-err "$2"
@@ -52,6 +54,7 @@ while [ "$#" -gt 0 ]; do
     --skip-staging) skip_staging=1 ;;
     --draft) draft=1 ;;
     --no-verify) no_verify=1 ;;
+    --trace) trace=1 ;;
     --)
       shift
       break
@@ -130,6 +133,7 @@ arc_options+=('--amend-all')
 [[ -n "$skip_staging" ]] && arc_options+=('--skip-staging')
 [[ -n "$no_verify" ]] && arc_options+=('--nolint' '--nounit')
 [[ -n "$message" ]] && arc_options+=('--message' "$message")
+[[ -n "$trace" ]] && arc_options+=('--trace')
 
 echo-run arc diff HEAD^ "${arc_options[@]}" || die "$?" "Failed to create diff."
 
