@@ -1,12 +1,5 @@
 #!/bin/sh
 
-for dir in "$HOME"/.config/sh/*/; do
-  [ -d "$dir" ] || continue
-
-  # shellcheck disable=SC1090
-  [ -r "${dir}init.sh" ] && . "${dir}init.sh"
-done
-
 # Tmux sessions
 alias default='new_or_switch_tmux default ${HOME}'
 alias misc='default'
@@ -51,7 +44,11 @@ fi
 
 # 1Password
 if command -v op >/dev/null; then
-  alias op-signin="echo_eval 'eval \"\$(op signin)\"'"
+  op_signin() {
+    if ! op get account >/dev/null 2>&1; then
+      echo_eval 'eval "$(op signin)"'
+    fi
+  }
 fi
 
 alias c='clear'
@@ -125,10 +122,7 @@ restore_venv() {
 }
 
 dotfiles() {
-  if [ -z "${OP_SESSION_my:-}" ]; then
-    # shellcheck disable=SC2016
-    echo_eval 'eval "$(op signin)"' || return "$?"
-  fi
+  op_signin || return "$?"
 
   case "$1" in
     'cd')
@@ -153,6 +147,13 @@ presentation_setup() {
   clear
   HOME="$new_home" exec zsh -li
 }
+
+for dir in "$HOME"/.config/sh/*/; do
+  [ -d "$dir" ] || continue
+
+  # shellcheck disable=SC1090
+  [ -r "${dir}init.sh" ] && . "${dir}init.sh"
+done
 
 if [ -n "$VIRTUAL_ENV" ]; then
   # Allows you to `rc` (reload config, see aliases below) from inside a virtual
