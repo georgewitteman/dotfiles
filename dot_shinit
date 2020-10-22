@@ -46,6 +46,7 @@ fi
 if command -v op >/dev/null; then
   op_signin() {
     if ! op get account >/dev/null 2>&1; then
+      # shellcheck disable=SC2016
       echo_eval 'eval "$(op signin)"'
     fi
   }
