@@ -20,7 +20,14 @@ echo-run command brew upgrade
 # echo-run command brew outdated
 # echo-warn "Skipping 'brew upgrade' since it's kind of slow."
 
-local brew_list=($(command brew list -1))
+local brew_list=($(command brew list --formula -1))
+
+# Install zsh first
+if (( $brew_list[(Ie)zsh] )); then
+  echo-ok 'zsh already installed'
+else
+  echo-run command brew install zsh
+fi
 
 if (( $brew_list[(Ie)universal-ctags] )); then
   echo-ok "universal-ctags already installed"
@@ -36,6 +43,7 @@ fi
 
 local formulas=(
   awscli
+  chezmoi
   curl
   fd
   fzf
@@ -52,7 +60,6 @@ local formulas=(
   tmux
   tree
   wget
-  zsh
 )
 
 local formulas_to_install=()

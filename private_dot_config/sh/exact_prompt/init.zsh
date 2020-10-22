@@ -3,6 +3,7 @@
 setopt prompt_subst
 
 VIRTUAL_ENV_DISABLE_PROMPT=1
+unset _OLD_VIRTUAL_PS1
 
 ps_git_head=2
 ps_git_stashes=3

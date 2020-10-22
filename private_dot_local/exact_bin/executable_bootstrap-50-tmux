@@ -2,7 +2,7 @@
 
 set -e
 
-if command -v tmux 2>/dev/null; then
+if command -v tmux >/dev/null 2>&1; then
   echo-info "Installing tmux terminfo file"
   echo-run tic -x "${HOME}/.config/tmux/tmux.terminfo"
 else

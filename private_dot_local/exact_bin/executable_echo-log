@@ -1,8 +1,19 @@
 #!/bin/sh
 
+log_newline='true'
+if [ "$1" = "-n" ]; then
+  log_newline='false'
+  shift
+fi
+
 log_level="$1"
 log_color="\033[44m"
 shift
+
+if [ "$1" = "-n" ]; then
+  log_newline='false'
+  shift
+fi
 
 case "$log_level" in
   DEBUG) log_color="\033[46m" ;;
@@ -24,4 +35,10 @@ case "$log_level" in
 esac
 
 printf "%b\033[97m %s \033[0m " "$log_color" "$log_level"
-echo "$@"
+if $log_newline; then
+  unset log_color log_level log_newline
+  echo "$@"
+else
+  unset log_color log_level log_newline
+  printf "%s" "$@"
+fi

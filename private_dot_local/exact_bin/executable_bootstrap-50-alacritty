@@ -7,4 +7,4 @@ echo-eval "curl --silent https://raw.githubusercontent.com/alacritty/alacritty/m
 echo-run tic -xe alacritty,alacritty-direct "$terminfo_file"
 echo-run rm "$terminfo_file"
 
-echo-eval "curl --silent https://raw.githubusercontent.com/alacritty/alacritty/master/extra/completions/_alacritty > ${HOME}/.config/zsh/functions/_alacritty"
+echo-eval "curl --silent https://raw.githubusercontent.com/alacritty/alacritty/master/extra/completions/_alacritty > ${HOME}/.config/zsh/_alacritty"
