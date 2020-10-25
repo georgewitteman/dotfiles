@@ -2,6 +2,10 @@
 
 export PYENV_ROOT="${HOME}/.local/share/yavm/pyenv"
 
+if [ ! -d "$PYENV_ROOT" ]; then
+  return
+fi
+
 while IFS= read -r line || [ -n "$line" ]; do
   PYENV_PATH="${PYENV_PATH:+${PYENV_PATH}:}${PYENV_ROOT}/versions/${line}/bin"
 done <"${PYENV_ROOT}/version"

@@ -1,5 +1,9 @@
 #!/bin/sh
 
+if [ ! -f "${HOME}/.tool-versions" ]; then
+  return
+fi
+
 while IFS= read -r line || [ -n "$line" ]; do
   case "$line" in
     'golang '*)
