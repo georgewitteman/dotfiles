@@ -123,14 +123,13 @@ restore_venv() {
 }
 
 dotfiles() {
-  op_signin || return "$?"
-
   case "$1" in
     'cd')
       shift
       echo_run cd "$(chezmoi source-path "$@")"
       ;;
     *)
+      op_signin || return "$?"
       command dotfiles "$@"
       ;;
   esac
