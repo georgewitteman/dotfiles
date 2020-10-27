@@ -90,14 +90,14 @@ prompt-cmd-time() {
   local units="s"
   psvar[$ps_cmd_color]="yellow"
 
-  if (( elapsed >=  60 )); then
+  if (( elapsed >= 60 )); then
     # Minutes
     split=("${(ps:.:)$(( elapsed / 60.0 ))}")
     units="m"
     psvar[$ps_cmd_color]="red"
   fi
   psvar[$ps_cmd_time]="${split[1]}"
-  if [[ "${split[2][1]}" != 0 ]]; then
+  if [[ "${split[2][1]}" -ne 0 ]]; then
     psvar[$ps_cmd_time]+=".${split[2][1]}"
   fi
   psvar[$ps_cmd_time]+="$units"
