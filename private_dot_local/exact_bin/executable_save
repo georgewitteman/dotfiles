@@ -2,19 +2,47 @@
 
 set -o errexit
 
+USAGE="usage: $(basename "$0") [commit message]"
 if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
   echo "usage: $(basename "$0") [commit message]"
   exit
 fi
 
-if [ "$#" -gt 1 ]; then
-  echo-err 'unsupported number of arguments'
-fi
+push=false
+message=''
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    -h | --help)
+      echo "$USAGE"
+      exit
+      ;;
+    -p | --push)
+      push=true
+      ;;
+    -*)
+      echo-err "unknown option: ${1}"
+      exit 1
+      ;;
+    *)
+      if [ -n "$message" ]; then
+        echo-err "unexpected argument: ${1}"
+        exit 1
+      fi
+      message="$1"
+      ;;
+  esac
+  shift
+done
 
 add
 
-if [ "$#" -eq 1 ]; then
-  echo-run git commit -m "$1"
+if [ -n "$message" ]; then
+  echo-run git commit -m "$message"
 else
   echo-run git commit
+fi
+
+if $push; then
+  echo-run git push
 fi
