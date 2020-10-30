@@ -4,6 +4,7 @@ set -o errexit
 
 if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
   echo "usage: $(basename "$0") [commit message]"
+  exit
 fi
 
 if [ "$#" -gt 1 ]; then
