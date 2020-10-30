@@ -37,10 +37,21 @@ done
 
 add
 
-if [ -n "$message" ]; then
-  echo-run git commit -m "$message"
+status="$(git status --porcelain)"
+
+if [ -z "$status" ] && [ -n "$message" ]; then
+  echo-err "There are no changes so we can't create your commit: ${message}"
+  exit 1
+fi
+
+if [ -n "$status" ]; then
+  if [ -n "$message" ]; then
+    echo-run git commit -m "$message"
+  else
+    echo-run git commit
+  fi
 else
-  echo-run git commit
+  echo-info "Skipping commit since there were no changes."
 fi
 
 if $push; then
