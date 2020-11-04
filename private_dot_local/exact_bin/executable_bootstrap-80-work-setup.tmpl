@@ -13,7 +13,7 @@ fi
 local repo
 for repo in "$WORK_PATH"/*(/N); do
   if [[ -d "${repo}/.git" ]]; then
-    echo-run cd "${repo:a}"
+    cd "${repo:a}"
     if [[ "$(git config user.email)" != "$WORK_EMAIL" ]]; then
       echo-run git config user.email "$WORK_EMAIL"
     fi
