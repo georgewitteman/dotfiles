@@ -49,6 +49,7 @@ local formulas=(
   fzf
   git
   gnupg
+  htop
   hyperfine
   jq
   pgcli
