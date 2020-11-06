@@ -23,4 +23,6 @@ for repo in "$WORK_PATH"/*(/N); do
   fi
 done
 
-# vim: ft=zsh:
+if command -v brew >/dev/null 2>&1; then
+  echo-run brew install postgres
+fi
