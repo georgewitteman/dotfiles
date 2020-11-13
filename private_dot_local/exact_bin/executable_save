@@ -2,11 +2,7 @@
 
 set -o errexit
 
-USAGE="usage: $(basename "$0") [commit message]"
-if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
-  echo "usage: $(basename "$0") [commit message]"
-  exit
-fi
+USAGE="usage: $(basename "$0") [-p | --push] [<commit message>]"
 
 push=false
 message=''
