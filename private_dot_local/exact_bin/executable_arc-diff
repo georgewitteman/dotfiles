@@ -127,7 +127,7 @@ arc_options=()
 
 # When linting git repositories, amend HEAD with all patches suggested by lint
 # without prompting.
-arc_options+=('--amend-all')
+arc_options+=('--amend-all' '--apply-patches')
 
 [[ -n "$draft" ]] && arc_options+=('--draft')
 [[ -n "$skip_staging" ]] && arc_options+=('--skip-staging')

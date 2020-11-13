@@ -16,7 +16,7 @@ local arg nose_args=()
 nose_args+=('--verbose')
 nose_args+=('--nologcapture')
 for arg in "$@"; do
-  nose_args+=("${arg/#$PWD\//}")
+  nose_args+=("${arg/#$PWD\//./}")
 done
 
 TZ=UTC echo-run nosetests "${nose_args[@]}" # "${file_or_dir##${run_dir}/}"
