@@ -4,6 +4,9 @@
 alias default='new_or_switch_tmux default ${HOME}'
 alias misc='default'
 
+alias ll='ls -l'
+alias la='ls -la'
+
 if ! command -v sudoedit >/dev/null; then
   alias sudoedit='sudo --edit'
 fi
@@ -98,6 +101,27 @@ new_or_switch_tmux() {
     # shellcheck disable=SC2164
     cd "$2"
   fi
+}
+
+exit() {
+  if [ -z "$TMUX" ]; then
+    # echo 'Exit if we are not in a tmux session'
+    builtin exit
+  fi
+
+  if [ "$(tmux list-windows 2>/dev/null | wc -l | tr -d ' ')" -ge 2 ]; then
+    # echo 'Exit if there are other windows in the same session'
+    builtin exit
+  fi
+
+  if ! tmux list-sessions 2>/dev/null | grep -invert-match --quiet caffeinate; then
+    # echo 'Exit if there are no other (useful) sessions to switch to'
+    builtin exit
+  fi
+
+  # echo 'Switch to another session'
+  tmux switch-client -t "$(tmux list-sessions 2>/dev/null | grep -v caffeinate | grep -v "$(tmux display-message -p '#{session_name}')" | head -n 1 | cut -d ':' -f 1)"
+  builtin exit
 }
 
 save_venv() {
