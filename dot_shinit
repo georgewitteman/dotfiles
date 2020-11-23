@@ -114,13 +114,13 @@ exit() {
     builtin exit
   fi
 
-  if ! tmux list-sessions 2>/dev/null | grep --invert-match --quiet caffeinate; then
+  if ! tmux list-sessions 2>/dev/null | grep --invert-match caffeinate | grep --invert-match --quiet "$(tmux display-message -p '#{session_name}')"; then
     # echo 'Exit if there are no other (useful) sessions to switch to'
     builtin exit
   fi
 
   # echo 'Switch to another session'
-  tmux switch-client -t "$(tmux list-sessions 2>/dev/null | grep -v caffeinate | grep -v "$(tmux display-message -p '#{session_name}')" | head -n 1 | cut -d ':' -f 1)"
+  tmux switch-client -t "$(tmux list-sessions 2>/dev/null | grep --invert-match caffeinate | grep --invert-match "$(tmux display-message -p '#{session_name}')" | head -n 1 | cut -d ':' -f 1)"
   builtin exit
 }
 
