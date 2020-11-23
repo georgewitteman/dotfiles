@@ -114,7 +114,7 @@ exit() {
     builtin exit
   fi
 
-  if ! tmux list-sessions 2>/dev/null | grep -invert-match --quiet caffeinate; then
+  if ! tmux list-sessions 2>/dev/null | grep --invert-match --quiet caffeinate; then
     # echo 'Exit if there are no other (useful) sessions to switch to'
     builtin exit
   fi
