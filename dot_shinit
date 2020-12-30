@@ -37,7 +37,6 @@ if command -v git >/dev/null; then
 fi
 
 if command -v arc >/dev/null; then
-  alias arc-lint="echo_run arc lint --apply-patches"
   alias arc-rebase='rebase && arc-diff -am "Rebase"'
 fi
 
@@ -90,16 +89,19 @@ take() {
 
 new_or_switch_tmux() {
   if ! tmux has-session -t "$1" >/dev/null 2>&1; then
-    tmux new-session -d -s "$1" -c "$2"
+    echo_run tmux new-session -d -s "$1" -c "$2"
+    if [ "$#" -ge 3 ]; then
+      tmux send-keys -t "$1" "clear; $3" Enter
+    fi
   fi
 
   if [ -z "$TMUX" ]; then
-    tmux attach-session -t "$1"
+    echo_run tmux attach-session -t "$1"
   elif [ "$(tmux display-message -p '#S')" != "$1" ]; then
-    tmux switch-client -t "$1"
+    echo_run tmux switch-client -t "$1"
   else
     # shellcheck disable=SC2164
-    cd "$2"
+    echo_run cd "$2"
   fi
 }
 
@@ -186,5 +188,5 @@ if [ -n "$VIRTUAL_ENV" ]; then
   # initialization. This reinitializes them. Keep this after anything else that
   # sets the path.
   # shellcheck disable=SC1090
-  . "$VIRTUAL_ENV/bin/activate"
+  echo_run . "$VIRTUAL_ENV/bin/activate"
 fi
