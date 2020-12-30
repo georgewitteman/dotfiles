@@ -9,7 +9,11 @@ build_regex() {
 test_classes=()
 test_functions=()
 test_files=()
-test_args=()
+test_args=(--with-progressive)
+
+if ! python -c 'import noseprogressive.result' >/dev/null 2>&1; then
+  echo-run pip install nose-progressive
+fi
 
 for arg in "$@"; do
   if [[ "$arg" =~ ^-.*$ ]]; then
