@@ -77,6 +77,10 @@ if is-clean-repo && [[ -z "$amend" ]]; then
   die 1 "No changes to add. Did you mean 'arc-diff -a'?"
 fi
 
+# Running lint first makes sure the diff only has actual failures (not failures
+# that have been autofixed)
+arc-lint
+
 # Add files
 echo-run git add --all || die "$?" "Failed to stage changes."
 
