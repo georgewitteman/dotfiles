@@ -1,0 +1,5 @@
+#!/bin/sh
+
+set -e
+
+echo-run chezmoi git -- remote 'set-url' origin "git@github.com:georgewitteman/dotfiles.git"

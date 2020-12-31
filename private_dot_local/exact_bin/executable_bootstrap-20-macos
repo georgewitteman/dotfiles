@@ -38,7 +38,9 @@ fi
 if (( $brew_list[(Ie)vim] )); then
   echo-ok 'vim already installed'
 else
-  echo-run command brew install --HEAD vim
+  # echo-run command brew install --HEAD vim
+  # Temporily not installing HEAD because a required patch is broken
+  echo-run command brew install vim
 fi
 
 local formulas=(
@@ -79,6 +81,7 @@ if [[ "${#installed_formulas}" -ne 0 ]]; then
 fi
 
 if [[ "${#formulas_to_install}" -ne 0 ]]; then
+  echo-run command brew fetch $formulas_to_install
   echo-run command brew install $formulas_to_install
 else
   echo-ok "No more formulas to install."

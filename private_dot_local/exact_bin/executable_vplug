@@ -5,6 +5,8 @@ local MANIFEST="$VIM_DIR/plugins"
 local PLUGINS_DIR="${VIM_PLUGINS_DIR:-$VIM_DIR/pack/mine/start}"
 local COMMENT="^ *#"
 
+mkdir -p "$PLUGINS_DIR"
+
 _edit-manifest() {
   "${EDITOR:-vim}" "$MANIFEST"
 }
@@ -15,7 +17,8 @@ _get-repo-url() {
   [[ "$repo" = http://* || "$repo" = https://* ]] && echo "$repo.git" && return
   local slashes="${repo//[^\/]}"
   local count="${#slashes}"
-  [ "$count" -eq 1 ] && echo "git@github.com:$repo" && return
+  # [ "$count" -eq 1 ] && echo "git@github.com:$repo" && return
+  [ "$count" -eq 1 ] && echo "https://github.com/${repo}.git" && return
   # Otherwise, it's a local repo
 }
 
@@ -30,9 +33,15 @@ _install-plugin() {
 
   local repo=$(_get-repo-url "$line")
   if [[ -n "$repo" ]]; then
-    git clone --depth 1 "$repo" "$PLUGINS_DIR/$plugin_name" >/dev/null 2>&1
+    if ! git clone --depth 1 "$repo" "$PLUGINS_DIR/$plugin_name" >/dev/null 2>&1; then
+      echo "Failed to clone ${plugin_name}: git clone --depth 1 ${repo} ${PLUGINS_DIR}/${plugin_name}" >&2
+      return 1
+    fi
   else
-    ln -nfs "$line" "$PLUGINS_DIR/$plugin_name"
+    if ! ln -nfs "$line" "$PLUGINS_DIR/$plugin_name"; then
+      echo "Failed to link ${plugin_name}: ln -nfs ${line} ${PLUGINS_DIR}/${plugin_name}" >&2
+      return 1
+    fi
   fi
   echo "$plugin_name: installed"
 }

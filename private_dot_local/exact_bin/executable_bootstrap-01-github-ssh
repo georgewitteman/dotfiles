@@ -18,6 +18,7 @@ if ! ssh-keygen -F github.com >/dev/null 2>&1; then
   fi
 
   echo-ok "GitHub fingerprint check succeeded."
+  echo-run mkdir -p "${HOME}/.ssh"
   echo-eval "cat $tmpfile >> $HOME/.ssh/known_hosts"
 else
   echo-ok "github.com ssh key already in ~/.ssh/known_hosts"

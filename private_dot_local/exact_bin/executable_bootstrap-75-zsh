@@ -9,4 +9,5 @@ else
   echo-info "No zcompdump file to remove"
 fi
 
+compaudit | xargs echo-run chmod g-w
 echo-run zplug update || true
