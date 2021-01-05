@@ -50,9 +50,20 @@ if command -v op >/dev/null; then
     if ! op get account >/dev/null 2>&1; then
       # shellcheck disable=SC2016
       echo_eval 'eval "$(op signin)"'
+      # Verify we are signed in now
+      op get account >/dev/null 2>&1
     fi
   }
 fi
+
+bootstrap() {
+  if ! command -v op >/dev/null 2>&1; then
+    echo-err "1Password CLI needs to be installed to run bootstrap scripts."
+    return 1
+  fi
+  op_signin || return "$?"
+  command bootstrap "$@"
+}
 
 alias c='clear'
 

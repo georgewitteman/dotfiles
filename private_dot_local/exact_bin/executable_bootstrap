@@ -9,6 +9,11 @@ if ! sudo --validate; then
   return 1
 fi
 
+if ! op get account >/dev/null 2>&1; then
+  # shellcheck disable=SC2016
+  eval "$(op signin)"
+fi
+
 # Using 'command ls' here because regular ls is aliased to add color and
 # formatting.
 local files=($(command ls "$HOME/.local/bin" | sort | grep bootstrap-))
