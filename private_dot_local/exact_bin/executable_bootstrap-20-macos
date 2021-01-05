@@ -35,13 +35,12 @@ else
   echo-run command brew install --HEAD universal-ctags/universal-ctags/universal-ctags
 fi
 
-if (( $brew_list[(Ie)vim] )); then
-  echo-ok 'vim already installed'
-else
-  # echo-run command brew install --HEAD vim
-  # Temporily not installing HEAD because a required patch is broken
-  echo-run command brew install vim
-fi
+# Temporily not installing HEAD because a required patch is broken
+# if (( $brew_list[(Ie)vim] )); then
+#   echo-ok 'vim already installed'
+# else
+#   echo-run command brew install --HEAD vim
+# fi
 
 local formulas=(
   awscli
@@ -62,6 +61,7 @@ local formulas=(
   terraform
   tmux
   tree
+  vim
   wget
 )
 
