@@ -32,4 +32,4 @@ while [[ "$#" -gt 0 ]]; do
   shift
 done
 
-safe-run git push "${args[@]}"
+echo-run git push "${args[@]}"
