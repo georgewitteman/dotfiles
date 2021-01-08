@@ -25,9 +25,9 @@ fi
 
 args=()
 while [[ "$#" -gt 0 ]]; do
-  case "$arg" in
+  case "$1" in
     -f | --force) args+=(--force-with-lease) ;;
-    *) args+=("$arg") ;;
+    *) args+=("$1") ;;
   esac
   shift
 done
