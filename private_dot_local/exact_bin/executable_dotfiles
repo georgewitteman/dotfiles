@@ -4,7 +4,7 @@ usage="Wrapper for chezmoi.
 
 Usage:
   $(basename "$0") -h | --help            Show usage and exit.
-  $(basename "$0") apply                  Show a diff and apply changes.
+  $(basename "$0") apply [--noconfirm]    Show a diff and apply changes.
   $(basename "$0") <any chezmoi command>  Passthrough to chezmoi.
 "
 
@@ -22,15 +22,21 @@ case "$command" in
     exit
     ;;
   apply)
+    cmd="safe-run"
+    for arg in "$@"; do
+      case "$arg" in
+        --noconfirm) cmd="echo-run"; break ;;
+      esac
+    done
     if echo-run chezmoi verify; then
       echo-info "Nothing to apply."
       exit
     fi
-    if ! echo-run chezmoi diff --no-pager; then
+    if [ "$cmd" = "safe-run" ] && ! echo-run chezmoi diff --no-pager; then
       echo-warn "Error showing diff. Are you signed in to 1Password?"
       exit 1
     fi
-    if ! safe-run chezmoi apply; then
+    if ! "$cmd" chezmoi apply; then
       echo-info "You can run 'dotfiles add <file>...' to update the source."
       exit
     fi

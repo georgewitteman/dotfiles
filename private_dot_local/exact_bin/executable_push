@@ -18,11 +18,18 @@ if [[ -n "$(git status --porcelain)" ]]; then
   exit 1
 fi
 
-args=("$@")
-
 remote="$(git rev-parse --abbrev-ref --symbolic-full-name '@{upstream}' 2>/dev/null)"
 if [[ -z "$remote" ]]; then
-  args+=("--set-upstream" "origin" "$head")
+  set -- "$@" --set-upstream origin "$head"
 fi
 
-echo-run git push "${args[@]}"
+args=()
+while [[ "$#" -gt 0 ]]; do
+  case "$arg" in
+    -f | --force) args+=(--force-with-lease) ;;
+    *) args+=("$arg") ;;
+  esac
+  shift
+done
+
+safe-run git push "${args[@]}"
