@@ -1,17 +1,33 @@
 #!/bin/sh
 
-if [ "$#" -le 0 ]; then
-  set -- shellcheck
-fi
+verbose=false
 
-for file in ~/.local/bin/* ~/.shinit ~/.profile ~/.config/sh/* ~/.config/sh/*/* ~/.config/sh/*/*/*; do
+for arg in "$@"; do
+  case "$arg" in
+    -v | --verbose) verbose=true ;;
+    -h | --help)
+      echo "usage: $(basename "$0") [-v|--verbose]"
+      exit
+      ;;
+  esac
+done
+
+_files() {
+  path="$1"
+  find "$path" -type f -not -path '*/\.git/*' -not -name 'tags'
+}
+
+for file in $(_files ~/.local/bin) ~/.shinit ~/.profile $(_files ~/.config/sh); do
   if [ ! -f "$file" ] || [ ! -r "$file" ]; then
     continue
   fi
   case $(head -1 "$file") in
-    *bash*) echo-run "$@" "$file" ;;
-    */sh*) echo-run "$@" "$file" ;;
-    *env\ sh*) echo-run "$@" "$file" ;;
-    *) continue ;;
+    *bash*) echo-run shellcheck "$file" ;;
+    */sh*) echo-run shellcheck "$file" ;;
+    *env\ sh*) echo-run shellcheck "$file" ;;
+    *)
+      $verbose && echo-info "Skipping ${file}"
+      continue
+      ;;
   esac
 done

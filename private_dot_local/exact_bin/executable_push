@@ -1,28 +1,28 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 
 if ! in-git-repo; then
   echo-err "Not in a git repository."
-  return 128
+  exit 128
 fi
 
-local head=$(git rev-parse --abbrev-ref HEAD)
+head="$(git rev-parse --abbrev-ref HEAD)"
 
 if [[ "$head" == "HEAD" ]]; then
   echo-err "You are not on the HEAD of a branch."
-  return 1
+  exit 1
 fi
 
-if [[ ! -z "$(git status --porcelain)" ]]; then
+if [[ -n "$(git status --porcelain)" ]]; then
   echo-err "There are uncommitted files."
   echo-run git status
-  return 1
+  exit 1
 fi
 
-local args=("$@")
+args=("$@")
 
-local remote="$(git rev-parse --abbrev-ref --symbolic-full-name @{upstream} 2>/dev/null)"
+remote="$(git rev-parse --abbrev-ref --symbolic-full-name '@{upstream}' 2>/dev/null)"
 if [[ -z "$remote" ]]; then
   args+=("--set-upstream" "origin" "$head")
 fi
 
-echo-run git push $args
+echo-run git push "${args[@]}"
