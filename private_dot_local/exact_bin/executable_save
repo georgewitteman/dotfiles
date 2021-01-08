@@ -56,5 +56,5 @@ if $push; then
   if [ -n "$remote" ]; then
     echo-run git pull --rebase
   fi
-  echo-run git push
+  push
 fi
