@@ -8,6 +8,9 @@ for dir in "$HOME"/.config/sh/*/; do
   [ -r "${dir}init.zsh" ] && . "${dir}init.zsh"
 done
 
+# Adding this here so scripts think pyenv is initialized
+# eval "$(pyenv init -)"
+
 # Set up fpath for my autoloaded functions
 fpath=("${HOME}/.config/zsh/" "${fpath[@]}")
 autoload -Uz "${HOME}/.config"/zsh/[A-Za-z]*
