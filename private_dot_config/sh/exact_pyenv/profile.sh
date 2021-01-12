@@ -1,6 +1,6 @@
 #!/bin/sh
 
-export PYENV_ROOT="${HOME}/.local/share/yavm/pyenv"
+export PYENV_ROOT="${HOME}/.local/share/pyenv"
 
 if [ ! -d "$PYENV_ROOT" ]; then
   return
