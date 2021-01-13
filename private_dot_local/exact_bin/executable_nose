@@ -12,6 +12,14 @@ for nose_profile_dir in "$VIRTUAL_ENV"/lib/python*/site-packages/nose_profile*/(
   [[ -d "$nose_profile_dir" ]] && echo-run rm -rf "$nose_profile_dir"
 done
 
+if ! python -c 'import noseprogressive.result' >/dev/null 2>&1; then
+  echo-run pip install nose-progressive
+fi
+
+# if ! python -c 'import ipdbplugin' >/dev/null 2>&1; then
+#   echo-run pip install ipdbplugin
+# fi
+
 local arg nose_args=()
 nose_args+=('--verbose')
 nose_args+=('--nologcapture')
