@@ -16,14 +16,9 @@
 	s = status
 	st = status
 	patch = !git --no-pager diff --no-color
-	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
-	base = !sh -c \"git show-branch | grep '*' | grep -v '$(git rev-parse --abbrev-ref HEAD)' | head -n1 | sed 's/.*\\[\\(.*\\)\\].*/\\1/' | sed 's/[\\^~].*//'\"
-	br = for-each-ref --sort=-committerdate refs/heads/ --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(color:green)%(committerdate:relative)%(color:reset) - %(contents:subject) - %(authorname) (%(color:red)%(objectname:short)%(color:reset))'
-	stash-untracked = "!f() {    \
-		git stash;               \
-		git stash -u;            \
-		git stash pop stash@{1}; \
-		}; f"
+	lg = !git-lg
+	br = !git-br
+	stash-untracked = !git-stash-untracked
 [core]
 	editor = vim
 [diff]
