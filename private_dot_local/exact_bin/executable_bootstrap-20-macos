@@ -53,16 +53,21 @@ local formulas=(
   htop
   hyperfine
   jq
+  openssl # pyenv recommends
   pgcli
   pinentry-mac
+  readline # pyenv recommends
   ripgrep
   rsync
   shellcheck
+  sqlite3 # pyenv recommends
   terraform
   tmux
   tree
   vim
   wget
+  xz # pyenv recommends
+  zlib # pyenv recommends
 )
 
 local formulas_to_install=()
