@@ -3,6 +3,8 @@
 	name = George Witteman
 	email = george@witteman.me
 	signingKey = 3F31B900236A9F918F143AE106223EC3AE0381FB
+[init]
+	defaultBranch = main
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
