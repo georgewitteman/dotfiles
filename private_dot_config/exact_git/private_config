@@ -18,9 +18,6 @@
 	s = status
 	st = status
 	patch = !git --no-pager diff --no-color
-	lg = !git-lg
-	br = !git-br
-	stash-untracked = !git-stash-untracked
 [core]
 	editor = vim
 [diff]
