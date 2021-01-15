@@ -2,9 +2,9 @@
 
 date_format='+%Y-%m-%dT%H:%M:%S'
 
-if [ "${1:-}" == '-n' ]; then
+if [ "${1:-}" = '-n' ]; then
   printf "%s" "$(date "$date_format")"
   exit $?
 fi
 
-echo "$(date "$date_format")"
+date "$date_format"
