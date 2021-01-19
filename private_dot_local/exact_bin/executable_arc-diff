@@ -97,7 +97,12 @@ fi
 if [[ -n "$amend" ]]; then
   git_options+=('--amend' '--no-edit')
 else
-  git_options+=('--message=<revision title>' '--no-edit')
+  git_options+=('--no-edit')
+  if [[ -n "$message" ]]; then
+    git_options+=("--message" "$message")
+  else
+    git_options+=('--message=<revision title>')
+  fi
 fi
 
 current_commit_author="$(git show --no-patch --format='%ae')"
