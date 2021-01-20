@@ -1,4 +1,0 @@
-#!/usr/bin/env zsh
-
-local target_dir="$(echo-run command git clone "$@" 2> >(tee /dev/stderr | grep 'Cloning into' | cut -d \' -f2))" || return "$?"
-echo-run cd "$target_dir"

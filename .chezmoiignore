@@ -10,5 +10,5 @@ tags
 {{ end }}
 
 {{ if ne .class "personal" }}
-.config/zsh/terraform
+.local/bin/terraform
 {{ end }}
