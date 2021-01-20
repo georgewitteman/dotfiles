@@ -147,6 +147,7 @@ restart_sh() {
   echo_run echo >/dev/null 2>&1
 
   echo_eval 'PATH=""'
+  # shellcheck disable=SC2153
   if [ -n "$FPATH" ]; then
     echo_eval 'FPATH=""'
   fi
@@ -251,12 +252,27 @@ for dir in "$HOME"/.config/sh/*/; do
   [ -r "${dir}init.sh" ] && . "${dir}init.sh"
 done
 
+remove_from_front_of_path() {
+  while true; do
+    case ":$PATH" in
+      *:"$1"/*:*) PATH="${PATH%%${1}*}${PATH#*${1}*:}" ;;
+      *"$1"/*) PATH="${PATH%%${1}*}" ;;
+      *) PATH="${PATH%:}"; break ;;
+    esac
+  done
+}
+
 if [ -n "$VIRTUAL_ENV" ]; then
   # Allows you to `rc` (reload config, see aliases below) from inside a virtual
   # environment without losing the virtual environment. Normally `exec` keeps
   # all environment variables, but certain ones get overwritten during zsh
   # initialization. This reinitializes them. Keep this after anything else that
   # sets the path.
+
+  # Clean the front of $PATH. This is really only used when starting a subshell
+  # while in a virtual environment
+  remove_from_front_of_path "$VIRTUAL_ENV"
+
   # shellcheck disable=SC1090
   echo_run . "$VIRTUAL_ENV/bin/activate"
 fi
