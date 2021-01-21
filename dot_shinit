@@ -90,7 +90,7 @@ venv() {
   # If you're in a venv and you didn't specify a different one explicitly then
   # you probably want to deactivate the current one
   if [ -n "$VIRTUAL_ENV" ] && [ -z "$3" ]; then
-    deactivate
+    echo_run deactivate
     return
   fi
 
@@ -100,7 +100,7 @@ venv() {
   fi
 
   # shellcheck disable=SC1090
-  . "${2}/${1}/bin/activate"
+  echo_run . "${2}/${1}/bin/activate"
 }
 
 clone() {
