@@ -60,7 +60,7 @@ local formulas=(
   ripgrep
   rsync
   shellcheck
-  sqlite3 # pyenv recommends
+  sqlite # pyenv recommends
   terraform
   tmux
   tree
