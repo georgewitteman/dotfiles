@@ -3,7 +3,7 @@
 set -o errexit
 
 USAGE="usage: $(basename "$0") [-d|--disconnect] <VPN name>"
-VPN_NAME=''
+vpn_name=''
 
 while [ $# -ge 1 ]; do
   case "$1" in
@@ -21,7 +21,7 @@ while [ $# -ge 1 ]; do
       ;;
     --)
       shift
-      VPN_NAME="$*"
+      vpn_name="$*"
       break
       ;;
     -*)
@@ -29,27 +29,27 @@ while [ $# -ge 1 ]; do
       exit 1
       ;;
     *)
-      VPN_NAME="$1"
+      vpn_name="$1"
   esac
   shift
 done
 
-if [ -z "$VPN_NAME" ]; then
+if [ -z "$vpn_name" ]; then
   echo-err "A VPN name is required"
   exit 1
 fi
 
-if ! scutil --nc list | cut -d '"' -f 2 | grep -q "$VPN_NAME"; then
-  echo-err "'${VPN_NAME}' is not a valid VPN"
+if ! scutil --nc list | cut -d '"' -f 2 | grep -q "$vpn_name"; then
+  echo-err "'${vpn_name}' is not a valid VPN"
   exit 1
 fi
 
 is_connected() {
-  networksetup -showpppoestatus "$VPN_NAME" | grep -q "^connected$"
+  networksetup -showpppoestatus "$vpn_name" | grep -q "^connected$"
 }
 
 if ! is_connected; then
-  echo-run networksetup -connectpppoeservice "$VPN_NAME"
+  echo-run networksetup -connectpppoeservice "$vpn_name"
 fi
 
 timeout="$(date -v+5S '+%s')"
