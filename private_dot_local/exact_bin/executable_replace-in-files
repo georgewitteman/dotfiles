@@ -42,5 +42,5 @@ for item in $items; do
   if $verbose; then
     echo-info "Replacing in '${item}'"
   fi
-  sed "s/${find_this}/${replace_with}/g" "$item" > "$temp" && mv "$temp" "$item"
+  sed "s+${find_this}+${replace_with}+g" "$item" > "$temp" && mv "$temp" "$item"
 done

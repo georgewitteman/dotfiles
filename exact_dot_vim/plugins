@@ -22,6 +22,7 @@ chrismaher/vim-dbt
 jalvesaq/Nvim-R
 chrisbra/csv.vim
 hashivim/vim-terraform
+darfink/vim-plist
 
 # Git
 tpope/vim-git

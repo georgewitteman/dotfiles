@@ -1,0 +1,16 @@
+#!/bin/sh
+
+agents_path="${HOME}/Library/LaunchAgents"
+
+echo-run mkdir -p "$agents_path"
+
+for file in ${HOME}/.config/sh/*/LaunchAgents/*.plist; do
+  if [ ! -f "$file" ]; then
+    continue
+  fi
+  dest="${agents_path}/$(basename "$file")"
+  echo-run cp "$file" "$dest"
+  replace-in-files --verbose '__HOME_DIR__' "$HOME" "$dest"
+  echo-run launchctl unload "$dest"
+  echo-run launchctl load "$dest"
+done
