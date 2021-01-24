@@ -160,8 +160,12 @@ if command -v fzf &>/dev/null && command -v fd &>/dev/null; then
   export FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude .git'
 fi
 
-# make some commands not show up in history
+if [ ! -d "${HOME}/.local/share/zsh" ]; then
+  mkdir -p "${HOME}/.local/share/zsh"
+fi
 HISTFILE="${HOME}/.local/share/zsh/history"
+
+# make some commands not show up in history
 HISTIGNORE="ls:ll:la:cd:cd -:pwd:exit:date:* --help"
 HISTSIZE=10000000
 SAVEHIST=10000000
