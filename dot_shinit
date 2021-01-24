@@ -131,7 +131,12 @@ take() {
 alias rc="restart_sh" # Reload Config
 alias resh="restart_sh"
 restart_sh() {
-  set -- "$(which "$(ps -p $$ | tail -1 | awk '{print $4}')")"
+  # Sometimes the shell will be started with a dash in front of the name of the
+  # shell to indicate that it's a login shell. This breaks the restart because
+  # exec thinks that the name of the shell is actually an argument.
+  set -- "$(ps -p $$ | tail -1 | awk '{print $4}')"
+  set -- "${1#-}"
+  set -- "$(which "$1")"
 
   if command -v zplug >/dev/null 2>&1; then
     echo_run zplug reinit
