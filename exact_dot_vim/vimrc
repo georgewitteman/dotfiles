@@ -161,6 +161,14 @@ if has('mouse')
   set mouse=a
 endif
 
+" Reselect visual block after indent/outdent
+vnoremap < <gv
+vnoremap > >gv
+
+" Turn off bells
+set novisualbell
+set noerrorbells
+
 " Split below and to the right
 set splitbelow
 set splitright
