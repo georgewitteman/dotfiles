@@ -78,31 +78,6 @@ if command -v brew >/dev/null; then
   alias brew-upgrade='echo_run brew upgrade --ignore-pinned --display-times'
 fi
 
-venv() {
-  # Recursively search up until home directory for a virtual environment with
-  # the desired name. This allows you to activate a venv from the root of your
-  # project while you're deep in the directory structure
-  set -- "${1:-.venv}" "$PWD" "$1"
-  while [ "$2" != "$HOME" ] && [ ! -f "${2}/${1}/bin/activate" ]; do
-    set -- "$1" "$(dirname "$2")" "$3"
-  done
-
-  # If you're in a venv and you didn't specify a different one explicitly then
-  # you probably want to deactivate the current one
-  if [ -n "$VIRTUAL_ENV" ] && [ -z "$3" ]; then
-    echo_run deactivate
-    return
-  fi
-
-  if [ ! -f "${2}/${1}/bin/activate" ]; then
-    echo-err "Couldn't find a valid venv for '${1}'"
-    return 1
-  fi
-
-  # shellcheck disable=SC1090
-  echo_run . "${2}/${1}/bin/activate"
-}
-
 clone() {
   set -- "$(FORCE_COLOR=1 echo-run command git clone "$@" 2>&1 | tee /dev/stderr | grep 'Cloning into' | cut -d \' -f2)" || return $?
   echo_run cd "$1"
@@ -202,12 +177,21 @@ _exit() {
   \exit
 }
 
+novenv() {
+  save_venv --quiet
+  "$@" && set -- $? || set -- $?
+  restore_venv --quiet
+  return $1
+}
+
 save_venv() {
   if [ -z "$VIRTUAL_ENV" ]; then
     return
   fi
 
-  echo "Saving venv '${VIRTUAL_ENV}'."
+  if [ "${1:-}" != "--quiet" ]; then
+    echo "Saving venv '${VIRTUAL_ENV}'."
+  fi
   SAVED_VENVS="${VIRTUAL_ENV}:${SAVED_VENVS:-}"
   deactivate
 }
@@ -218,10 +202,37 @@ restore_venv() {
   fi
 
   if [ -n "${SAVED_VENVS:-}" ]; then
-    echo "Restoring '${SAVED_VENVS%%:*}'."
-    echo_run . "${SAVED_VENVS%%:*}/bin/activate"
+    if [ "${1:-}" != "--quiet" ]; then
+      echo "Restoring '${SAVED_VENVS%%:*}'."
+    fi
+    . "${SAVED_VENVS%%:*}/bin/activate"
     SAVED_VENVS="${SAVED_VENVS#${SAVED_VENVS%%:*}:}"
   fi
+}
+
+venv() {
+  # Recursively search up until home directory for a virtual environment with
+  # the desired name. This allows you to activate a venv from the root of your
+  # project while you're deep in the directory structure
+  set -- "${1:-.venv}" "$PWD" "$1"
+  while [ "$2" != "$HOME" ] && [ ! -f "${2}/${1}/bin/activate" ]; do
+    set -- "$1" "$(dirname "$2")" "$3"
+  done
+
+  # If you're in a venv and you didn't specify a different one explicitly then
+  # you probably want to deactivate the current one
+  if [ -n "$VIRTUAL_ENV" ] && [ -z "$3" ]; then
+    echo_run deactivate
+    return
+  fi
+
+  if [ ! -f "${2}/${1}/bin/activate" ]; then
+    echo-err "Couldn't find a valid venv for '${1}'"
+    return 1
+  fi
+
+  # shellcheck disable=SC1090
+  echo_run . "${2}/${1}/bin/activate"
 }
 
 dotfiles() {
