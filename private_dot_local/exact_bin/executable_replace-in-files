@@ -42,5 +42,10 @@ for item in $items; do
   if $verbose; then
     echo-info "Replacing in '${item}'"
   fi
-  sed "s+${find_this}+${replace_with}+g" "$item" > "$temp" && mv "$temp" "$item"
+  if sed "s+${find_this}+${replace_with}+g" "$item" > "$temp"; then
+    chmod "$(stat -f '%p' "$item")" "$temp"
+    mv "$temp" "$item"
+  else
+    echo-err "Failed to replace in ${item}"
+  fi
 done
