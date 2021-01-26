@@ -4,7 +4,7 @@ agents_path="${HOME}/Library/LaunchAgents"
 
 echo-run mkdir -p "$agents_path"
 
-for file in ${HOME}/.config/sh/*/LaunchAgents/*.plist; do
+for file in "$HOME"/.config/sh/*/LaunchAgents/*.plist; do
   if [ ! -f "$file" ]; then
     continue
   fi

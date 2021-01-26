@@ -179,9 +179,10 @@ _exit() {
 
 novenv() {
   save_venv --quiet
-  "$@" && set -- $? || set -- $?
+  "$@"
+  set $?
   restore_venv --quiet
-  return $1
+  return "$1"
 }
 
 save_venv() {
@@ -205,6 +206,7 @@ restore_venv() {
     if [ "${1:-}" != "--quiet" ]; then
       echo "Restoring '${SAVED_VENVS%%:*}'."
     fi
+    # shellcheck disable=SC1090
     . "${SAVED_VENVS%%:*}/bin/activate"
     SAVED_VENVS="${SAVED_VENVS#${SAVED_VENVS%%:*}:}"
   fi
