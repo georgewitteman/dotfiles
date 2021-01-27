@@ -217,7 +217,7 @@ venv() {
   # the desired name. This allows you to activate a venv from the root of your
   # project while you're deep in the directory structure
   set -- "${1:-.venv}" "$PWD" "$1"
-  while [ "$2" != "$HOME" ] && [ ! -f "${2}/${1}/bin/activate" ]; do
+  while [ "$2" != "$HOME" ] && [ "$2" != "/" ] && [ ! -f "${2}/${1}/bin/activate" ]; do
     set -- "$1" "$(dirname "$2")" "$3"
   done
 

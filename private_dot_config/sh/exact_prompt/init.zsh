@@ -109,7 +109,7 @@ prompt-venv-name() {
     return
   fi
 
-  if [[ -n "${ATT_ROOT:-}" && "${VIRTUAL_ENV##${ATT_ROOT}}" != "${VIRTUAL_ENV}" ]]; then
+  if [[ "${VIRTUAL_ENV%%/src/.venv}" != "$VIRTUAL_ENV" ]] || [[ "${VIRTUAL_ENV%%/src/.venv3}" != "$VIRTUAL_ENV" ]]; then
     psvar[$ps_venv_name]="${VIRTUAL_ENV:h:h:t}"
     return
   fi
