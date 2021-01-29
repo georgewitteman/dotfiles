@@ -212,6 +212,12 @@ restore_venv() {
   fi
 }
 
+tmp() {
+  set -- "${TMPDIR}$(date +%Y-%m-%dT%H%M%S)"
+  echo_run mkdir -p "$1"
+  echo_run cd "$1"
+}
+
 venv() {
   # Recursively search up until home directory for a virtual environment with
   # the desired name. This allows you to activate a venv from the root of your
