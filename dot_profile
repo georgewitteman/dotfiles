@@ -19,7 +19,7 @@ export LS_COLORS="di=34:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30
 # Fixes gpg when "GPG Suite" is not installed (i.e. gpg is installed from homebrew)
 export GPG_TTY="$TTY"
 
-PATH="${HOME}/.cargo/bin:${HOME}/.phabricator/arcanist/bin:${HOME}/.local/bin:/usr/local/opt/fzf/bin:/usr/local/sbin:${PATH}"
+PATH="${HOME}/.cargo/bin:${HOME}/.local/bin:/usr/local/opt/fzf/bin:/usr/local/sbin:${PATH}"
 
 for dir in "$HOME"/.config/sh/*/; do
   [ -d "$dir" ] || continue
