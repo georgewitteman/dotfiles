@@ -1,11 +1,149 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 
-local port="${1:-8000}"
+set -o errexit
 
-if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
-  echo "usage: $(basename "$0") [PORT]"
-  return 1
-fi
+spacer="
+"
+port="${1:-8080}"
 
-( sleep 2; open "http://127.0.0.1:${port}" ) &
-echo-run python3 -m http.server "$port" --bind 127.0.0.1 || return "$?"
+fifo_file="$(mktemp "${TMPDIR}server_fifoXXXXXX")"
+rm "$fifo_file"
+mkfifo "$fifo_file"
+
+trap cleanup EXIT INT HUP TERM
+
+cleanup() {
+  echo "Exiting..."
+  rm "$fifo_file"
+}
+
+declare -a headers
+status_line="HTTP/1.1 200 OK"
+response_body=""
+
+set_header() {
+  declare -a new_headers
+  for header in "${headers[@]}"; do
+    if [ "${header%%:*}" != "$1" ]; then
+      new_headers+=("$header")
+    fi
+  done
+  new_headers+=("${1}: ${2}")
+  headers=("${new_headers[@]}")
+}
+
+set_response_body() {
+  response_body="$*"
+}
+
+set_default_headers() {
+  set_header 'Content-Type' 'text/html'
+  set_header 'cache-control' 'max-age=0'
+  set_header 'Connection' 'close'
+}
+
+set_status() {
+  code="${1:-200}"
+  case "$code" in
+    200) description="OK" ;;
+    400) description="Bad Request" ;;
+    403) description="Forbidden" ;;
+    404) description="Not Found" ;;
+    405) description="Method Not Allowed" ;;
+    500) description="Internal Server Error" ;;
+    *)
+      echo-err "Code '${code}' not allowed" >&2
+      exit 1
+      ;;
+  esac
+  status_line="HTTP/1.1 ${code} ${description}"
+}
+
+reset_response() {
+  headers=()
+  set_default_headers
+  response_body=""
+  status_line=""
+}
+
+send_internal_server_error() {
+  reset_response
+  set_status 500
+  set_header "Content-Type" "text/plain"
+  set_response_body "500 Internal Server Error"
+  send_response
+}
+
+send_response() {
+  if [ -z "$status_line" ]; then
+    send_internal_server_error
+    return
+  fi
+
+  final_response="${status_line}\r\n"
+  for header in "${headers[@]}"; do
+    final_response+="${header}\r\n"
+  done
+  final_response+="\r\n"
+  final_response+="$response_body"
+  echo -e "$final_response" 2>&1
+  echo -e "$final_response" > "$fifo_file"
+}
+
+send_file() {
+  if [ ! -f "$1" ]; then
+    echo-err "${1} is not a file"
+    send_internal_server_error
+    return
+  fi
+
+  case "${1##*.}" in
+    htm | html )
+      set_header 'Content-Type' 'text/html'
+      ;;
+    *)
+      set_header 'Content-Type' 'text/plain'
+      ;;
+  esac
+
+  set_status 200
+  set_response_body "$(<"$1")"
+  send_response
+}
+
+send_directory() {
+  if [ ! -d "$1" ]; then
+    echo-err "${1} is not a directory"
+    send_internal_server_error
+    return
+  fi
+
+  set_status 200
+  set_header 'Content-Type' 'text/plain'
+  set_response_body "$(ls -la "$1")"
+  send_response
+}
+
+while true; do
+  reset_response
+  request_path=""
+  cat "$fifo_file" | nc -l "$port" | while read line; do
+    printf '< %s\n' "$line"
+    if [ -z "$request_path" ]; then
+      read -r request_method request_path request_http_version <<<"$line"
+    fi
+    if [ -z "$(echo "$line" | tr -d '\r\n')" ]; then
+      if [ -f "${PWD}${request_path}" ]; then
+        send_file "${PWD}${request_path}"
+      elif [ -d "${PWD}${request_path}" ]; then
+        send_directory "${PWD}${request_path}"
+      else
+        set_status 404
+        set_header 'Content-Type' 'text/plain'
+        set_response_body "404 Not Found"
+        send_response
+      fi
+    fi
+  done
+  echo
+done
