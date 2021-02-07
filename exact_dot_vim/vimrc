@@ -156,12 +156,10 @@ set wildmode=longest:full,full
 " Don't expand certain files
 set wildignore=*.o,*.obj,*.bak,*.exe,*.pyc
 
-" TODO: Disabling mouse support temporarily to help me get better at keyboard
-" shortcuts
 " Enable mouse support for all modes
-" if has('mouse')
-"   set mouse=a
-" endif
+if has('mouse')
+  set mouse=a
+endif
 
 " Reselect visual block after indent/outdent
 vnoremap < <gv
