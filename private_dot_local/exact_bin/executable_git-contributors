@@ -1,3 +1,39 @@
-#!/bin/sh
+#!/usr/bin/env bash
+
+USAGE="usage: $(basename "$0") [--recent] [--] [<path>]"
+
+recent=false
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    -[[:alnum:]][[:alnum:]]*)
+      _value="-${1##-?}"
+      _arg="${1%%${1##-?}}"
+      ;;
+  esac
+  if [ -n "${_arg:-}${_value:-}" ]; then
+    shift
+    set -- "$_arg" "$_value" "$@"
+  fi
+  unset _arg _value
+  case "$1" in
+    -h | --help)
+      echo "$USAGE"
+      exit
+      ;;
+    --recent) recent=true ;;
+    --) break ;;
+    -?*)
+      echo-err "unknown option: ${1}" >&2
+      exit 1
+      ;;
+    *) break ;;
+  esac
+  shift
+done
+
+if $recent; then
+  set -- --after="$(date -v-6m +%Y-%m-%d)" "$@"
+fi
 
 echo-run git shortlog --summary --numbered "$@"
