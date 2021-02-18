@@ -44,7 +44,7 @@ elif [ -n "$after" ]; then
 fi
 
 newline=$'\n'
-header="Count|Email|Oldest|Newest"
+header="Count|Engineer|Oldest|Newest"
 output=""
 current_name=""
 current_count=""
