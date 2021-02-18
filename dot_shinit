@@ -7,6 +7,8 @@ alias misc='default'
 alias ll='ls -l'
 alias la='ls -la'
 
+alias vim.='vim .'
+
 if ! command -v sudoedit >/dev/null; then
   alias sudoedit='sudo --edit'
 fi
