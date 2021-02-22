@@ -12,5 +12,5 @@ GIT_HEAD="$(get-remote-head)"
 echo "$GIT_HEAD"
 
 echo-run git checkout --quiet "$GIT_HEAD"
-echo-run git pull --quiet --rebase --prune origin
+echo-run git pull --quiet --rebase --no-tags --prune origin "$GIT_HEAD"
 git-show --quiet
