@@ -18,6 +18,7 @@ Options:
   --plan-changes        Create or update a revision without requesting a code review.
   -r, --rebase          Rebase before pushing to Phabricator.
   --skip-staging        Don't upload to staging repository.
+  --draft               Draft diff
   --nolint              Prevent lint errors from preventing diff upload.
   --trace               Log debug info."
 
@@ -81,7 +82,7 @@ fi
 
 # Running lint first makes sure the diff only has actual failures (not failures
 # that have been autofixed)
-if ! arc-lint && ! $no_lint; then
+if ! arc-lint --rev HEAD^ && ! $no_lint; then
   exit 1
 fi
 
