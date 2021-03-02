@@ -1,14 +1,12 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 
 if ! command -v nosetests >/dev/null 2>&1; then
   echo-err "The 'nosetests' command is not available."
   return 127
 fi
 
-# (N) ignores no matches. Default is to error
-local nose_profile_dir
-for nose_profile_dir in "$VIRTUAL_ENV"/lib/python*/site-packages/nose_profile*/(N); do
-  # nose_profile just doesn't work, so lets just get rid of it so we don't always see that error
+# nose_profile just doesn't work, so lets just get rid of it so we don't always see that error
+for nose_profile_dir in "$VIRTUAL_ENV"/lib/python*/site-packages/nose_profile*/; do
   [[ -d "$nose_profile_dir" ]] && echo-run rm -rf "$nose_profile_dir"
 done
 
@@ -20,7 +18,7 @@ fi
 #   echo-run pip install ipdbplugin
 # fi
 
-local arg nose_args=()
+typeset -a nose_args=()
 nose_args+=('--verbose')
 nose_args+=('--nologcapture')
 for arg in "$@"; do
