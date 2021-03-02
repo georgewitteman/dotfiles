@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [ $# -eq 0 ] || [ "$1" = "-h" ] || [ "$1" == "--help" ]; then
+if [ $# -eq 0 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
   echo "usage: $(basename "$0") <branch name>" >&2
   exit
 fi
