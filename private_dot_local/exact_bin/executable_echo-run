@@ -55,4 +55,6 @@ unset _echo_run_part_before_single_quote _echo_run_part_needs_quotes _echo_run_c
 
 # Note that this doesn't handle alias expansion. The alternate solution would
 # be to use eval, but then we couldn't reliably unset all the variables.
-"$@"
+if [ -z "${ECHO_RUN_ECHO_ONLY:-}" ]; then
+  "$@"
+fi
