@@ -27,4 +27,4 @@ for arg in "$@"; do
   nose_args+=("${arg/#$PWD\//./}")
 done
 
-TZ=UTC echo-run nosetests "${nose_args[@]}" # "${file_or_dir##${run_dir}/}"
+TZ=UTC echo-run /usr/bin/time nosetests "${nose_args[@]}" # "${file_or_dir##${run_dir}/}"
