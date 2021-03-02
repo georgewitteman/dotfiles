@@ -136,6 +136,15 @@ if [[ -n "$rebase" ]]; then
   echo-run rebase || die "$?" "Failed to rebase branch."
 fi
 
+# New diffs should always have the --draft flag
+if [[ -n "$amend" ]] && ! git show --no-patch --format="%b" | grep --quiet "Differential Revision"; then
+  # We're amending a commit, but the commit doesn't have a diff for it yet
+  draft=true
+elif [[ -z "$amend" ]]; then
+  # If we're not amending a diff then we're creating a new one
+  draft=true
+fi
+
 # Arc Diff
 arc_options=()
 
