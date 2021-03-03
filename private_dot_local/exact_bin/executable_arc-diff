@@ -80,9 +80,14 @@ if is-clean-repo && [[ -z "$amend" ]]; then
   die 1 "No changes to add. Did you mean 'arc-diff -a'?"
 fi
 
+base="HEAD"
+if $amend; then
+  base="HEAD^"
+fi
+
 # Running lint first makes sure the diff only has actual failures (not failures
 # that have been autofixed)
-if ! arc-lint --rev HEAD^ && ! $no_lint; then
+if ! arc-lint --rev "$base" && ! $no_lint; then
   exit 1
 fi
 
