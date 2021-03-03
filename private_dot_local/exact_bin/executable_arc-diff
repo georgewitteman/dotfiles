@@ -87,24 +87,24 @@ if ! arc-lint --rev HEAD^ && ! $no_lint; then
 fi
 
 # Add files
-echo-run git add --all || die "$?" "Failed to stage changes."
+# echo-run git add --all || die "$?" "Failed to stage changes."
 
 # Commit
 commit_run_cmd="echo-run"
-git_options=(--quiet)
-if [[ -n "$no_verify" ]]; then
-  git_options+=(--no-verify)
-fi
-if [[ -n "$amend" ]]; then
-  git_options+=('--amend' '--no-edit')
-else
-  git_options+=('--no-edit')
-  if [[ -n "$message" ]]; then
-    git_options+=("--message" "$message")
-  else
-    git_options+=('--message=<revision title>')
-  fi
-fi
+# git_options=(--quiet)
+# if [[ -n "$no_verify" ]]; then
+#   git_options+=(--no-verify)
+# fi
+# if [[ -n "$amend" ]]; then
+#   git_options+=('--amend' '--no-edit')
+# else
+#   git_options+=('--no-edit')
+#   if [[ -n "$message" ]]; then
+#     git_options+=("--message" "$message")
+#   else
+#     git_options+=('--message=<revision title>')
+#   fi
+# fi
 
 current_commit_author="$(git show --no-patch --format='%ae')"
 repo_email="$(git config --get user.email)"
@@ -126,7 +126,7 @@ if [[ -z "$amend" && "$current_commit_author" = "$repo_email" ]]; then
 fi
 
 prev_head="$(git rev-parse HEAD)"
-"$commit_run_cmd" git commit "${git_options[@]}" || die "$?" "Failed to commit changes to git."
+# "$commit_run_cmd" git commit "${git_options[@]}" || die "$?" "Failed to commit changes to git."
 if [[ -n "$amend" ]]; then
   echo-info "Use 'git reset $prev_head' if you want to un-amend."
 fi
@@ -150,7 +150,7 @@ arc_options=()
 
 # When linting git repositories, amend HEAD with all patches suggested by lint
 # without prompting.
-arc_options+=('--amend-all')
+arc_options+=('--add-all')
 
 [[ -n "$draft" ]] && arc_options+=('--draft')
 [[ -n "$skip_staging" ]] && arc_options+=('--skip-staging')
@@ -158,9 +158,7 @@ arc_options+=('--amend-all')
 [[ -n "$message" ]] && arc_options+=('--message' "$message")
 [[ -n "$trace" ]] && arc_options+=('--trace')
 
-if ! $no_lint; then
-  arc_options+=('--apply-patches')
-else
+if $no_lint; then
   arc_options+=('--nolint')
 fi
 
