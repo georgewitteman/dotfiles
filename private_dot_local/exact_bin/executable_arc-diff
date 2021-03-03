@@ -81,7 +81,7 @@ if is-clean-repo && [[ -z "$amend" ]]; then
 fi
 
 base="HEAD"
-if $amend; then
+if [ -n "$amend" ]; then
   base="HEAD^"
 fi
 
