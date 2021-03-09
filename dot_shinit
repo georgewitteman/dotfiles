@@ -225,7 +225,7 @@ venv() {
   while [ $# -gt 0 ]; do
     case "$1" in
       -h | --help)
-        echo "usage: $(basename "$0") [--create] [--delete] [<venv name>]" >&2
+        echo "usage: $(basename "$0") [--create] [<venv name>]" >&2
         return
         ;;
       --create)
