@@ -222,6 +222,36 @@ tmp() {
 }
 
 venv() {
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      -h | --help)
+        echo "usage: $(basename "$0") [--create] [--delete] [<venv name>]" >&2
+        return
+        ;;
+      --create)
+        shift
+        if [ -n "$VIRTUAL_ENV" ]; then
+          echo_run deactivate
+        fi
+        if [ -d "${1:-.venv}" ]; then
+          echo_run rm -rf "${1:-.venv}"
+        fi
+        echo_run python3 -m venv "${1:-.venv}"
+        echo_run . "${1:-.venv}/bin/activate"
+        if [ -f requirements.txt ]; then
+          echo_run pip install -r requirements.txt
+        fi
+        return $?
+        ;;
+      *)
+        break
+        ;;
+    esac
+    shift
+  done
+
+
+
   # Recursively search up until home directory for a virtual environment with
   # the desired name. This allows you to activate a venv from the root of your
   # project while you're deep in the directory structure
