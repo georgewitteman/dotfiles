@@ -254,3 +254,6 @@ endif
 " Default to treating /bin/sh as POSIX shell (not the super duper old bourne
 " shell)
 let g:is_posix = 1
+
+" Dockerfiles load vim-json which sets conceallevel. We don't want that
+let g:vim_json_syntax_conceal = 0
