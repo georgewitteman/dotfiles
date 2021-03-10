@@ -16,6 +16,10 @@ fpath=("${HOME}/.config/zsh/" "${fpath[@]}")
 autoload -Uz "${HOME}/.config"/zsh/[A-Za-z]*
 autoload -Uz compinit && compinit -C -d "${HOME}/.zcompdump"
 
+if [ -f "${NVM_DIR:-${HOME}/.nvm}/bash_completion" ]; then
+  source "${NVM_DIR:-${HOME}/.nvm}/bash_completion"
+fi
+
 echo-eval() { echo_eval "$@" }
 echo-run() { echo_run "$@" }
 safe-run() { safe_run "$@" }
