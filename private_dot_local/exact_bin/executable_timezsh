@@ -4,4 +4,4 @@ if [ "$#" -eq 0 ]; then
   set -- '--login' '--interactive' "$@"
 fi
 
-echo-run hyperfine "${SHELL} $* -c exit"
+echo-run hyperfine "${SHELL} $* -c command exit"
