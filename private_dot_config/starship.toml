@@ -45,7 +45,7 @@ time_format = '%I:%M %P'
 [custom.venv]
 shell = ['dash']
 command = """
-if [ "${VIRTUAL_ENV%%/src/.ven[v,v3]}" != "$VIRTUAL_ENV" ]; then
+if [ "${VIRTUAL_ENV%%/src/.venv*}" != "$VIRTUAL_ENV" ]; then
   basename "${VIRTUAL_ENV%/*/*}"
 else
   echo "${VIRTUAL_ENV#${VIRTUAL_ENV%/*/*}/}"
