@@ -3,6 +3,7 @@ add_newline = false
 format = """$shlvl\
 $directory\
 $git_branch\
+${custom.git_host}\
 $git_commit\
 $git_state\
 $nodejs\
@@ -53,3 +54,11 @@ fi
 when = 'test -n "$VIRTUAL_ENV"'
 format = '([\($output\)]($style) )'
 style = 'fg:242'
+description = 'Custom formatted python virtual environment name'
+
+[custom.git_host]
+shell = ['dash']
+command = "command git ls-remote --get-url"
+when = "command git rev-parse --is-inside-work-tree"
+format = "at [$output]($style) "
+disabled = true
