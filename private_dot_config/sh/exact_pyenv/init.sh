@@ -21,4 +21,8 @@ pyenv() {
   # Reverse the path so that the first version in the file is first in $PATH
   PATH="${PYENV_PATH:+${PYENV_PATH}:}${PYENV_ROOT}/bin:${PATH}"
   unset PYENV_PATH
+
+  if [ -n "$VIRTUAL_ENV" ]; then
+    . "${VIRTUAL_ENV}/bin/activate"
+  fi
 }

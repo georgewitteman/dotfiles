@@ -1,3 +1,10 @@
 #!/usr/bin/env bash
 
 source "${HOME}/.shinit"
+
+for dir in "$HOME"/.config/sh/*/; do
+  [ -d "$dir" ] || continue
+
+  # shellcheck disable=SC1090
+  [ -r "${dir}init.bash" ] && . "${dir}init.bash"
+done
