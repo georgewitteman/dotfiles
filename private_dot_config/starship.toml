@@ -15,8 +15,13 @@ $jobs\
 $line_break\
 $character"""
 
+[directory]
+fish_style_pwd_dir_length = 2
+
 [status]
+format = '[ $status( $signal_name) ]($style) '
 disabled = false
+style = 'fg:white bg:red bold'
 
 [git_branch]
 symbol = ""
@@ -25,9 +30,9 @@ symbol = ""
 disabled = true
 
 [python]
-format = "via [${pyenv_prefix}(${version} )(\\($virtualenv\\))]($style) "
+format = 'via [${pyenv_prefix}(${version} )(\($virtualenv\))]($style) '
 
 [time]
 disabled = false
 use_12hr = true
-time_format = "%I:%M %P"
+time_format = '%I:%M %P'
