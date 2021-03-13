@@ -5,14 +5,31 @@
 " NOTE: 'encoding' defaults to "latin1" or $LANG
 scriptencoding utf-8
 
+if has('nvim')
+  if ! executable($HOME.'/.config/nvim/venv2/bin/python')
+    execute '!python2 -m pip install virtualenv'
+    execute '!python2 -m virtualenv '.$HOME.'/.config/nvim/venv2'
+    execute '!'.$HOME.'/.config/nvim/venv2/bin/python -m pip install -r '.$HOME.'/.config/nvim/requirements.txt'
+  endif
+  if ! executable($HOME.'/.config/nvim/venv3/bin/python')
+    execute '!python3 -m venv '.$HOME.'/.config/nvim/venv3'
+    execute '!'.$HOME.'/.config/nvim/venv3/bin/python -m pip install -r '.$HOME.'/.config/nvim/requirements.txt'
+  endif
+
+  let g:python_host_prog = $HOME.'/.config/nvim/venv2/bin/python'
+  let g:python3_host_prog = $HOME.'/.config/nvim/venv3/bin/python'
+endif
+
 " Environment
-" Persistent Undo
-set undodir=$HOME/.local/share/vim/undo
-set undofile " Automatically save undo history to an undo file. Stored in 'undodir'
-set directory=$HOME/.local/share/vim/swap " List of dir names for the swap file
-set noswapfile " No swapfiles
-set backupdir=$HOME/.local/share/vim/backup " List of dir names for the backup file
-set viminfo+='1000,n$HOME/.local/share/vim/viminfo
+if ! has('nvim')
+  " Persistent Undo
+  set undodir=$HOME/.local/share/vim/undo
+  set undofile " Automatically save undo history to an undo file. Stored in 'undodir'
+  set directory=$HOME/.local/share/vim/swap " List of dir names for the swap file
+  set noswapfile " No swapfiles
+  set backupdir=$HOME/.local/share/vim/backup " List of dir names for the backup file
+  set viminfo+='1000,n$HOME/.local/share/vim/viminfo
+endif
 
 " Leader to <Space>
 let mapleader = "\<Space>"

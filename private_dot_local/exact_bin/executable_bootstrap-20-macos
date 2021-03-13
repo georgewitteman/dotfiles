@@ -53,6 +53,7 @@ local formulas=(
   htop
   hyperfine
   jq
+  nvim
   openssl # pyenv recommends
   pgcli
   pinentry-mac

@@ -1,7 +1,6 @@
 add_newline = false
 
-format = """
-$shlvl\
+format = """$shlvl\
 $directory\
 $git_branch\
 $git_commit\
