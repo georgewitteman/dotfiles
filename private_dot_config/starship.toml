@@ -1,0 +1,33 @@
+add_newline = false
+
+format = """
+$shlvl\
+$directory\
+$git_branch\
+$git_commit\
+$git_state\
+$nodejs\
+$python\
+$cmd_duration\
+$time\
+$status\
+$jobs\
+$line_break\
+$character"""
+
+[status]
+disabled = false
+
+[git_branch]
+symbol = ""
+
+[git_status]
+disabled = true
+
+[python]
+format = "via [${pyenv_prefix}(${version} )(\\($virtualenv\\))]($style) "
+
+[time]
+disabled = false
+use_12hr = true
+time_format = "%I:%M %P"

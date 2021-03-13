@@ -61,6 +61,7 @@ local formulas=(
   rsync
   shellcheck
   sqlite # pyenv recommends
+  starship
   terraform
   tmux
   tree

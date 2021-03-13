@@ -7,7 +7,7 @@ if [ $# -gt 0 ]; then
   exit $?
 fi
 
-diff_id="$(arc list --ansi | fzf --ansi | grep --no-filename --only-matching 'D\d\d*')"
+diff_id="$(arc list --ansi | grep '\*.*' | fzf --ansi | grep --no-filename --only-matching 'D\d\d*')"
 
 if [ -z "$diff_id" ]; then
   exit $?
