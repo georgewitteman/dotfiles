@@ -7,8 +7,8 @@ $git_commit\
 $git_state\
 $nodejs\
 $python\
-$cmd_duration\
 $time\
+$cmd_duration\
 $status\
 $jobs\
 $line_break\
