@@ -62,3 +62,8 @@ command = "command git ls-remote --get-url"
 when = "command git rev-parse --is-inside-work-tree"
 format = "at [$output]($style) "
 disabled = true
+
+[jobs]
+threshold = 0
+symbol = '+'
+format = '([$symbol$number]($style) )'
