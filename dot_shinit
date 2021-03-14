@@ -225,10 +225,26 @@ venv() {
   while [ $# -gt 0 ]; do
     case "$1" in
       -h | --help)
-        echo "usage: $(basename "$0") [--create] [<venv name>]" >&2
+        echo "usage: $(basename "$0") [--create|--create3] [--create2] [<venv name>]" >&2
         return
         ;;
-      --create)
+      --create2)
+        shift
+        if [ -n "$VIRTUAL_ENV" ]; then
+          echo_run deactivate
+        fi
+        if [ -d "${1:-.venv}" ]; then
+          echo_run rm -rf "${1:-.venv}"
+        fi
+        echo_run python2 -m pip install virtualenv
+        echo_run python2 -m virtualenv "${1:-.venv}"
+        echo_run . "${1:-.venv}/bin/activate"
+        if [ -f requirements.txt ]; then
+          echo_run pip install -r requirements.txt
+        fi
+        return $?
+        ;;
+      --create | --create3)
         shift
         if [ -n "$VIRTUAL_ENV" ]; then
           echo_run deactivate
@@ -249,8 +265,6 @@ venv() {
     esac
     shift
   done
-
-
 
   # Recursively search up until home directory for a virtual environment with
   # the desired name. This allows you to activate a venv from the root of your
