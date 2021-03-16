@@ -566,6 +566,8 @@
 	<string>6E2D3025-5153-45A3-907A-9EF6A2339A62</string>
 	<key>DisableDocumentedEditedIndicator</key>
 	<false/>
+	<key>EnableAPIServer</key>
+	<true/>
 	<key>HapticFeedbackForEsc</key>
 	<false/>
 	<key>HotkeyMigratedFromSingleToMulti</key>
