@@ -1,0 +1,42 @@
+#!/bin/sh
+
+set -o errexit
+
+if [ $# -ge 1 ]; then
+  case "$1" in
+    -h | --help)
+      echo "usage: $(basename "$0")"
+      exit
+      ;;
+  esac
+fi
+
+if [ -z "$PYENV_ROOT" ]; then
+  echo-err '$PYENV_ROOT is not defined.'
+  exit 1
+fi
+
+# Clear any arguments
+set --
+
+for version_path in "${PYENV_ROOT}/versions/"*; do
+  [ -d "$version_path" ] || continue
+  set -- "$@" "$(basename "$version_path")"
+done
+
+if [ $# -eq 0 ]; then
+  set -- "2.7.14" "3.7.8"
+fi
+
+if [ -d "$PYENV_ROOT" ]; then
+  safe-run rm -rf "$PYENV_ROOT"
+fi
+echo-run git clone git@github.com:pyenv/pyenv.git "$PYENV_ROOT"
+echo-run git clone git@github.com:pyenv/pyenv-doctor.git "$PYENV_ROOT/plugins/pyenv-doctor"
+echo-run git clone git@github.com:pyenv/pyenv-update.git "$PYENV_ROOT/plugins/pyenv-update"
+echo-run git clone git@github.com:pyenv/pyenv-which-ext.git "$PYENV_ROOT/pyenv/pyenv-which-ext"
+
+if [ $# -gt 0 ]; then
+  echo-info "Setting global python versions to $*"
+  echo-run pyenv global "$@"
+fi

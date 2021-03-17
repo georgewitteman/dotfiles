@@ -1,5 +1,9 @@
 #!/bin/sh
 
+if ! command -v pyenv >/dev/null 2>&1 && [ ! -d "$PYENV_ROOT" ]; then
+  pyenv-reinstall
+fi
+
 pyenv() {
   command pyenv "$@" || return "$?"
 
@@ -14,9 +18,11 @@ pyenv() {
     esac
   done
 
-  while IFS= read -r line || [ -n "$line" ]; do
-    PYENV_PATH="${PYENV_PATH:+${PYENV_PATH}:}${PYENV_ROOT}/versions/${line}/bin"
-  done <"${PYENV_ROOT}/version"
+  if [ -f "${PYENV_ROOT}/version" ]; then
+    while IFS= read -r line || [ -n "$line" ]; do
+      PYENV_PATH="${PYENV_PATH:+${PYENV_PATH}:}${PYENV_ROOT}/versions/${line}/bin"
+    done <"${PYENV_ROOT}/version"
+  fi
 
   # Reverse the path so that the first version in the file is first in $PATH
   PATH="${PYENV_PATH:+${PYENV_PATH}:}${PYENV_ROOT}/bin:${PATH}"
