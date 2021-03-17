@@ -2,7 +2,7 @@
 
 set -o errexit
 
-USAGE="usage: $(basename "$0") [--verbose] <version>"
+USAGE="usage: $(basename "$0") [--verbose] [--skip-existing] <version>"
 
 if [ $# -le 0 ]; then
   echo "$USAGE"
@@ -10,6 +10,7 @@ if [ $# -le 0 ]; then
 fi
 
 verbose=false
+skip_existing=false
 version=
 
 while [ $# -gt 0 ]; do
@@ -20,6 +21,9 @@ while [ $# -gt 0 ]; do
       ;;
     --verbose)
       verbose=true;
+      ;;
+    --skip-existing)
+      skip_existing=true;
       ;;
     *.*.*)
       version="$1"
@@ -40,6 +44,9 @@ fi
 set --
 if $verbose; then
   set -- "$@" --verbose
+fi
+if $skip_existing; then
+  set -- "$@" --skip-existing
 fi
 
 openssl_path="$(brew --prefix openssl)"

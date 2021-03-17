@@ -194,3 +194,4 @@ if [[ -z "$TMUX" && "$SHLVL" -eq 1 ]]; then
   # Always open tmux when starting Alacritty
   new_or_switch_tmux default "$HOME"
 fi
+# zprof

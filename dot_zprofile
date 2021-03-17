@@ -1,3 +1,4 @@
 #!/usr/bin/env zsh
 
+# zmodload zsh/zprof
 source "${HOME}/.profile"
