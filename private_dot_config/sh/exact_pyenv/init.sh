@@ -1,8 +1,8 @@
 #!/bin/sh
 
-# if ! command -v pyenv >/dev/null 2>&1 && [ ! -d "$PYENV_ROOT" ]; then
-#   pyenv-reinstall
-# fi
+if ! command -v pyenv >/dev/null 2>&1 && [ ! -d "$PYENV_ROOT" ]; then
+  pyenv-reinstall
+fi
 
 pyenv() {
   command pyenv "$@" || return "$?"
