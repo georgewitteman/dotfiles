@@ -136,7 +136,11 @@ if command -v fzf &>/dev/null && command -v fd &>/dev/null; then
     # Trim leading and trailing whitespace
     current_word="${${current_word##[[:space:]]##}%%[[:space:]]##}"
 
-    local path="$(fd --hidden --exclude .git | fzf --query "$current_word")"
+    if command -v project-find >/dev/null 2>&1; then
+      local path="$(project-find -d | fzf --query "$current_word")"
+    else
+      local path="$(fd --hidden --exclude .git | fzf --query "$current_word")"
+    fi
     if [[ "$status" != 0 || -z "$path" ]]; then
       zle reset-prompt
       return
@@ -160,8 +164,6 @@ if command -v fzf &>/dev/null && command -v fd &>/dev/null; then
   }
   zle -N fzf-select-history
   bindkey '^R' fzf-select-history
-
-  export FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude .git'
 fi
 
 if [ ! -d "${HOME}/.local/share/zsh" ]; then
