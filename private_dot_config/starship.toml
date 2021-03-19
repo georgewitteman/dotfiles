@@ -11,9 +11,9 @@ $python\
 $time\
 $cmd_duration\
 $status\
-$jobs\
 $line_break\
 ${custom.venv}\
+$jobs\
 $character"""
 
 [directory]
@@ -67,3 +67,4 @@ disabled = true
 threshold = 0
 symbol = '+'
 format = '([$symbol$number]($style) )'
+style = 'fg:red bold'
