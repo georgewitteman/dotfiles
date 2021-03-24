@@ -11,6 +11,7 @@ $python\
 $time\
 $cmd_duration\
 $status\
+${custom.stashes}\
 $line_break\
 ${custom.venv}\
 $jobs\
@@ -62,6 +63,20 @@ command = "command git ls-remote --get-url"
 when = "command git rev-parse --is-inside-work-tree"
 format = "at [$output]($style) "
 disabled = true
+
+[custom.stashes]
+shell = ['dash']
+command = """
+stash_count=$(wc -l $(command git rev-parse --git-dir)/logs/refs/stash | awk '{ print $1 }')
+if [ "$stash_count" -eq 1 ]; then
+  echo "${stash_count} stash"
+else
+  echo "${stash_count} stashes"
+fi
+"""
+when = "test -f $(git rev-parse --git-dir)/logs/refs/stash"
+format = "[$output]($style) "
+style = 'fg:red bold'
 
 [jobs]
 threshold = 0
