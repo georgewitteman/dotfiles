@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 set -o errexit
 
@@ -7,10 +7,18 @@ if [ $# -gt 0 ]; then
   exit $?
 fi
 
-diff_id="$(arc list --ansi | grep '\*.*' | fzf --ansi | grep --no-filename --only-matching 'D\d\d*')"
-
-if [ -z "$diff_id" ]; then
-  exit $?
-fi
-
-echo-run arc work "$diff_id"
+print_lines() {
+  for branchref in $(git --no-pager branch --sort=-committerdate --format='%(refname)'); do
+    diff_id="$(git for-each-ref "$branchref" --format='%(contents:body)' | grep 'Differential Revision: ' || true)"
+    if [ -n "$diff_id" ]; then
+      diff_id="${diff_id##*/}:"
+    else
+      diff_id="       "
+    fi
+    git for-each-ref --color=always "$branchref" --format='%(HEAD) %(color:bold)'"${diff_id}"'%(color:reset) %(contents:subject) - %(color:yellow)%(committerdate:relative)%(color:reset) - %(color:green)%(refname:short)%(color:reset)'
+  done
+}
+branch="$(print_lines | fzf --no-multi --delimiter ' - ' --preview='git show --color=always {-1}' --ansi)"
+branch="${branch##* - }"
+echo-run git switch "$branch" || exit $?
+git-show --quiet

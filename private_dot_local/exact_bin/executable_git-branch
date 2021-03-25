@@ -6,6 +6,11 @@ if ! is-clean-repo; then
   return 1
 fi
 
+if [ -f "$(git rev-parse --show-toplevel)/.arcconfig" ]; then
+  arc-work
+  exit $?
+fi
+
 local branches branch
 branches=$(
   git \
