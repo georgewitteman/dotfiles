@@ -2,16 +2,20 @@
 
 set -o errexit
 
-USAGE="usage: $(basename "$0") [-p | --push] [<commit message>]"
+USAGE="usage: $(basename "$0") [-p | --push] [-f | --force] [<commit message>]"
 
 push=false
 message=''
+force=false
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
     -h | --help)
       echo "$USAGE"
       exit
+      ;;
+    -f | --force)
+      force=true
       ;;
     -p | --push)
       push=true
@@ -52,9 +56,13 @@ else
 fi
 
 if $push; then
-  remote="$(git rev-parse --abbrev-ref --symbolic-full-name '@{upstream}' 2>/dev/null)"
+  remote="$(git rev-parse --abbrev-ref --symbolic-full-name '@{upstream}' 2>/dev/null || true)"
   if [ -n "$remote" ]; then
     echo-run git pull --rebase
   fi
-  push
+  if $force; then
+    push --force
+  else
+    push
+  fi
 fi
