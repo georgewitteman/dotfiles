@@ -22,9 +22,9 @@ for file in $(_files ~/.local/bin) ~/.shinit ~/.profile $(_files ~/.config/sh); 
     continue
   fi
   case $(head -1 "$file") in
-    *bash*) echo-run shellcheck "$file" ;;
-    */sh*) echo-run shellcheck "$file" ;;
-    *env\ sh*) echo-run shellcheck "$file" ;;
+    *bash*) shellcheck "$file" ;;
+    */sh*) shellcheck "$file" ;;
+    *env\ sh*) shellcheck "$file" ;;
     *)
       $verbose && echo-info "Skipping ${file}"
       continue

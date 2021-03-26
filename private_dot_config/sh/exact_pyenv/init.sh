@@ -29,6 +29,7 @@ pyenv() {
   unset PYENV_PATH
 
   if [ -n "$VIRTUAL_ENV" ]; then
+    # shellcheck disable=SC1090
     . "${VIRTUAL_ENV}/bin/activate"
   fi
 }

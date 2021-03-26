@@ -5,6 +5,7 @@ nvm() {
     nvm_upgrade
   fi
   unset -f nvm
+  # shellcheck disable=SC1090,SC2240
   . "$NVM_DIR/nvm.sh" --no-use
   nvm "$@"
 }

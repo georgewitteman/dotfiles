@@ -12,6 +12,7 @@ if [ $# -ge 1 ]; then
 fi
 
 if [ -z "$PYENV_ROOT" ]; then
+  # shellcheck disable=SC2016
   echo-err '$PYENV_ROOT is not defined.'
   exit 1
 fi
