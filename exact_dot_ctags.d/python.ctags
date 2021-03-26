@@ -4,4 +4,3 @@
 --exclude=.venv
 --exclude=.tox
 --exclude=.mypy_cache
-
