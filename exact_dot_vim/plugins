@@ -23,6 +23,7 @@ jalvesaq/Nvim-R
 chrisbra/csv.vim
 hashivim/vim-terraform
 darfink/vim-plist
+rust-lang/rust.vim
 
 # Git
 tpope/vim-git
