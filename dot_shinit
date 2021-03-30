@@ -184,7 +184,7 @@ _exit() {
 novenv() {
   save_venv --quiet
   "$@"
-  set $?
+  set -- $?
   restore_venv --quiet
   return "$1"
 }
