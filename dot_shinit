@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Tmux sessions
-alias default='new_or_switch_tmux default ${HOME}'
+alias default='new_or_switch_tab default ${HOME}'
 alias misc='default'
 
 alias ll='ls -l'
@@ -137,6 +137,12 @@ restart_sh() {
   fi
 
   echo_run exec "$1" -li
+}
+
+new_or_switch_tab() {
+  echo_run cd "$2"
+  tab "$1"
+  echo_run cd -
 }
 
 new_or_switch_tmux() {
