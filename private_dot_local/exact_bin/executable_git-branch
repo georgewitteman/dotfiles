@@ -27,7 +27,7 @@ if [ -f "$(git rev-parse --show-toplevel)/.arcconfig" ]; then
   exit $?
 fi
 
-branch="$(git for-each-ref --color=always refs/heads/ --format='%(HEAD) %(color:green)%(refname:short)%(color:reset) - %(contents:subject) - %(color:yellow)%(committerdate:relative)%(color:reset)' | fzf --no-multi --delimiter ' - ' --preview='git show --color=always {-1}' --ansi)"
+branch="$(git for-each-ref --sort=-committerdate --color=always refs/heads/ --format='%(HEAD) %(color:green)%(refname:short)%(color:reset) - %(contents:subject) - %(color:yellow)%(committerdate:relative)%(color:reset)' | fzf --no-multi --delimiter ' - ' --preview='git show --color=always {-1}' --ansi)"
 branch="${branch%% - *}"
 branch="${branch##\* }"
 branch="${branch##  }"
