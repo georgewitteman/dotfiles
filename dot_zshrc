@@ -151,7 +151,7 @@ if command -v fzf &>/dev/null && command -v fd &>/dev/null; then
     zle reset-prompt
   }
   zle -N fzf-file-widget
-  bindkey '^T' fzf-file-widget
+  # bindkey '^T' fzf-file-widget
 
   fzf-select-history() {
     local command="$(fc -l -n 1 | fzf --tiebreak index --tac --query "$LBUFFER")"
@@ -191,6 +191,17 @@ setopt hist_ignore_space
 setopt hist_reduce_blanks
 # Don't execute immediately upon history expansion.
 setopt hist_verify
+
+zle-open-tab() {
+  BUFFER="tab"
+  zle accept-line
+}
+zle -N zle-open-tab
+bindkey '^T' zle-open-tab
+
+if [[ -z "$TAB" && "$SHLVL" -eq 1 ]]; then
+  tab default
+fi
 
 # if [[ -z "$TMUX" && "$SHLVL" -eq 1 ]]; then
 #   # Always open tmux when starting Alacritty

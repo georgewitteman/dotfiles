@@ -1,3 +1,6 @@
+tab: default
+doc: "The default workspace"
+
 workspace:
   - repo: .local/share/chezmoi
   - workspace: Code
