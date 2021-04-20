@@ -4,6 +4,7 @@
 .vim/pack
 README.md
 tags
+tab.yml
 
 {{ if ne .class "work" }}
 .local/bin/bootstrap-81-snowsql-install

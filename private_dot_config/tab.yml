@@ -1,9 +1,3 @@
 workspace:
-  - tab: global-tab
-    doc: "my global tab doc"
-    directory: tab-dir
-
-  # this links to a workspace config in ~/my-workspace
-  #   workspaces are only active within the workspace directory
-  #   this creates a link to that workspace, so you can always activate it with `tab my-workspace`
+  - repo: .local/share/chezmoi
   - workspace: Code
