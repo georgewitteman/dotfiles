@@ -51,3 +51,6 @@ tags.temp.tmp
 # Just don't add env files by default
 env
 *.env
+
+# https://github.com/austinjones/tab-rs
+tab.yml
