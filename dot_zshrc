@@ -199,9 +199,9 @@ zle-open-tab() {
 zle -N zle-open-tab
 bindkey '^T' zle-open-tab
 
-if [[ -z "$TAB" && "$SHLVL" -eq 1 ]]; then
-  tab default
-fi
+# if [[ -z "$TAB" && "$SHLVL" -eq 1 ]]; then
+#   tab default
+# fi
 
 # if [[ -z "$TMUX" && "$SHLVL" -eq 1 ]]; then
 #   # Always open tmux when starting Alacritty
