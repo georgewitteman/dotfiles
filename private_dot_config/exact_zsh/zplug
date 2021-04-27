@@ -44,13 +44,13 @@ zplug-reinit() {
   [[ -f "$compdump_file" ]] && echo-run rm -f "$compdump_file"
   autoload -Uz compinit && echo-run compinit -d "${HOME}/.zcompdump"
 
-  autoload -Uz zrecompile
-  echo-run zrecompile -p -q "$compdump_file"
+  # autoload -Uz zrecompile
+  # echo-run zrecompile -p -q "$compdump_file"
 
-  local zfile
-  for zfile in ${ZDOTDIR:-${HOME}}/.z(shenv|profile|shrc|login|logout)(N-.); do
-    echo-run zrecompile -p -q "${zfile}" || return 1
-  done
+  # local zfile
+  # for zfile in ${ZDOTDIR:-${HOME}}/.z(shenv|profile|shrc|login|logout)(N-.); do
+  #   echo-run zrecompile -p -q "${zfile}" || return 1
+  # done
 }
 
 zplug-update-plugins() {
