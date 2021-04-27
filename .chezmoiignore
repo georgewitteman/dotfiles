@@ -6,6 +6,8 @@ README.md
 tags
 tab.yml
 
+com.googlecode.iterm2.plist
+
 {{ if ne .class "work" }}
 .local/bin/bootstrap-81-snowsql-install
 {{ end }}
