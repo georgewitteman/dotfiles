@@ -50,6 +50,9 @@ AndrewRadev/splitjoin.vim
 # Better text
 reedes/vim-pencil
 
+# Better syntax highlighting of files managed by chezmoi
+alker0/chezmoi.vim
+
 # Miscellaneous
 haya14busa/is.vim
 janko/vim-test
