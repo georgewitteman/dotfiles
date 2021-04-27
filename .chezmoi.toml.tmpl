@@ -7,6 +7,9 @@
 {{- $personal_vault := promptString "Personal Vault UUID" -}}
 {{- $work_vault := promptString "Work Vault UUID" -}}
 
+[onepassword]
+  cache = true
+
 [data]
   name = "George Witteman"
   email = "george@witteman.me"
