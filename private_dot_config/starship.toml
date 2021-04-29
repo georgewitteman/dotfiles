@@ -88,7 +88,5 @@ format = "[$output]($style) "
 style = "bold blue"
 
 [jobs]
-threshold = 0
 symbol = '+'
-format = '([$symbol$number]($style) )'
 style = 'fg:red bold'
