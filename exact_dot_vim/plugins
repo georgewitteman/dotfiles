@@ -24,6 +24,7 @@ chrisbra/csv.vim
 hashivim/vim-terraform
 darfink/vim-plist
 rust-lang/rust.vim
+Glench/Vim-Jinja2-Syntax
 
 # Git
 tpope/vim-git
