@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# https://github.com/joeyhoer/dnd/blob/master/dnd.sh
 
 # Set global variables
 PROGNAME=$(basename "$0")
