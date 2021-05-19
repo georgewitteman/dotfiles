@@ -23,7 +23,7 @@ restart_services(){
     if [[ "$line" == "" ]]; then continue; fi
     i="$line"
     if [[ $(ps aux | grep $i | awk '$0!~/grep/{print $2}') != "" ]]; then
-      killall "$i" && \
+      echo-run killall "$i" && \
       sleep 0.1 && \
       while [[ $(ps aux | grep $i | awk '$0!~/grep/{print $2}') == "" ]]; do
         sleep 0.5;
@@ -39,9 +39,11 @@ restart_services(){
 get_dnd_status() {
   get_nested_plist $DND_PLIST $DND_PLIST_KEY | \
     xmllint --xpath 'boolean(//key[text()="userPref"]/following-sibling::dict/key[text()="enabled"])' -
+  printf "\n"
 }
 
 enable_dnd() {
+  echo-info "Enabling do not disturb" >&2
   # If the userPref key does not exist, insert it, otherwise replace it
   enable_flag="-insert"
   if get_nested_plist $DND_PLIST $DND_PLIST_KEY | \
@@ -58,14 +60,15 @@ enable_dnd() {
         <key>reason</key>
         <integer>1</integer>
     </dict> " - -o - | plutil -convert binary1 - -o - | xxd -p | tr -d '\n')
-  defaults write $DND_PLIST_ID $DND_PLIST_KEY -data "$DND_HEX_DATA"
+  echo-run defaults write $DND_PLIST_ID $DND_PLIST_KEY -data "$DND_HEX_DATA"
   restart_services ${PROCESS_LIST[@]}
 }
 
 disable_dnd() {
+  echo-info "Disabling do not disturb" >&2
   DND_HEX_DATA=$(get_nested_plist $DND_PLIST $DND_PLIST_KEY | \
     plutil -remove userPref - -o - | plutil -convert binary1 - -o - | xxd -p | tr -d '\n')
-  defaults write $DND_PLIST_ID $DND_PLIST_KEY -data "$DND_HEX_DATA"
+  echo-run defaults write $DND_PLIST_ID $DND_PLIST_KEY -data "$DND_HEX_DATA"
   restart_services ${PROCESS_LIST[@]}
 }
 
@@ -75,12 +78,11 @@ Usage:    $PROGNAME [options]
 Version:  $VERSION
 DND: Do Not Disturb
 Control macOS notification "Do Not Disturb" settings
-Options:
+Commands:
   status     Current Do Not Disturb status
-               0: Disabled
-               1: Enabled
   on         Enable Do Not Disturb
   off        Disable Do Not Disturb
+  toggle     Toggle Do Not Disturb
 Example:
   dnd on
 EOF
@@ -96,12 +98,18 @@ done
 
 shift $(( OPTIND - 1 ))
 
-opt=${1:-on}
+opt="${1:-toggle}"
 
-if [[ $opt == "status" ]]; then
+if [[ "$opt" == "status" ]]; then
   get_dnd_status
-elif [[ $opt == "on" ]]; then
-  if [[ $(get_dnd_status) == "false" ]]; then enable_dnd; fi
-elif [[  $opt == "off" ]]; then
-  if [[ $(get_dnd_status) == "true" ]]; then disable_dnd; fi
+elif [[ "$opt" == "on" ]]; then
+  if [[ "$(get_dnd_status)" == "false" ]]; then enable_dnd; fi
+elif [[ "$opt" == "off" ]]; then
+  if [[ "$(get_dnd_status)" == "true" ]]; then disable_dnd; fi
+elif [[ "$opt" == "toggle" ]]; then
+  if [[ "$(get_dnd_status)" == "true" ]]; then
+    disable_dnd
+  else
+    enable_dnd
+  fi
 fi
