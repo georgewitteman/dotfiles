@@ -1,3 +1,4 @@
+{{- if (eq .chezmoi.os "linux") -}}
 #!/usr/bin/env zsh
 
 set -e
@@ -91,3 +92,4 @@ fi
 echo-run sudo systemctl enable lightdm.service
 echo-run sudo systemctl enable docker.service
 echo-run sudo usermod -aG docker $USER
+{{ end -}}
