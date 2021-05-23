@@ -1,0 +1,11 @@
+name: Continuous integration
+
+on: [push]
+
+jobs:
+  test_new_install:
+    runs-on: macos-latest
+    steps:
+      - name: Install, init, and apply
+        shell: bash
+        run: 'sh -c "$(curl -fsLS git.io/chezmoi)" -- init --apply georgewitteman'
