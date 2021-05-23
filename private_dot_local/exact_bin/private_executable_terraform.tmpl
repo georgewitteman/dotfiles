@@ -2,8 +2,8 @@
 
 CLOUDFLARE_EMAIL="{{ .email }}" \
 CLOUDFLARE_API_KEY="{{ (onepassword "dyulx35qcveyzpgdij2j3vvd4y" .vault).details.password }}" \
-DNSIMPLE_TOKEN="{{ (onepassword "pgfgdbtj3bgbfphzkhdxrkp44m" .vault).details.password }}" \
-DNSIMPLE_ACCOUNT="{{ (onepassword "uvbhjdlqczaolpwzje7c6nc2xq" .vault).details.password }}" \
+DNSIMPLE_TOKEN='{{- output "op" "get" "item" "rbb4jo4wmrfdjjus6gqjsymm7a" "--fields" "token" | trim }}' \
+DNSIMPLE_ACCOUNT='{{- output "op" "get" "item" "rbb4jo4wmrfdjjus6gqjsymm7a" "--fields" "account" | trim }}' \
 GITHUB_TOKEN="{{ (onepassword "sjrmyfeywna6zje7uf7oekhnoi" .vault).details.password }}" \
 /usr/local/bin/terraform "$@"
 
