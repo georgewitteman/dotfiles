@@ -6,14 +6,15 @@ TYPE="ed25519"
 FILE="${HOME}/.ssh/id_${TYPE}"
 
 if [ ! -f "$FILE" ]; then
+  echo "Creating new ssh key with ssh-keygen"
   # -N: passphrase
   # -t: type
   # -C: comment
   # -f: output file
-  echo-run ssh-keygen -t "$TYPE" -C "{{ .email }}" -f "$FILE" -N ""
-  echo-ok "New SSH key created."
+  ssh-keygen -t "$TYPE" -C "{{ .email }}" -f "$FILE" -N ""
+  echo "New SSH key created."
 else
-  echo-ok "SSH key already exists."
+  echo "SSH key already exists."
 fi
 
-echo-ok "Run 'cat ${FILE}.pub | pbcopy' to copy it to clipboard."
+echo "Run 'cat ${FILE}.pub | pbcopy' to copy it to clipboard."
