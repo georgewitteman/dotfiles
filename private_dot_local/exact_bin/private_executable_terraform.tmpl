@@ -1,3 +1,4 @@
+{{- if not .work -}}
 #!/bin/sh
 
 CLOUDFLARE_EMAIL="{{ .email }}" \
@@ -6,5 +7,4 @@ DNSIMPLE_TOKEN='{{- output "op" "get" "item" "rbb4jo4wmrfdjjus6gqjsymm7a" "--fie
 DNSIMPLE_ACCOUNT='{{- output "op" "get" "item" "rbb4jo4wmrfdjjus6gqjsymm7a" "--fields" "account" | trim }}' \
 GITHUB_TOKEN="{{ (onepassword "sjrmyfeywna6zje7uf7oekhnoi" .vault).details.password }}" \
 /usr/local/bin/terraform "$@"
-
-# vim: ft=zsh:
+{{- end -}}

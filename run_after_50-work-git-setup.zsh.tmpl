@@ -1,3 +1,4 @@
+{{- if .work -}}
 #!/usr/bin/env zsh
 
 set -e
@@ -27,3 +28,4 @@ done
 if command -v brew >/dev/null 2>&1; then
   echo-run brew install postgres
 fi
+{{ end -}}

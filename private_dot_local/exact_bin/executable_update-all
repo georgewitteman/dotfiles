@@ -9,6 +9,9 @@ if ! sudo --validate; then
   return 1
 fi
 
+# sudo keep alive
+while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+
 if ! op get account >/dev/null 2>&1; then
   # shellcheck disable=SC2016
   eval "$(op signin)"
@@ -16,7 +19,7 @@ fi
 
 # Using 'command ls' here because regular ls is aliased to add color and
 # formatting.
-local files=($(command ls "$HOME/.local/bin" | sort | grep bootstrap-))
+local files=($(command ls "$HOME/.local/bin" | sort | grep update- | grep -v update-all))
 
 local i
 for i in {1..${#files}}; do

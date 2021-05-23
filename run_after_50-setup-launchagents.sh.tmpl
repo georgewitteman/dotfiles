@@ -1,8 +1,13 @@
+{{- if (eq .chezmoi.os "darwin") -}}
 #!/bin/sh
+
+echo-info "Setting up LaunchAgents"
 
 agents_path="${HOME}/Library/LaunchAgents"
 
-echo-run mkdir -p "$agents_path"
+if [ ! -d "$agents_path" ]; then
+  echo-run mkdir -p "$agents_path"
+fi
 
 for file in "$HOME"/.config/sh/*/LaunchAgents/*.plist; do
   if [ ! -f "$file" ]; then
@@ -14,3 +19,4 @@ for file in "$HOME"/.config/sh/*/LaunchAgents/*.plist; do
   echo-run launchctl unload "$dest"
   echo-run launchctl load "$dest"
 done
+{{ end -}}
