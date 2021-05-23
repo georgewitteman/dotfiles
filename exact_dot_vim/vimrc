@@ -20,6 +20,10 @@ if has('nvim')
   let g:python3_host_prog = $HOME.'/.config/nvim/venv3/bin/python'
 endif
 
+" Required to do first
+" https://github.com/alker0/chezmoi.vim
+packadd chezmoi.vim
+
 " Environment
 if ! has('nvim')
   " Persistent Undo
