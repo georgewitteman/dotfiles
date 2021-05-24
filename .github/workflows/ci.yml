@@ -17,13 +17,15 @@ jobs:
         uses: actions/cache@v2
         if: startsWith(runner.os, 'macOS')
         with:
-          key: homebrew-cache-1
+          key: homebrew-cache-${{ hashFiles('~/Library/Caches/Homebrew/**') }}
           path: ~/Library/Caches/Homebrew
+          restore-keys: homebrew-cache-
       - name: Cache pyenv builds
         uses: actions/cache@v2
         with:
-          key: pyenv-cache-1
+          key: pyenv-cache-${{ hashFiles('~/.local/share/pyenv/cache/**') }}
           path: ~/.local/share/pyenv/cache
+          restore-keys: pyenv-cache-
       - name: Install, init, and apply
         run: 'sh -c "$(curl -fsLS git.io/chezmoi)" -- init --depth=1 --apply georgewitteman'
       - name: Shellcheck

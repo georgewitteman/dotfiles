@@ -30,13 +30,6 @@ echo-run brew upgrade
 
 local brew_list=($(command brew list --formula -1))
 
-# Install zsh first
-if (( $brew_list[(Ie)zsh] )); then
-  echo-ok 'zsh already installed'
-else
-  echo-run command brew install zsh
-fi
-
 if (( $brew_list[(Ie)universal-ctags] )); then
   echo-ok "universal-ctags already installed"
 else
@@ -77,6 +70,7 @@ local formulas=(
   wget
   xz # pyenv recommends
   zlib # pyenv recommends
+  zsh
 )
 
 local formulas_to_install=()
