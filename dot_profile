@@ -25,8 +25,12 @@ PATH="${HOME}/.cargo/bin:${HOME}/.local/bin:/usr/local/opt/fzf/bin:/usr/local/sb
 
 for dir in "$HOME"/.config/sh/*/; do
   [ -d "$dir" ] || continue
-  [ -d "${dir}/bin" ] && PATH="${dir}bin:${PATH}"
+  if [ -d "${dir}/bin" ]; then
+    PATH="${dir}bin:${PATH}"
+  fi
 
   # shellcheck disable=SC1090
-  [ -r "${dir}profile.sh" ] && . "${dir}profile.sh"
+  if [ -r "${dir}profile.sh" ]; then
+    . "${dir}profile.sh"
+  fi
 done
