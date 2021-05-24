@@ -26,7 +26,7 @@ for version_path in "${PYENV_ROOT}/versions/"*; do
 done
 
 if [ $# -eq 0 ]; then
-  set -- "2.7.14" "3.7.8"
+  set -- "3.7.8"
 fi
 
 if [ -d "$PYENV_ROOT" ]; then
@@ -36,6 +36,12 @@ echo-run git clone https://github.com/pyenv/pyenv.git "$PYENV_ROOT"
 echo-run git clone https://github.com/pyenv/pyenv-doctor.git "$PYENV_ROOT/plugins/pyenv-doctor"
 echo-run git clone https://github.com/pyenv/pyenv-update.git "$PYENV_ROOT/plugins/pyenv-update"
 echo-run git clone https://github.com/pyenv/pyenv-which-ext.git "$PYENV_ROOT/pyenv/pyenv-which-ext"
+
+for version in $@; do
+  echo-run pyenv install "$version" &
+done
+
+wait
 
 if [ $# -gt 0 ]; then
   echo-info "Setting global python versions to $*"
