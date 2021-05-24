@@ -3,7 +3,7 @@ name: Continuous integration
 on: [push]
 
 jobs:
-  test_new_install:
+  install:
     runs-on: macos-latest
     steps:
       - name: Install, init, and apply
