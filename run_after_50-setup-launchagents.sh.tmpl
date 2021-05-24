@@ -1,6 +1,8 @@
 {{- if (eq .chezmoi.os "darwin") -}}
 #!/bin/sh
 
+set -e
+
 echo-info "Setting up LaunchAgents"
 
 agents_path="${HOME}/Library/LaunchAgents"

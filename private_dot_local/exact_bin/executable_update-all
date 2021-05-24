@@ -2,7 +2,7 @@
 
 set -e
 
-if ! sudo --validate; then
+if ! sudo true; then
 # sudo echo "$SHELL" > /dev/null
 # if [[ $status -ne 0 ]]; then
   echo-info "We need sudo to do some stuff."
@@ -27,6 +27,12 @@ for i in {1..${#files}}; do
   echo "============================================================="
   echo "Running: \033[32m${file}\033[0m (${i}/${#files})"
   echo "============================================================="
-  "$HOME/.local/bin/$file"
-  [[ "$i" -lt "${#files}" ]] && echo
+  if "$HOME/.local/bin/$file"; then
+    echo-ok "${file} finished successfully"
+  else
+    echo-err "${file} failed with status $?"
+  fi
+  if [[ "$i" -lt "${#files}" ]];
+    echo
+  fi
 done
