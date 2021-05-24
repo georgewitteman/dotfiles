@@ -1,6 +1,5 @@
 #!/bin/sh
 
-exit
 set -e
 
 . "${HOME}/.profile"
