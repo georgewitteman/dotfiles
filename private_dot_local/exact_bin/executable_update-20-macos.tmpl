@@ -14,6 +14,13 @@ if (( ! $+commands[brew] )); then
   echo-eval '/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
 fi
 
+fetch_formulas() {
+  {
+    printf "%s\n" "$@"
+    brew deps --union "$@"
+  } | sort | uniq | xargs -L1 -P8 echo-run brew fetch
+}
+
 # Don't need to explicitly run update if we're running upgrade
 # echo-run command brew update
 
@@ -110,7 +117,8 @@ fi
 
 if [[ "${#formulas_to_install}" -ne 0 ]]; then
   echo "::group::Fetching homebrew formula and their dependencies"
-  echo-run brew fetch --deps $formulas_to_install
+  fetch_formulas $formulas_to_install
+  # echo-run brew fetch --deps $formulas_to_install
   echo "::endgroup::"
   echo "::group::Installing homebrew formula"
   echo-run command brew install --display-times $formulas_to_install

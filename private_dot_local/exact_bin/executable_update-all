@@ -40,11 +40,11 @@ for i in {1..${#files}}; do
     exit "$status_code"
   fi
 
-  if [ -n "$GITHUB_WORKFLOW" ]; then
-    echo "::group::"
-  fi
-
   if [[ "$i" -lt "${#files}" ]]; then
     echo
+  fi
+
+  if [ -n "$GITHUB_WORKFLOW" ]; then
+    echo "::endgroup::"
   fi
 done

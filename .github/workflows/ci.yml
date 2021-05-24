@@ -6,6 +6,12 @@ jobs:
   install:
     runs-on: macos-latest
     steps:
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_KEY }}
+          name: id_ed25519
+          if_key_exists: fail
       - name: Install, init, and apply
         shell: bash
         run: 'PATH="${PATH}:${HOME}/.local/bin" sh -c "$(curl -fsLS git.io/chezmoi)" -- init --depth=1 --apply georgewitteman'
