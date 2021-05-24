@@ -216,7 +216,7 @@ restore_venv() {
     if [ "${1:-}" != "--quiet" ]; then
       echo "Restoring '${SAVED_VENVS%%:*}'."
     fi
-    # shellcheck disable=SC1090
+    # shellcheck disable=SC1090,SC1091
     . "${SAVED_VENVS%%:*}/bin/activate"
     SAVED_VENVS="${SAVED_VENVS#${SAVED_VENVS%%:*}:}"
   fi

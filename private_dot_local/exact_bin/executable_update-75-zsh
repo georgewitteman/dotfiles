@@ -9,8 +9,7 @@ else
   echo-info "No zcompdump file to remove"
 fi
 
-if [ -z "$CI" ]; then
-  set -x
+if [ -t 0 ] && [ -t 1 ]; then
+  compaudit | xargs echo-run chmod g-w
+  echo-run zplug update || true
 fi
-compaudit | xargs echo-run chmod g-w
-echo-run zplug update || true

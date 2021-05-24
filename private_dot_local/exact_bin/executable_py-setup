@@ -18,7 +18,7 @@ if [ -z "$VIRTUAL_ENV" ]; then
     echo-run python3 -m venv "${project_root}/.venv"
   fi
   echo-info "Activating venv"
-  # shellcheck disable=SC1090
+  # shellcheck disable=SC1090,SC1091
   . "${project_root}/.venv/bin/activate"
 fi
 
