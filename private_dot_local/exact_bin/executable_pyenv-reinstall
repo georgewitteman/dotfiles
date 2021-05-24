@@ -37,7 +37,7 @@ echo-run git clone https://github.com/pyenv/pyenv-doctor.git "$PYENV_ROOT/plugin
 echo-run git clone https://github.com/pyenv/pyenv-update.git "$PYENV_ROOT/plugins/pyenv-update"
 echo-run git clone https://github.com/pyenv/pyenv-which-ext.git "$PYENV_ROOT/pyenv/pyenv-which-ext"
 
-for version in $@; do
+for version in "$@"; do
   echo-run pyenv install "$version" &
 done
 

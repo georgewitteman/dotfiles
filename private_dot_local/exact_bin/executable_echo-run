@@ -33,7 +33,7 @@ for _echo_run_current_arg in "$@"; do
       _echo_run_current_value="${_echo_run_current_value}'${_echo_run_part_before_single_quote}'"
     fi
 
-    if [ x"${_echo_run_part_before_single_quote}" = x"${_echo_run_current_arg_temp}" ]; then
+    if [ "${_echo_run_part_before_single_quote}" = "${_echo_run_current_arg_temp}" ]; then
       break
     fi
 
