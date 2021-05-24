@@ -54,7 +54,7 @@ local formulas=(
   htop
   hyperfine
   jq
-  nvim
+  neovim
   openssl # pyenv recommends
   pgcli
   pinentry-mac
@@ -77,8 +77,28 @@ local formulas_to_install=()
 local installed_formulas=()
 local formula
 for formula in $formulas; do
-  if (($brew_list[(Ie)$formula])); then
-    installed_formulas+=("$formula")
+  case "$formula" in
+    awscli)
+      if command -v aws >/dev/null 2>&1; then
+        installed_formulas+=("$formula")
+      fi
+      ;;
+    openssl)
+      if ls /usr/local/Cellar | grep -q openssl >/dev/null 2>&1; then
+        installed_formulas+=("$formula")
+      fi
+      ;;
+    *)
+      if (($brew_list[(Ie)$formula])); then
+        installed_formulas+=("$formula")
+      fi
+      ;;
+  esac
+done
+
+for formula in $formulas; do
+  if (($installed_formulas[(Ie)$formula])); then
+    # installed already
   else
     formulas_to_install+=("$formula")
   fi
