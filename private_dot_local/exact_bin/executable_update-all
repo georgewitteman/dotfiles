@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 
 set -e
 
@@ -15,11 +15,15 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
 # Using 'command ls' here because regular ls is aliased to add color and
 # formatting.
-local files=($(command ls "$HOME/.local/bin" | sort | grep update- | grep -v update-all))
+IFS=$'\n' read -r -d '' -a files < <(command ls "$HOME/.local/bin" | sort | grep update- | grep -v update-all; printf '\0')
 
-local i
-for i in {1..${#files}}; do
-  local file="${files[$i]}"
+echo "${files[@]}"
+
+for i in $(seq 1 "${#files[@]}"); do
+  file="${files[$i-1]}"
+  if ! command -v "$(basename "$file")" >/dev/null 2>&1; then
+    continue
+  fi
 
   if [ -n "$GITHUB_WORKFLOW" ]; then
     printf "::group::"
@@ -27,23 +31,20 @@ for i in {1..${#files}}; do
     echo "============================================================="
   fi
 
-  echo "Running: \033[32m${file}\033[0m (${i}/${#files})"
+  printf "Running: \033[32m%s\033[0m (%s/%s)\n" "$file" "$i" "${#files[@]}"
 
   if [ -z "$GITHUB_WORKFLOW" ]; then
     echo "============================================================="
   fi
 
   if ! "$HOME/.local/bin/$file"; then
-    status_code="$?"
-    echo-err "${file} failed with status $?"
-    exit "$status_code"
-  fi
-
-  if [[ "$i" -lt "${#files}" ]]; then
-    echo
+    echo-err "${file} failed"
+    exit 1
   fi
 
   if [ -n "$GITHUB_WORKFLOW" ]; then
     echo "::endgroup::"
+  elif [[ "$i" -lt "${#files[@]}" ]]; then
+    echo
   fi
 done

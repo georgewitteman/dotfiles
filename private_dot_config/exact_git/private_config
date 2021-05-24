@@ -1,3 +1,4 @@
+# vim: ft=gitconfig
 # This is Git's per-user configuration file.
 [user]
 	name = George Witteman
@@ -34,5 +35,5 @@
 	rebase = true
 [commit]
 	gpgsign = true
-
-# vim: ft=gitconfig
+[url "git@github.com:"]
+	insteadOf = https://github.com/

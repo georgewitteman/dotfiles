@@ -115,7 +115,7 @@ restart_sh() {
   # exec thinks that the name of the shell is actually an argument.
   set -- "$(ps -p $$ | tail -1 | awk '{print $4}')"
   set -- "${1#-}"
-  set -- "$(which "$1")"
+  set -- "$(command -v "$1")"
 
   if command -v zplug >/dev/null 2>&1; then
     echo_run zplug reinit

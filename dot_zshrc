@@ -20,10 +20,10 @@ fpath=("${HOME}/.config/zsh/" "${fpath[@]}")
 autoload -Uz "${HOME}/.config"/zsh/[A-Za-z]*
 if [ -t 0 ] && [ -t 1 ]; then
   autoload -Uz compinit && compinit -C -d "${HOME}/.zcompdump"
-fi
 
-if [ -f "${NVM_DIR:-${HOME}/.nvm}/bash_completion" ]; then
-  source "${NVM_DIR:-${HOME}/.nvm}/bash_completion"
+  if [ -f "${NVM_DIR:-${HOME}/.nvm}/bash_completion" ]; then
+    source "${NVM_DIR:-${HOME}/.nvm}/bash_completion"
+  fi
 fi
 
 echo-eval() { echo_eval "$@" }
@@ -214,4 +214,8 @@ setopt hist_verify
 #   new_or_switch_tmux default "$HOME"
 # fi
 # zprof
-test -e /Users/georgewitteman/.iterm2_shell_integration.zsh && source /Users/georgewitteman/.iterm2_shell_integration.zsh || true
+
+# Keep this at the end
+if [ -e "${HOME}/.iterm2_shell_integration.zsh" ]; then
+  . "${HOME}/.iterm2_shell_integration.zsh" || true
+fi

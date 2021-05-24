@@ -20,17 +20,34 @@ jobs:
         uses: actions/cache@v2
         if: startsWith(runner.os, 'macOS')
         with:
-          key: homebrew-cache-${{ hashFiles('~/Library/Caches/Homebrew/**') }}
+          key: homebrew-cache-${{ runner.os }}-${{ github.sha }}
           path: ~/Library/Caches/Homebrew
-          restore-keys: homebrew-cache-
+          restore-keys: homebrew-cache-${{ runner.os }}
       - name: Cache pyenv builds
         uses: actions/cache@v2
         with:
-          key: pyenv-cache-${{ hashFiles('~/.local/share/pyenv/cache/**') }}
+          key: pyenv-cache-${{ runner.os }}-${{ github.sha }}
           path: ~/.local/share/pyenv/cache
-          restore-keys: pyenv-cache-
-      - name: Install, init, and apply
-        run: 'sh -c "$(curl -fsLS git.io/chezmoi)" -- init --depth=1 --apply georgewitteman'
+          restore-keys: pyenv-cache-${{ runner.os }}
+
+      - name: Install
+        run: |
+          sh -c "$(curl -fsLS git.io/chezmoi)"
+          echo $BINDIR >> "$GITHUB_PATH"
+        env:
+          BINDIR: ${HOME}/.chezmoi_bin
+
+      - name: Checkout
+        run: |
+          set -x
+          chezmoi init --depth=1 "$GITHUB_REPOSITORY"
+          git -C $(chezmoi source-path) fetch origin "$GITHUB_SHA"
+          git -C $(chezmoi source-path) checkout "$GITHUB_SHA"
+          set +x
+      - name: Init and apply
+        run: |
+          chezmoi init
+          chezmoi apply
+
       - name: Shellcheck
-        if: startsWith(runner.os, 'macOS')
         run: 'sh -l -c "shellcheck-all"'
