@@ -1,15 +1,15 @@
 #!/usr/bin/env zsh
 
-set -e
-source "$HOME/.zshrc"
+# set -e
+# source "$HOME/.zshrc"
 
-if [[ -f "$HOME/.zcompdump" ]]; then
-  echo-run rm "$HOME/.zcompdump"
-else
-  echo-info "No zcompdump file to remove"
-fi
+# if [[ -f "$HOME/.zcompdump" ]]; then
+#   echo-run rm "$HOME/.zcompdump"
+# else
+#   echo-info "No zcompdump file to remove"
+# fi
 
-if [ -t 0 ] && [ -t 1 ]; then
-  compaudit | xargs echo-run chmod g-w
-  echo-run zplug update || true
-fi
+# if [ -t 0 ] && [ -t 1 ]; then
+#   compaudit | xargs echo-run chmod g-w
+#   echo-run zplug update || true
+# fi

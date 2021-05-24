@@ -4,4 +4,4 @@ set -e
 
 . "${HOME}/.profile"
 
-# update-all
+update-all
