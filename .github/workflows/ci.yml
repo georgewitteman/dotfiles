@@ -27,3 +27,6 @@ jobs:
       - name: Install, init, and apply
         shell: bash
         run: 'sh -c "$(curl -fsLS git.io/chezmoi)" -- init --depth=1 --apply georgewitteman'
+      - name: Shellcheck
+        shell: bash
+        run: 'sh -l -c "shellcheck-all"'

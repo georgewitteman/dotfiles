@@ -17,17 +17,19 @@ _files() {
   find "$path" -type f -not -path '*/\.git/*' -not -name 'tags'
 }
 
+exit_code=0
 for file in $(_files ~/.local/bin) ~/.shinit ~/.profile $(_files ~/.config/sh); do
   if [ ! -f "$file" ] || [ ! -r "$file" ]; then
     continue
   fi
   case $(head -1 "$file") in
-    *bash*) shellcheck "$file" ;;
-    */sh*) shellcheck "$file" ;;
-    *env\ sh*) shellcheck "$file" ;;
+    *bash*) shellcheck "$file" || exit_code=$? ;;
+    */sh*) shellcheck "$file" || exit_code=$? ;;
+    *env\ sh*) shellcheck "$file" || exit_code=$? ;;
     *)
       $verbose && echo-info "Skipping ${file}"
       continue
       ;;
   esac
 done
+exit "$exit_code"
