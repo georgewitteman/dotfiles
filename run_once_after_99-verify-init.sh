@@ -1,5 +1,6 @@
 #!/bin/sh
 
+exit
 set -e
 
 . "${HOME}/.profile"
@@ -33,8 +34,7 @@ assert_exit_0() {
   fi
 }
 
-assert_file_exists ${HOME}/.ssh/*.pub
-assert_exit_0 "grep -q github.com ~/.ssh/known_hosts"
+assert_file_exists "${HOME}/.zshrc"
 
 assert_cmd_exists rg
 assert_cmd_exists op

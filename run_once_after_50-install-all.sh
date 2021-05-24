@@ -4,4 +4,5 @@ set -e
 
 . "${HOME}/.profile"
 
-update-all
+# update-all
+update-20-macos
