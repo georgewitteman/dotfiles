@@ -17,8 +17,6 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 # formatting.
 IFS=$'\n' read -r -d '' -a files < <(command ls "$HOME/.local/bin" | sort | grep update- | grep -v update-all; printf '\0')
 
-echo "${files[@]}"
-
 for i in $(seq 1 "${#files[@]}"); do
   file="${files[$i-1]}"
   if ! command -v "$(basename "$file")" >/dev/null 2>&1; then

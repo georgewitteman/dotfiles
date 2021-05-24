@@ -37,3 +37,7 @@
 	gpgsign = true
 [url "git@github.com:"]
 	insteadOf = https://github.com/
+{{- if .is_work }}
+[includeIf "gitdir:{{ .work.path }}/*/"]
+	path = ~/.config/git/work
+{{- end }}

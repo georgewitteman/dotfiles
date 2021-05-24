@@ -1,4 +1,4 @@
-{{- if not (or .work (env "CI")) -}}
+{{- if not (or .is_work (env "CI")) -}}
 #!/bin/sh
 
 CLOUDFLARE_EMAIL="{{ .email }}" \
