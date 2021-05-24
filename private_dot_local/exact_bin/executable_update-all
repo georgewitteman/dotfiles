@@ -19,12 +19,19 @@ local files=($(command ls "$HOME/.local/bin" | sort | grep update- | grep -v upd
 local i
 for i in {1..${#files}}; do
   local file="${files[$i]}"
-  echo "============================================================="
+
   if [ -n "$GITHUB_WORKFLOW" ]; then
     printf "::group::"
+  else
+    echo "============================================================="
   fi
+
   echo "Running: \033[32m${file}\033[0m (${i}/${#files})"
-  echo "============================================================="
+
+  if [ -z "$GITHUB_WORKFLOW" ]; then
+    echo "============================================================="
+  fi
+
   if "$HOME/.local/bin/$file"; then
     echo-ok "${file} finished successfully"
   else
@@ -32,9 +39,11 @@ for i in {1..${#files}}; do
     echo-err "${file} failed with status $?"
     exit "$status_code"
   fi
+
   if [ -n "$GITHUB_WORKFLOW" ]; then
     echo "::group::"
   fi
+
   if [[ "$i" -lt "${#files}" ]]; then
     echo
   fi

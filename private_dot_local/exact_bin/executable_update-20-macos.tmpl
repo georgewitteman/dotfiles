@@ -109,8 +109,12 @@ if [[ "${#installed_formulas}" -ne 0 ]]; then
 fi
 
 if [[ "${#formulas_to_install}" -ne 0 ]]; then
-  echo-run command brew fetch $formulas_to_install
+  echo "::group::Fetching homebrew formula and their dependencies"
+  echo-run command brew fetch --deps $formulas_to_install
+  echo "::endgroup::"
+  echo "::group::Installing homebrew formula"
   echo-run command brew install $formulas_to_install
+  echo "::endgroup::"
 else
   echo-ok "No more formulas to install."
 fi
