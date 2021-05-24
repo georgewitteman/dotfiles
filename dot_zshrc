@@ -4,6 +4,10 @@ source "${HOME}/.shinit"
 for dir in "$HOME"/.config/sh/*/; do
   [ -d "$dir" ] || continue
 
+  if [ -n "$CI" ]; then
+    echo "Sourcing ${dir}init.zsh"
+  fi
+
   # shellcheck disable=SC1090
   [ -r "${dir}init.zsh" ] && . "${dir}init.zsh"
 done
