@@ -1,13 +1,13 @@
 {{- $work := false -}}
 {{- if stdinIsATTY -}}
-{{- $work = promptBool "Work machine" -}}
+{{- $work = promptBool "Is this a work computer (y/n)" -}}
 {{- end -}}
 
 {{- $work_email := "" -}}
 {{- $work_path := "" -}}
 {{- if $work -}}
-{{- $work_email = promptString "Work Email" -}}
-{{- $work_path = promptString "Work Path" -}}
+{{- $work_email = promptString "What is your work email" -}}
+{{- $work_path = promptString "Where are your work repositories located" -}}
 {{- end -}}
 
 onepassword:
