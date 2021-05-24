@@ -2,6 +2,8 @@
 
 set -e
 
+. "${HOME}/.profile"
+
 echo-info "Running tests"
 
 assert_file_exists() {

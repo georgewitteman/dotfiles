@@ -1,4 +1,5 @@
 #!/usr/bin/env zsh
+set -x
 
 local plugins_path="${HOME}/.config/zsh"
 local compdump_file="${HOME}/.zcompdump"
