@@ -32,10 +32,10 @@ fi
 if [ -d "$PYENV_ROOT" ]; then
   safe-run rm -rf "$PYENV_ROOT"
 fi
-echo-run git clone git@github.com:pyenv/pyenv.git "$PYENV_ROOT"
-echo-run git clone git@github.com:pyenv/pyenv-doctor.git "$PYENV_ROOT/plugins/pyenv-doctor"
-echo-run git clone git@github.com:pyenv/pyenv-update.git "$PYENV_ROOT/plugins/pyenv-update"
-echo-run git clone git@github.com:pyenv/pyenv-which-ext.git "$PYENV_ROOT/pyenv/pyenv-which-ext"
+echo-run git clone https://github.com/pyenv/pyenv.git "$PYENV_ROOT"
+echo-run git clone https://github.com/pyenv/pyenv-doctor.git "$PYENV_ROOT/plugins/pyenv-doctor"
+echo-run git clone https://github.com/pyenv/pyenv-update.git "$PYENV_ROOT/plugins/pyenv-update"
+echo-run git clone https://github.com/pyenv/pyenv-which-ext.git "$PYENV_ROOT/pyenv/pyenv-which-ext"
 
 if [ $# -gt 0 ]; then
   echo-info "Setting global python versions to $*"
