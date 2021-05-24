@@ -1,0 +1,32 @@
+#!/bin/sh
+
+set -e
+
+if ! op >/dev/null 2>&1; then
+  echo-err "1Password CLI not installed"
+  exit 1
+fi
+
+if [ ! -t 0 ]; then
+  echo-warn "Skipping GPG key import because stdin isn't a tty"
+  exit
+fi
+
+if gpg --list-keys "{{ .gpgkey }}" >/dev/null 2>&1; then
+  echo-ok "GPG keys already imported."
+  exit
+fi
+
+echo-info "Importing personal GPG keys"
+
+if ! op get account >/dev/null 2>&1; then
+  # shellcheck disable=SC2016
+  eval "$(op signin my.1password.com "{{ .email }}")"
+  # Verify we are signed in now
+  op get account >/dev/null 2>&1
+fi
+
+echo-eval 'op get document "Personal GPG Key - George Witteman (AE0381FB) – Public.asc" | gpg --batch --import'
+echo-eval 'op get document "Personal GPG Key - George Witteman (AE0381FB) – Secret.asc" | gpg --batch --import'
+
+echo-ok "GPG keys imported"

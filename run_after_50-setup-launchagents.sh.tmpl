@@ -19,4 +19,6 @@ for file in "$HOME"/.config/sh/*/LaunchAgents/*.plist; do
   echo-run launchctl unload "$dest"
   echo-run launchctl load "$dest"
 done
+
+echo-ok "LaunchAgents set up"
 {{ end -}}

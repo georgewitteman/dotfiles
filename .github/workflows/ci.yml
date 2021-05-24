@@ -8,4 +8,4 @@ jobs:
     steps:
       - name: Install, init, and apply
         shell: bash
-        run: 'PATH="${PATH}:${HOME}/.local/bin" sh -c "$(curl -fsLS git.io/chezmoi)" -- init --depth=1 --apply --verbose georgewitteman'
+        run: 'PATH="${PATH}:${HOME}/.local/bin" sh -c "$(curl -fsLS git.io/chezmoi)" -- init --depth=1 --apply georgewitteman'
