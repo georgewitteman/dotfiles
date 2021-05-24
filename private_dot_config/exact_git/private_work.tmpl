@@ -1,4 +1,6 @@
+{{ if .is_work -}}
 # vim: ft=gitconfig
 [user]
 	email = {{ .work.email }}
 	signingKey = {{ .work.signingkey }}
+{{ end -}}
