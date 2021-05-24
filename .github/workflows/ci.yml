@@ -11,6 +11,7 @@ jobs:
         with:
           key: ${{ secrets.SSH_KEY }}
           name: id_ed25519
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
           if_key_exists: fail
       - name: Install, init, and apply
         shell: bash
