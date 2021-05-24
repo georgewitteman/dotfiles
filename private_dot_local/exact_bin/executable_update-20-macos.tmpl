@@ -17,7 +17,6 @@ fi
 # Don't need to explicitly run update if we're running upgrade
 # echo-run command brew update
 
-echo-eval 'brew outdated -q | xargs -L1 -P8 brew fetch --deps'
 echo-run brew upgrade
 # echo-run command brew outdated
 # echo-warn "Skipping 'brew upgrade' since it's kind of slow."
@@ -111,7 +110,7 @@ fi
 
 if [[ "${#formulas_to_install}" -ne 0 ]]; then
   echo "::group::Fetching homebrew formula and their dependencies"
-  echo-eval "printf '%s\n' $formulas_to_install | xargs -L1 -P8 brew fetch --deps"
+  echo-run brew fetch --deps $formulas_to_install
   echo "::endgroup::"
   echo "::group::Installing homebrew formula"
   echo-run command brew install --display-times $formulas_to_install
