@@ -4,7 +4,10 @@ on: [push]
 
 jobs:
   install:
-    runs-on: macos-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macOS-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
@@ -29,4 +32,5 @@ jobs:
       - name: Install, init, and apply
         run: 'sh -c "$(curl -fsLS git.io/chezmoi)" -- init --depth=1 --apply georgewitteman'
       - name: Shellcheck
+        if: startsWith(runner.os, 'macOS')
         run: 'sh -l -c "shellcheck-all"'
