@@ -20,12 +20,20 @@ local i
 for i in {1..${#files}}; do
   local file="${files[$i]}"
   echo "============================================================="
+  if [ -n "$GITHUB_WORKFLOW" ]; then
+    printf "::group::"
+  fi
   echo "Running: \033[32m${file}\033[0m (${i}/${#files})"
   echo "============================================================="
   if "$HOME/.local/bin/$file"; then
     echo-ok "${file} finished successfully"
   else
+    status_code="$?"
     echo-err "${file} failed with status $?"
+    exit "$status_code"
+  fi
+  if [ -n "$GITHUB_WORKFLOW" ]; then
+    echo "::group::"
   fi
   if [[ "$i" -lt "${#files}" ]]; then
     echo
