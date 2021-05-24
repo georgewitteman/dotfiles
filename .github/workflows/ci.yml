@@ -22,13 +22,13 @@ jobs:
         with:
           key: homebrew-cache-${{ runner.os }}-${{ github.sha }}
           path: ~/Library/Caches/Homebrew
-          restore-keys: homebrew-cache-${{ runner.os }}
+          restore-keys: homebrew-cache-${{ runner.os }}-
       - name: Cache pyenv builds
         uses: actions/cache@v2
         with:
           key: pyenv-cache-${{ runner.os }}-${{ github.sha }}
           path: ~/.local/share/pyenv/cache
-          restore-keys: pyenv-cache-${{ runner.os }}
+          restore-keys: pyenv-cache-${{ runner.os }}-
 
       - name: Install
         run: |
