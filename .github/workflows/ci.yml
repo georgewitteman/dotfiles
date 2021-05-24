@@ -13,6 +13,17 @@ jobs:
           name: id_ed25519
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
           if_key_exists: fail
+      - name: Cache Homebrew downloads
+        uses: actions/cache@v2
+        if: startsWith(runner.os, 'macOS')
+        with:
+          key: homebrew-cache-1
+          path: ~/Library/Caches/Homebrew
+      - name: Cache pyenv builds
+        uses: actions/cache@v2
+        with:
+          key: pyenv-cache-1
+          path: ~/.local/share/pyenv/cache
       - name: Install, init, and apply
         shell: bash
         run: 'PATH="${PATH}:${HOME}/.local/bin" sh -c "$(curl -fsLS git.io/chezmoi)" -- init --depth=1 --apply georgewitteman'

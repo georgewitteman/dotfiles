@@ -1,10 +1,11 @@
-#!/usr/bin/env zsh -l
+#!/usr/bin/env zsh
 
 set -e
+source "$HOME/.zprofile"
 source "$HOME/.zshrc"
 
-if [[ -f "$HOME/.cache/zcompdump" ]]; then
-  echo-run rm "$HOME/.cache/zcompdump"
+if [[ -f "$HOME/.zcompdump" ]]; then
+  echo-run rm "$HOME/.zcompdump"
 else
   echo-info "No zcompdump file to remove"
 fi
