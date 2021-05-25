@@ -25,6 +25,9 @@ export FZF_DEFAULT_COMMAND="${FZF_DEFAULT_COMMAND:-fd --type f --hidden --exclud
 # Fixes gpg when "GPG Suite" is not installed (i.e. gpg is installed from homebrew)
 export GPG_TTY="$TTY"
 
+# https://github.com/Homebrew/brew/pull/10374
+export HOMEBREW_BOOTSNAP=1
+
 PATH="${HOME}/.cargo/bin:${HOME}/.local/bin:/usr/local/opt/fzf/bin:/usr/local/sbin:${PATH}"
 
 for dir in "$HOME"/.config/sh/*/; do
