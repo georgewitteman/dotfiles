@@ -31,7 +31,7 @@ assert_cmd_exists() {
 
 assert_exit_0() {
   if eval "$1"; then
-    echo-ok "The file '$1' succeeded"
+    echo-ok "The command '$1' succeeded"
   else
     echo-err "The command '$1' failed"
     exit 1

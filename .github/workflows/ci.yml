@@ -36,8 +36,8 @@ jobs:
 
       - name: Init and apply
         run: |
-          chezmoi init --no-tty
-          chezmoi apply --no-tty --exclude=scripts
+          chezmoi init --verbose --debug --no-tty
+          chezmoi apply --verbose --debug --no-tty --exclude=scripts
 
       - name: Install shellcheck (linux)
         if: ${{ runner.os == 'Linux' }}
