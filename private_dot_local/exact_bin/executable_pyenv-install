@@ -49,8 +49,6 @@ if $skip_existing; then
   set -- "$@" --skip-existing
 fi
 
-openssl_path="$(brew --prefix openssl)"
-sdk_path="$(xcrun --show-sdk-path)"
 
 case "$version" in
   3.8.* | 3.9.*)
@@ -58,6 +56,8 @@ case "$version" in
     exit $?
     ;;
   *)
+    openssl_path="$(brew --prefix openssl)"
+    sdk_path="$(xcrun --show-sdk-path)"
     # https://github.com/pyenv/pyenv/wiki/Common-build-problems
     # CFLAGS: "You can set your CFLAGS to accepted safe values to help get a little
     # more speed."

@@ -36,7 +36,6 @@ jobs:
           mkdir -p "$(dirname $(chezmoi source-path))"
           cp -r "$GITHUB_WORKSPACE" "$(chezmoi source-path)"
 
-
       - name: Get Date
         id: get-date
         run: |
@@ -49,13 +48,6 @@ jobs:
           key: homebrew-cache-${{ runner.os }}-${{ steps.get-date.outputs.date}}
           path: ~/Library/Caches/Homebrew
           restore-keys: homebrew-cache-${{ runner.os }}-
-      - name: Cache pyenv builds
-        if: ${{ !env.ACT }}
-        uses: actions/cache@v2
-        with:
-          key: pyenv-cache-${{ runner.os }}-${{ steps.get-date.outputs.date}}
-          path: ~/.local/share/pyenv/cache
-          restore-keys: pyenv-cache-${{ runner.os }}-
 
       - name: Init and apply
         run: |
