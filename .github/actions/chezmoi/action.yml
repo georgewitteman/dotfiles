@@ -4,6 +4,7 @@ runs:
   using: "composite"
   steps:
     - name: Install
+      shell: bash
       run: |
         sh -c "$(curl -fsLS git.io/chezmoi)"
         if [ -n "$GITHUB_PATH" ]; then
@@ -15,6 +16,7 @@ runs:
       env:
         BINDIR: ${HOME}/.chezmoi_bin
     - name: Copy repository to chezmoi
+      shell: bash
       run: |
         rm -rf "$(chezmoi source-path)"
         mkdir -p "$(dirname $(chezmoi source-path))"
