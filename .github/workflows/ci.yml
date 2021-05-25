@@ -86,16 +86,20 @@ jobs:
         if: ${{ runner.os == 'macOS' && !env.ACT }}
         uses: actions/cache@v2
         with:
-          key: homebrew-cache-${{ runner.os }}-${{ steps.get-date.outputs.date }}
+          key: homebrew-cache-${{ matrix.os }}-${{ steps.get-date.outputs.date }}
           path: ~/Library/Caches/Homebrew
-          restore-keys: homebrew-cache-${{ runner.os }}-
+          restore-keys: |
+            homebrew-cache-${{ matrix.os }}-
+            homebrew-cache-${{ runner.os }}-
       - name: Cache pyenv builds
         if: ${{ !env.ACT }}
         uses: actions/cache@v2
         with:
-          key: pyenv-${{ runner.os }}-${{ steps.get-date.outputs.date }}
+          key: pyenv-${{ matrix.os }}-${{ steps.get-date.outputs.date }}
           path: ~/.local/share/pyenv/cache
-          restore-keys: pyenv-${{ runner.os }}-
+          restore-keys: |
+            pyenv-${{ matrix.os }}-
+            pyenv-${{ runner.os }}-
 
       - name: Init and apply
         run: |
