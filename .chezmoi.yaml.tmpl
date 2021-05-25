@@ -1,5 +1,5 @@
 {{- $work := false -}}
-{{- if stdinIsATTY -}}
+{{- if and stdinIsATTY (not (env "CI")) -}}
 {{- $work = promptBool "Is this a work computer (y/n)" -}}
 {{- end -}}
 

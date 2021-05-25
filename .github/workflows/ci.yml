@@ -16,38 +16,49 @@ jobs:
           name: id_ed25519
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
           if_key_exists: fail
+
+      - uses: actions/checkout@v2
+
+      - name: Install
+        run: |
+          sh -c "$(curl -fsLS git.io/chezmoi)"
+          if [ -f "$GITHUB_PATH" ]; then
+            echo $BINDIR >> "$GITHUB_PATH"
+          else
+            echo ::add-path::${BINDIR}
+          fi
+        env:
+          BINDIR: ${HOME}/.chezmoi_bin
+      - name: Copy repository to chezmoi
+        run: |
+          rm -rf "$(chezmoi source-path)"
+          mkdir -p "$(dirname $(chezmoi source-path))"
+          cp -r "$GITHUB_WORKSPACE" "$(chezmoi source-path)"
+
       - name: Cache Homebrew downloads
+        if: ${{ runner.os == 'macOS' && !env.ACT }}
         uses: actions/cache@v2
-        if: startsWith(runner.os, 'macOS')
         with:
           key: homebrew-cache-${{ runner.os }}-${{ github.sha }}
           path: ~/Library/Caches/Homebrew
           restore-keys: homebrew-cache-${{ runner.os }}-
       - name: Cache pyenv builds
+        if: ${{ !env.ACT }}
         uses: actions/cache@v2
         with:
           key: pyenv-cache-${{ runner.os }}-${{ github.sha }}
           path: ~/.local/share/pyenv/cache
           restore-keys: pyenv-cache-${{ runner.os }}-
 
-      - name: Install
-        run: |
-          sh -c "$(curl -fsLS git.io/chezmoi)"
-          echo $BINDIR >> "$GITHUB_PATH"
-        env:
-          BINDIR: ${HOME}/.chezmoi_bin
-
-      - name: Checkout
-        run: |
-          set -x
-          chezmoi init --depth=1 "$GITHUB_REPOSITORY"
-          git -C $(chezmoi source-path) fetch origin "$GITHUB_SHA"
-          git -C $(chezmoi source-path) checkout "$GITHUB_SHA"
-          set +x
       - name: Init and apply
         run: |
-          chezmoi init
-          chezmoi apply
+          chezmoi init --no-tty
+          chezmoi apply --no-tty
 
+      - name: Install shellcheck
+        if: ${{ runner.os == 'Linux' }}
+        run: |
+          sudo apt-get --quiet --quiet --yes update
+          sudo apt-get --quiet --quiet --yes install shellcheck
       - name: Shellcheck
         run: 'sh -l -c "shellcheck-all"'

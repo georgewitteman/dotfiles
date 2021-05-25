@@ -54,3 +54,6 @@ env
 
 # https://github.com/austinjones/tab-rs
 tab.yml
+
+# https://github.com/nektos/act
+.secrets

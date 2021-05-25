@@ -8,6 +8,6 @@ tab.yml
 
 com.googlecode.iterm2.plist
 
-{{- if not .is_work -}}
+{{- if not (default false .is_work) -}}
 .local/bin/terraform
 {{- end -}}

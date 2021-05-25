@@ -35,10 +35,12 @@ assert_exit_0() {
 
 assert_file_exists "${HOME}/.zshrc"
 
+{{ if eq .chezmoi.os "darwin" -}}
 assert_cmd_exists rg
 assert_cmd_exists op
 assert_cmd_exists jq
 
 assert_exit_0 "nvim -v | grep -q NVIM"
+{{- end }}
 
 echo-ok "All tests ran successfully"
