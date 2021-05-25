@@ -16,30 +16,12 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
-
-      - name: Install
-        run: |
-          sh -c "$(curl -fsLS git.io/chezmoi)"
-          if [ -n "$GITHUB_PATH" ]; then
-            echo Adding ${BINDIR} to ${GITHUB_PATH}
-            echo $BINDIR >> "$GITHUB_PATH"
-          else
-            echo ::add-path::${BINDIR}
-          fi
-        env:
-          BINDIR: ${HOME}/.chezmoi_bin
-      - name: Copy repository to chezmoi
-        run: |
-          rm -rf "$(chezmoi source-path)"
-          mkdir -p "$(dirname $(chezmoi source-path))"
-          cp -r "$GITHUB_WORKSPACE" "$(chezmoi source-path)"
-
+      - uses: ./.github/actions/chezmoi
       - name: Init and apply
         run: |
           set -x
           chezmoi init --no-tty
           chezmoi apply --no-tty --exclude=scripts
-
       - name: Install shellcheck (linux)
         if: ${{ runner.os == 'Linux' }}
         run: |
@@ -66,23 +48,7 @@ jobs:
           if_key_exists: fail
 
       - uses: actions/checkout@v2
-
-      - name: Install
-        run: |
-          sh -c "$(curl -fsLS git.io/chezmoi)"
-          if [ -n "$GITHUB_PATH" ]; then
-            echo Adding ${BINDIR} to ${GITHUB_PATH}
-            echo $BINDIR >> "$GITHUB_PATH"
-          else
-            echo ::add-path::${BINDIR}
-          fi
-        env:
-          BINDIR: ${HOME}/.chezmoi_bin
-      - name: Copy repository to chezmoi
-        run: |
-          rm -rf "$(chezmoi source-path)"
-          mkdir -p "$(dirname $(chezmoi source-path))"
-          cp -r "$GITHUB_WORKSPACE" "$(chezmoi source-path)"
+      - uses: ./.github/actions/chezmoi
 
       - name: Get date for cache key
         id: get-date

@@ -1,0 +1,21 @@
+name: 'Setup chezmoi'
+description: 'Install chezmoi and move source files to home directory'
+runs:
+  using: "composite"
+  steps:
+    - name: Install
+      run: |
+        sh -c "$(curl -fsLS git.io/chezmoi)"
+        if [ -n "$GITHUB_PATH" ]; then
+          echo Adding ${BINDIR} to ${GITHUB_PATH}
+          echo $BINDIR >> "$GITHUB_PATH"
+        else
+          echo ::add-path::${BINDIR}
+        fi
+      env:
+        BINDIR: ${HOME}/.chezmoi_bin
+    - name: Copy repository to chezmoi
+      run: |
+        rm -rf "$(chezmoi source-path)"
+        mkdir -p "$(dirname $(chezmoi source-path))"
+        cp -r "$GITHUB_WORKSPACE" "$(chezmoi source-path)"
