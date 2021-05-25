@@ -33,11 +33,14 @@ jobs:
           chezmoi init --no-tty
           chezmoi apply --no-tty --exclude=scripts
 
-      - name: Install shellcheck
+      - name: Install shellcheck (linux)
         if: ${{ runner.os == 'Linux' }}
         run: |
           sudo apt-get --quiet --quiet --yes update
           sudo apt-get --quiet --quiet --yes install shellcheck
+      - name: Install shellcheck (macos)
+        if: ${{ runner.os == 'macOS' }}
+        run: brew install shellcheck
       - name: Shellcheck
         run: 'sh -l -c "shellcheck-all"'
 
@@ -91,7 +94,7 @@ jobs:
         uses: actions/cache@v2
         with:
           key: pyenv-${{ runner.os }}-${{ steps.get-date.outputs.date }}
-          path: ~/.local/share/pyenv
+          path: ~/.local/share/pyenv/cache
           restore-keys: pyenv-${{ runner.os }}-
 
       - name: Init and apply

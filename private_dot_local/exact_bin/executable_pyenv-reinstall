@@ -32,7 +32,10 @@ fi
 tmp="$(mktemp -d)"
 
 if [ -d "${PYENV_ROOT}/cache" ]; then
+  echo "${PYENV_ROOT}/cache exists"
   echo-run cp -r "${PYENV_ROOT}/cache" "$tmp"
+else
+  echo "${PYENV_ROOT}/cache does not exist"
 fi
 
 if [ -d "$PYENV_ROOT" ]; then
@@ -49,6 +52,8 @@ echo-run git clone https://github.com/pyenv/pyenv-which-ext.git "$PYENV_ROOT/pye
 
 if [ -d "${tmp}/cache" ]; then
   echo-run mv "${tmp}/cache" "${PYENV_ROOT}/cache"
+else
+  echo-run mkdir -p "${PYENV_ROOT}/cache"
 fi
 
 for version in "$@"; do
