@@ -54,6 +54,8 @@ jobs:
         run: |
           chezmoi init --no-tty
           chezmoi apply --no-tty
+        env:
+          GIT_SSH_COMMAND: ssh -i ${{ env.HOME }}/.ssh/id_ed25519 -o "UserKnownHostsFile ${{ env.HOME }}/.ssh/known_hosts"
 
       - name: Install shellcheck
         if: ${{ runner.os == 'Linux' }}

@@ -1,5 +1,9 @@
 #!/bin/sh
 
+if [ -n "$GITHUB_WORKFLOW" ]; then
+  echo "::group::Creating SSH key"
+fi
+
 set -e
 
 TYPE="ed25519"
@@ -18,3 +22,7 @@ else
 fi
 
 echo "Run 'cat ${FILE}.pub | pbcopy' to copy it to clipboard."
+
+if [ -n "$GITHUB_WORKFLOW" ]; then
+  echo "::endgroup::"
+fi

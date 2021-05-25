@@ -1,5 +1,9 @@
 #!/bin/sh
 
+if [ -n "$GITHUB_WORKFLOW" ]; then
+  echo "::group::Setup GitHub SSH keys"
+fi
+
 set -e
 
 if ! ssh-keygen -F github.com >/dev/null 2>&1; then
@@ -22,4 +26,8 @@ if ! ssh-keygen -F github.com >/dev/null 2>&1; then
   cat "$tmpfile" >> $HOME/.ssh/known_hosts
 else
   echo "github.com ssh key already in ~/.ssh/known_hosts"
+fi
+
+if [ -n "$GITHUB_WORKFLOW" ]; then
+  echo "::endgroup::"
 fi

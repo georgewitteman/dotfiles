@@ -4,15 +4,20 @@ set -e
 
 . "${HOME}/.profile"
 
+if [ -n "$GITHUB_WORKFLOW" ]; then
+  printf "::group::"
+fi
 echo-info "Running tests"
 
-assert_file_exists() {
-  if [ -f "$1" ]; then
-    echo-ok "The file '$1' exists"
-  else
-    echo-err "The file '$1' does not exist"
-    exit 1
-  fi
+assert_files_exist() {
+  for file in "$@"; do
+    if [ -f "$file" ]; then
+      echo-ok "The file '${file}' exists"
+    else
+      echo-err "The file '${file}' does not exist"
+      exit 1
+    fi
+  done
 }
 
 assert_cmd_exists() {
@@ -33,7 +38,8 @@ assert_exit_0() {
   fi
 }
 
-assert_file_exists "${HOME}/.zshrc"
+assert_files_exist "${HOME}/.zshrc"
+assert_files_exist ${HOME}/.ssh/id_*
 
 {{ if eq .chezmoi.os "darwin" -}}
 assert_cmd_exists rg
@@ -43,4 +49,15 @@ assert_cmd_exists jq
 assert_exit_0 "nvim -v | grep -q NVIM"
 {{- end }}
 
+if [ -n "$CI" ]; then
+  echo "Running CI only tests"
+
+  assert_exit_0 pyenv-reinstall
+  assert_files_exist ${PYENV_ROOT}/versions/*/bin/python
+fi
+
 echo-ok "All tests ran successfully"
+
+if [ -n "$GITHUB_WORKFLOW" ]; then
+  echo "::endgroup::"
+fi

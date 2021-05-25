@@ -10,7 +10,7 @@ if ! op >/dev/null 2>&1; then
 fi
 
 if [ ! -t 0 ] || [ -n "$CI" ]; then
-  echo-warn "Skipping GPG key import because stdin isn't a tty"
+  echo-ok "Skipping GPG key import because stdin isn't a tty"
   exit
 fi
 
