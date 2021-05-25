@@ -52,6 +52,7 @@ assert_exit_0 "nvim -v | grep -q NVIM"
 if [ -n "$CI" ]; then
   echo "Running CI only tests"
 
+  echo-run rm -rf "${PYENV_ROOT}"
   assert_exit_0 pyenv-reinstall
   assert_files_exist ${PYENV_ROOT}/versions/*/bin/python
 fi

@@ -22,7 +22,8 @@ jobs:
       - name: Install
         run: |
           sh -c "$(curl -fsLS git.io/chezmoi)"
-          if [ -f "$GITHUB_PATH" ]; then
+          if [ -n "$GITHUB_PATH" ]; then
+            echo Adding ${BINDIR} to ${GITHUB_PATH}
             echo $BINDIR >> "$GITHUB_PATH"
           else
             echo ::add-path::${BINDIR}
