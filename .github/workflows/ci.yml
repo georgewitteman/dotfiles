@@ -1,4 +1,4 @@
-name: Continuous integration
+name: CI
 
 on:
   push:
@@ -28,7 +28,7 @@ jobs:
       - name: Shellcheck
         run: 'sh -l -c "shellcheck-all"'
 
-  apply:
+  scripts:
     strategy:
       matrix:
         os: [ubuntu-latest, ubuntu-18.04, macOS-latest]
