@@ -29,13 +29,27 @@ if [ $# -eq 0 ]; then
   set -- "3.7.8"
 fi
 
+tmp="$(mktemp -d)"
+
+if [ -d "${PYENV_ROOT}/cache" ]; then
+  echo-run cp -r "${PYENV_ROOT}/cache" "$tmp"
+fi
+
 if [ -d "$PYENV_ROOT" ]; then
-  safe-run rm -rf "$PYENV_ROOT"
+  if [ -n "$CI" ]; then
+    echo-run rm -rf "$PYENV_ROOT"
+  else
+    safe-run rm -rf "$PYENV_ROOT"
+  fi
 fi
 echo-run git clone https://github.com/pyenv/pyenv.git "$PYENV_ROOT"
 echo-run git clone https://github.com/pyenv/pyenv-doctor.git "$PYENV_ROOT/plugins/pyenv-doctor"
 echo-run git clone https://github.com/pyenv/pyenv-update.git "$PYENV_ROOT/plugins/pyenv-update"
 echo-run git clone https://github.com/pyenv/pyenv-which-ext.git "$PYENV_ROOT/pyenv/pyenv-which-ext"
+
+if [ -d "${tmp}/cache" ]; then
+  echo-run mv "${tmp}/cache" "${PYENV_ROOT}/cache"
+fi
 
 for version in "$@"; do
   echo-run pyenv install "$version" &
