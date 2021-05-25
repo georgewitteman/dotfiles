@@ -3,10 +3,48 @@ name: Continuous integration
 on: [push]
 
 jobs:
-  install:
+  shellcheck:
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install
+        run: |
+          sh -c "$(curl -fsLS git.io/chezmoi)"
+          if [ -n "$GITHUB_PATH" ]; then
+            echo Adding ${BINDIR} to ${GITHUB_PATH}
+            echo $BINDIR >> "$GITHUB_PATH"
+          else
+            echo ::add-path::${BINDIR}
+          fi
+        env:
+          BINDIR: ${HOME}/.chezmoi_bin
+      - name: Copy repository to chezmoi
+        run: |
+          rm -rf "$(chezmoi source-path)"
+          mkdir -p "$(dirname $(chezmoi source-path))"
+          cp -r "$GITHUB_WORKSPACE" "$(chezmoi source-path)"
+
+      - name: Init and apply
+        run: |
+          chezmoi init --no-tty
+          chezmoi apply --no-tty --exclude=scripts
+
+      - name: Install shellcheck
+        if: ${{ runner.os == 'Linux' }}
+        run: |
+          sudo apt-get --quiet --quiet --yes update
+          sudo apt-get --quiet --quiet --yes install shellcheck
+      - name: Shellcheck
+        run: 'sh -l -c "shellcheck-all"'
+
+  apply:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, ubuntu-18.04, macOS-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Install SSH key
@@ -62,11 +100,3 @@ jobs:
           chezmoi apply --no-tty
         env:
           GIT_SSH_COMMAND: ssh -i ${HOME}/.ssh/id_ed25519 -o "UserKnownHostsFile ${HOME}/.ssh/known_hosts"
-
-      - name: Install shellcheck
-        if: ${{ runner.os == 'Linux' }}
-        run: |
-          sudo apt-get --quiet --quiet --yes update
-          sudo apt-get --quiet --quiet --yes install shellcheck
-      - name: Shellcheck
-        run: 'sh -l -c "shellcheck-all"'
