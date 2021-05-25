@@ -18,6 +18,9 @@ runs:
     - name: Copy repository to chezmoi
       shell: bash
       run: |
+        set -x
         rm -rf "$(chezmoi source-path)"
         mkdir -p "$(dirname $(chezmoi source-path))"
         cp -r "$GITHUB_WORKSPACE" "$(chezmoi source-path)"
+        chezmoi init --no-tty
+        chezmoi apply --no-tty --exclude=scripts
