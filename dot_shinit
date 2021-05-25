@@ -89,7 +89,7 @@ remove_from_path() {
       *:"$1"/*:*) REPLY="${REPLY%%${1}*}${REPLY#*${1}*:}" ;;
       *"$1"/*) REPLY="${REPLY%%${1}*}" ;;
       *)
-        echo ${REPLY%:}
+        echo "${REPLY%:}"
         break
         ;;
     esac
