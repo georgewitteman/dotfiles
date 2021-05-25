@@ -11,16 +11,7 @@ fi
 pyenv() {
   command pyenv "$@" || return "$?"
 
-  while true; do
-    case ":$PATH" in
-      *:"$PYENV_ROOT"/*:*) PATH="${PATH%%${PYENV_ROOT}*}${PATH#*${PYENV_ROOT}*:}" ;;
-      *"$PYENV_ROOT"/*) PATH="${PATH%%${PYENV_ROOT}*}" ;;
-      *)
-        PATH="${PATH%:}"
-        break
-        ;;
-    esac
-  done
+  PATH="$(remove_from_path "$PYENV_ROOT")"
 
   if [ -f "${PYENV_ROOT}/version" ]; then
     while IFS= read -r line || [ -n "$line" ]; do

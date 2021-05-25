@@ -77,10 +77,24 @@ if command -v brew >/dev/null; then
       echo-warn "Don't run brew from inside a venv. https://docs.brew.sh/Homebrew-and-Python"
       return 1
     fi
-    command brew "$@"
+    env "PATH=$(remove_from_path "$PYENV_ROOT")" command brew "$@" || return $?
   }
   alias brew-upgrade='echo_run brew upgrade --ignore-pinned --display-times'
 fi
+
+remove_from_path() {
+  REPLY="$PATH"
+  while true; do
+    case ":$REPLY" in
+      *:"$1"/*:*) REPLY="${REPLY%%${1}*}${REPLY#*${1}*:}" ;;
+      *"$1"/*) REPLY="${REPLY%%${1}*}" ;;
+      *)
+        echo ${REPLY%:}
+        break
+        ;;
+    esac
+  done
+}
 
 clone() {
   set -- "$(FORCE_COLOR=1 echo-run command git clone "$@" 2>&1 | tee /dev/stderr | grep 'Cloning into' | cut -d \' -f2)" || return $?
