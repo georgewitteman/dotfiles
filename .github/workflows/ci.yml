@@ -52,16 +52,16 @@ jobs:
         if: ${{ !env.ACT }}
         uses: actions/cache@v2
         with:
-          key: pyenv${{ runner.os }}-${{ steps.get-date.outputs.date }}
+          key: pyenv-${{ runner.os }}-${{ steps.get-date.outputs.date }}
           path: ~/.local/share/pyenv
-          restore-keys: pyenv${{ runner.os }}-
+          restore-keys: pyenv-${{ runner.os }}-
 
       - name: Init and apply
         run: |
           chezmoi init --no-tty
           chezmoi apply --no-tty
         env:
-          GIT_SSH_COMMAND: ssh -i ${{ env.HOME }}/.ssh/id_ed25519 -o "UserKnownHostsFile ${{ env.HOME }}/.ssh/known_hosts"
+          GIT_SSH_COMMAND: ssh -i ${HOME}/.ssh/id_ed25519 -o "UserKnownHostsFile ${HOME}/.ssh/known_hosts"
 
       - name: Install shellcheck
         if: ${{ runner.os == 'Linux' }}
