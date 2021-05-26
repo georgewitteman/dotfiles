@@ -7,27 +7,7 @@ on:
     # 5am PT daily
     - cron: '30 12 * * *'
 
-
 jobs:
-  shellcheck:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macOS-latest]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v2
-      - uses: ./.github/actions/chezmoi
-      - name: Install shellcheck (linux)
-        if: ${{ runner.os == 'Linux' }}
-        run: |
-          sudo apt-get --quiet --quiet --yes update
-          sudo apt-get --quiet --quiet --yes install shellcheck
-      - name: Install shellcheck (macos)
-        if: ${{ runner.os == 'macOS' }}
-        run: brew install shellcheck
-      - name: Shellcheck
-        run: 'sh -l -c "shellcheck-all"'
-
   scripts:
     strategy:
       matrix:
