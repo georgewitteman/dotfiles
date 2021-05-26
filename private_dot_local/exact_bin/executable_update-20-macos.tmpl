@@ -11,12 +11,6 @@ fi
 
 echo-run brew upgrade
 
-if brew list universal-ctags >/dev/null 2>&1; then
-  echo-ok "universal-ctags already installed"
-else
-  echo-run command brew install --HEAD universal-ctags/universal-ctags/universal-ctags
-fi
-
 {
   echo 'tap "georgewitteman/taps"'
   echo 'brew "tree"'
@@ -46,6 +40,7 @@ fi
   echo 'brew "xz"' # pyenv recommends
   echo 'brew "zlib"' # pyenv recommends
   echo 'brew "zsh"'
+  echo 'brew "universal-ctags"'
   if ! command -v aws >/dev/null 2>&1; then
     echo 'brew "awscli"'
   fi
