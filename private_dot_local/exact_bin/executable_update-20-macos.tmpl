@@ -47,5 +47,5 @@ echo-run brew upgrade
   if ! ls /usr/local/Cellar/*openssl* >/dev/null 2>&1; then
     echo 'brew "openssl"'
   fi
-} | echo-run brew bundle --no-lock --file=-
+} | echo-run brew bundle --no-lock --verbose --file=-
 {{ end -}}
