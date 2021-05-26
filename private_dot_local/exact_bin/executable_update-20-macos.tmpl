@@ -1,40 +1,21 @@
 {{- if eq .chezmoi.os "darwin" -}}
-#!/usr/bin/env zsh
+#!/bin/sh
 
 set -e
 
-if [[ ! "$OSTYPE" =~ "darwin" ]]; then
-  echo-warn "Not on macOS. Skipping macOS."
-  exit
-fi
-
-# install homebrew if it's missing
-if (( ! $+commands[brew] )); then
+# Install homebrew if it's missing
+if ! command -v brew >/dev/null 2>&1; then
   echo-info "Installing homebrew"
   echo-eval '/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
 fi
 
-# Don't need to explicitly run update if we're running upgrade
-# echo-run command brew update
-
 echo-run brew upgrade
-# echo-run command brew outdated
-# echo-warn "Skipping 'brew upgrade' since it's kind of slow."
 
-local brew_list=($(command brew list --formula -1))
-
-if (( $brew_list[(Ie)universal-ctags] )); then
+if brew list universal-ctags >/dev/null 2>&1; then
   echo-ok "universal-ctags already installed"
 else
   echo-run command brew install --HEAD universal-ctags/universal-ctags/universal-ctags
 fi
-
-# Temporily not installing HEAD because a required patch is broken
-# if (( $brew_list[(Ie)vim] )); then
-#   echo-ok 'vim already installed'
-# else
-#   echo-run command brew install --HEAD vim
-# fi
 
 {
   echo 'tap "georgewitteman/taps"'
@@ -71,5 +52,5 @@ fi
   if ! ls /usr/local/Cellar | grep -q openssl >/dev/null 2>&1; then
     echo 'brew "openssl"'
   fi
-} | echo-run brew bundle --no-lock --file=/dev/stdin
+} | echo-run brew bundle --no-lock --file=-
 {{ end -}}
