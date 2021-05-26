@@ -1,3 +1,4 @@
+{{- if not (eq .chezmoi.osRelease.versionID "18.04") -}}
 #!/bin/sh
 
 set -e
@@ -20,3 +21,4 @@ echo-ok "Shellcheck ran successfully"
 if [ -n "$GITHUB_WORKFLOW" ]; then
   echo "::endgroup::"
 fi
+{{ end -}}

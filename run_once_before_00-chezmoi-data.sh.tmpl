@@ -1,0 +1,10 @@
+{{- if env "GITHUB_WORKFLOW" -}}
+#!/bin/sh
+
+echo "::group::Available chezmoi data"
+
+echo chezmoi data
+chezmoi data
+
+echo "::endgroup::"
+{{ end -}}

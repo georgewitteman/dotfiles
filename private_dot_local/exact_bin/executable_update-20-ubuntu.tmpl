@@ -1,0 +1,9 @@
+{{- if eq .chezmoi.os "linux" -}}
+#!/bin/sh
+
+set -e
+
+echo-run sudo apt --quiet --quiet --yes update
+echo-run sudo apt --quiet --quiet --yes install shellcheck
+
+{{ end -}}
