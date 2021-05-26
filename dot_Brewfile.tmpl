@@ -1,0 +1,42 @@
+{{- if eq .chezmoi.os "darwin" -}}
+
+tap "georgewitteman/taps"
+
+brew "tree"
+brew "chezmoi"
+brew "curl"
+brew "fd"
+brew "fzf"
+brew "git"
+brew "gnupg"
+brew "htop"
+brew "hyperfine"
+brew "jq"
+brew "neovim"
+brew "openssl" # pyenv recommends
+brew "pgcli"
+brew "pinentry-mac"
+brew "readline" # pyenv recommends
+brew "ripgrep"
+brew "rsync"
+brew "shellcheck"
+brew "sqlite" # pyenv recommends
+brew "starship"
+brew "terraform"
+brew "tmux"
+brew "tree"
+brew "wget"
+brew "xz" # pyenv recommends
+brew "zlib" # pyenv recommends
+brew "zsh"
+brew "universal-ctags"
+
+{{ if not (lookPath "aws") }}
+brew "awscli"
+{{ end }}
+
+{{ if not (eq (output "sh" "-c" "ls /usr/local/Cellar/*openssl* || true" | trim) "") }}
+brew "openssl"
+{{ end }}
+
+{{ end -}}

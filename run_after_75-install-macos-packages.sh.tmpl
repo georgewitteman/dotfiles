@@ -1,0 +1,12 @@
+{{- if eq .chezmoi.os "darwin" -}}
+#!/bin/sh
+
+# Install homebrew if it's missing
+if ! command -v brew >/dev/null 2>&1; then
+  echo-info "Installing homebrew"
+  eval '/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
+fi
+
+echo-run brew update --quiet
+echo-run brew bundle --global --no-lock
+{{ end -}}
