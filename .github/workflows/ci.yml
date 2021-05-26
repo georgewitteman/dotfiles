@@ -25,30 +25,6 @@ jobs:
       - uses: actions/checkout@v2
       - uses: ./.github/actions/chezmoi
 
-      - name: Get date for cache key
-        id: get-date
-        run: |
-          echo "::set-output name=date::$(/bin/date -u "+%Y%m%d")"
-        shell: bash
-      - name: Cache Homebrew downloads
-        if: ${{ runner.os == 'macOS' && !env.ACT }}
-        uses: actions/cache@v2
-        with:
-          key: homebrew-cache-${{ matrix.os }}-${{ steps.get-date.outputs.date }}
-          path: ~/Library/Caches/Homebrew
-          restore-keys: |
-            homebrew-cache-${{ matrix.os }}-
-            homebrew-cache-${{ runner.os }}-
-      - name: Cache pyenv builds
-        if: ${{ !env.ACT }}
-        uses: actions/cache@v2
-        with:
-          key: pyenv-${{ matrix.os }}-${{ steps.get-date.outputs.date }}
-          path: ~/.local/share/pyenv/cache
-          restore-keys: |
-            pyenv-${{ matrix.os }}-
-            pyenv-${{ runner.os }}-
-
       - run: chezmoi apply --no-tty
         env:
           GIT_SSH_COMMAND: ssh -i ${HOME}/.ssh/id_ed25519 -o "UserKnownHostsFile ${HOME}/.ssh/known_hosts"
