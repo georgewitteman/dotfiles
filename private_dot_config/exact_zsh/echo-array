@@ -1,9 +1,0 @@
-#!/usr/bin/env zsh
-
-local variable_name="${1:-path}"
-local count="${#${(P)variable_name}}"
-local width="${#count}"
-local i
-for i in {1..$count}; do
-  echo "${(l:$width:)i}: ${${(P)variable_name}[$i]}"
-done

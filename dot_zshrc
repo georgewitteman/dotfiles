@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+# vim: ft=zsh
 source "${HOME}/.shinit"
 
 for dir in "$HOME"/.config/sh/*/; do
@@ -32,6 +32,23 @@ safe-run() { safe_run "$@" }
 
 alias echo-path="echo-array path"
 alias echo-fpath="echo-array fpath"
+
+echo-array() {
+  local variable_name="${1:-path}"
+  local count="${#${(P)variable_name}}"
+  local width="${#count}"
+  local i
+  for i in {1..$count}; do
+    echo "${(l:$width:)i}: ${${(P)variable_name}[$i]}"
+  done
+}
+
+echo-assoc-array() {
+  local key val var_name="$1"
+  for key val ("${(@Pkv)var_name}"); do
+    echo "$key -> $val"
+  done
+}
 
 # Use menu for autocompletion when number of items >= 2
 zstyle ':completion:*' menu select=2
@@ -107,7 +124,6 @@ bindkey '^[d' kill-word # alt-d
 bindkey '^[#' pound-insert # alt-#
 bindkey '^[[Z' reverse-menu-complete # shift-tab
 bindkey '^[.' insert-last-word
-
 
 if command -v fzf &>/dev/null && command -v fd &>/dev/null; then
   fzf-file-widget() {

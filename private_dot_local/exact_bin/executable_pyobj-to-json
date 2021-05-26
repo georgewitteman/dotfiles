@@ -1,18 +1,15 @@
-#!/usr/bin/env zsh
-
-local line
-local pyobj
+#!/usr/bin/env bash
 
 if [ -p /dev/stdin ]; then
-  while read line; do
+  while read -r line; do
     pyobj+="$line\n"
   done
   pyobj+="$line"
 else
-  pyobj="$@"
+  pyobj="$*"
 fi
 
-local from_clipboard
+from_clipboard
 if [[ -z "$pyobj" ]]; then
   pyobj="$(pbpaste)"
   from_clipboard=1
@@ -23,7 +20,7 @@ if [[ -z "$pyobj" ]]; then
 fi
 
 # The `-` means read from stdin
-local output="$(python3 - << EOF
+output="$(python3 - << EOF
 import json
 try:
     obj = $pyobj

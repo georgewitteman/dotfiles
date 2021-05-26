@@ -1,27 +1,45 @@
-#!/usr/bin/env zsh
+#!/bin/sh
 
-local USAGE="Change the author of a commit.
+USAGE="Change the author of a commit.
 
 Usage:
-  ${0:t} -h | --help
-  ${0:t} --name <name> --email <email>
+  $(basename "$0") -h | --help
+  $(basename "$0") -n <name> -e <email>
+  $(basename "$0") --name <name> --email <email>
 "
 
-local args arg new_name new_email
-zparseopts -A args -E -D -F -- h -help -name: -email: || return "$status"
+die() {
+  [ "$#" -ge 2 ] && echo-err "$2"
+  exit "$1"
+}
 
-for arg in ${(k)args}; do
-  case "$arg" in
-    -h | --help) echo "$USAGE"; return ;;
-    --name) new_name="${args[$arg]}" ;;
-    --email) new_email="${args[$arg]}" ;;
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    -[[:alnum:]][[:alnum:]]*)
+      _value="-${1##-?}"
+      _arg="${1%%${1##-?}}"
+      ;;
   esac
+  if [ -n "${_arg:-}${_value:-}" ]; then
+    shift
+    set -- "$_arg" "$_value" "$@"
+  fi
+  unset _arg _value
+  case "$1" in
+    -h | --help) echo "$USAGE"; exit ;;
+    -n | --name) new_name="$2"; shift ;;
+    -e | --email) new_email="$2"; shift ;;
+    -- ) shift; break ;;
+    -?*) die 1 "unknown option: ${1}" ;;
+    *) break ;;
+  esac
+  shift
 done
 
-if [[ -z "$new_name" || -z "$new_email" ]]; then
+if [ -z "$new_name" ] || [ -z "$new_email" ]; then
   echo-err 'A name and email are required.'
   echo "$USAGE"
-  return 1
+  exit 1
 fi
 
-echo-run git commit --amend --author="${new_name} <${new_email}>"
+safe-run git commit --amend --author="${new_name} <${new_email}>"

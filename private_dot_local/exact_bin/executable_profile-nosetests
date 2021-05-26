@@ -1,7 +1,7 @@
-#!/usr/bin/env zsh
+#!/bin/sh
 
-local file="$(mktemp).profile"
-time python -m cProfile -o "$file" $(which nosetests) $@
+file="$(mktemp).profile"
+time python -m cProfile -o "$file" "$(which nosetests)" "$@"
 echo
 echo "Profile: $file"
 echo "Run: snakeviz $file"

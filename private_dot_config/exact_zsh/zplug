@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+# vim: ft=zsh
 
 local plugins_path="${HOME}/.config/zsh"
 local compdump_file="${HOME}/.zcompdump"

@@ -6,7 +6,7 @@ set -e
 # Install homebrew if it's missing
 if ! command -v brew >/dev/null 2>&1; then
   echo-info "Installing homebrew"
-  echo-eval '/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
+  eval '/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
 fi
 
 echo-run brew upgrade
@@ -49,7 +49,7 @@ fi
   if ! command -v aws >/dev/null 2>&1; then
     echo 'brew "awscli"'
   fi
-  if ! ls /usr/local/Cellar | grep -q openssl >/dev/null 2>&1; then
+  if ! ls /usr/local/Cellar/*openssl* >/dev/null 2>&1; then
     echo 'brew "openssl"'
   fi
 } | echo-run brew bundle --no-lock --file=-

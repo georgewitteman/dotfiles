@@ -1,12 +1,9 @@
-#!/usr/bin/env zsh
+#!/bin/sh
 
-local remote_branches=($(
-  git for-each-ref --sort=committerdate refs/remotes/origin \
+for ref in $(git for-each-ref --sort=committerdate refs/remotes/origin \
     --format='%(authoremail) %(refname)' \
     | grep "$(git config user.email)" \
     | grep origin \
-    | cut -d ' ' -f 2))
-
-local branches=(${(M)remote_branches/#refs\/remotes\/origin\//})
-
-echo "${(j:\n:)branches}"
+    | cut -d ' ' -f 2); do
+  echo "${ref##refs/remotes/origin/}"
+done
