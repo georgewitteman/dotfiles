@@ -1,9 +1,9 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 
-local VIM_DIR="${VIM_DIR:-$HOME/.vim}"
-local MANIFEST="$VIM_DIR/plugins"
-local PLUGINS_DIR="${VIM_PLUGINS_DIR:-$VIM_DIR/pack/mine/start}"
-local COMMENT="^ *#"
+VIM_DIR="${VIM_DIR:-$HOME/.vim}"
+MANIFEST="$VIM_DIR/plugins"
+PLUGINS_DIR="${VIM_PLUGINS_DIR:-$VIM_DIR/pack/mine/start}"
+COMMENT="^ *#"
 
 mkdir -p "$PLUGINS_DIR"
 
@@ -31,7 +31,8 @@ _install-plugin() {
     return 1
   fi
 
-  local repo=$(_get-repo-url "$line")
+  local repo
+  repo=$(_get-repo-url "$line")
   if [[ -n "$repo" ]]; then
     if ! git clone --depth 1 "$repo" "$PLUGINS_DIR/$plugin_name" >/dev/null 2>&1; then
       echo "Failed to clone ${plugin_name}: git clone --depth 1 ${repo} ${PLUGINS_DIR}/${plugin_name}" >&2
@@ -52,10 +53,13 @@ _install-missing-plugins() {
   # reliably not have the job notifications show up. I think it might be
   # because the MONITOR option turns on job control, and something about the
   # wait command requires job control to be on to work properly
-  for line in "${(@f)"$(<$MANIFEST)"}"; do
-    ([[ -z "${line// }" ]] || [[ "$line" =~ "$COMMENT" ]]) && continue
+  while IFS="" read -r line || [ -n "$line" ]; do
+    if [[ -z "${line// }" ]] || [[ "$line" =~ $COMMENT ]]; then
+      continue
+    fi
+    # shellcheck disable=SC2031
     _install-plugin "$line" &
-  done
+  done < "$MANIFEST"
   wait
   )
   _update-help-tags
@@ -74,9 +78,13 @@ _uninstall-unwanted-plugins() {
   local did_uninstall=0
   # The '(N)' tells zsh to not error when it doesn't find any directories and
   # the '(/)' tells it to only look for directories
-  for dir in $PLUGINS_DIR/*(/N); do
-    _uninstall-plugin "$dir"
-    [[ "$?" -eq 0 ]] && did_uninstall=1
+  for dir in "$PLUGINS_DIR"/*; do
+    if [[  ! -d "$dir" ]]; then
+      continue
+    fi
+    if _uninstall-plugin "$dir"; then
+      did_uninstall=1
+    fi
   done
   [[ "$did_uninstall" -ne 1 ]] && echo "No plugins to uninstall" && return
   _update-help-tags
@@ -91,24 +99,31 @@ _update-plugin() {
     return 1
   fi
 
-  cd "$dir"
-  local branch="$(git rev-parse --abbrev-ref --symbolic-full-name HEAD)"
+  if ! cd "$dir"; then
+    echo "$plugin_name: Failed to cd to ${dir}"
+    return 1
+  fi
+  local branch
+  branch="$(git rev-parse --abbrev-ref --symbolic-full-name HEAD)"
 
   if [[ "$branch" == "HEAD" ]]; then
     echo "$plugin_name: not updating, detached HEAD"
     return 1
   fi
 
-  local start_commit="$(git rev-parse HEAD)"
+  local start_commit
+  start_commit="$(git rev-parse HEAD)"
   git pull --quiet
 
-  local commits=$(git rev-list --count "$start_commit"..."HEAD")
+  local commits
+  commits=$(git rev-list --count "${start_commit}...HEAD")
   if [[ "$commits" -eq 0 ]]; then
     [[ -z "$quieter" ]] && echo "$plugin_name: nothing to update"
     return 1
   fi
 
-  local log="\n$(git log --oneline "$start_commit"..."HEAD")\n"
+  local log
+  log="\n$(git log --oneline "${start_commit}...HEAD")\n"
   if [[ -n "$quieter" ]]; then
     echo "$plugin_name: updated $commits commit(s)"
   else
@@ -127,17 +142,21 @@ _update-plugins() {
   #
   # The '(N)' tells zsh to not error when it doesn't find any directories and
   # the '(/)' tells it to only look for directories
-  for dir in $PLUGINS_DIR/*(/N); do
+  for dir in "$PLUGINS_DIR"/*; do
     plugin_name=${dir##*/}
     [[ -n "$1" ]] && [[ "$1" != "$plugin_name" ]] && continue
     _update-plugin "$dir" "$quieter" &
   done
-  for line in "${(@f)"$(<$MANIFEST)"}"; do
-    ([[ -z "${line// }" ]] || [[ "$line" =~ "$COMMENT" ]]) && continue
+  while IFS="" read -r line || [ -n "$line" ]; do
+    if [[ -z "${line// }" ]] || [[ "$line" =~ $COMMENT ]]; then
+      continue
+    fi
+    # shellcheck disable=SC2031
     local plugin_name=${line##*/}
     [[ -d "$PLUGINS_DIR/$plugin_name" ]] && continue
+    # shellcheck disable=SC2031
     _install-plugin "$line" &
-  done
+  done < "$MANIFEST"
   wait
   )
   _update-help-tags
@@ -165,8 +184,8 @@ _usage() {
   echo ""
 }
 
-local command_name="${0:t}"
-local action="$1"
+command_name="$(basename "$0")"
+action="$1"
 
 case $action in
   edit)
@@ -193,6 +212,6 @@ case $action in
 
   *)
     _usage
-    return 1
+    exit 1
     ;;
 esac
