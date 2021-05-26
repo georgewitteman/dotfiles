@@ -3,6 +3,8 @@
 
 set -e
 
+. "${HOME}/.profile"
+
 echo-run sudo apt --quiet --quiet --yes update
 echo-run sudo apt --quiet --quiet --yes install shellcheck
 

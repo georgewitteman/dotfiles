@@ -1,6 +1,10 @@
 {{- if eq .chezmoi.os "darwin" -}}
 #!/bin/sh
 
+set -e
+
+. "${HOME}/.profile"
+
 # Install homebrew if it's missing
 if ! command -v brew >/dev/null 2>&1; then
   echo-info "Installing homebrew"

@@ -3,6 +3,8 @@
 
 set -e
 
+. "${HOME}/.profile"
+
 if command -v snowsql >/dev/null 2>&1; then
   echo-info 'Skipping snowsql because it is already installed.'
   exit
