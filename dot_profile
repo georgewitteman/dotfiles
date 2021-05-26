@@ -1,9 +1,5 @@
 #!/bin/sh
 
-if [ -n "$CI" ]; then
-  echo "Running ~/.profile"
-fi
-
 export ENV="${HOME}/.shinit"
 
 # Don't write python .pyc files, because they're not necessary and clutter
