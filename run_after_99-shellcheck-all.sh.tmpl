@@ -1,4 +1,4 @@
-{{- if not (eq .chezmoi.osRelease.versionID "18.04") -}}
+{{- if not (eq (index .chezmoi.osRelease "versionID") "18.04") -}}
 #!/bin/sh
 
 set -e
