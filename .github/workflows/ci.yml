@@ -11,17 +11,6 @@ jobs:
         os: [ubuntu-latest, ubuntu-18.04, macOS-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Install SSH key
-        uses: shimataro/ssh-key-action@v2
-        with:
-          key: ${{ secrets.SSH_KEY }}
-          name: id_ed25519
-          known_hosts: ${{ secrets.KNOWN_HOSTS }}
-          if_key_exists: fail
-
       - uses: actions/checkout@v2
       - uses: ./.github/actions/chezmoi
-
       - run: chezmoi apply --no-tty
-        env:
-          GIT_SSH_COMMAND: ssh -i ${HOME}/.ssh/id_ed25519 -o "UserKnownHostsFile ${HOME}/.ssh/known_hosts"

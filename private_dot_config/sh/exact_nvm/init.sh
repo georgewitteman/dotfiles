@@ -12,7 +12,7 @@ nvm() {
 
 nvm_upgrade() {
   if [ ! -d "$NVM_DIR" ]; then
-    echo_run git clone "git@github.com:nvm-sh/nvm.git" "$NVM_DIR"
+    echo_run git clone "https://github.com:nvm-sh/nvm.git" "$NVM_DIR"
   else
     echo_run git -C "$NVM_DIR" fetch
   fi

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if [ -n "$GITHUB_WORKFLOW" ]; then
-  echo "::group::Setup GitHub SSH keys"
+  echo "::group::Add GitHub to known_hosts"
 fi
 
 set -e

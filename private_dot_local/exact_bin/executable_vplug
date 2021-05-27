@@ -17,7 +17,6 @@ _get-repo-url() {
   [[ "$repo" = http://* || "$repo" = https://* ]] && echo "$repo.git" && return
   local slashes="${repo//[^\/]}"
   local count="${#slashes}"
-  # [ "$count" -eq 1 ] && echo "git@github.com:$repo" && return
   [ "$count" -eq 1 ] && echo "https://github.com/${repo}.git" && return
   # Otherwise, it's a local repo
 }
