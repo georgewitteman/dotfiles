@@ -41,20 +41,16 @@ assert_exit_0() {
 assert_files_exist "${HOME}/.zshrc"
 assert_files_exist ${HOME}/.ssh/id_*
 
+
 {{ if eq .chezmoi.os "darwin" -}}
 assert_cmd_exists rg
 assert_cmd_exists op
 assert_cmd_exists jq
 
+assert_files_exist ${PYENV_ROOT}/versions/*/bin/python
+
 assert_exit_0 "nvim -v | grep -q NVIM"
 {{- end }}
-
-if [ -n "$CI" ]; then
-  echo "Running CI only tests"
-
-  assert_exit_0 'pyenv-reinstall'
-  assert_files_exist ${PYENV_ROOT}/versions/*/bin/python
-fi
 
 echo-ok "All tests ran successfully"
 
