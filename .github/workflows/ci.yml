@@ -3,9 +3,6 @@ name: CI
 on:
   push:
   pull_request:
-  schedule:
-    # 5am PT daily
-    - cron: '30 12 * * *'
 
 jobs:
   scripts:
