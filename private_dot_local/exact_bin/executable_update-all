@@ -2,17 +2,6 @@
 
 set -e
 
-
-if ! sudo true; then
-# sudo echo "$SHELL" > /dev/null
-# if [[ $status -ne 0 ]]; then
-  echo-info "We need sudo to do some stuff."
-  return 1
-fi
-
-# sudo keep alive
-while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
-
 # Using 'command ls' here because regular ls is aliased to add color and
 # formatting.
 IFS=$'\n' read -r -d '' -a files < <(command ls "$HOME/.local/bin" | sort | grep update- | grep -v update-all; printf '\0')
