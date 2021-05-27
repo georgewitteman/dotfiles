@@ -78,7 +78,7 @@ _uninstall-unwanted-plugins() {
   # The '(N)' tells zsh to not error when it doesn't find any directories and
   # the '(/)' tells it to only look for directories
   for dir in "$PLUGINS_DIR"/*; do
-    if [[  ! -d "$dir" ]]; then
+    if [[ ! -d "$dir" ]]; then
       continue
     fi
     if _uninstall-plugin "$dir"; then
@@ -142,6 +142,9 @@ _update-plugins() {
   # The '(N)' tells zsh to not error when it doesn't find any directories and
   # the '(/)' tells it to only look for directories
   for dir in "$PLUGINS_DIR"/*; do
+    if [[ ! -d "$dir" ]]; then
+      continue
+    fi
     plugin_name=${dir##*/}
     [[ -n "$1" ]] && [[ "$1" != "$plugin_name" ]] && continue
     _update-plugin "$dir" "$quieter" &
