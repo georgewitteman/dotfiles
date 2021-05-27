@@ -1,5 +1,5 @@
 if [ ! -d "${XDG_CACHE_DIR:-${HOME}/.cache}/fast-syntax-highlighting" ]; then
-  echo_run git clone https://github.com:zdharma/fast-syntax-highlighting.git \
+  echo_run git clone https://github.com/zdharma/fast-syntax-highlighting.git \
     "${XDG_CACHE_DIR:-${HOME}/.cache}/fast-syntax-highlighting"
 fi
 
