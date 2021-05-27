@@ -1,0 +1,15 @@
+name: Quick Install
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  scripts:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macOS-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - run: 'sh -c "$(curl -fsLS git.io/chezmoi)" -- init --apply georgewitteman'

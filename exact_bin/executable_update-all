@@ -4,7 +4,7 @@ set -e
 
 # Using 'command ls' here because regular ls is aliased to add color and
 # formatting.
-IFS=$'\n' read -r -d '' -a files < <(command ls "$HOME/.local/bin" | sort | grep update- | grep -v update-all; printf '\0')
+IFS=$'\n' read -r -d '' -a files < <(command ls "$PRIVATE_BIN" | sort | grep update- | grep -v update-all; printf '\0')
 
 for i in $(seq 1 "${#files[@]}"); do
   file="${files[$i-1]}"
@@ -24,7 +24,7 @@ for i in $(seq 1 "${#files[@]}"); do
     echo "============================================================="
   fi
 
-  if ! "$HOME/.local/bin/$file"; then
+  if ! "${PRIVATE_BIN}/${file}"; then
     echo-err "${file} failed"
     exit 1
   fi

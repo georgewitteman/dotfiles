@@ -23,10 +23,12 @@ export GPG_TTY="$TTY"
 
 # https://github.com/Homebrew/brew/pull/10374
 export HOMEBREW_BOOTSNAP=1
-
 export HOMEBREW_NO_ANALYTICS=1
 
-PATH="${HOME}/.cargo/bin:${HOME}/.local/bin:/usr/local/opt/fzf/bin:/usr/local/sbin:${PATH}"
+# https://stackoverflow.com/a/9168577
+export PRIVATE_BIN="${HOME}/bin"
+
+PATH="${HOME}/.cargo/bin:${PRIVATE_BIN}:/usr/local/opt/fzf/bin:/usr/local/sbin:${PATH}"
 
 for dir in "$HOME"/.config/sh/*/; do
   [ -d "$dir" ] || continue

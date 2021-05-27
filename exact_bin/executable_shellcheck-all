@@ -18,7 +18,7 @@ _files() {
 }
 
 {
-  for file in $(_files ~/.local/bin) ~/.shinit ~/.profile $(_files ~/.config/sh); do
+  for file in $(_files "$PRIVATE_BIN") ~/.shinit ~/.profile $(_files ~/.config/sh); do
     if [ ! -f "$file" ] || [ ! -r "$file" ]; then
       continue
     fi
