@@ -22,11 +22,11 @@ brew "wget"
 brew "zsh"
 brew "universal-ctags"
 
-{{ if not (lookPath "aws") }}
+{{- if not (lookPath "aws") }}
 brew "awscli"
-{{ end }}
+{{ end -}}
 
-{{ if not (eq (output "sh" "-c" "ls /usr/local/Cellar/*openssl* || true" | trim) "") }}
+{{ if eq (output "sh" "-c" "ls /usr/local/Cellar/*openssl* || true" | trim) "" -}}
 brew "openssl"
 {{ end }}
 

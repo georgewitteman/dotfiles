@@ -12,5 +12,5 @@ if ! command -v brew >/dev/null 2>&1; then
 fi
 
 echo-run brew update --quiet
-echo-run brew bundle --verbose --global --no-lock
+echo-run brew bundle {{ if (env "CI") }}--verbose {{ end }}--global --no-lock
 {{ end -}}
