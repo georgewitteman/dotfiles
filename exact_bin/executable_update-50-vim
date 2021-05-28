@@ -2,4 +2,5 @@
 
 set -e
 
-echo-run vplug update --quieter || true
+echo-run vim -i NONE -c "PlugUpgrade" -c "qa"
+echo-run vim -i NONE -c "PlugUpdate" -c "qa"

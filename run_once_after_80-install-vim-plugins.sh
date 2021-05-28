@@ -13,7 +13,7 @@ if [ -n "$GITHUB_WORKFLOW" ]; then
   echo "::group::Installing vim plugins"
 fi
 
-vplug install
+echo-run vim -i NONE -c "PlugInstall" -c "qa"
 
 if [ -n "$GITHUB_WORKFLOW" ]; then
   echo "::endgroup::"
