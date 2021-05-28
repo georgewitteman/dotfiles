@@ -1,8 +1,8 @@
 {{- if eq .chezmoi.os "linux" -}}
 #!/bin/sh
 
-if ! sudo --non-interactive --validate >/dev/null 2>&1; then
-  echo "Skipping ubuntu packages install because we don't have sudo permissions"
+if ! sudo true; then
+  echo "Skipping Ubuntu packages install because we don't have sudo permissions"
   exit
 fi
 

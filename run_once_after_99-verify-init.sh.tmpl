@@ -47,8 +47,6 @@ assert_cmd_exists rg
 assert_cmd_exists op
 assert_cmd_exists jq
 
-assert_files_exist ${PYENV_ROOT}/versions/*/bin/python
-
 assert_exit_0 "nvim -v | grep -q NVIM"
 {{- end }}
 
