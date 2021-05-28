@@ -1,4 +1,3 @@
-.bin/chezmoi
 .config/tmux/plugins
 .config/tmux/tpm
 .config/zsh/plugins
@@ -6,6 +5,7 @@
 .vim/pack
 .vim/plugged
 README.md
+bin/chezmoi
 install.sh
 tab.yml
 tags
