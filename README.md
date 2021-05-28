@@ -8,5 +8,5 @@ I use `chezmoi` to manage my dotfiles, which is why the files have the weird pre
 
 ```sh
 # Monitor the installation, some if it is interactive
-BINDIR="${HOME}/.local/bin sh" -c "$(curl -fsLS git.io/chezmoi)" -- init --apply georgewitteman
+sh -c "$(curl -fsLS git.io/chezmoi)" -- init --apply georgewitteman
 ```

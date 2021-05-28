@@ -1,12 +1,9 @@
-.config/zsh/plugins
+.bin/chezmoi
 .config/tmux/plugins
 .config/tmux/tpm
+.config/zsh/plugins
 .vim/pack
 README.md
-tags
-tab.yml
 install.sh
-
-{{- if default false .is_work | not -}}
-.local/bin/terraform
-{{- end -}}
+tab.yml
+tags
