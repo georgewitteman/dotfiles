@@ -5,7 +5,7 @@ on:
   pull_request:
 
 jobs:
-  scripts:
+  clone-and-install:
     strategy:
       matrix:
         os: [ubuntu-latest, ubuntu-18.04, macOS-latest]
@@ -13,3 +13,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - runs: ./install.sh
+
+  codespaces:
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/vscode/devcontainers/base:ubuntu
+      env:
+        CODESPACES: true
+    steps:
+      - uses: actions/checkout@v2
+      - run: ./install.sh
