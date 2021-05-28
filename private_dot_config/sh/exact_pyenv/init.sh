@@ -1,14 +1,10 @@
 #!/bin/sh
 
-if ! command -v pyenv >/dev/null 2>&1 && [ ! -d "$PYENV_ROOT" ]; then
-  if [ ! -d "${PYENV_ROOT}/cache" ]; then
-    echo-run mkdir -p "${PYENV_ROOT}/cache"
+pyenv() {
+  if ! command -v pyenv >/dev/null 2>&1 && [ ! -d "$PYENV_ROOT" ]; then
+    pyenv-reinstall || return "$?"
   fi
 
-  pyenv-reinstall
-fi
-
-pyenv() {
   command pyenv "$@" || return "$?"
 
   PATH="$(remove_from_path "$PYENV_ROOT")"

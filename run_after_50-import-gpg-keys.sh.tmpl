@@ -4,14 +4,14 @@ set -e
 
 . "${HOME}/.profile"
 
-if ! op >/dev/null 2>&1; then
-  echo-err "1Password CLI not installed"
-  exit 1
-fi
-
 if [ ! -t 0 ] || [ -n "$CI" ]; then
   echo-ok "Skipping GPG key import because stdin isn't a tty"
   exit
+fi
+
+if ! op >/dev/null 2>&1; then
+  echo-err "1Password CLI not installed"
+  exit 1
 fi
 
 if gpg --list-keys "{{ .gpgkey }}" >/dev/null 2>&1; then

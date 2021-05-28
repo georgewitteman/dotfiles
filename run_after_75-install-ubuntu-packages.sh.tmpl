@@ -1,11 +1,24 @@
 {{- if eq .chezmoi.os "linux" -}}
 #!/bin/sh
 
+if ! sudo --non-interactive --validate >/dev/null 2>&1; then
+  echo "Skipping ubuntu packages install because we don't have sudo permissions"
+  exit
+fi
+
 set -e
 
 . "${HOME}/.profile"
 
+if [ -n "$GITHUB_WORKFLOW" ]; then
+  echo "::group::Installing ubuntu packages"
+fi
+
 echo-run sudo apt --quiet --quiet --yes update
 echo-run sudo apt --quiet --quiet --yes install shellcheck
+
+if [ -n "$GITHUB_WORKFLOW" ]; then
+  echo "::endgroup::"
+fi
 
 {{ end -}}
