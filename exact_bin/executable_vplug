@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -x
+
 VIM_DIR="${VIM_DIR:-$HOME/.vim}"
 MANIFEST="$VIM_DIR/plugins"
 PLUGINS_DIR="${VIM_PLUGINS_DIR:-$VIM_DIR/pack/mine/start}"
@@ -165,10 +167,7 @@ _update-plugins() {
 }
 
 _update-help-tags() {
-  # -E starts vim in improved ex mode
-  # -s starts vim in silent/batch mode, but only when vim was started in ex
-  #    mode
-  vim -E -s -c 'helptags ALL' -c 'quit'
+  vim -c 'helptags ALL' -c quit
 }
 
 _usage() {

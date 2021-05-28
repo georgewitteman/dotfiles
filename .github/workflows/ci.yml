@@ -39,3 +39,13 @@ jobs:
       - run: apt install --yes curl openssh-client unzip gnupg vim git
       - uses: actions/checkout@v2
       - run: ./install.sh
+
+  shellcheck:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macOS-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - run: ./install.sh
+      - run: "${HOME}/bin/shellcheck-all"
