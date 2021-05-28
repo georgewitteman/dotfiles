@@ -1,5 +1,8 @@
 #!/bin/sh
 
+set -e
+
+PRIVATE_BIN="${PRIVATE_BIN:-${HOME}/bin}"
 verbose=false
 
 for arg in "$@"; do
