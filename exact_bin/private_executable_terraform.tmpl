@@ -1,4 +1,4 @@
-{{- if not (or .is_work (env "CI")) -}}
+{{- if not (or .is_work .is_transient (env "CI")) -}}
 #!/bin/sh
 
 CLOUDFLARE_EMAIL="{{ .email }}" \
