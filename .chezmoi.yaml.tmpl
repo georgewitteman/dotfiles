@@ -1,15 +1,25 @@
-{{- $work := false -}}
-{{- $transient := false -}}
+{{- $work := (index . "is_work") -}}
+{{- $transient := (index . "is_transient") -}}
+
 {{- if and stdinIsATTY (not (env "CI")) -}}
+{{- if kindIs "invalid" $work -}}
 {{- $work = promptBool "Is this a work computer (y/n)" -}}
+{{- end -}}
+{{- if kindIs "invalid" $transient -}}
 {{- $transient = promptBool "Is this a transient machine (y/n)" -}}
 {{- end -}}
+{{- end -}}
 
-{{- $work_email := "" -}}
-{{- $work_path := "" -}}
+{{- $work_email := index (default dict (index . "work")) "email" -}}
+{{- $work_path := index (default dict (index . "work")) "path" -}}
+
 {{- if $work -}}
+{{- if not $work_email -}}
 {{- $work_email = promptString "What is your work email" -}}
+{{- end -}}
+{{- if not $work_path -}}
 {{- $work_path = promptString "Where are your work repositories located" -}}
+{{- end -}}
 {{- end -}}
 
 onepassword:
@@ -20,8 +30,8 @@ diff:
     - scripts
 
 data:
-  is_work: {{ $work }}
-  is_transient: {{ $transient }}
+  is_work: {{ kindIs "bool" $work | ternary $work false }}
+  is_transient: {{ kindIs "bool" $transient | ternary $transient false }}
   name: "George Witteman"
   email: "george@witteman.me"
   vault: "y3wsvezcovj634l3leoly4i4qy"
@@ -30,6 +40,6 @@ data:
   work:
     vault: "d2npbgiaxt5asswavzklxnkwne"
     signingkey: "3F7D97CD2491D6CD2B814EF36F1B35AC1C424C4F"
-    email: "{{ $work_email }}"
-    path: "{{ $work_path }}"
+    email: {{ $work_email | quote }}
+    path: {{ $work_path | expandenv | osClean | quote }}
 {{ end -}}
