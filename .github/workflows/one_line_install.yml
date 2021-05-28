@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - master
+  schedule:
+    # 5am PT daily
+    - cron: '30 12 * * *'
 
 jobs:
   scripts:

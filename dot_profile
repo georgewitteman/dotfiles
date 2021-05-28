@@ -28,7 +28,7 @@ export HOMEBREW_NO_ANALYTICS=1
 # https://stackoverflow.com/a/9168577
 export PRIVATE_BIN="${HOME}/bin"
 
-PATH="${HOME}/.cargo/bin:${PRIVATE_BIN}:/usr/local/opt/fzf/bin:/usr/local/sbin:${PATH}"
+PATH="${HOME}/.cargo/bin:${PRIVATE_BIN}:${HOME}/.local/bin:/usr/local/opt/fzf/bin:/usr/local/sbin:${PATH}"
 
 for dir in "$HOME"/.config/sh/*/; do
   [ -d "$dir" ] || continue

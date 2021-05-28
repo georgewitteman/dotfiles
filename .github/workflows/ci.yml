@@ -12,5 +12,4 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
-      - uses: ./.github/actions/chezmoi
-      - run: chezmoi apply --no-tty
+      - runs: ./install.sh

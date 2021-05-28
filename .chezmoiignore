@@ -5,9 +5,8 @@
 README.md
 tags
 tab.yml
+install.sh
 
-com.googlecode.iterm2.plist
-
-{{- if not (default false .is_work) -}}
+{{- if default false .is_work | not -}}
 .local/bin/terraform
 {{- end -}}
