@@ -66,6 +66,6 @@ case "$version" in
       CFLAGS="${CFLAGS} -I${sdk_path}/usr/include -I${openssl_path}/include" \
       LDFLAGS="${LDFLAGS} -L${sdk_path}/usr/lib -L${openssl_path}/lib" \
       echo-run command pyenv install "$@" "$version"
-    exit $?
+    echo-run "${PYENV_ROOT}/versions/${version}/bin/python" -m pip install virtualenv
     ;;
 esac
