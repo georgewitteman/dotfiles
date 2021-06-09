@@ -19,7 +19,7 @@ if [ -f "$1" ]; then
     *.pkg) echo-run xar -xvf "$1" ;;
     # Rely on GNU's tar autodetection. List of recognized suffixes:
     # https://www.gnu.org/software/tar/manual/html_node/gzip.html#auto_002dcompress
-    *) echo-run tar -axvf "$1" ;;
+    *) echo-run tar -xvf "$1" ;;
   esac
 else
   echo "'$1' can not be extracted"
