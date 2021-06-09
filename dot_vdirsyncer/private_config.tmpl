@@ -1,0 +1,20 @@
+{{- if not (env "CI") -}}
+[general]
+status_path = "~/.vdirsyncer/status/"
+
+[pair my_contacts]
+a = "my_contacts_local"
+b = "my_contacts_remote"
+collections = ["from a", "from b"]
+
+[storage my_contacts_local]
+type = "filesystem"
+path = "~/.vdirsyncer/contacts/"
+fileext = ".vcf"
+
+[storage my_contacts_remote]
+type = "carddav"
+url = "https://carddav.messagingengine.com/"
+username = "{{ .email }}"
+password = "{{ (onepassword "cscwpmjszmi6pndmaqbqhl2v7q" .vault).details.password }}"
+{{ end -}}
