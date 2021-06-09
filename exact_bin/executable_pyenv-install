@@ -56,7 +56,7 @@ case "$version" in
     exit $?
     ;;
   *)
-    openssl_path="$(brew --prefix "openssl@1.0.2t")"
+    # openssl_path="$(brew --prefix "openssl@1.0.2t")"
     sdk_path="$(xcrun --show-sdk-path)"
     # https://github.com/pyenv/pyenv/wiki/Common-build-problems
     # CFLAGS: "You can set your CFLAGS to accepted safe values to help get a little
