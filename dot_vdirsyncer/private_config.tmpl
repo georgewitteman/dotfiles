@@ -6,6 +6,7 @@ status_path = "~/.vdirsyncer/status/"
 a = "my_contacts_local"
 b = "my_contacts_remote"
 collections = ["from a", "from b"]
+conflict_resolution = ["command", "vimdiff", "--noplugin"]
 
 [storage my_contacts_local]
 type = "filesystem"
