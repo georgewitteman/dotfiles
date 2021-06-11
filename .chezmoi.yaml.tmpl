@@ -12,6 +12,7 @@
 
 {{- $work_email := index (default dict (index . "work")) "email" -}}
 {{- $work_path := index (default dict (index . "work")) "path" -}}
+{{- $work_terms := index (default dict (index . "work")) "terms" -}}
 
 {{- if $work -}}
 {{- if not $work_email -}}
@@ -38,6 +39,10 @@ data:
   gpgkey: "3F31B900236A9F918F143AE106223EC3AE0381FB"
 {{- if $work }}
   work:
+    terms:
+      {{- range $work_terms }}
+      - {{ . | quote }}
+      {{- end }}
     vault: "d2npbgiaxt5asswavzklxnkwne"
     signingkey: "3F7D97CD2491D6CD2B814EF36F1B35AC1C424C4F"
     email: {{ $work_email | quote }}
