@@ -15,7 +15,7 @@ if [ -n "$GITHUB_WORKFLOW" ]; then
 fi
 
 echo-run sudo apt --quiet --quiet --yes update
-echo-run sudo apt --quiet --quiet --yes install shellcheck vim neovim git
+echo-run sudo apt --quiet --quiet --yes install shellcheck vim neovim git python-pip python3-pip
 
 if [ -n "$GITHUB_WORKFLOW" ]; then
   echo "::endgroup::"
