@@ -1,6 +1,7 @@
 add_newline = false
 
 format = """$shlvl\
+$hostname\
 $directory\
 $git_branch\
 ${custom.git_host}\
