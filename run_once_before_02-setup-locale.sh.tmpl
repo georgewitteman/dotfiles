@@ -1,5 +1,10 @@
-#!/bin/sh
 {{- if lookPath "locale-gen" -}}
-echo '$ sudo locale-gen en_US.UTF-8'
+#!/bin/sh
+
+set -o errexit
+set -x
+
+sudo perl -pi -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /etc/locale.gen
 sudo locale-gen en_US.UTF-8
+sudo update-locale en_US.UTF-8
 {{ end -}}
