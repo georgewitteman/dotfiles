@@ -1,10 +1,11 @@
 {{- if not (or .is_work .is_transient (env "CI")) -}}
 #!/bin/sh
 
-CLOUDFLARE_EMAIL="{{ .email }}" \
-CLOUDFLARE_API_KEY="{{ (onepassword "dyulx35qcveyzpgdij2j3vvd4y" .vault).details.password }}" \
-DNSIMPLE_TOKEN='{{- output "op" "get" "item" "rbb4jo4wmrfdjjus6gqjsymm7a" "--fields" "token" | trim }}' \
-DNSIMPLE_ACCOUNT='{{- output "op" "get" "item" "rbb4jo4wmrfdjjus6gqjsymm7a" "--fields" "account" | trim }}' \
-GITHUB_TOKEN="{{ (onepassword "sjrmyfeywna6zje7uf7oekhnoi" .vault).details.password }}" \
+export CLOUDFLARE_EMAIL='{{ .email }}'
+export CLOUDFLARE_API_KEY='{{ (onepassword "dyulx35qcveyzpgdij2j3vvd4y" .vault).details.password }}'
+export DNSIMPLE_TOKEN='{{- output "op" "get" "item" "rbb4jo4wmrfdjjus6gqjsymm7a" "--fields" "token" | trim }}'
+export DNSIMPLE_ACCOUNT='{{- output "op" "get" "item" "rbb4jo4wmrfdjjus6gqjsymm7a" "--fields" "account" | trim }}'
+export GITHUB_TOKEN='{{ (onepassword "sjrmyfeywna6zje7uf7oekhnoi" .vault).details.password }}'
+
 /usr/local/bin/terraform "$@"
 {{- end -}}
