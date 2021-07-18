@@ -7,7 +7,7 @@ ZONE_ID="witteman.me"
 RECORD_ID="24808871"
 IP=`curl --ipv4 -s http://icanhazip.com/`
 
-echo-run curl \
+curl \
   -H "Authorization: Bearer ${TOKEN}" \
   -H "Content-Type: application/json" \
   -H "Accept: application/json" \
