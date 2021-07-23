@@ -9,3 +9,4 @@ bin/chezmoi
 install.sh
 tab.yml
 tags
+unbound.conf
