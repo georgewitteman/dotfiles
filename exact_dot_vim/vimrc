@@ -320,7 +320,8 @@ set winwidth=90
 set winheight=20
 " The minimal height of a window, when it's not the current window. This is a
 " hard minimum, windows will never become smaller (default 1, 0-3 reasonable)
-set winminheight=3
+" FIXME: Commented out to fix issue on raspberry pi under neovim
+" set winminheight=3
 " The minimal width of a window, when it's not the current window. This is a
 " hard minimum, windows will never become smaller (default 1, 0-12 reasonable)
 set winminwidth=10
