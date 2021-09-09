@@ -11,4 +11,4 @@ else
   echo-run git fetch origin ${GIT_HEAD}:${GIT_HEAD}
 fi
 
-git-show --quiet "${GIT_HEAD}"
+"${HOME}/bin/git-show" --quiet "${GIT_HEAD}"
