@@ -8,7 +8,7 @@ if [ "$(git rev-parse --abbrev-ref HEAD)" = "${GIT_HEAD}" ]; then
   echo-run git fetch origin "${GIT_HEAD}"
   echo-run git merge --ff-only
 else
-  echo-run git fetch origin ${GIT_HEAD}:${GIT_HEAD}
+  echo-run git fetch origin "${GIT_HEAD}:${GIT_HEAD}"
 fi
 
 "${HOME}/bin/git-show" --quiet "${GIT_HEAD}"
