@@ -11,8 +11,12 @@ print_arc_lines() {
   for branchref in $(git --no-pager branch --sort=-committerdate --format='%(refname)'); do
     diff_id="$(git for-each-ref "$branchref" --format='%(contents:body)' | grep 'Differential Revision: ' || true)"
     if [ -n "$diff_id" ]; then
+      # diff_status="$(echo '{"constraints":{"ids": ['${diff_id##*/D}']}}' \
+      #   | arc call-conduit -- differential.revision.search \
+      #   | jq --raw-output '.response.data[0].fields.status.name')"
       diff_id="${diff_id##*/}:"
     else
+      diff_status="No diff"
       diff_id="       "
     fi
     git for-each-ref --color=always "$branchref" --format='%(HEAD) %(color:bold)'"${diff_id}"'%(color:reset) %(contents:subject) - %(color:yellow)%(committerdate:relative)%(color:reset) - %(color:green)%(refname:short)%(color:reset)'

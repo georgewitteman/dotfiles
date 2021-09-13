@@ -29,6 +29,14 @@ done
 
 diff_url="$(git show --quiet --format="%b" "$ref" | grep "^Differential Revision: " | cut -d' ' -f 3)"
 
+diff_status=""
+if [ -n "$diff_url" ]; then
+  diff_id="${diff_url##*/D}"
+  diff_status="$(echo '{"constraints":{"ids": ['${diff_id}']}}' \
+    | arc call-conduit -- differential.revision.search \
+    | jq --raw-output '.response.data[0].fields.status.name')"
+fi
+
 header="======== git show --format=\"…\" $* ========"
 footer="$(printf '=%.0s' $(seq 1 "${#header}"))"
 
@@ -44,7 +52,7 @@ commit_fmt+=("$header")
 commit_fmt+=("   Hash: %h")
 commit_fmt+=("   %C(cyan)Tags:%Creset %C(bold)$(join_by ', ' "${tags[@]}")%Creset")
 commit_fmt+=("  %C(red)Heads:%Creset $(join_by ', ' "${heads[@]}")")
-[[ -n "$diff_url" ]] && commit_fmt+=("   %C(yellow)Diff:%Creset ${diff_url}")
+[[ -n "$diff_url" ]] && commit_fmt+=("   %C(yellow)Diff:%Creset ${diff_url} (${diff_status:-Unknown})")
 commit_fmt+=(" %C(green)Author:%Creset %an <%ae>")
 commit_fmt+=("   %C(blue)Date:%Creset %cd (%ar)")
 commit_fmt+=("%C(magenta)Subject:%Creset %C(bold)%s%Creset")

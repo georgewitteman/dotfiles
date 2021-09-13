@@ -8,9 +8,10 @@ if ! in-git-repo; then
 fi
 
 printf "Getting remote HEAD... "
-GIT_HEAD="$(get-remote-head)"
-echo "$GIT_HEAD"
+head="$(get-remote-head)"
+echo "$head"
 
-echo-run git checkout --quiet "$GIT_HEAD"
-echo-run git pull --quiet --rebase --prune origin "$GIT_HEAD"
+echo-run git switch "$head"
+echo-run git fetch --prune origin "$head"
+echo-run git rebase origin "$head"
 git-show --quiet
