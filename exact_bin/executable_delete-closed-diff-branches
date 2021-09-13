@@ -21,7 +21,6 @@ while [ "$#" -gt 0 ]; do
   shift
 done
 
-git_head="$(get-remote-head)"
 current_branch="$(git rev-parse --abbrev-ref HEAD)"
 for branch in $(git for-each-ref --sort=committerdate refs/heads --format='%(refname:short)'); do
   if [ "${branch}" = "develop" ] || \
@@ -37,7 +36,7 @@ for branch in $(git for-each-ref --sort=committerdate refs/heads --format='%(ref
     continue
   fi
   diff_id="${diff_url##*/D}"
-  diff_status="$(echo '{"constraints":{"ids": ['${diff_id}']}}' \
+  diff_status="$(echo '{"constraints":{"ids": ['"$diff_id"']}}' \
     | arc call-conduit -- differential.revision.search \
     | jq --raw-output '.response.data[0].fields.status.name')"
 

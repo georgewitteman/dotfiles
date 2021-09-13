@@ -16,7 +16,7 @@ print_arc_lines() {
       #   | jq --raw-output '.response.data[0].fields.status.name')"
       diff_id="${diff_id##*/}:"
     else
-      diff_status="No diff"
+      # diff_status="No diff"
       diff_id="       "
     fi
     git for-each-ref --color=always "$branchref" --format='%(HEAD) %(color:bold)'"${diff_id}"'%(color:reset) %(contents:subject) - %(color:yellow)%(committerdate:relative)%(color:reset) - %(color:green)%(refname:short)%(color:reset)'
