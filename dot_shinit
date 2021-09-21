@@ -43,10 +43,6 @@ if command -v git >/dev/null; then
   alias status='echo_run git status'
 fi
 
-if command -v arc >/dev/null; then
-  alias arc-rebase='rebase && arc-diff -am "Rebase"'
-fi
-
 if command -v shfmt >/dev/null; then
   alias my-shfmt="shfmt -i 2 -w -ci"
 fi
