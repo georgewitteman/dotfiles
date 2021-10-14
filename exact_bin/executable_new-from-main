@@ -1,11 +1,48 @@
 #!/bin/sh
 
-if [ $# -eq 0 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
-  echo "usage: $(basename "$0") <branch name>" >&2
-  exit
-fi
+USAGE="usage: $(basename "$0") [-l|--latest] <branch name>"
 
 set -o errexit
 
-main
-echo-run git switch -c "$1"
+branch_name=
+latest=false
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    -h | --help)
+      echo "$USAGE"
+      exit
+      ;;
+    -l | --latest)
+      latest=true
+      ;;
+    --)
+      shift
+      break
+      ;;
+    -?*)
+      echo "unknown option: ${1}"
+      exit 1
+      ;;
+    *)
+      branch_name="$1"
+      ;;
+  esac
+  shift
+done
+
+if [ -z "$branch_name" ]; then
+  echo-err "missing branch name" >&2
+  exit 1
+fi
+
+if $latest; then
+  main
+else
+  printf "Getting remote HEAD... "
+  head="$(get-remote-head)"
+  echo "$head"
+  echo-run git switch "$head"
+fi
+
+echo-run git switch -c "$branch_name"
