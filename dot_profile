@@ -24,7 +24,8 @@ export GPG_TTY="$TTY"
 # https://github.com/Homebrew/brew/pull/10374
 export HOMEBREW_BOOTSNAP=1
 export HOMEBREW_NO_ANALYTICS=1
-export HOMEBREW_INSTALL_FROM_API=1
+# I was seeing issues with this so commenting it out for now
+# export HOMEBREW_INSTALL_FROM_API=1
 
 # https://stackoverflow.com/a/9168577
 export PRIVATE_BIN="${HOME}/bin"
