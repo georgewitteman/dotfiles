@@ -1,0 +1,7 @@
+#!/bin/sh
+
+echo "Changing chezmoi repo to ssh"
+
+cd "{{ .chezmoi.sourceDir }}"
+
+{{ joinPath .chezmoi.sourceDir "exact_bin/executable_git-https-to-ssh" | include }}

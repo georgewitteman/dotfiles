@@ -71,8 +71,10 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-rhubarb'
 
 " FZF
-Plug 'junegunn/fzf'
-Plug 'junegunn/fzf.vim'
+if executable("fzf")
+  Plug 'junegunn/fzf'
+  Plug 'junegunn/fzf.vim'
+endif
 
 " grep/ack/ripgrep
 Plug 'mileszs/ack.vim'
