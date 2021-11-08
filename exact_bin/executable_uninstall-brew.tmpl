@@ -1,0 +1,10 @@
+{{- if eq .chezmoi.os "darwin" -}}
+#!/bin/sh
+
+set -e
+
+echo-eval '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh)"'
+
+echo-ok "Successfully uninstalled homebrew. Do you want to remove chezmoi files that rely on brew?"
+echo-run dotfiles apply
+{{ end -}}

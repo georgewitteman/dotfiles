@@ -48,16 +48,18 @@ if command -v shfmt >/dev/null; then
 fi
 
 # 1Password
-if command -v op >/dev/null; then
-  op_signin() {
-    if ! op get account >/dev/null 2>&1; then
-      # shellcheck disable=SC2016
-      echo_eval 'eval "$(op signin)"'
-      # Verify we are signed in now
-      op get account >/dev/null 2>&1
-    fi
-  }
-fi
+op_signin() {
+  if ! command -v op >/dev/null 2>&1; then
+    echo "command not found: op"
+    return 127
+  fi
+  if ! op get account >/dev/null 2>&1; then
+    # shellcheck disable=SC2016
+    echo_eval 'eval "$(op signin)"'
+    # Verify we are signed in now
+    op get account >/dev/null 2>&1
+  fi
+}
 
 bootstrap() {
   if ! command -v op >/dev/null 2>&1; then
@@ -107,6 +109,7 @@ autoload_script() {
 }
 
 autoload_script echo_eval "${PRIVATE_BIN}/echo-eval"
+autoload_script safe_eval "${PRIVATE_BIN}/safe-eval"
 autoload_script echo_run "${PRIVATE_BIN}/echo-run"
 autoload_script safe_run "${PRIVATE_BIN}/safe-run"
 
@@ -306,13 +309,19 @@ venv() {
 }
 
 dotfiles() {
+  if [ $# -eq 0 ]; then
+    command dotfiles
+    return $?
+  fi
   case "$1" in
     'cd')
       shift
       echo_run cd "$(chezmoi source-path "$@")"
       ;;
     *)
-      op_signin || return "$?"
+      if command -v op >/dev/null 2>&1; then
+        op_signin || return "$?"
+      fi
       command dotfiles "$@"
       ;;
   esac

@@ -4,7 +4,7 @@ usage="Wrapper for chezmoi.
 
 Usage:
   $(basename "$0") -h | --help            Show usage and exit.
-  $(basename "$0") apply [--noconfirm]    Show a diff and apply changes.
+  $(basename "$0") apply [-y|--yes|--noconfirm]  Show a diff and apply changes.
   $(basename "$0") <any chezmoi command>  Passthrough to chezmoi.
 "
 
@@ -25,7 +25,7 @@ case "$command" in
     cmd="safe-run"
     for arg in "$@"; do
       case "$arg" in
-        --noconfirm|--yes) cmd="echo-run"; break ;;
+        --noconfirm|--yes|-y) cmd="echo-run"; break ;;
       esac
     done
     if [ "$cmd" = "safe-run" ] && echo-run chezmoi verify; then

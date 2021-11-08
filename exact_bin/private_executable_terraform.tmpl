@@ -1,4 +1,4 @@
-{{- if not (or .is_work .is_transient (env "CI")) -}}
+{{- if lookPath "op" -}}
 #!/bin/sh
 
 export CLOUDFLARE_EMAIL='{{ .email }}'

@@ -2,6 +2,13 @@
 
 set -e
 
+if [ -f "${HOME}/.config/zsh/_alacritty" ]; then
+  echo-run rm "${HOME}/.config/zsh/_alacritty"
+fi
+
+echo "Skipping for now since I don't use Alacritty anymore"
+exit
+
 terminfo_file="$(mktemp)"
 echo-eval "curl --silent https://raw.githubusercontent.com/alacritty/alacritty/master/extra/alacritty.info > $terminfo_file"
 echo-run tic -xe alacritty,alacritty-direct "$terminfo_file"

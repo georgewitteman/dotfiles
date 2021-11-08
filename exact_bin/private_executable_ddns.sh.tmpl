@@ -1,4 +1,4 @@
-{{- if not (or .is_work .is_transient (env "CI")) -}}
+{{- if lookPath "op" -}}
 #!/bin/bash
 
 TOKEN='{{- output "op" "get" "item" "rbb4jo4wmrfdjjus6gqjsymm7a" "--fields" "token" | trim }}'
