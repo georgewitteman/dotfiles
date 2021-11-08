@@ -35,7 +35,9 @@
 [pull]
 	rebase = true
 [commit]
+{{- if lookPath "gpg" }}
 	gpgsign = true
+{{- end }}
 {{- if .is_work }}
 [includeIf "gitdir:{{ .work.path }}/*/"]
 	path = ~/.config/git/work
