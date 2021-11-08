@@ -1,4 +1,4 @@
-{{- if not (or .is_work .is_transient) -}}
+{{- if not .is_work -}}
 #!/bin/sh
 
 set -e

@@ -1,4 +1,4 @@
-{{- if and (eq .chezmoi.os "linux") (not .is_transient) -}}
+{{- if and (eq .chezmoi.os "linux") -}}
 #!/bin/sh
 
 if ! sudo true; then

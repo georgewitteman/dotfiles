@@ -1,4 +1,3 @@
-{{- if .is_work -}}
 #!/bin/sh
 
 set -e
@@ -21,4 +20,3 @@ echo-run ln -s "$HOME/Applications/SnowSQL.app/Contents/MacOS/snowsql" '/usr/loc
 
 echo-info "Cleaning up temporary directory."
 echo-run rm -rf "$tmpdir"
-{{- end -}}
