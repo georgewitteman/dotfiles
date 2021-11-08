@@ -5,7 +5,7 @@ TOKEN='{{- output "op" "get" "item" "rbb4jo4wmrfdjjus6gqjsymm7a" "--fields" "tok
 ACCOUNT_ID='{{- output "op" "get" "item" "rbb4jo4wmrfdjjus6gqjsymm7a" "--fields" "account" | trim }}'
 ZONE_ID="witteman.me"
 RECORD_ID="24808871"
-IP=`curl --ipv4 -s http://icanhazip.com/`
+IP="$(curl --ipv4 -s http://icanhazip.com/)"
 
 curl \
   -H "Authorization: Bearer ${TOKEN}" \

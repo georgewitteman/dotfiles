@@ -48,4 +48,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: ./install.sh
+      - if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: 'sudo apt update; sudo apt install --yes shellcheck'
+      - if: ${{ matrix.os == 'macOS-latest' }}
+        run: 'brew install shellcheck'
       - run: "${HOME}/bin/shellcheck-all"

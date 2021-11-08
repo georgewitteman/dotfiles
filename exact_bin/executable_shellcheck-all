@@ -30,4 +30,4 @@ _files() {
       *) $verbose && echo-info "Skipping ${file}" >&2 ;;
     esac
   done
-} | xargs shellcheck
+} | xargs echo shellcheck --external-sources --source-path="${HOME}"
