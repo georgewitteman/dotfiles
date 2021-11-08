@@ -1,0 +1,23 @@
+#!/bin/sh
+
+set -o errexit
+
+echo-warn "This will delete all chezmoi managed dotfiles, chezmoi, and some other files. Commands will be run from the home directory."
+echo-warn "You will only be prompted once."
+
+
+line='
+'
+
+cmds="${line}"
+cmds+="cd {{ .chezmoi.homeDir }}${line}"
+cmds+="chezmoi managed --no-pager | tail -r | xargs rm -dv${line}"
+cmds+="rm -fv {{ .chezmoi.homeDir }}/.ssh/known_hosts${line}"
+cmds+="rm -rfv"
+for f in ${HOME}/.z*; do
+  cmds+=" $f"
+done
+cmds+="${line}"
+cmds+="chezmoi purge --binary --force --verbose${line}"
+
+safe-eval "$cmds"
