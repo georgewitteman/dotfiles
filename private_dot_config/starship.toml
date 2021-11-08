@@ -11,6 +11,7 @@ $nodejs\
 $python\
 $time\
 $cmd_duration\
+$shell\
 $status\
 ${custom.stashes}\
 ${custom.tab}\

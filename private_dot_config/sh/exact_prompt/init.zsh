@@ -4,6 +4,8 @@ if [ -n "$VIRTUAL_ENV" ]; then
 fi
 if command -v starship >/dev/null 2>/dev/null; then
   eval "$(starship init zsh)"
+else
+  PS1="%~ %# "
 fi
 if [ -n "$__zsh_prompt_venv" ]; then
   source "${__zsh_prompt_venv}/bin/activate"
