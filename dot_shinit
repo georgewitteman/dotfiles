@@ -243,7 +243,7 @@ venv() {
   while [ $# -gt 0 ]; do
     case "$1" in
       -h | --help)
-        echo "usage: $(basename "$0") [--create|--create3] [--create2] [<venv name>]" >&2
+        echo "usage: $(basename "$0") [--create|--create3] [--create2] [-d|--deactivate] [<venv name>]" >&2
         return
         ;;
       --create2)
@@ -274,6 +274,13 @@ venv() {
         echo_run . "${1:-.venv}/bin/activate"
         if [ -f requirements.txt ]; then
           echo_run pip install -r requirements.txt
+        fi
+        return $?
+        ;;
+      -d|--deactivate)
+        if [ -n "$VIRTUAL_ENV" ] && command -v deactivate >/dev/null 2>&1; then
+          echo_run deactivate
+          return $?
         fi
         return $?
         ;;
