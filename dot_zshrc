@@ -30,7 +30,6 @@ echo-eval() { echo_eval "$@" }
 echo-run() { echo_run "$@" }
 safe-run() { safe_run "$@" }
 
-alias echo-path="echo-array path"
 alias echo-fpath="echo-array fpath"
 
 echo-array() {
