@@ -1,7 +1,7 @@
 {{- $work := (index . "is_work") -}}
 {{- $transient := (index . "is_transient") -}}
 
-{{- if and stdinIsATTY (not (env "CI")) -}}
+{{- if and stdinIsATTY (not (env "CI")) (not (env "GITPOD_HOST")) -}}
 {{- if kindIs "invalid" $work -}}
 {{- $work = promptBool "Is this a work computer (y/n)" -}}
 {{- end -}}
