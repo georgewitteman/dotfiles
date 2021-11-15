@@ -7,5 +7,5 @@ I use `chezmoi` to manage my dotfiles, which is why the files have the weird pre
 ## Installation
 
 ```bash
-sh -c "$(curl -fsLS git.io/chezmoi)" -- -b "${HOME}/bin" -d init --debug --use-builtin-git on --apply georgewitteman
+sh -c "$(curl -fsLS git.io/chezmoi)" -- -b "${HOME}/bin" -d init --use-builtin-git on --apply georgewitteman
 ```
