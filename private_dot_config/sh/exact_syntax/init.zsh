@@ -1,6 +1,6 @@
 if [ ! -d "${XDG_CACHE_DIR:-${HOME}/.cache}/fast-syntax-highlighting" ]; then
   echo "Install zsh syntax highlighting with:"
-  echo "  git clone https://github.com/zdharma/fast-syntax-highlighting.git" \
+  echo "  git clone https://github.com/zdharma-continuum/fast-syntax-highlighting" \
     "${XDG_CACHE_DIR:-~/.cache}/fast-syntax-highlighting"
 fi
 
