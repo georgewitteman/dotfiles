@@ -48,3 +48,6 @@ cd - >/dev/null
 for volume in /Volumes/Mattermost*; do
   echo-run hdiutil detach "$volume"
 done
+
+echo "Release notes:"
+echo "  https://docs.mattermost.com/install/desktop-app-changelog.html"
