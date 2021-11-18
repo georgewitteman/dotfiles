@@ -9,7 +9,13 @@ export PYTHONDONTWRITEBYTECODE=1
 # Locale setup
 export LC_ALL="${LC_ALL:-en_US.UTF-8}"
 export LANG="${LANG:-en_US.UTF-8}"
-export EDITOR="${EDITOR:-nvim}"
+
+if command -v nvim >/dev/null 2>&1; then
+  export EDITOR="${EDITOR:-nvim}"
+else
+  export EDITOR="${EDITOR:-vim}"
+fi
+
 export PAGER="${PAGER:-less}"
 export MANPAGER="${MANPAGER:-less -is}"
 export CLICOLOR="${CLICOLOR:-1}"
