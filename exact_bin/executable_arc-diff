@@ -33,7 +33,7 @@ while [ "$#" -gt 0 ]; do
   case "$1" in
     -[[:alnum:]][[:alnum:]]*)
       _value="-${1##-?}"
-      _arg="${1%%${1##-?}}"
+      _arg="${1%%"${1##-?}"}"
       ;;
   esac
   if [ -n "${_arg:-}${_value:-}" ]; then

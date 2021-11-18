@@ -3,6 +3,7 @@
 
 set -e
 
+# shellcheck source=.profile
 . "${HOME}/.profile"
 
 if [ ! -t 0 ] || [ -n "$CI" ]; then

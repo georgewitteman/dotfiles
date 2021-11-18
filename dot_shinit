@@ -84,11 +84,12 @@ if command -v brew >/dev/null; then
 fi
 
 remove_from_path() {
+  # NOTE: Removes only a prefix (i.e. $PYENV_ROOT not $PYENV_ROOT/bin)
   REPLY="$PATH"
   while true; do
     case ":$REPLY" in
-      *:"$1"/*:*) REPLY="${REPLY%%${1}*}${REPLY#*${1}*:}" ;;
-      *"$1"/*) REPLY="${REPLY%%${1}*}" ;;
+      *:"$1"/*:*) REPLY="${REPLY%%"${1}"*}${REPLY#*"${1}"*:}" ;;
+      *"$1"/*) REPLY="${REPLY%%"${1}"*}" ;;
       *)
         echo "${REPLY%:}"
         break
@@ -229,7 +230,7 @@ restore_venv() {
     fi
     # shellcheck disable=SC1090,SC1091
     . "${SAVED_VENVS%%:*}/bin/activate"
-    SAVED_VENVS="${SAVED_VENVS#${SAVED_VENVS%%:*}:}"
+    SAVED_VENVS="${SAVED_VENVS#"${SAVED_VENVS%%:*}:"}"
   fi
 }
 
@@ -357,8 +358,8 @@ done
 remove_from_front_of_path() {
   while true; do
     case ":$PATH" in
-      *:"$1"/*:*) PATH="${PATH%%${1}*}${PATH#*${1}*:}" ;;
-      *"$1"/*) PATH="${PATH%%${1}*}" ;;
+      *:"$1"/*:*) PATH="${PATH%%"${1}"*}${PATH#*"${1}"*:}" ;;
+      *"$1"/*) PATH="${PATH%%"${1}"*}" ;;
       *) PATH="${PATH%:}"; break ;;
     esac
   done

@@ -2,6 +2,7 @@
 
 set -e
 
+# shellcheck source=.profile
 . "${HOME}/.profile"
 
 if command -v snowsql >/dev/null 2>&1; then

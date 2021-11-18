@@ -8,4 +8,5 @@ if [ -t 1 ] || [ -n "${FORCE_COLOR:-}" ]; then
   printf "\033[0m" >&2
 fi
 
+# shellcheck disable=SC2294
 eval "$@"

@@ -10,8 +10,8 @@ for FGs in '    m' '   1m' '  30m' '1;30m' '  31m' '1;31m' '  32m' \
   '  90m' '1;90m' '  91m' '1;91m' '  92m' \
   '1;92m' '  93m' '1;93m' '  94m' '1;94m' '  95m' '1;95m' \
   '  96m' '1;96m' '  97m' '1;97m'; do
-  FG=${FGs#${FGs%%[![:space:]]*}}
-  FG=${FG%${FG##*[![:space:]]}}
+  FG=${FGs#"${FGs%%[![:space:]]*}"}
+  FG=${FG%"${FG##*[![:space:]]}"}
   printf " %b \033[%b  %b  " "$FGs" "$FG" "$T"
   for BG in 40m 41m 42m 43m 44m 45m 46m 47m 100m 101m 102m 103m 104m 105m 106m 107m; do
     printf "%b \033[%b\033[%b  %b  \033[0m" "$EINS" "$FG" "$BG" "$T"
