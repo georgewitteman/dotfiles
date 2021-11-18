@@ -35,7 +35,7 @@ export HOMEBREW_INSTALL_FROM_API=1
 # https://stackoverflow.com/a/9168577
 export PRIVATE_BIN="${HOME}/bin"
 
-PATH="${HOME}/.cargo/bin:${PRIVATE_BIN}:${HOME}/.local/bin:/usr/local/opt/fzf/bin:/usr/local/sbin:${PATH}"
+PATH="${PRIVATE_BIN}:${HOME}/.local/bin:/usr/local/opt/fzf/bin:/usr/local/sbin:${PATH}"
 
 for dir in "$HOME"/.config/sh/*/; do
   [ -d "$dir" ] || continue
