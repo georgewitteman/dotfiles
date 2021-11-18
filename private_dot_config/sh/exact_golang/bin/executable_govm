@@ -84,7 +84,7 @@ install_golang() {
 }
 
 install_version() {
-  install_golang "$1" "${HOME}/.local/share/yavm/installs/golang/${1}"
+  install_golang "$1" "${HOME}/.local/share/govm/${1}"
 }
 
 if [ "$#" -le 0 ]; then
