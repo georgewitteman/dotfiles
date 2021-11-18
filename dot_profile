@@ -7,14 +7,14 @@ export ENV="${HOME}/.shinit"
 export PYTHONDONTWRITEBYTECODE=1
 
 # Locale setup
-export LC_ALL="en_US.UTF-8"
-export LANG="en_US.UTF-8"
-export EDITOR="nvim"
-export PAGER=less
-export MANPAGER='less -is'
-export CLICOLOR=1
-export LSCOLORS="exfxcxdxbxegedabagacad"
-export LS_COLORS="di=34:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43"
+export LC_ALL="${LC_ALL:-en_US.UTF-8}"
+export LANG="${LANG:-en_US.UTF-8}"
+export EDITOR="${EDITOR:-nvim}"
+export PAGER="${PAGER:-less}"
+export MANPAGER="${MANPAGER:-less -is}"
+export CLICOLOR="${CLICOLOR:-1}"
+export LSCOLORS="${LSCOLORS:-exfxcxdxbxegedabagacad}"
+export LS_COLORS="${LS_COLORS:-di=34:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43}"
 
 export FZF_DEFAULT_COMMAND="${FZF_DEFAULT_COMMAND:-fd --type f --hidden --exclude .git}"
 
@@ -24,8 +24,7 @@ export GPG_TTY="$TTY"
 # https://github.com/Homebrew/brew/pull/10374
 export HOMEBREW_BOOTSNAP=1
 export HOMEBREW_NO_ANALYTICS=1
-# I was seeing issues with this so commenting it out for now
-# export HOMEBREW_INSTALL_FROM_API=1
+export HOMEBREW_INSTALL_FROM_API=1
 
 # https://stackoverflow.com/a/9168577
 export PRIVATE_BIN="${HOME}/bin"
