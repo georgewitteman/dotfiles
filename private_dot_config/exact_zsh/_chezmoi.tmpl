@@ -1,1 +1,3 @@
+{{- if lookPath "kubectl" -}}
 {{ output "chezmoi" "completion" "zsh" }}
+{{- end -}}
