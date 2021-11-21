@@ -4,7 +4,7 @@
 
 set -o errexit
 
-if [ ! "$(command -v chezmoi)" ]; then
+if ! command -v chezmoi >/dev/null 2>&1; then
   bin_dir="${HOME}/.local/bin"
   chezmoi="${bin_dir}/chezmoi"
   if command -v curl >/dev/null 2>&1; then

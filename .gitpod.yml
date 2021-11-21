@@ -3,4 +3,4 @@ tasks:
     set -o errexit
     set -o xtrace
     brew install chezmoi
-    chezmoi --source "$GITPOD_REPO_ROOT" init --apply
+    ./install.sh

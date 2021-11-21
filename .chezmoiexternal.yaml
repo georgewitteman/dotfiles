@@ -1,56 +1,73 @@
+ {{- $refreshPeriod := "168h" -}}
+
 .vim/autoload/plug.vim:
   type: file
   url: 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-  refreshPeriod: 168h
+  refreshPeriod: {{ $refreshPeriod }}
 
 .cache/fast-syntax-highlighting:
   type: archive
   url: 'https://github.com/zdharma-continuum/fast-syntax-highlighting/archive/master.tar.gz'
   exact: true
   stripComponents: 1
-  refreshPeriod: 168h
+  refreshPeriod: {{ $refreshPeriod }}
 
 .config/zsh/_alacritty:
   type: file
   url: 'https://raw.githubusercontent.com/alacritty/alacritty/master/extra/completions/_alacritty'
-  refreshPeriod: 168h
+  refreshPeriod: {{ $refreshPeriod }}
 
 .config/zsh/_cargo:
   type: file
   url: 'https://raw.githubusercontent.com/rust-lang/cargo/master/src/etc/_cargo'
-  refreshPeriod: 168h
+  refreshPeriod: {{ $refreshPeriod }}
+
+.config/zsh/_fd:
+  type: file
+  url: 'https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/fd/_fd'
+  refreshPeriod: {{ $refreshPeriod }}
+
+.config/zsh/_node:
+  type: file
+  url: 'https://raw.githubusercontent.com/zsh-users/zsh-completions/master/src/_node'
+  refreshPeriod: {{ $refreshPeriod }}
+
+.config/zsh/_rg:
+  type: file
+  url: 'https://raw.githubusercontent.com/BurntSushi/ripgrep/master/complete/_rg'
+  refreshPeriod: {{ $refreshPeriod }}
 
 .pyenv:
   type: archive
   url: 'https://github.com/pyenv/pyenv/archive/master.tar.gz'
   exact: true
   stripComponents: 1
-  refreshPeriod: 168h
+  refreshPeriod: {{ $refreshPeriod }}
 
 .pyenv/plugins/pyenv-doctor:
   type: archive
   url: 'https://github.com/pyenv/pyenv-doctor/archive/master.tar.gz'
   exact: true
   stripComponents: 1
-  refreshPeriod: 168h
+  refreshPeriod: {{ $refreshPeriod }}
 
 .pyenv/plugins/pyenv-update:
   type: archive
   url: 'https://github.com/pyenv/pyenv-update/archive/master.tar.gz'
   exact: true
   stripComponents: 1
-  refreshPeriod: 168h
+  refreshPeriod: {{ $refreshPeriod }}
 
 .pyenv/plugins/pyenv-which-ext:
   type: archive
   url: 'https://github.com/pyenv/pyenv-which-ext/archive/master.tar.gz'
   exact: true
   stripComponents: 1
-  refreshPeriod: 168h
+  refreshPeriod: {{ $refreshPeriod }}
 
 .nvm:
   type: archive
   url: 'https://github.com/nvm-sh/nvm/archive/master.tar.gz'
   exact: true
   stripComponents: 1
-  refreshPeriod: 168h
+  refreshPeriod: {{ $refreshPeriod }}
