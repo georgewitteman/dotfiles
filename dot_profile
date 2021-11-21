@@ -35,7 +35,7 @@ export HOMEBREW_INSTALL_FROM_API=1
 # https://stackoverflow.com/a/9168577
 export PRIVATE_BIN="${HOME}/bin"
 
-add_to_path() {
+add_to_path_if_exists() {
   if [ $# -ne 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
     echo "usage: $0 <path>"
     return
@@ -45,10 +45,10 @@ add_to_path() {
   fi
 }
 
-add_to_path "/usr/local/sbin"
-add_to_path "/usr/local/opt/fzf/bin"
-add_to_path "${HOME}/.local/bin"
-add_to_path "$PRIVATE_BIN"
+add_to_path_if_exists "/usr/local/sbin"
+add_to_path_if_exists "/usr/local/opt/fzf/bin"
+add_to_path_if_exists "${HOME}/.local/bin"
+add_to_path_if_exists "$PRIVATE_BIN"
 
 for dir in "$HOME"/.config/sh/*/; do
   [ -d "$dir" ] || continue
