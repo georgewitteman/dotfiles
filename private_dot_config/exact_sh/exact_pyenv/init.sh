@@ -1,12 +1,6 @@
 #!/bin/sh
 
 pyenv() {
-  if [ ! -d "$PYENV_ROOT" ] || ! command -vp pyenv >/dev/null 2>&1; then
-    echo-err "pyenv not installed or set up correctly"
-    echo-info "Run \`install-pyenv\` to set up pyenv"
-    return 127
-  fi
-
   command pyenv "$@" || return "$?"
 
   PATH="$(remove_from_path "$PYENV_ROOT")"

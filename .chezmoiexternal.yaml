@@ -24,7 +24,7 @@
 
 .config/zsh/_fd:
   type: file
-  url: 'https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/fd/_fd'
+  url: 'https://raw.githubusercontent.com/sharkdp/fd/master/contrib/completion/_fd'
   refreshPeriod: {{ $refreshPeriod }}
 
 .config/zsh/_node:
@@ -40,27 +40,6 @@
 .pyenv:
   type: archive
   url: 'https://github.com/pyenv/pyenv/archive/master.tar.gz'
-  exact: true
-  stripComponents: 1
-  refreshPeriod: {{ $refreshPeriod }}
-
-.pyenv/plugins/pyenv-doctor:
-  type: archive
-  url: 'https://github.com/pyenv/pyenv-doctor/archive/master.tar.gz'
-  exact: true
-  stripComponents: 1
-  refreshPeriod: {{ $refreshPeriod }}
-
-.pyenv/plugins/pyenv-update:
-  type: archive
-  url: 'https://github.com/pyenv/pyenv-update/archive/master.tar.gz'
-  exact: true
-  stripComponents: 1
-  refreshPeriod: {{ $refreshPeriod }}
-
-.pyenv/plugins/pyenv-which-ext:
-  type: archive
-  url: 'https://github.com/pyenv/pyenv-which-ext/archive/master.tar.gz'
   exact: true
   stripComponents: 1
   refreshPeriod: {{ $refreshPeriod }}

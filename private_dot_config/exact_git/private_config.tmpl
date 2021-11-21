@@ -1,9 +1,9 @@
 # vim: ft=gitconfig
 # This is Git's per-user configuration file.
 [user]
-	name = George Witteman
-	email = george@witteman.me
-	signingKey = 3F31B900236A9F918F143AE106223EC3AE0381FB
+	name = {{ .name }}
+	email = {{ .email }}
+	signingKey = {{ .gpgkey }}
 [init]
 	defaultBranch = main
 [filter "lfs"]
@@ -35,7 +35,7 @@
 [pull]
 	rebase = true
 [commit]
-{{- if (and (lookPath "gpg") (eq (output "sh" "-c" "gpg --list-secret-keys 409B6B1796C275462A1703113804BB82D39DC0E3 || echo false") "")) }}
+{{- if (and (lookPath "gpg") (eq (output "sh" "-c" (cat "gpg --list-secret-keys " .gpgkey " >/dev/null 2>&1 || echo false")) "")) }}
 	gpgsign = true
 {{- end }}
 {{- if .is_work }}

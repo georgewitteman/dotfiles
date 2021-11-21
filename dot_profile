@@ -16,7 +16,7 @@ else
   export EDITOR="${EDITOR:-vim}"
 fi
 
-export PAGER="${PAGER:-less}"
+export PAGER="${PAGER:-less -R}"
 export MANPAGER="${MANPAGER:-less -is}"
 export CLICOLOR="${CLICOLOR:-1}"
 export LSCOLORS="${LSCOLORS:-exfxcxdxbxegedabagacad}"
