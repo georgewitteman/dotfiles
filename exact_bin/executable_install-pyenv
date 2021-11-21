@@ -17,18 +17,6 @@ if [ -z "$PYENV_ROOT" ]; then
   exit 1
 fi
 
-# Clear any arguments
-set --
-
-for version_path in "${PYENV_ROOT}/versions/"*; do
-  [ -d "$version_path" ] || continue
-  set -- "$@" "$(basename "$version_path")"
-done
-
-if [ $# -eq 0 ]; then
-  set -- "3.7.8"
-fi
-
 tmp="$(mktemp -d)"
 
 if [ -d "${PYENV_ROOT}/cache" ]; then
@@ -54,15 +42,4 @@ if [ -d "${tmp}/cache" ]; then
   echo-run mv "${tmp}/cache" "${PYENV_ROOT}/cache"
 else
   echo-run mkdir -p "${PYENV_ROOT}/cache"
-fi
-
-for version in "$@"; do
-  echo-run pyenv install "$version" &
-done
-
-wait
-
-if [ $# -gt 0 ]; then
-  echo-info "Setting global python versions to $*"
-  echo-run pyenv global "$@"
 fi
