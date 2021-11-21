@@ -1,15 +1,8 @@
-.config/tmux/plugins
-.config/tmux/tpm
-.config/zsh/plugins
-.config
-.config/sh/*_local
 .config/nvim/venv*
+.config/sh/*_local
 .vim/.netrwhist
-.vim/pack
 .vim/plugged
 README.md
 bin/chezmoi
 install.sh
-tab.yml
 tags
-unbound.conf
