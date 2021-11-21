@@ -135,7 +135,9 @@ if (has('termguicolors'))
   let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
   set termguicolors
   set background=dark
-  colorscheme nord
+  if !empty(globpath(&rtp, 'colors/nord.vim'))
+    colorscheme nord
+  endif
 endif
 
 " How many whitespace characters a literal \t is worth

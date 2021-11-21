@@ -30,6 +30,10 @@ diff:
   exclude:
     - scripts
 
+{{ if (env "GITPOD_REPO_ROOT") -}}
+sourceDir: {{ env "GITPOD_REPO_ROOT" | quote}}
+{{- end }}
+
 data:
   is_work: {{ kindIs "bool" $work | ternary $work false }}
   is_transient: {{ kindIs "bool" $transient | ternary $transient false }}

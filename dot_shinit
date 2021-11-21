@@ -142,7 +142,7 @@ restart_sh() {
   # first to load the echo_run script
   echo_run echo >/dev/null 2>&1
 
-  echo_eval 'PATH="/usr/bin:/bin:/usr/sbin:/sbin"'
+  echo_eval 'PATH="/usr/sbin:/usr/bin:/sbin:/bin"'
   # shellcheck disable=SC2153
   if [ -n "$FPATH" ]; then
     echo_eval 'FPATH=""'

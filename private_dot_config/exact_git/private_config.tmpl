@@ -35,7 +35,7 @@
 [pull]
 	rebase = true
 [commit]
-{{- if lookPath "gpg" }}
+{{- if (and (lookPath "gpg") (eq (output "sh" "-c" "gpg --list-secret-keys 409B6B1796C275462A1703113804BB82D39DC0E3 || echo false") "")) }}
 	gpgsign = true
 {{- end }}
 {{- if .is_work }}
