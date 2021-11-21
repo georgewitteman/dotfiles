@@ -4,10 +4,13 @@ set -e
 
 # Using 'command ls' here because regular ls is aliased to add color and
 # formatting.
-IFS=$'\n' read -r -d '' -a files < <(command ls "$PRIVATE_BIN" | sort | grep -E '^update-' | grep -v update-all; printf '\0')
+IFS=$'\n' read -r -d '' -a files < <(
+  command ls "$PRIVATE_BIN" | sort | grep -E '^update-' | grep -v update-all
+  printf '\0'
+)
 
 for i in $(seq 1 "${#files[@]}"); do
-  file="${files[$i-1]}"
+  file="${files[$i - 1]}"
   if ! command -v "$(basename "$file")" >/dev/null 2>&1; then
     continue
   fi

@@ -14,5 +14,5 @@ file="${1?}"
 git blame -w --porcelain -- "$file" | awk '
   /^[0-9a-f]{40} / { sha = $1 }
   /^author-time / { print(sha) }
-' | sort -u | grep -v '^0\+$' | xargs -I % git diff -w --name-only "%^..%" \
-  | grep -v "$file" | sort | uniq -c | sort -rn
+' | sort -u | grep -v '^0\+$' | xargs -I % git diff -w --name-only "%^..%" |
+  grep -v "$file" | sort | uniq -c | sort -rn

@@ -6,6 +6,6 @@ printf "\033[0m"
 
 read -r reply >&2
 case "$reply" in
-  [Yy][Ee][Ss] | [Yy]) exit 0;;
+  [Yy][Ee][Ss] | [Yy]) exit 0 ;;
   *) exit 1 ;;
 esac

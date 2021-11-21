@@ -32,9 +32,9 @@ diff_url="$(git show --quiet --format="%b" "$ref" | grep "^Differential Revision
 diff_status=""
 if [ -n "$diff_url" ]; then
   diff_id="${diff_url##*/D}"
-  diff_status="$(echo '{"constraints":{"ids": ['"$diff_id"']}}' \
-    | arc call-conduit -- differential.revision.search \
-    | jq --raw-output '.response.data[0].fields.status.name')"
+  diff_status="$(echo '{"constraints":{"ids": ['"$diff_id"']}}' |
+    arc call-conduit -- differential.revision.search |
+    jq --raw-output '.response.data[0].fields.status.name')"
 fi
 
 header="======== git show --format=\"…\" $* ========"

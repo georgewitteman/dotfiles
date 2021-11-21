@@ -20,7 +20,8 @@ if [[ -z "$pyobj" ]]; then
 fi
 
 # The `-` means read from stdin
-output="$(python3 - << EOF
+output="$(
+  python3 - <<EOF
 import json
 try:
     obj = $pyobj

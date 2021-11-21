@@ -24,10 +24,22 @@ while [ "$#" -gt 0 ]; do
   case "$1" in
     -v | --by-version) by_version=1 ;;
     -d | --by-date) by_date=1 ;;
-    -p | --pattern) pattern="$2"; shift ;;
-    -n | --num-tags) num_tags="$2"; shift ;;
-    -g | --egrep-pattern) egrep_pattern="$2"; shift ;;
-    -- ) shift; break ;;
+    -p | --pattern)
+      pattern="$2"
+      shift
+      ;;
+    -n | --num-tags)
+      num_tags="$2"
+      shift
+      ;;
+    -g | --egrep-pattern)
+      egrep_pattern="$2"
+      shift
+      ;;
+    --)
+      shift
+      break
+      ;;
     -?*) die 1 "unknown option: ${1}" ;;
     *) break ;;
   esac
@@ -51,10 +63,10 @@ echo "${latest_tags_by_date[@]}"
 echo "${latest_tags_by_version[@]}"
 
 if [[ "$by_version$by_date" = "1" ]]; then
-  if (( by_version )); then
+  if ((by_version)); then
     printf "%s\n" "${latest_tags_by_version[@]}"
     exit
-  elif (( by_date )); then
+  elif ((by_date)); then
     printf "%s\n" "${latest_tags_by_date[@]}"
     exit
   fi
@@ -74,7 +86,7 @@ fi
 
 [[ "${#latest_tags_by_date}" -eq 0 ]] && exit 1
 
-for i in $(seq 0 "$(( num_tags - 1 ))"); do
+for i in $(seq 0 "$((num_tags - 1))"); do
   if [[ "${latest_tags_by_date[$i]}" != "${latest_tags_by_version[$i]}" ]]; then
     echo "index $i: ${latest_tags_by_date[$i]} != ${latest_tags_by_version[$i]}" >&2
     exit 1

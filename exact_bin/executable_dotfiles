@@ -25,7 +25,10 @@ case "$command" in
     cmd="safe-run"
     for arg in "$@"; do
       case "$arg" in
-        --noconfirm|--yes|-y) cmd="echo-run"; break ;;
+        --noconfirm | --yes | -y)
+          cmd="echo-run"
+          break
+          ;;
       esac
     done
     if [ "$cmd" = "safe-run" ] && echo-run chezmoi verify; then

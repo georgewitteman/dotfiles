@@ -19,5 +19,5 @@ nvm_upgrade() {
   fi
   echo_run git -C "$NVM_DIR" checkout \
     "$(git -C "$NVM_DIR" describe --abbrev=0 --tags --match "v[0-9]*" \
-    "$(git -C "$NVM_DIR" rev-list --tags --max-count=1)")"
+      "$(git -C "$NVM_DIR" rev-list --tags --max-count=1)")"
 }

@@ -27,7 +27,10 @@ while [ "$#" -gt 0 ]; do
   if [ "$path" = "--" ]; then
     break
   fi
-  full_path="$(cd "$(dirname "$path")" || exit; pwd)/$(basename "$path")"
+  full_path="$(
+    cd "$(dirname "$path")" || exit
+    pwd
+  )/$(basename "$path")"
   if ! git -C "$full_path" rev-parse --git-dir >/dev/null 2>&1; then
     continue
   fi

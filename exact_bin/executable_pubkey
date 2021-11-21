@@ -8,4 +8,4 @@ if [ ! -f "$file" ]; then
   echo-err "Failed to find public key file in ${HOME}/.ssh" >&2
   exit 1
 fi
-pbcopy < "$file" | echo-ok 'Public key copied to clipboard.'
+pbcopy <"$file" | echo-ok 'Public key copied to clipboard.'

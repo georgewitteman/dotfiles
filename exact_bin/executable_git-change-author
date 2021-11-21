@@ -26,10 +26,22 @@ while [ "$#" -gt 0 ]; do
   fi
   unset _arg _value
   case "$1" in
-    -h | --help) echo "$USAGE"; exit ;;
-    -n | --name) new_name="$2"; shift ;;
-    -e | --email) new_email="$2"; shift ;;
-    -- ) shift; break ;;
+    -h | --help)
+      echo "$USAGE"
+      exit
+      ;;
+    -n | --name)
+      new_name="$2"
+      shift
+      ;;
+    -e | --email)
+      new_email="$2"
+      shift
+      ;;
+    --)
+      shift
+      break
+      ;;
     -?*) die 1 "unknown option: ${1}" ;;
     *) break ;;
   esac

@@ -278,7 +278,7 @@ venv() {
         fi
         return $?
         ;;
-      -d|--deactivate)
+      -d | --deactivate)
         if [ -n "$VIRTUAL_ENV" ] && command -v deactivate >/dev/null 2>&1; then
           echo_run deactivate
           return $?
@@ -360,7 +360,10 @@ remove_from_front_of_path() {
     case ":$PATH" in
       *:"$1"/*:*) PATH="${PATH%%"${1}"*}${PATH#*"${1}"*:}" ;;
       *"$1"/*) PATH="${PATH%%"${1}"*}" ;;
-      *) PATH="${PATH%:}"; break ;;
+      *)
+        PATH="${PATH%:}"
+        break
+        ;;
     esac
   done
 }

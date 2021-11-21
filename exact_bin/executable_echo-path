@@ -1,14 +1,14 @@
 #!/bin/sh
 
 echo_array() {
-    len=$#
-    num_len="$(( ${#len} + 1 ))"
-    num=0
-    # shellcheck disable=SC2068
-    for arg in $@; do
-        printf "%${num_len}d: %s\n" "$num" "$arg"
-        num=$(( num + 1 ))
-    done
+  len=$#
+  num_len="$((${#len} + 1))"
+  num=0
+  # shellcheck disable=SC2068
+  for arg in $@; do
+    printf "%${num_len}d: %s\n" "$num" "$arg"
+    num=$((num + 1))
+  done
 }
 
 # shellcheck disable=SC2086

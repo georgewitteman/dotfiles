@@ -4,7 +4,7 @@ set -o errexit
 
 for arg in "$@"; do
   case "$arg" in
-    -h | --help )
+    -h | --help)
       echo "usage: arc-rebase [branch]"
       exit
       ;;

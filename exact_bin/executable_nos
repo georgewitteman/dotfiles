@@ -5,7 +5,6 @@ build_regex() {
   echo "($*)"
 }
 
-
 test_classes=()
 test_functions=()
 test_files=()
