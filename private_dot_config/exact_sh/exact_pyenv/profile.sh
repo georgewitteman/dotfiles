@@ -1,6 +1,6 @@
 #!/bin/sh
 
-export PYENV_ROOT="${HOME}/.local/share/pyenv"
+export PYENV_ROOT="${PYENV_ROOT:-"${HOME}/.local/share/pyenv"}"
 
 if [ -d "$PYENV_ROOT" ]; then
   if [ -f "${PYENV_ROOT}/version" ]; then
