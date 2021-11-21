@@ -1,5 +1,11 @@
 .config/nvim/venv*
 .config/sh/*_local
+.nvm/.cache/**
+.nvm/alias/**
+.nvm/versions
+.pyenv/shims/**
+.pyenv/version
+.pyenv/versions/**
 .vim/.netrwhist
 .vim/plugged
 README.md
