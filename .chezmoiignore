@@ -1,6 +1,7 @@
 .config/tmux/plugins
 .config/tmux/tpm
 .config/zsh/plugins
+.vim/.netrwhist
 .vim/pack
 .vim/plugged
 README.md
