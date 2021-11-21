@@ -1,5 +1,3 @@
 #!/bin/sh
 
-if [ -d "${HOME}/.cargo/bin" ]; then
-  PATH="${HOME}/.cargo/bin:${PATH}"
-fi
+add_to_path_if_exists "${HOME}/.cargo/bin"
