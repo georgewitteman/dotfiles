@@ -12,7 +12,8 @@ nvm() {
 
 nvm_upgrade() {
   if [ ! -d "$NVM_DIR" ]; then
-    echo_run git clone "https://github.com/nvm-sh/nvm.git" "$NVM_DIR"
+    echo "nvm is not installed. Do you want to install it?"
+    safe-run git clone "https://github.com/nvm-sh/nvm.git" "$NVM_DIR"
   else
     echo_run git -C "$NVM_DIR" fetch
   fi
