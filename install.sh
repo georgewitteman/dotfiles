@@ -2,7 +2,7 @@
 
 # https://github.com/chezmoi/dotfiles/blob/master/install.sh
 
-set -e # -e: exit on error
+set -o errexit
 
 if [ ! "$(command -v chezmoi)" ]; then
   bin_dir="${HOME}/.local/bin"
