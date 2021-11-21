@@ -1,24 +1,28 @@
 #!/bin/sh
 
-if [ -d "$PYENV_ROOT" ]; then
-  pyenv() {
-    command pyenv "$@" || return "$?"
+pyenv() {
+  if [ ! -d "$PYENV_ROOT" ] || ! command -vp pyenv >/dev/null 2>&1; then
+    echo-err "pyenv not installed or set up correctly"
+    echo-info 'Run `install-pyenv` to set up pyenv'
+    return 127
+  fi
 
-    PATH="$(remove_from_path "$PYENV_ROOT")"
+  command pyenv "$@" || return "$?"
 
-    if [ -f "${PYENV_ROOT}/version" ]; then
-      while IFS= read -r line || [ -n "$line" ]; do
-        PYENV_PATH="${PYENV_PATH:+${PYENV_PATH}:}${PYENV_ROOT}/versions/${line}/bin"
-      done <"${PYENV_ROOT}/version"
-    fi
+  PATH="$(remove_from_path "$PYENV_ROOT")"
 
-    # Reverse the path so that the first version in the file is first in $PATH
-    PATH="${PYENV_PATH:+${PYENV_PATH}:}${PYENV_ROOT}/bin:${PATH}"
-    unset PYENV_PATH
+  if [ -f "${PYENV_ROOT}/version" ]; then
+    while IFS= read -r line || [ -n "$line" ]; do
+      PYENV_PATH="${PYENV_PATH:+${PYENV_PATH}:}${PYENV_ROOT}/versions/${line}/bin"
+    done <"${PYENV_ROOT}/version"
+  fi
 
-    if [ -n "$VIRTUAL_ENV" ]; then
-      # shellcheck disable=SC1090,SC1091
-      . "${VIRTUAL_ENV}/bin/activate"
-    fi
-  }
-fi
+  # Reverse the path so that the first version in the file is first in $PATH
+  PATH="${PYENV_PATH:+${PYENV_PATH}:}${PYENV_ROOT}/bin:${PATH}"
+  unset PYENV_PATH
+
+  if [ -n "$VIRTUAL_ENV" ]; then
+    # shellcheck disable=SC1090,SC1091
+    . "${VIRTUAL_ENV}/bin/activate"
+  fi
+}
