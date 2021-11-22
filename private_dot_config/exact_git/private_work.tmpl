@@ -1,8 +1,8 @@
 {{ if .is_work -}}
 # vim: ft=gitconfig
 [user]
-	email = {{ .work.email }}
-	signingKey = {{ .work.signingkey }}
+	email = {{ .work.email | quote }}
+	signingKey = {{ .work.signingkey | quote }}
 [url "git@github.com:"]
 	insteadOf = https://github.com/
 [core]

@@ -1,0 +1,5 @@
+{{- if and .is_work (not .is_transient) }}
+{{- if stat (joinPath .work.path .work.ssh_config) }}
+{{ output "sed" "s/GREP_FOR_THIS/georgewitteman/g" (joinPath .work.path .work.ssh_config) }}
+{{- end }}
+{{- end }}

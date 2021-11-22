@@ -1,9 +1,9 @@
 # vim: ft=gitconfig
 # This is Git's per-user configuration file.
 [user]
-	name = {{ .name }}
-	email = {{ .email }}
-	signingKey = {{ .gpgkey }}
+	name = {{ .name | quote }}
+	email = {{ .email | quote }}
+	signingKey = {{ .gpgkey | quote }}
 [init]
 	defaultBranch = main
 [filter "lfs"]
