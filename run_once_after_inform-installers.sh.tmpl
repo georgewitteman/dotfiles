@@ -1,8 +1,8 @@
 #!/bin/sh
 
-if ! git -C "$(chezmoi source-path)" remote -v | grep -q "git@github.com:"; then
+if ! git -C {{ .chezmoi.sourceDir }} remote -v | grep -q "git@github.com:"; then
   echo "Use ssh repo URL for dotfiles repo:"
-  echo '  $ (cd "$(chezmoi source-path)" && git-https-to-ssh)'
+  echo '  $ (cd "$({{ .chezmoi.executable }} source-path)" && git-https-to-ssh)'
   echo
 fi
 
