@@ -5,7 +5,7 @@ fi
 if command -v starship >/dev/null 2>/dev/null; then
   eval "$(starship init zsh)"
 else
-  PS1="%~ %# "
+  PS1="%F{14}%B%~%f%b %# "
 fi
 if [ -n "$__zsh_prompt_venv" ]; then
   source "${__zsh_prompt_venv}/bin/activate"
