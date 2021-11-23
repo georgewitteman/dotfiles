@@ -24,86 +24,8 @@ if has('nvim')
   endif
 endif
 
-" Now managed by chezmoi
-" Install vim-plug if not found
-" if empty(glob('~/.vim/autoload/plug.vim'))
-"   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-"     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-"   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-" endif
-
-call plug#begin('~/.vim/plugged')
-" Required to do first
-Plug 'alker0/chezmoi.vim'
-
-" Colorschemes
-Plug 'laggardkernel/vim-one'
-Plug 'arzg/vim-colors-xcode'
-Plug 'joshdick/onedark.vim'
-Plug 'danilo-augusto/vim-afterglow'
-Plug 'arcticicestudio/nord-vim'
-
-" Filetypes
-Plug 'cespare/vim-toml'
-Plug 'gisphm/vim-gitignore'
-Plug 'chrisbra/vim-zsh'
-Plug 'elzr/vim-json'
-Plug 'lifepillar/pgsql.vim'
-Plug 'saltstack/salt-vim'
-Plug 'pboettch/vim-cmake-syntax'
-Plug 'plasticboy/vim-markdown'
-Plug 'stephpy/vim-yaml'
-Plug 'Vimjas/vim-python-pep8-indent'
-Plug 'raimon49/requirements.txt.vim'
-Plug 'hdima/python-syntax'
-Plug 'chrismaher/vim-dbt'
-Plug 'jalvesaq/Nvim-R'
-Plug 'chrisbra/csv.vim'
-Plug 'hashivim/vim-terraform'
-Plug 'darfink/vim-plist'
-Plug 'rust-lang/rust.vim'
-Plug 'Glench/Vim-Jinja2-Syntax'
-
-" Git
-Plug 'tpope/vim-git'
-" airblade/vim-gitgutter
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-rhubarb'
-
-" FZF
-Plug 'junegunn/fzf', executable('fzf') ? {} : { 'on': [] }
-Plug 'junegunn/fzf.vim', executable('fzf') ? {} : { 'on': [] }
-
-" grep/ack/ripgrep
-Plug 'mileszs/ack.vim'
-
-" Python
-Plug 'jeetsukumaran/vim-pythonsense'
-
-" Align table-like data
-Plug 'godlygeek/tabular'
-
-" Join/separate lines
-Plug 'AndrewRadev/splitjoin.vim'
-
-" Better text
-Plug 'reedes/vim-pencil'
-
-" Better syntax highlighting of files managed by chezmoi
-Plug 'alker0/chezmoi.vim'
-
-" Miscellaneous
-Plug 'haya14busa/is.vim'
-Plug 'janko/vim-test'
-Plug 'justinmk/vim-dirvish'
-Plug 'ludovicchabant/vim-gutentags'
-Plug 'ntpeters/vim-better-whitespace'
-Plug 'tpope/vim-capslock'
-Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-dispatch'
-Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-surround'
-call plug#end()
+" This must be first according to the docs: https://github.com/alker0/chezmoi.vim
+packadd! chezmoi.vim
 
 " Environment
 if ! has('nvim')
@@ -135,9 +57,7 @@ if (has('termguicolors'))
   let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
   set termguicolors
   set background=dark
-  if !empty(globpath(&rtp, 'colors/nord.vim'))
-    colorscheme nord
-  endif
+  colorscheme nord
 endif
 
 " How many whitespace characters a literal \t is worth
