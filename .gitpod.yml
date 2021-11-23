@@ -1,5 +1,11 @@
 image: georgewitteman/gitpod-dotfiles-base:latest
 
+vscode:
+  extensions:
+    - golang.go
+    - ms-azuretools.vscode-docker
+    - redhat.vscode-yaml
+
 # tasks:
 # - command: |
 #     sh -xe install.sh
