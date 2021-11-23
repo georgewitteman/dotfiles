@@ -1,9 +1,8 @@
 image:
   file: Dockerfile
 
-# tasks:
-# - command: |
-#     set -o errexit
-#     set -o xtrace
-#     brew install chezmoi
-#     ./install.sh
+tasks:
+- command: |
+    set -o errexit
+    set -o xtrace
+    ./install.sh
