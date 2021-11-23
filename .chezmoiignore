@@ -1,7 +1,7 @@
 .cache/fast-syntax-highlighting/secondary_theme.zsh
 .config/nvim/venv*
 .config/sh/*_local
-.gitpod.yml
+.gitpod.*
 .nvm/.cache/**
 .nvm/alias/**
 .nvm/versions
@@ -9,6 +9,7 @@
 .pyenv/version
 .pyenv/versions/**
 .vim/.netrwhist
+Dockerfile
 README.md
 bin/chezmoi
 install.sh
