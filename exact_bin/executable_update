@@ -10,7 +10,7 @@ IFS=$'\n' read -r -d '' -a files < <(
 )
 
 for i in $(seq 1 "${#files[@]}"); do
-  file="${files[$i - 1]}"
+  file="${files[i - 1]}"
   if ! command -v "$(basename "$file")" >/dev/null 2>&1; then
     continue
   fi
@@ -34,7 +34,7 @@ for i in $(seq 1 "${#files[@]}"); do
 
   if [ -n "$GITHUB_WORKFLOW" ]; then
     echo "::endgroup::"
-  elif [[ "$i" -lt "${#files[@]}" ]]; then
+  elif [[ $i -lt ${#files[@]} ]]; then
     echo
   fi
 done

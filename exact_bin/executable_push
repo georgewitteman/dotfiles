@@ -7,7 +7,7 @@ fi
 
 head="$(git rev-parse --abbrev-ref HEAD)"
 
-if [[ "$head" == "HEAD" ]]; then
+if [[ $head == "HEAD" ]]; then
   echo-err "You are not on the HEAD of a branch."
   exit 1
 fi
@@ -19,12 +19,12 @@ if [[ -n "$(git status --porcelain)" ]]; then
 fi
 
 remote="$(git rev-parse --abbrev-ref --symbolic-full-name '@{upstream}' 2>/dev/null)"
-if [[ -z "$remote" ]]; then
+if [[ -z $remote ]]; then
   set -- "$@" --set-upstream origin "$head"
 fi
 
 args=()
-while [[ "$#" -gt 0 ]]; do
+while [[ $# -gt 0 ]]; do
   case "$1" in
     -f | --force) args+=(--force-with-lease) ;;
     *) args+=("$1") ;;

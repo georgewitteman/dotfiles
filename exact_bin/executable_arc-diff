@@ -76,7 +76,7 @@ done
 # echo "skip_staging: ${skip_staging}"
 # exit
 
-if is-clean-repo && [[ -z "$amend" ]]; then
+if is-clean-repo && [[ -z $amend ]]; then
   die 1 "No changes to add. Did you mean 'arc-diff -a'?"
 fi
 
@@ -97,14 +97,14 @@ echo-run git add --all || die "$?" "Failed to stage changes."
 # Commit
 commit_run_cmd="echo-run"
 git_options=(--quiet)
-if [[ -n "$no_verify" ]]; then
+if [[ -n $no_verify ]]; then
   git_options+=(--no-verify)
 fi
-if [[ -n "$amend" ]]; then
+if [[ -n $amend ]]; then
   git_options+=('--amend' '--no-edit')
 else
   git_options+=('--no-edit')
-  if [[ -n "$message" ]]; then
+  if [[ -n $message ]]; then
     git_options+=("--message" "$message")
   else
     git_options+=('--message=<revision title>')
@@ -113,18 +113,18 @@ fi
 
 current_commit_author="$(git show --no-patch --format='%ae')"
 repo_email="$(git config --get user.email)"
-if [[ -z "$repo_email" ]]; then
+if [[ -z $repo_email ]]; then
   repo_email="$(git config --global --get user.email)"
 fi
 
-if [[ -n "$amend" && "$current_commit_author" != "$repo_email" ]]; then
+if [[ -n $amend && $current_commit_author != "$repo_email" ]]; then
   echo-warn "Are you sure you want to amend a commit that you don't own?"
   echo-warn "Current commit author email: $current_commit_author"
   echo-warn "Your email: $repo_email"
   commit_run_cmd="safe-run"
 fi
 
-if [[ -z "$amend" && "$current_commit_author" = "$repo_email" ]]; then
+if [[ -z $amend && $current_commit_author == "$repo_email" ]]; then
   echo-warn "Are you sure you want to create a new commit? You own the current commit."
   echo-warn "Current commit summary: $(git show --quiet --format='%s')"
   commit_run_cmd="safe-run"
@@ -132,20 +132,20 @@ fi
 
 prev_head="$(git rev-parse HEAD)"
 "$commit_run_cmd" git commit "${git_options[@]}" || die "$?" "Failed to commit changes to git."
-if [[ -n "$amend" ]]; then
+if [[ -n $amend ]]; then
   echo-info "Use 'git reset $prev_head' if you want to un-amend."
 fi
 
-if [[ -n "$rebase" ]]; then
+if [[ -n $rebase ]]; then
   echo-info "Rebasing off of master branch."
   echo-run rebase || die "$?" "Failed to rebase branch."
 fi
 
 # New diffs should always have the --draft flag
-if [[ -n "$amend" ]] && ! git show --no-patch --format="%b" | grep --quiet "Differential Revision"; then
+if [[ -n $amend ]] && ! git show --no-patch --format="%b" | grep --quiet "Differential Revision"; then
   # We're amending a commit, but the commit doesn't have a diff for it yet
   draft=true
-elif [[ -z "$amend" ]]; then
+elif [[ -z $amend ]]; then
   # If we're not amending a diff then we're creating a new one
   draft=true
 fi
@@ -157,11 +157,11 @@ arc_options=()
 # without prompting.
 arc_options+=('--amend-all')
 
-[[ -n "$draft" ]] && arc_options+=('--draft')
-[[ -n "$skip_staging" ]] && arc_options+=('--skip-staging')
-[[ -n "$no_verify" ]] && arc_options+=('--nolint' '--nounit')
-[[ -n "$message" ]] && arc_options+=('--message' "$message")
-[[ -n "$trace" ]] && arc_options+=('--trace')
+[[ -n $draft ]] && arc_options+=('--draft')
+[[ -n $skip_staging ]] && arc_options+=('--skip-staging')
+[[ -n $no_verify ]] && arc_options+=('--nolint' '--nounit')
+[[ -n $message ]] && arc_options+=('--message' "$message")
+[[ -n $trace ]] && arc_options+=('--trace')
 
 if ! $no_lint; then
   arc_options+=('--apply-patches')

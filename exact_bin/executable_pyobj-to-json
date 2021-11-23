@@ -10,12 +10,12 @@ else
 fi
 
 from_clipboard
-if [[ -z "$pyobj" ]]; then
+if [[ -z $pyobj ]]; then
   pyobj="$(pbpaste)"
   from_clipboard=1
 fi
 
-if [[ -z "$pyobj" ]]; then
+if [[ -z $pyobj ]]; then
   exit
 fi
 
@@ -32,7 +32,7 @@ except Exception as e:
 EOF
 )"
 
-if [[ -n "$from_clipboard" ]]; then
+if [[ -n $from_clipboard ]]; then
   echo "$output" | pbcopy
 fi
 

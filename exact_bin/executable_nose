@@ -7,7 +7,7 @@ fi
 
 # nose_profile just doesn't work, so lets just get rid of it so we don't always see that error
 for nose_profile_dir in "$VIRTUAL_ENV"/lib/python*/site-packages/nose_profile*/; do
-  [[ -d "$nose_profile_dir" ]] && echo-run rm -rf "$nose_profile_dir"
+  [[ -d $nose_profile_dir ]] && echo-run rm -rf "$nose_profile_dir"
 done
 
 if ! python -c 'import noseprogressive.result' >/dev/null 2>&1; then

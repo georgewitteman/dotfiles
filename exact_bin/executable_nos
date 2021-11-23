@@ -11,17 +11,17 @@ test_files=()
 test_args=(--with-progressive)
 
 for arg in "$@"; do
-  if [[ "$arg" =~ ^-.*$ ]]; then
+  if [[ $arg =~ ^-.*$ ]]; then
     test_args+=("$arg")
-  elif [[ "$arg" =~ ^[A-Z].*$ ]]; then
+  elif [[ $arg =~ ^[A-Z].*$ ]]; then
     test_classes+=("$arg")
-  elif [[ "$arg" =~ ^.*\.py$ ]]; then
-    if [[ ! -e "$arg" ]]; then
+  elif [[ $arg =~ ^.*\.py$ ]]; then
+    if [[ ! -e $arg ]]; then
       echo-warn "Skipping ${arg} because it doesn't exist"
       continue
     fi
     test_files+=("$arg")
-  elif [[ "$arg" =~ ^test_.*$ ]]; then
+  elif [[ $arg =~ ^test_.*$ ]]; then
     test_functions+=("$arg")
   else
     test_files+=("$arg")

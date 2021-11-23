@@ -35,4 +35,4 @@ _files() {
       *) $verbose && echo-info "Skipping ${file}" >&2 ;;
     esac
   done
-} | xargs shfmt -i 2 -ci -w
+} | xargs shfmt -i 2 -ci -l -d -s

@@ -3,6 +3,7 @@
 
 set -e
 
+# shellcheck disable=SC2016
 safe-eval '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
 
 echo-ok "Successfully uninstalled homebrew. Do you want to create chezmoi files that rely on brew?"

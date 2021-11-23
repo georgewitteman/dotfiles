@@ -19,8 +19,8 @@ get_nested_plist() {
 }
 
 restart_services() {
-  while IFS= read -r line || [[ -n "$line" ]]; do
-    if [[ "$line" == "" ]]; then continue; fi
+  while IFS= read -r line || [[ -n $line ]]; do
+    if [[ $line == "" ]]; then continue; fi
     i="$line"
     if pgrep "$i" >/dev/null; then
       echo-run killall "$i"
@@ -96,13 +96,13 @@ shift $((OPTIND - 1))
 
 opt="${1:-toggle}"
 
-if [[ "$opt" == "status" ]]; then
+if [[ $opt == "status" ]]; then
   get_dnd_status
-elif [[ "$opt" == "on" ]]; then
+elif [[ $opt == "on" ]]; then
   if [[ "$(get_dnd_status)" == "false" ]]; then enable_dnd; fi
-elif [[ "$opt" == "off" ]]; then
+elif [[ $opt == "off" ]]; then
   if [[ "$(get_dnd_status)" == "true" ]]; then disable_dnd; fi
-elif [[ "$opt" == "toggle" ]]; then
+elif [[ $opt == "toggle" ]]; then
   if [[ "$(get_dnd_status)" == "true" ]]; then
     disable_dnd
   else

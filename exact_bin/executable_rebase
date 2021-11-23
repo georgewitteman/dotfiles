@@ -5,7 +5,7 @@ if ! in-git-repo; then
   exit 128
 fi
 
-if [[ "$1" == "" ]]; then
+if [[ $1 == "" ]]; then
   echo-info -n "Getting remote HEAD... "
   GIT_HEAD="$(get-remote-head)"
   echo "$GIT_HEAD"
@@ -15,7 +15,7 @@ if [[ "$1" == "" ]]; then
   exit $?
 fi
 
-if [[ ("$1" == "-i" || "$1" == "--interactive") && "$#" -le 1 ]]; then
+if [[ ($1 == "-i" || $1 == "--interactive") && $# -le 1 ]]; then
   echo-info -n "Getting remote HEAD... "
   GIT_HEAD="$(get-remote-head)"
   echo "$GIT_HEAD"
@@ -25,12 +25,12 @@ if [[ ("$1" == "-i" || "$1" == "--interactive") && "$#" -le 1 ]]; then
   exit $?
 fi
 
-if [[ "$1" == "--continue" && "$#" -le 1 ]]; then
+if [[ $1 == "--continue" && $# -le 1 ]]; then
   echo-run git rebase --continue
   exit $?
 fi
 
-if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
+if [[ $1 == "-h" ]] || [[ $1 == "--help" ]]; then
   echo "Usage: $0 [<git rebase args>]"
   exit
 fi

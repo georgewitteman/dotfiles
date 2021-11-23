@@ -1,4 +1,4 @@
-{{- if lookPath "apt" -}}
+{{- if lookPath "apt-get" -}}
 #!/bin/sh
 
 if ! sudo true; then
@@ -17,9 +17,4 @@ fi
 
 echo-run sudo apt --quiet --quiet --yes update
 echo-run sudo apt --quiet --quiet --yes install shellcheck vim neovim git python3-pip
-
-if [ -n "$GITHUB_WORKFLOW" ]; then
-  echo "::endgroup::"
-fi
-
 {{ end -}}

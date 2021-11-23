@@ -66,7 +66,7 @@ jobs:
       - uses: actions/checkout@v2
       - run: ./install.sh
 
-  shellcheck:
+  lint:
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest]
@@ -76,6 +76,9 @@ jobs:
       - run: ./install.sh
       - if: ${{ matrix.os == 'ubuntu-latest' }}
         run: 'sudo apt update; sudo apt install --yes shellcheck'
+      - if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: 'curl -sS https://webinstall.dev/shfmt | bash'
       - if: ${{ matrix.os == 'macOS-latest' }}
-        run: 'brew install shellcheck'
+        run: 'brew install shellcheck shfmt'
       - run: "${HOME}/bin/shellcheck-all"
+      - run: "${HOME}/bin/shfmt-check-all"
