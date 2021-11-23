@@ -10,6 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: docker build --file Dockerfile --tag dockerfile-test .
+      - run: docker run -t dockerfile-test sh -c 'CI=true sh -c "$(curl -fsLS git.io/chezmoi)" -- init --apply georgewitteman'
 
   clone-and-install:
     strategy:
