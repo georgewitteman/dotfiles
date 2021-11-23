@@ -9,9 +9,9 @@ line='
 '
 
 cmds="${line}"
-cmds="${cmds}cd {{ .chezmoi.homeDir }}${line}"
+cmds="${cmds}cd ${HOME}${line}"
 cmds="${cmds}chezmoi managed --no-pager | tail -r | xargs rm -dv${line}"
-cmds="${cmds}rm -fv {{ .chezmoi.homeDir }}/.ssh/known_hosts${line}"
+cmds="${cmds}rm -fv ${HOME}/.ssh/known_hosts${line}"
 cmds="${cmds}rm -rfv"
 for f in "$HOME"/.z*; do
   cmds=" $f"

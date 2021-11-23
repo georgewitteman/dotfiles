@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-{{- if env "GITPOD_WORKSPACE_ID" }}
+{{- if stat "/var/gitpod/.bashrc-prepend" }}
 {{ output "cat" "/var/gitpod/.bashrc-prepend" }}
 {{- end }}
 
@@ -28,6 +28,6 @@ if [ -e "${HOME}/.cache/iterm2/iterm2_shell_integration.bash" ]; then
   . "${HOME}/.cache/iterm2/iterm2_shell_integration.bash" || true
 fi
 
-{{- if env "GITPOD_WORKSPACE_ID" -}}
+{{- if stat "/var/gitpod/.bashrc-prepend" }}
 {{ output "cat" "/var/gitpod/.bashrc-append" }}
 {{ end }}

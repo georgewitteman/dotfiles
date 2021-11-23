@@ -1,4 +1,3 @@
-{{- if eq .chezmoi.os "darwin" -}}
 #!/bin/sh
 
 set -e
@@ -26,13 +25,12 @@ brew "tmux"
 brew "tree"
 brew "wget"
 brew "universal-ctags"
-
-{{ if not (lookPath "aws") }}
-brew "awscli"
-{{ end -}}
-
-{{ if eq (output "sh" "-c" "ls /usr/local/Cellar/*openssl* || true" | trim) "" }}
-brew "openssl"
-{{ end -}}
 EOF
-{{ end -}}
+
+if ! command -v "aws" >/dev/null 2>&1; then
+  echo-run brew install awscli
+fi
+
+if ! ls /usr/local/Cellar/*openssl*; then
+  echo-run brew install openssl
+fi
