@@ -1,6 +1,6 @@
 image: georgewitteman/gitpod-dotfiles-base:latest
 
-tasks:
-- command: |
-    sh -xe install.sh
-    exec $SHELL -li
+# tasks:
+# - command: |
+#     sh -xe install.sh
+#     exec $SHELL -li
