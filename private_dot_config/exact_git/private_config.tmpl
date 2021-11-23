@@ -4,6 +4,10 @@
 	name = {{ .name | quote }}
 	email = {{ .email | quote }}
 	signingKey = {{ .gpgkey | quote }}
+{{- if env "GITPOD_WORKSPACE_ID" }}
+[credential]
+        helper = /usr/bin/gp credential-helper
+{{- end }}
 [init]
 	defaultBranch = main
 [filter "lfs"]
