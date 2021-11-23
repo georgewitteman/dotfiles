@@ -204,24 +204,7 @@ setopt hist_reduce_blanks
 # Don't execute immediately upon history expansion.
 setopt hist_verify
 
-# zle-open-tab() {
-#   BUFFER="tab"
-#   zle accept-line
-# }
-# zle -N zle-open-tab
-# bindkey '^T' zle-open-tab
-
-# if [[ -z "$TAB" && "$SHLVL" -eq 1 ]]; then
-#   tab default
-# fi
-
-# if [[ -z "$TMUX" && "$SHLVL" -eq 1 ]]; then
-#   # Always open tmux when starting Alacritty
-#   new_or_switch_tmux default "$HOME"
-# fi
-# zprof
-
 # Keep this at the end
-if [ -e "${HOME}/.iterm2_shell_integration.zsh" ]; then
-  . "${HOME}/.iterm2_shell_integration.zsh" || true
+if [ -e "${HOME}/.cache/iterm2/iterm2_shell_integration.zsh" ]; then
+  . "${HOME}/.cache/iterm2/iterm2_shell_integration.zsh" || true
 fi
