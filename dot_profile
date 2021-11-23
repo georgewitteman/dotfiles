@@ -39,6 +39,7 @@ PATH="/usr/local/sbin:${PATH}"
 PATH="/usr/local/opt/fzf/bin:${PATH}"
 PATH="${HOME}/.local/bin:${PATH}"
 PATH="$PRIVATE_BIN:${PATH}"
+PATH="${HOME}/.cargo/bin:${PATH}"
 
 for dir in "$HOME"/.config/sh/*/; do
   [ -d "$dir" ] || continue
