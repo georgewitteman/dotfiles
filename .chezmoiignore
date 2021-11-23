@@ -9,7 +9,6 @@
 .pyenv/version
 .pyenv/versions/**
 .vim/.netrwhist
-.vim/plugged
 README.md
 bin/chezmoi
 install.sh
