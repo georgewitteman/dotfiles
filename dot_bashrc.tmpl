@@ -23,6 +23,11 @@ for dir in "$HOME"/.config/sh/*/; do
   [ -r "${dir}init.bash" ] && . "${dir}init.bash"
 done
 
+# Keep this at the end
+if [ -e "${HOME}/.cache/iterm2/iterm2_shell_integration.bash" ]; then
+  . "${HOME}/.cache/iterm2/iterm2_shell_integration.bash" || true
+fi
+
 {{- if env "GITPOD_WORKSPACE_ID" -}}
 {{ output "cat" "/var/gitpod/.bashrc-append" }}
 {{ end }}

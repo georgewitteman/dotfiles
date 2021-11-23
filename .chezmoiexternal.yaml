@@ -7,6 +7,11 @@
   stripComponents: 1
   refreshPeriod: {{ $refreshPeriod }}
 
+.cache/iterm2/iterm2_shell_integration.bash:
+  type: file
+  url: 'https://gitlab.com/gnachman/iterm2/-/raw/master/Resources/shell_integration/iterm2_shell_integration.bash'
+  refreshPeriod: {{ $refreshPeriod }}
+
 .cache/iterm2/iterm2_shell_integration.zsh:
   type: file
   url: 'https://gitlab.com/gnachman/iterm2/-/raw/master/Resources/shell_integration/iterm2_shell_integration.zsh'
