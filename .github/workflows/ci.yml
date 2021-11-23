@@ -22,7 +22,7 @@ jobs:
           tags: georgewitteman/gitpod-dotfiles-base:latest
 
       - name: Install dotfiles to test
-        run: docker run -t georgewitteman/gitpod-dotfiles-base:latest sh -c 'CI=true sh -c "$(curl -fsLS git.io/chezmoi)" -- init --apply georgewitteman'
+        run: docker run --rm georgewitteman/gitpod-dotfiles-base:latest sh -c 'CI=true sh -c "$(curl -fsLS git.io/chezmoi)" -- init --apply georgewitteman'
 
       - name: Build and push
         uses: docker/build-push-action@v2
