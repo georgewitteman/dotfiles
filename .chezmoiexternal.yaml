@@ -69,7 +69,8 @@
 {{- template "vim-plugin" "https://github.com/alker0/chezmoi.vim/archive/main.tar.gz" }}
 
 # Nord color scheme
-{{- template "github-vim-plugin" (list "arcticicestudio/nord-vim" "develop") }}
+.vim/pack/plugins/opt/nord-vim:
+  {{- template "vim-plugin" "https://github.com/arcticicestudio/nord-vim/archive/develop.tar.gz" }}
 
 # Commenting these out so that when I add them back I can write down what they
 # do and why I have them
