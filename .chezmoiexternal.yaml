@@ -64,64 +64,75 @@
 .vim/pack/plugins/start/{{ base (index . 0) }}:
   {{- template "vim-plugin" (list "https://github.com/" (index . 0) "/archive/" (index . 1) ".tar.gz" | join "") }}{{ end -}}
 
+# Enables useful syntax highlighting for .tmpl and other chezmoi files
 .vim/pack/plugins/opt/chezmoi.vim:
 {{- template "vim-plugin" "https://github.com/alker0/chezmoi.vim/archive/main.tar.gz" }}
 
-# Color schemes
+# Nord color scheme
 {{- template "github-vim-plugin" (list "arcticicestudio/nord-vim" "develop") }}
 
-# Filetypes
-{{- template "github-vim-plugin" (list "cespare/vim-toml" "main") }}
-{{- template "github-vim-plugin" (list "gisphm/vim-gitignore" "master") }}
-{{- template "github-vim-plugin" (list "chrisbra/vim-zsh" "master") }}
-{{- template "github-vim-plugin" (list "elzr/vim-json" "master") }}
-{{- template "github-vim-plugin" (list "lifepillar/pgsql.vim" "master") }}
-{{- template "github-vim-plugin" (list "saltstack/salt-vim" "master") }}
-{{- template "github-vim-plugin" (list "pboettch/vim-cmake-syntax" "master") }}
-{{- template "github-vim-plugin" (list "plasticboy/vim-markdown" "master") }}
-{{- template "github-vim-plugin" (list "stephpy/vim-yaml" "master") }}
-{{- template "github-vim-plugin" (list "Vimjas/vim-python-pep8-indent" "master") }}
-{{- template "github-vim-plugin" (list "raimon49/requirements.txt.vim" "master") }}
-{{- template "github-vim-plugin" (list "hdima/python-syntax" "master") }}
-{{- template "github-vim-plugin" (list "chrismaher/vim-dbt" "master") }}
-{{- template "github-vim-plugin" (list "jalvesaq/Nvim-R" "master") }}
-{{- template "github-vim-plugin" (list "chrisbra/csv.vim" "master") }}
-{{- template "github-vim-plugin" (list "hashivim/vim-terraform" "master") }}
-{{- template "github-vim-plugin" (list "darfink/vim-plist" "master") }}
-{{- template "github-vim-plugin" (list "rust-lang/rust.vim" "master") }}
-{{- template "github-vim-plugin" (list "Glench/Vim-Jinja2-Syntax" "master") }}
+# Commenting these out so that when I add them back I can write down what they
+# do and why I have them
+# {{- template "github-vim-plugin" (list "cespare/vim-toml" "main") }}
+# {{- template "github-vim-plugin" (list "gisphm/vim-gitignore" "master") }}
+# {{- template "github-vim-plugin" (list "chrisbra/vim-zsh" "master") }}
+# {{- template "github-vim-plugin" (list "elzr/vim-json" "master") }}
+# {{- template "github-vim-plugin" (list "lifepillar/pgsql.vim" "master") }}
+# {{- template "github-vim-plugin" (list "saltstack/salt-vim" "master") }}
+# {{- template "github-vim-plugin" (list "pboettch/vim-cmake-syntax" "master") }}
+# {{- template "github-vim-plugin" (list "plasticboy/vim-markdown" "master") }}
+# {{- template "github-vim-plugin" (list "stephpy/vim-yaml" "master") }}
+# {{- template "github-vim-plugin" (list "Vimjas/vim-python-pep8-indent" "master") }}
+# {{- template "github-vim-plugin" (list "raimon49/requirements.txt.vim" "master") }}
+# {{- template "github-vim-plugin" (list "hdima/python-syntax" "master") }}
+# {{- template "github-vim-plugin" (list "chrismaher/vim-dbt" "master") }}
+# {{- template "github-vim-plugin" (list "jalvesaq/Nvim-R" "master") }}
+# {{- template "github-vim-plugin" (list "chrisbra/csv.vim" "master") }}
+# {{- template "github-vim-plugin" (list "hashivim/vim-terraform" "master") }}
+# {{- template "github-vim-plugin" (list "darfink/vim-plist" "master") }}
+# {{- template "github-vim-plugin" (list "rust-lang/rust.vim" "master") }}
+# {{- template "github-vim-plugin" (list "Glench/Vim-Jinja2-Syntax" "master") }}
 
-# Git
-{{- template "github-vim-plugin" (list "tpope/vim-git" "master") }}
+{{- if lookPath "git" }}
+# Allows calling arbitrary git commands and other things
 {{- template "github-vim-plugin" (list "tpope/vim-fugitive" "master") }}
+
+# GitHub plugin for vim-fugitive
 {{- template "github-vim-plugin" (list "tpope/vim-rhubarb" "master") }}
+{{ end }}
 
 {{- if lookPath "fzf" }}
-# FZF
+# FZF support
 {{- template "github-vim-plugin" (list "junegunn/fzf" "master") }}
 {{- template "github-vim-plugin" (list "junegunn/fzf.vim" "master") }}
 {{ end }}
 
-# Python
-{{- template "github-vim-plugin" (list "jeetsukumaran/vim-pythonsense" "master") }}
-
-# Align table-like data
-{{- template "github-vim-plugin" (list "godlygeek/tabular" "master") }}
-
-# Join/separate lines
-{{- template "github-vim-plugin" (list "AndrewRadev/splitjoin.vim" "master") }}
-
 # Better text
 {{- template "github-vim-plugin" (list "reedes/vim-pencil" "master") }}
 
-# Miscellaneous
+# Improved incremental search
 {{- template "github-vim-plugin" (list "haya14busa/is.vim" "master") }}
-{{- template "github-vim-plugin" (list "janko/vim-test" "master") }}
+
+# A better (and faster) file manager than netrw
 {{- template "github-vim-plugin" (list "justinmk/vim-dirvish" "master") }}
+
+# For automatically creating tags files
 {{- template "github-vim-plugin" (list "ludovicchabant/vim-gutentags" "master") }}
+
+# Strips whitespace when closing files
 {{- template "github-vim-plugin" (list "ntpeters/vim-better-whitespace" "master") }}
+
+# Adds capslock shortcut
 {{- template "github-vim-plugin" (list "tpope/vim-capslock" "master") }}
+
+# Shortcuts for commenting out lines/blocks of lines
 {{- template "github-vim-plugin" (list "tpope/vim-commentary" "master") }}
+
+# Adds `:Make` for asynchronous makes
 {{- template "github-vim-plugin" (list "tpope/vim-dispatch" "master") }}
+
+# Allows repeating non-default shortcuts
 {{- template "github-vim-plugin" (list "tpope/vim-repeat" "master") }}
+
+# Adds shortcuts for surrounding items with things
 {{- template "github-vim-plugin" (list "tpope/vim-surround" "master") }}
