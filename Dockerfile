@@ -15,6 +15,6 @@ ENV LANG=en_US.UTF-8
 
 RUN yes | unminimize && \
       apt-get update && \
-      apt-get install -y curl sudo && \
+      apt-get install -y curl sudo git && \
       apt-get clean -y && \
       rm -rf  /var/cache/debconf/*  /var/lib/apt/lists/*  /tmp/*  /var/tmp/*
