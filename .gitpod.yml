@@ -2,6 +2,5 @@ image: georgewitteman/gitpod-dotfiles-base:latest
 
 tasks:
 - command: |
-    set -o errexit
-    set -o xtrace
-    ./install.sh
+    sh -xe install.sh
+    exec $SHELL -li
