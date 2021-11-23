@@ -1,0 +1,21 @@
+#!/bin/sh
+
+if ! command -v op >/dev/null 2>&1; then
+  echo-err "1password-cli is not installed" >&2
+  exit 127
+fi
+
+if [ -t 1 ]; then
+  echo-info 'Run: eval $(terraform-vars)'
+  exit 1
+fi
+
+. "${HOME}/.shinit"
+
+op_signin
+
+echo export CLOUDFLARE_EMAIL={{ .email | quote }}
+echo export CLOUDFLARE_API_KEY="$(op get item dyulx35qcveyzpgdij2j3vvd4y --fields password)"
+echo export DNSIMPLE_TOKEN="$(op get item rbb4jo4wmrfdjjus6gqjsymm7a --fields token)"
+echo export DNSIMPLE_ACCOUNT="$(op get item rbb4jo4wmrfdjjus6gqjsymm7a --fields account)"
+echo export GITHUB_TOKEN="$(op get item sjrmyfeywna6zje7uf7oekhnoi --fields password)"
