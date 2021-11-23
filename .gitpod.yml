@@ -1,5 +1,4 @@
-image:
-  file: Dockerfile
+image: georgewitteman/gitpod-dotfiles-base:latest
 
 tasks:
 - command: |
