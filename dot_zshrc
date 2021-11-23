@@ -26,13 +26,9 @@ if [ -t 0 ] && [ -t 1 ] && [ -z "$CI" ]; then
   fi
 fi
 
-echo-eval() { echo_eval "$@" }
-echo-run() { echo_run "$@" }
-safe-run() { safe_run "$@" }
+alias echo_fpath="echo_array fpath"
 
-alias echo-fpath="echo-array fpath"
-
-echo-array() {
+echo_array() {
   local variable_name="${1:-path}"
   local count="${#${(P)variable_name}}"
   local width="${#count}"
@@ -42,7 +38,7 @@ echo-array() {
   done
 }
 
-echo-assoc-array() {
+echo_assoc_array() {
   local key val var_name="$1"
   for key val ("${(@Pkv)var_name}"); do
     echo "$key -> $val"
