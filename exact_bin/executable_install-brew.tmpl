@@ -1,4 +1,4 @@
-{{- if and (eq .chezmoi.os "darwin") (not (lookPath "brew")) -}}
+{{- if eq .chezmoi.os "darwin" -}}
 #!/bin/sh
 
 set -e

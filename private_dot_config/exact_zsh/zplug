@@ -41,8 +41,8 @@ zplug-reinit() {
     return 1
   fi
 
-  [[ -f "$compdump_file" ]] && echo-run rm -f "$compdump_file"
-  autoload -Uz compinit && echo-run compinit -d "${HOME}/.zcompdump"
+  [[ -f "$compdump_file" ]] && echo_run rm -f "$compdump_file"
+  autoload -Uz compinit && echo_run compinit -d "${HOME}/.zcompdump"
 
   # autoload -Uz zrecompile
   # echo-run zrecompile -p -q "$compdump_file"

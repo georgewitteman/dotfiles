@@ -1,4 +1,4 @@
-{{- if and (eq .chezmoi.os "linux") -}}
+{{- if lookPath "apt" -}}
 #!/bin/sh
 
 if ! sudo true; then
