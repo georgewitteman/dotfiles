@@ -5,6 +5,12 @@ on:
   pull_request:
 
 jobs:
+  dockerfile-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: docker build --file Dockerfile --tag dockerfile-test .
+
   clone-and-install:
     strategy:
       matrix:
