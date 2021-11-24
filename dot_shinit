@@ -59,22 +59,36 @@ if command -v brew >/dev/null; then
       echo-warn "Don't run brew from inside a venv. https://docs.brew.sh/Homebrew-and-Python"
       return 1
     fi
-    env "PATH=$(remove_from_path "$PYENV_ROOT")" command brew "$@" || return $?
+    env "PATH=$(remove_prefix_from_path "$PYENV_ROOT"; echo "$PATH")" command brew "$@" || return $?
   }
 fi
 
-remove_from_path() {
+remove_prefix_from_path() {
   # NOTE: Removes only a prefix (i.e. $PYENV_ROOT not $PYENV_ROOT/bin)
-  REPLY="$PATH"
   while true; do
-    case ":$REPLY" in
-      *:"$1"/*:*) REPLY="${REPLY%%"${1}"*}${REPLY#*"${1}"*:}" ;;
-      *"$1"/*) REPLY="${REPLY%%"${1}"*}" ;;
-      *)
-        echo "${REPLY%:}"
-        break
-        ;;
+    case ":$PATH" in
+      *:"$1"/*:*) PATH="${PATH%%"${1}"*}${PATH#*"${1}"*:}" ;;
+      *"$1"/*) PATH="${PATH%%"${1}"*}" ;;
+      *) break ;;
     esac
+  done
+}
+
+remove_from_path() {
+  while [ $# -gt 0 ]; do
+    while true; do
+      case $PATH in
+        "$1")
+          unset PATH
+          break
+          ;;
+        "$1:"*) PATH=${PATH#"$1:"} ;;
+        *":$1") PATH=${PATH%":$1"} ;;
+        *":$1:"*) PATH=${PATH%%":$1:"*}:${PATH#*":$1:"} ;;
+        *) break ;;
+      esac
+    done
+    shift
   done
 }
 
@@ -287,19 +301,6 @@ for dir in "$HOME"/.config/sh/*/; do
   [ -r "${dir}init.sh" ] && . "${dir}init.sh"
 done
 
-remove_from_front_of_path() {
-  while true; do
-    case ":$PATH" in
-      *:"$1"/*:*) PATH="${PATH%%"${1}"*}${PATH#*"${1}"*:}" ;;
-      *"$1"/*) PATH="${PATH%%"${1}"*}" ;;
-      *)
-        PATH="${PATH%:}"
-        break
-        ;;
-    esac
-  done
-}
-
 if [ -n "$VIRTUAL_ENV" ]; then
   # Allows you to `rc` (reload config, see aliases below) from inside a virtual
   # environment without losing the virtual environment. Normally `exec` keeps
@@ -309,7 +310,7 @@ if [ -n "$VIRTUAL_ENV" ]; then
 
   # Clean the front of $PATH. This is really only used when starting a subshell
   # while in a virtual environment
-  remove_from_front_of_path "$VIRTUAL_ENV"
+  remove_prefix_from_path "$VIRTUAL_ENV"
 
   # shellcheck disable=SC1090
   echo_run . "$VIRTUAL_ENV/bin/activate"
