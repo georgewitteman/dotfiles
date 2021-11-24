@@ -1,3 +1,5 @@
+" Config for the hdima/python-syntax plugin
+
 " Highlight syntax of str.format syntax
 let g:python_highlight_string_format = 1
 " Highlight standard exceptions
