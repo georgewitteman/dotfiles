@@ -19,13 +19,6 @@ if command -v yarn >/dev/null; then
 fi
 
 if command -v git >/dev/null; then
-  git() {
-    if [ $# -gt 0 ]; then
-      command git "$@"
-    else
-      command git status
-    fi
-  }
   alias g='git'
   alias gs='echo_run git status'
   alias gb='git-branch'
@@ -37,10 +30,6 @@ if command -v git >/dev/null; then
   alias commit='echo_run git commit'
   alias pull='echo_run git pull'
   alias status='echo_run git status'
-fi
-
-if command -v shfmt >/dev/null; then
-  alias my_shfmt="shfmt -i 2 -w -ci -s"
 fi
 
 # 1Password
