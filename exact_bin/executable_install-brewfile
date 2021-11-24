@@ -2,6 +2,7 @@
 
 set -e
 
+# shellcheck source=.profile
 . "${HOME}/.profile"
 
 echo-run brew tap "georgewitteman/tap"

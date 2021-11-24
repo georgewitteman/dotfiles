@@ -1,7 +1,8 @@
 #!/bin/sh
 
 if ! command -v "locale-gen" >/dev/null 2>&1; then
-  echo-err "locale-gen is not in \$PATH"
+  # shellcheck disable=SC2016
+  echo-err 'locale-gen is not in $PATH'
   exit 127
 fi
 
