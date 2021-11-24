@@ -44,7 +44,7 @@ if command -v git >/dev/null; then
 fi
 
 if command -v shfmt >/dev/null; then
-  alias my-shfmt="shfmt -i 2 -w -ci"
+  alias my_shfmt="shfmt -i 2 -w -ci -s"
 fi
 
 # 1Password
@@ -80,7 +80,6 @@ if command -v brew >/dev/null; then
     fi
     env "PATH=$(remove_from_path "$PYENV_ROOT")" command brew "$@" || return $?
   }
-  alias brew-upgrade='echo_run brew upgrade --ignore-pinned --display-times'
 fi
 
 remove_from_path() {
