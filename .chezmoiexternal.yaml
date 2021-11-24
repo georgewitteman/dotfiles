@@ -106,19 +106,20 @@
 # { {- template "github-vim-plugin" (list "rust-lang/rust.vim" "master") }}
 # { {- template "github-vim-plugin" (list "Glench/Vim-Jinja2-Syntax" "master") }}
 
-{{- if lookPath "git" }}
 # Allows calling arbitrary git commands and other things
-{{- template "github-vim-plugin" (list "tpope/vim-fugitive" "master") }}
+.vim/pack/plugins/opt/vim-fugitive:
+{{- template "vim-plugin" "https://github.com/tpope/vim-fugitive/archive/master.tar.gz" }}
 
 # GitHub plugin for vim-fugitive
-{{- template "github-vim-plugin" (list "tpope/vim-rhubarb" "master") }}
-{{ end }}
+.vim/pack/plugins/opt/vim-rhubarb:
+{{- template "vim-plugin" "https://github.com/tpope/vim-rhubarb/archive/master.tar.gz" }}
 
-{{- if lookPath "fzf" }}
 # FZF support
-{{- template "github-vim-plugin" (list "junegunn/fzf" "master") }}
-{{- template "github-vim-plugin" (list "junegunn/fzf.vim" "master") }}
-{{ end }}
+.vim/pack/plugins/opt/fzf:
+{{- template "vim-plugin" "https://github.com/junegunn/fzf/archive/master.tar.gz" }}
+
+.vim/pack/plugins/opt/fzf.vim:
+{{- template "vim-plugin" "https://github.com/junegunn/fzf.vim/archive/master.tar.gz" }}
 
 # Better text
 {{- template "github-vim-plugin" (list "reedes/vim-pencil" "master") }}

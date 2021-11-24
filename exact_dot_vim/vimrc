@@ -27,6 +27,18 @@ endif
 " This must be first according to the docs: https://github.com/alker0/chezmoi.vim
 packadd! chezmoi.vim
 
+" Add git plugins if git is installed
+if executable('git')
+  packadd! vim-fugitive
+  packadd! vim-rhubarb
+endif
+
+" Add fzf plugins if fzf is installed
+if executable('fzf')
+  packadd! fzf
+  packadd! fzf.vim
+endif
+
 " Environment
 if ! has('nvim')
   " Persistent Undo
