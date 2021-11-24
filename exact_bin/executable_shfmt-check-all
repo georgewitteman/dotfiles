@@ -1,38 +1,3 @@
 #!/bin/sh
 
-set -o errexit
-
-if ! command -v shfmt >/dev/null; then
-  echo-err "Install shfmt first: https://github.com/mvdan/sh"
-  exit 1
-fi
-
-PRIVATE_BIN="${PRIVATE_BIN:-${HOME}/bin}"
-verbose=false
-
-for arg in "$@"; do
-  case "$arg" in
-    -v | --verbose) verbose=true ;;
-    -h | --help)
-      echo "usage: $(basename "$0") [-v|--verbose]"
-      exit
-      ;;
-  esac
-done
-
-_files() {
-  path="$1"
-  find "$path" -type f -not -path '*/\.git/*' -not -name 'tags'
-}
-
-{
-  for file in $(_files "$PRIVATE_BIN") ~/.shinit ~/.profile $(_files ~/.config/sh); do
-    if [ ! -f "$file" ] || [ ! -r "$file" ]; then
-      continue
-    fi
-    case $(head -1 "$file") in
-      *bash* | */sh* | *env\ sh*) echo "$file" ;;
-      *) $verbose && echo-info "Skipping ${file}" >&2 ;;
-    esac
-  done
-} | xargs shfmt -i 2 -ci -l -d -s
+"${HOME}/bin/get-files-to-lint" "$@" | xargs shfmt -i 2 -ci -d -s

@@ -1,10 +1,6 @@
 {{- if .is_work -}}
 #!/bin/sh
 
-if [ "{{ .work.terms }}" = "" ]; then
-  exit
-fi
-
 exec 1>&2
 
 skiptermscheck=$(git config --type=bool hooks.skiptermscheck)
@@ -14,10 +10,9 @@ fi
 
 echo "Making sure there are no work terms in this repository"
 
-{{ range .work.terms }}
+{{ range .work.terms -}}
 if echo-run rg "{{ . }}"; then
   exit 1
 fi
-{{ end }}
-
+{{ end -}}
 {{ end -}}

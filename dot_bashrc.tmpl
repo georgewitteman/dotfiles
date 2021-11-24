@@ -4,17 +4,15 @@
 {{ output "cat" "/var/gitpod/.bashrc-prepend" }}
 {{- end }}
 
-if [ -z "$ENV" ]; then
+if [[ -z $ENV ]]; then
   # If ~/.bash_profile wasn't sourced then source it
+  # shellcheck source=.bash_profile
   source "${HOME}/.bash_profile"
   return $?
 fi
 
+# shellcheck source=.shinit
 source "${HOME}/.shinit"
-
-if [[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]]; then
-  . "/usr/local/etc/profile.d/bash_completion.sh"
-fi
 
 for dir in "$HOME"/.config/sh/*/; do
   [ -d "$dir" ] || continue
@@ -24,7 +22,8 @@ for dir in "$HOME"/.config/sh/*/; do
 done
 
 # Keep this at the end
-if [ -e "${HOME}/.cache/iterm2/iterm2_shell_integration.bash" ]; then
+if [[ -e "${HOME}/.cache/iterm2/iterm2_shell_integration.bash" ]]; then
+  # shellcheck source=.cache/iterm2/iterm2_shell_integration.bash
   . "${HOME}/.cache/iterm2/iterm2_shell_integration.bash" || true
 fi
 

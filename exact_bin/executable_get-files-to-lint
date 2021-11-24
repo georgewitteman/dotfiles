@@ -1,0 +1,49 @@
+#!/bin/sh
+
+set -o errexit
+
+PRIVATE_BIN="${PRIVATE_BIN:-${HOME}/bin}"
+verbose=false
+debug=false
+
+for arg in "$@"; do
+  case "$arg" in
+    -v | --verbose) verbose=true ;;
+    -d | --debug) debug=true ;;
+    -h | --help)
+      echo "usage: $(basename "$0") [-v|--verbose] [-d|--debug]" >&2
+      exit
+      ;;
+  esac
+done
+
+files() {
+  path="$1"
+  find "$path" -type f -not -path '*/\.git/*' -not -name 'tags'
+}
+
+lint_file() {
+  echo "$file"
+  $verbose && echo "Linting ${file}" >&2
+}
+
+for file in $(files "$PRIVATE_BIN") ~/.shinit ~/.profile ~/.bashrc \
+  ~/.bash_profile $(files ~/.config/sh) $(files ~/.config/git); do
+  if [ ! -f "$file" ] || [ ! -r "$file" ]; then
+    continue
+  fi
+  case "$file" in
+    *.bash | *.sh)
+      lint_file "$file"
+      continue
+      ;;
+  esac
+  case $(head -1 "$file") in
+    *bash* | */sh* | *env\ sh*)
+      lint_file "$file"
+      ;;
+    *)
+      $debug && echo "Skipping ${file}" >&2
+      ;;
+  esac
+done
