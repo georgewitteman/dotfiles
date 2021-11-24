@@ -1,9 +1,5 @@
 #!/bin/sh
 
-# Tmux sessions
-alias default='new_or_switch_tab default ${HOME}'
-alias misc='default'
-
 alias ll='ls -l'
 alias la='ls -la'
 
@@ -133,54 +129,6 @@ restart_sh() {
   fi
 
   echo_run exec "$1" -li
-}
-
-new_or_switch_tab() {
-  echo_run cd "$2"
-  tab "$1"
-  echo_run cd -
-}
-
-new_or_switch_tmux() {
-  if ! tmux has-session -t "$1" >/dev/null 2>&1; then
-    echo_run tmux new-session -d -s "$1" -c "$2"
-    if [ "$#" -ge 3 ]; then
-      tmux send-keys -t "$1" "clear; $3" Enter
-    fi
-  fi
-
-  if [ -z "$TMUX" ]; then
-    echo_run tmux attach-session -t "$1"
-  elif [ "$(tmux display-message -p '#S')" != "$1" ]; then
-    echo_run tmux switch-client -t "$1"
-  else
-    # shellcheck disable=SC2164
-    echo_run cd "$2"
-  fi
-}
-
-alias exit='_exit'
-_exit() {
-  # NOTE: The exit calls are prefixed with a \ so that they ignore alias
-  # expansion and prevent infinite loops
-  if [ -z "$TMUX" ]; then
-    # echo 'Exit if we are not in a tmux session'
-    \exit
-  fi
-
-  if [ "$(tmux list-windows 2>/dev/null | wc -l | tr -d ' ')" -ge 2 ]; then
-    # echo 'Exit if there are other windows in the same session'
-    \exit
-  fi
-
-  if ! tmux list-sessions 2>/dev/null | grep --invert-match caffeinate | grep --invert-match --quiet "$(tmux display-message -p '#{session_name}')"; then
-    # echo 'Exit if there are no other (useful) sessions to switch to'
-    \exit
-  fi
-
-  # echo 'Switch to another session'
-  tmux switch-client -t "$(tmux list-sessions 2>/dev/null | grep --invert-match caffeinate | grep --invert-match "$(tmux display-message -p '#{session_name}')" | head -n 1 | cut -d ':' -f 1)"
-  \exit
 }
 
 novenv() {
