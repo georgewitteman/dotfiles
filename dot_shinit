@@ -168,10 +168,10 @@ save_venv() {
   fi
 
   if [ "${1:-}" != "--quiet" ]; then
-    echo "Saving venv '${VIRTUAL_ENV}'."
+    echo "\033[2m# Saving venv '${VIRTUAL_ENV}'\033[m"
   fi
   SAVED_VENVS="${VIRTUAL_ENV}:${SAVED_VENVS:-}"
-  deactivate
+  echo_run deactivate
 }
 
 restore_venv() {
@@ -181,10 +181,10 @@ restore_venv() {
 
   if [ -n "${SAVED_VENVS:-}" ]; then
     if [ "${1:-}" != "--quiet" ]; then
-      echo "Restoring '${SAVED_VENVS%%:*}'."
+      echo "\033[2m# Restoring '${SAVED_VENVS%%:*}'\033[m"
     fi
     # shellcheck disable=SC1090,SC1091
-    . "${SAVED_VENVS%%:*}/bin/activate"
+    echo_run . "${SAVED_VENVS%%:*}/bin/activate"
     SAVED_VENVS="${SAVED_VENVS#"${SAVED_VENVS%%:*}:"}"
   fi
 }
