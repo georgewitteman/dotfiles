@@ -24,7 +24,9 @@ files() {
 
 lint_file() {
   echo "$file"
-  $verbose && echo "Linting ${file}" >&2
+  if $verbose; then
+    echo "Linting ${file}" >&2
+  fi
 }
 
 for file in $(files "$PRIVATE_BIN") ~/.shinit ~/.profile ~/.bashrc \
@@ -43,7 +45,9 @@ for file in $(files "$PRIVATE_BIN") ~/.shinit ~/.profile ~/.bashrc \
       lint_file "$file"
       ;;
     *)
-      $debug && echo "Skipping ${file}" >&2
+      if $debug; then
+        echo "Skipping ${file}" >&2
+      fi
       ;;
   esac
 done

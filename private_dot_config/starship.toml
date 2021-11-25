@@ -1,7 +1,7 @@
 add_newline = false
 
 format = """$shlvl\
-$hostname\
+hostname\
 $directory\
 $git_branch\
 ${custom.git_host}\
@@ -11,10 +11,9 @@ $nodejs\
 $python\
 $time\
 $cmd_duration\
-$shell\
 $status\
 ${custom.stashes}\
-${custom.tab}\
+$shell\
 $line_break\
 ${custom.venv}\
 $jobs\
@@ -81,14 +80,9 @@ when = "test -f $(git rev-parse --git-dir)/logs/refs/stash"
 format = "[$output]($style) "
 style = 'fg:red bold'
 
-[custom.tab]
-description = "The current tab in the tab terminal multiplexer"
-command = "tab --starship"
-when = "tab --starship"
-shell = ["sh"]
-format = "[$output]($style) "
-style = "bold blue"
-
 [jobs]
 symbol = '+'
 style = 'fg:red bold'
+
+[shell]
+disabled = false

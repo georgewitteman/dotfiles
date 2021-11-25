@@ -59,7 +59,10 @@ if command -v brew >/dev/null; then
       echo-warn "Don't run brew from inside a venv. https://docs.brew.sh/Homebrew-and-Python"
       return 1
     fi
-    env "PATH=$(remove_prefix_from_path "$PYENV_ROOT"; echo "$PATH")" command brew "$@" || return $?
+    env "PATH=$(
+      remove_prefix_from_path "$PYENV_ROOT"
+      echo "$PATH"
+    )" command brew "$@" || return $?
   }
 fi
 
@@ -119,7 +122,9 @@ restart_sh() {
   # Sometimes the shell will be started with a dash in front of the name of the
   # shell to indicate that it's a login shell. This breaks the restart because
   # exec thinks that the name of the shell is actually an argument.
-  set -- "$(ps -p $$ | tail -1 | awk '{print $4}')"
+  if [ $# -eq 0 ]; then
+    set -- "$(ps -p $$ | tail -1 | awk '{print $4}')"
+  fi
   set -- "${1#-}"
   set -- "$(command -v "$1")"
 
@@ -132,15 +137,19 @@ restart_sh() {
     return 1
   fi
 
-  # Since we reset $PATH and the autoloading requires cat we need to run this
-  # first to load the echo_run script
+  # Since we reset $PATH and the autoloading requires cat (which is in $PATH)
+  # preload some functions
   echo_run echo >/dev/null 2>&1
+  echo_eval echo >/dev/null 2>&1
 
-  echo_eval 'PATH="/usr/sbin:/usr/bin:/sbin:/bin"'
-  # shellcheck disable=SC2153
-  if [ -n "$FPATH" ]; then
-    echo_eval 'FPATH=""'
-  fi
+  for name in $(env | cut -d '=' -f1 | xargs echo); do
+    # These variables are provided by the terminal and are not automatically
+    # assigned by the shell
+    case "$name" in
+      COLORFGBG | COLORTERM | COMMAND_MODE | HOME | ITERM_PROFILE | ITERM_SESSION_ID | LANG | LC_TERMINAL | LC_TERMINAL_VERSION | LOGNAME | PWD | SHELL | SSH_AUTH_SOCK | TERM | TERM_PROGRAM | TERM_PROGRAM_VERSION | TERM_SESSION_ID | TMPDIR | USER | XPC_FLAGS | XPC_SERVICE_NAME | __CFBundleIdentifier | __CF_USER_TEXT_ENCODING) : ;;
+      *) echo_run unset "$name" ;;
+    esac
+  done
 
   echo_run exec "$1" -li
 }
