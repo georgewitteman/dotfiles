@@ -142,7 +142,10 @@ restart_sh() {
   echo_run echo >/dev/null 2>&1
   echo_eval echo >/dev/null 2>&1
 
-  for name in $(env | cut -d '=' -f1 | xargs echo); do
+  # Try using the awk approach since my original approach didn't handle
+  # newlines well
+  # for name in $(env | cut -d '=' -f1 | xargs echo); do
+  for name in $(awk 'BEGIN{for(v in ENVIRON) print v}' | xargs echo); do
     # These variables are provided by the terminal and are not automatically
     # assigned by the shell
     case "$name" in
