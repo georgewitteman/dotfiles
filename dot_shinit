@@ -3,30 +3,12 @@
 alias ll='ls -l'
 alias la='ls -la'
 
-alias vim.='vim .'
-
 if ! command -v sudoedit >/dev/null; then
   alias sudoedit='sudo --edit'
 fi
 
-# Always use local package jest
-if command -v yarn >/dev/null; then
-  alias jest='yarn run jest'
-fi
-
-if command -v git >/dev/null; then
-  alias g='git'
-  alias gs='echo_run git status'
-  alias gb='git-branch'
-  alias master='main'
-  alias develop='main'
-  alias switch='echo_run git switch'
-  alias restore='echo_run git restore'
-  alias fetch='echo_run git fetch'
-  alias commit='echo_run git commit'
-  alias pull='echo_run git pull'
-  alias status='echo_run git status'
-fi
+alias gs='echo_run git status'
+alias gb='git-branch'
 
 # 1Password
 op_signin() {
@@ -41,17 +23,6 @@ op_signin() {
     op get account >/dev/null 2>&1
   fi
 }
-
-bootstrap() {
-  if ! command -v op >/dev/null 2>&1; then
-    echo-err "1Password CLI needs to be installed to run bootstrap scripts."
-    return 1
-  fi
-  op_signin || return "$?"
-  command bootstrap "$@"
-}
-
-alias c='clear'
 
 if command -v brew >/dev/null; then
   brew() {
@@ -116,7 +87,6 @@ take() {
   mkdir -p "$1" && cd "$1"
 }
 
-alias rc="restart_sh" # Reload Config
 alias resh="restart_sh"
 restart_sh() {
   # Sometimes the shell will be started with a dash in front of the name of the
@@ -158,38 +128,11 @@ restart_sh() {
 }
 
 novenv() {
-  save_venv --quiet
+  venv --save
   "$@"
   set -- $?
-  restore_venv --quiet
+  venv --restore
   return "$1"
-}
-
-save_venv() {
-  if [ -z "$VIRTUAL_ENV" ]; then
-    return
-  fi
-
-  if [ "${1:-}" != "--quiet" ]; then
-    echo "\033[2m# Saving venv '${VIRTUAL_ENV}'\033[m"
-  fi
-  SAVED_VENVS="${VIRTUAL_ENV}:${SAVED_VENVS:-}"
-  echo_run deactivate
-}
-
-restore_venv() {
-  if command -v deactivate >/dev/null 2>&1; then
-    echo_run deactivate
-  fi
-
-  if [ -n "${SAVED_VENVS:-}" ]; then
-    if [ "${1:-}" != "--quiet" ]; then
-      echo "\033[2m# Restoring '${SAVED_VENVS%%:*}'\033[m"
-    fi
-    # shellcheck disable=SC1090,SC1091
-    echo_run . "${SAVED_VENVS%%:*}/bin/activate"
-    SAVED_VENVS="${SAVED_VENVS#"${SAVED_VENVS%%:*}:"}"
-  fi
 }
 
 tmp() {
@@ -218,6 +161,28 @@ venv() {
         echo_run . "${1:-.venv}/bin/activate"
         if [ -f requirements.txt ]; then
           echo_run pip install -r requirements.txt
+        fi
+        return $?
+        ;;
+      --save)
+        if [ -z "$VIRTUAL_ENV" ]; then
+          return
+        fi
+
+        echo "\033[2m# Saving venv '${VIRTUAL_ENV}'\033[m"
+        SAVED_VENVS="${VIRTUAL_ENV}:${SAVED_VENVS:-}"
+        echo_run deactivate
+        return $?
+        ;;
+      --restore)
+        if command -v deactivate >/dev/null 2>&1; then
+          echo_run deactivate
+        fi
+
+        if [ -n "${SAVED_VENVS:-}" ]; then
+          echo "\033[2m# Restoring '${SAVED_VENVS%%:*}'\033[m"
+          echo_run . "${SAVED_VENVS%%:*}/bin/activate"
+          SAVED_VENVS="${SAVED_VENVS#"${SAVED_VENVS%%:*}:"}"
         fi
         return $?
         ;;
@@ -291,19 +256,6 @@ dotfiles() {
       command dotfiles "$@"
       ;;
   esac
-}
-
-presentation_setup() {
-  new_home="$(mktemp -d)"
-  echo "Copying .terminfo to new HOME"
-  cp -r ~/.terminfo "${new_home}/.terminfo"
-  echo "Copying .vim to new HOME"
-  cp -r ~/.vim "${new_home}/.vim"
-  echo "Adding empty .zshrc"
-  touch "${new_home}/.zshrc"
-  cd "$new_home" || return
-  clear
-  HOME="$new_home" exec zsh -li
 }
 
 for dir in "$HOME"/.config/sh/*/; do
