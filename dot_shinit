@@ -144,8 +144,35 @@ tmp() {
 venv() {
   while [ $# -gt 0 ]; do
     case "$1" in
+      -[[:alnum:]][[:alnum:]]*)
+        _value="-${1##-?}"
+        _arg="${1%%"${1##-?}"}"
+        ;;
+    esac
+    if [ -n "${_arg:-}${_value:-}" ]; then
+      shift
+      set -- "$_arg" "$_value" "$@"
+    fi
+    unset _arg _value
+    case "$1" in
       -h | --help)
-        echo "usage: $(basename "$0") [--create|--create3] [--create2] [-d|--deactivate] [<venv name>]" >&2
+        echo "Usage: venv [options] [<venv_name>]"
+        echo
+        echo "Manges virtual environments. Passing no options will attempt to find"
+        echo "and activate a virtual environment with the default name (.venv) or "
+        echo "<venv_name>."
+        echo
+        echo "Options:"
+        echo "  -c --create --create3  Create a python 3 virtual environment."
+        echo "  --create2              Create a python 2 virtual environment."
+        echo "  -s --save              Save a virtual environment to the stack."
+        echo "  -r --restore           Restore a virtual environment from the stack."
+        echo "  -d --deactivate        Deactivate a virtual environment."
+        echo
+        echo "Examples:"
+        echo "  venv  # Activate a virtual environment with the name .venv"
+        echo "  venv --create .venv3"
+        echo "  venv --save && do_something && venv --restore"
         return
         ;;
       --create2)
@@ -164,7 +191,7 @@ venv() {
         fi
         return $?
         ;;
-      --save)
+      -s | --save)
         if [ -z "$VIRTUAL_ENV" ]; then
           return
         fi
@@ -174,7 +201,7 @@ venv() {
         echo_run deactivate
         return $?
         ;;
-      --restore)
+      -r | --restore)
         if command -v deactivate >/dev/null 2>&1; then
           echo_run deactivate
         fi
@@ -186,7 +213,7 @@ venv() {
         fi
         return $?
         ;;
-      --create | --create3)
+      -c | --create | --create3)
         shift
         if [ -n "$VIRTUAL_ENV" ]; then
           echo_run deactivate
