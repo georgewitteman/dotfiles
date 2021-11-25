@@ -93,10 +93,17 @@ restart_sh() {
   # shell to indicate that it's a login shell. This breaks the restart because
   # exec thinks that the name of the shell is actually an argument.
   if [ $# -eq 0 ]; then
-    set -- "$(ps -p $$ | tail -1 | awk '{print $4}')"
+    if [ -f "/proc/$$/cmdline" ]; then
+      set -- "$(tr '\0' ' ' <"/proc/$$/cmdline" | cut -d ' ' -f 1)"
+    else
+      set -- "$(ps -p $$ -o comm | tail -1)"
+    fi
   fi
   set -- "${1#-}"
   set -- "$(command -v "$1")"
+  if [ -z "$1" ]; then
+    set -- "${SHELL:-/bin/zsh}"
+  fi
 
   if command -v zplug >/dev/null 2>&1; then
     echo_run zplug reinit

@@ -21,11 +21,13 @@ for dir in "$HOME"/.config/sh/*/; do
   [ -r "${dir}init.bash" ] && . "${dir}init.bash"
 done
 
+{{- if eq .chezmoi.os "darwin" }}
 # Keep this at the end
 if [[ -e "${HOME}/.cache/iterm2/iterm2_shell_integration.bash" ]]; then
   # shellcheck source=.cache/iterm2/iterm2_shell_integration.bash
   . "${HOME}/.cache/iterm2/iterm2_shell_integration.bash" || true
 fi
+{{- end -}}
 
 {{- if stat "/var/gitpod/.bashrc-prepend" }}
 {{ output "cat" "/var/gitpod/.bashrc-append" }}

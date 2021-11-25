@@ -3,7 +3,7 @@
 pyenv() {
   command pyenv "$@" || return "$?"
 
-  PATH="$(remove_from_path "$PYENV_ROOT")"
+  remove_prefix_from_path "$PYENV_ROOT"
 
   if [ -f "${PYENV_ROOT}/version" ]; then
     while IFS= read -r line || [ -n "$line" ]; do

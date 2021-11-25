@@ -1,0 +1,41 @@
+#!/bin/sh
+
+set -o errexit
+
+if ! command -v docker >/dev/null 2>&1; then
+  echo-err "Docker is not installed"
+  exit 127
+fi
+
+if ! pgrep -fq docker; then
+  echo-err "Docker is not running"
+  exit 1
+fi
+
+image="${1:-georgewitteman/dev-alpine:latest}"
+
+if [ -f "$image" ]; then
+  file="$image"
+  image="georgewitteman/dev-alpine:local"
+
+  echo-run docker build \
+    --tag "$image" \
+    --file "$file" \
+    "$(chezmoi source-path)"
+fi
+
+ssh_volumes=""
+for id_file in ~/.ssh/id_*; do
+  ssh_volumes="--volume ${id_file}:/home/dev/.ssh/${id_file##*/} ${ssh_volumes}"
+done
+
+# shellcheck disable=SC2086
+echo-run docker run \
+  --volume "dev-alpine-workspace:/home/dev/workspace" \
+  --volume "dev-alpine-pyenv-versions:/home/dev/.pyenv/versions" \
+  $ssh_volumes \
+  --interactive \
+  --tty \
+  --rm \
+  --detach-keys 'ctrl-q,q' \
+  "$image"

@@ -15,6 +15,7 @@ $status\
 ${custom.stashes}\
 $shell\
 $line_break\
+${custom.container}\
 ${custom.venv}\
 $jobs\
 $character"""
@@ -45,8 +46,13 @@ disabled = false
 use_12hr = true
 time_format = '%I:%M %P'
 
+[custom.container]
+when = "test -f /.dockerenv || grep -q docker /proc/1/cgroup"
+style = 'bold fg:purple'
+command = "echo DOCKER"
+description = "Identifies that we are in a container"
+
 [custom.venv]
-shell = ['dash']
 command = """
 if [ "${VIRTUAL_ENV%%/src/.venv*}" != "$VIRTUAL_ENV" ]; then
   basename "${VIRTUAL_ENV%/*/*}"
@@ -56,18 +62,16 @@ fi
 """
 when = 'test -n "$VIRTUAL_ENV"'
 format = '([\($output\)]($style) )'
-style = 'fg:242'
+style = "fg:242"
 description = 'Custom formatted python virtual environment name'
 
 [custom.git_host]
-shell = ['dash']
 command = "command git ls-remote --get-url"
 when = "command git rev-parse --is-inside-work-tree"
 format = "at [$output]($style) "
 disabled = true
 
 [custom.stashes]
-shell = ['dash']
 command = """
 stash_count=$(wc -l $(command git rev-parse --git-dir)/logs/refs/stash | awk '{ print $1 }')
 if [ "$stash_count" -eq 1 ]; then
