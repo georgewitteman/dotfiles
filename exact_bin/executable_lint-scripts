@@ -3,5 +3,5 @@
 set -o errexit
 set -o xtrace
 
-shellcheck-all "$@"
 shfmt-check-all "$@"
+shellcheck-all "$@"

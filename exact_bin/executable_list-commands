@@ -1,0 +1,48 @@
+#!/bin/sh
+
+case "$PATH" in
+  *[!:]:) PATH="$PATH:" ;;
+esac
+
+set -o noglob
+IFS=:
+
+dirname_cd() {
+  dir=${1:-.}
+  dir=${dir%%"${dir##*[!/]}"}
+  if [ -n "${dir##*/*}" ]; then
+    dir=.
+  fi
+  dir=${dir%/*}
+  dir=${dir%%"${dir##*[!/]}"}
+  cd "${dir:-/}" || return
+}
+
+basename_print() {
+  dir=${1%"${1##*[!/]}"}
+  dir=${dir##*/}
+  dir=${dir%"$2"}
+  printf '%s' "${dir:-/}"
+}
+
+for dir in $PATH; do
+  set +o noglob
+  if [ -z "$dir" ]; then
+    dir="."
+  fi
+  for file in "$dir"/*; do
+    if [ -x "$file" ] && ! [ -d "$file" ]; then
+      echo "${file##*/}:${file}"
+    fi
+  done
+done | sort | uniq | while IFS=: read -r name file; do
+  dirname_cd "$file"
+  printf '%s = %s' "${name}" "$file"
+  while [ -h "$file" ]; do
+    file="$(readlink "$file")"
+    dirname_cd "$file"
+    printf ' -> %s' "${PWD}/"
+    basename_print "$file"
+  done
+  echo
+done
