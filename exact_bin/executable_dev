@@ -13,17 +13,13 @@ if ! pgrep -fq docker; then
 fi
 
 name="default-dev"
-default_image="georgewitteman/dev-alpine:latest"
-image=""
-file=""
+file="$(chezmoi source-path)/.docker/dev-alpine.Dockerfile"
 verbose="false"
 
 USAGE="Usage: $(basename "$0") [OPTIONS] [COMMAND] [ARG...]
 
 Options:
   -n, --name string     A name for the container (default: ${name})
-      --image string    The docker image to run (default: ${image})
-  -f, --file string     A Dockerfile to build
   -v, --verbose         Run verbosely
 "
 
@@ -48,22 +44,6 @@ while [ "$#" -gt 0 ]; do
     -h | --help)
       echo "$USAGE"
       exit
-      ;;
-    --image)
-      if [ $# -lt 2 ]; then
-        die 1 "${1} requires a value"
-      fi
-      file=""
-      image="$2"
-      shift
-      ;;
-    -f | --file)
-      if [ $# -lt 2 ]; then
-        die 1 "${1} requires a value"
-      fi
-      file="$2"
-      image=""
-      shift
       ;;
     -n | --name)
       if [ $# -lt 2 ]; then
@@ -137,19 +117,20 @@ if [ -n "$file" ]; then
     "$(chezmoi source-path)"
 fi
 
-if [ -z "$image" ]; then
-  image="$default_image"
-fi
-
 ssh_volumes=""
 for id_file in ~/.ssh/id_*; do
   ssh_volumes="--volume ${id_file}:/home/dev/.ssh/${id_file##*/} ${ssh_volumes}"
 done
 
+# Cache certain directories across all alpine containers
 # shellcheck disable=SC2086
 exec echo-run docker run \
   --volume "dev-${name}-workspace:/home/dev/workspace" \
-  --volume "dev-${name}-pyenv-versions:/home/dev/.pyenv/versions" \
+  --volume "dev-alpine-pyenv-versions:/home/dev/.pyenv/versions" \
+  --volume "dev-alpine-cargo-bin:/home/dev/.cargo/bin" \
+  --volume "dev-alpine-cargo-registry-index:/home/dev/.cargo/registry/index" \
+  --volume "dev-alpine-cargo-registry-cache:/home/dev/.cargo/registry/cache" \
+  --volume "dev-alpine-cargo-git-db:/home/dev/.cargo/git/db" \
   $ssh_volumes \
   --interactive \
   --tty \

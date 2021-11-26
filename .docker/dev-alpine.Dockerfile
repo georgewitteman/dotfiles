@@ -3,7 +3,7 @@ FROM alpine:latest
 # https://github.com/microsoft/vscode-dev-containers/blob/main/script-library/common-alpine.sh
 # Make sure to install everything here. Using --no-cache makes apk download the
 # index every time, so running it multiple times will just waste time/bandwidth
-RUN apk --update add \
+RUN apk --update --upgrade add \
       autoconf \
       automake \
       bash \
@@ -13,6 +13,7 @@ RUN apk --update add \
       curl \
       gcc \
       git \
+      gnupg \
       less \
       libffi-dev \
       libxml2-dev \
@@ -21,15 +22,17 @@ RUN apk --update add \
       mandoc \
       nasm \
       ncurses \
-      openssh \
+      openssh-client \
       openssl-dev \
       readline-dev \
+      rustup \
       starship \
       sudo \
       tree \
       vim \
       zlib-dev \
-      zsh
+      zsh \
+      && echo "Finished installing packages!"
 
 ARG USER=dev
 ENV HOME /home/$USER
@@ -41,10 +44,14 @@ RUN addgroup -S $USER \
 
 USER $USER
 
+RUN rustup-init -y --no-modify-path
+
 RUN mkdir -p $HOME/workspace && chown $USER:$USER $HOME/workspace
 RUN mkdir -p $HOME/.pyenv/versions && chown $USER:$USER $HOME/.pyenv/versions
-
-# RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
+RUN mkdir -p $HOME/.cargo/bin && chown $USER:$USER $HOME/.cargo/bin
+RUN mkdir -p $HOME/.cargo/registry/index && chown $USER:$USER $HOME/.cargo/registry/index
+RUN mkdir -p $HOME/.cargo/registry/cache && chown $USER:$USER $HOME/.cargo/registry/cache
+RUN mkdir -p $HOME/.cargo/git/db && chown $USER:$USER $HOME/.cargo/git/db
 
 COPY --chown=$USER:$USER . $HOME/.local/share/chezmoi
 # TODO: Switch to using apk for chezmoi once it has a version where
