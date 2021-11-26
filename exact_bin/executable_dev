@@ -12,16 +12,133 @@ if ! pgrep -fq docker; then
   exit 1
 fi
 
-image="${1:-georgewitteman/dev-alpine:latest}"
+name="default-dev"
+default_image="georgewitteman/dev-alpine:latest"
+image=""
+file=""
+verbose="false"
 
-if [ -f "$image" ]; then
-  file="$image"
-  image="georgewitteman/dev-alpine:local"
+USAGE="Usage: $(basename "$0") [OPTIONS] [COMMAND] [ARG...]
+
+Options:
+  -n, --name string     A name for the container (default: ${name})
+      --image string    The docker image to run (default: ${image})
+  -f, --file string     A Dockerfile to build
+  -v, --verbose         Run verbosely
+"
+
+die() {
+  [ "$#" -ge 2 ] && echo-err "$2"
+  exit "$1"
+}
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    -[[:alnum:]][[:alnum:]]*)
+      _value="-${1##-?}"
+      _arg="${1%%"${1##-?}"}"
+      ;;
+  esac
+  if [ -n "${_arg:-}${_value:-}" ]; then
+    shift
+    set -- "$_arg" "$_value" "$@"
+  fi
+  unset _arg _value
+  case "$1" in
+    -h | --help)
+      echo "$USAGE"
+      exit
+      ;;
+    --image)
+      if [ $# -lt 2 ]; then
+        die 1 "${1} requires a value"
+      fi
+      file=""
+      image="$2"
+      shift
+      ;;
+    -f | --file)
+      if [ $# -lt 2 ]; then
+        die 1 "${1} requires a value"
+      fi
+      file="$2"
+      image=""
+      shift
+      ;;
+    -n | --name)
+      if [ $# -lt 2 ]; then
+        die 1 "${1} requires a value"
+      fi
+      name="$2"
+      shift
+      ;;
+    -v | --verbose)
+      if $verbose; then
+        set -o xtrace
+      fi
+      verbose="true"
+      ;;
+    --)
+      shift
+      break
+      ;;
+    -?*) die 1 "unknown option: ${1}" ;;
+    *) break ;;
+  esac
+  shift
+done
+
+if [ $# -eq 0 ]; then
+  # If no command arguments were passed then use -li as the default to set an
+  # interactive login shell
+  set -- /bin/zsh -li
+fi
+
+running_container="$(docker ps -q --filter "name=^${name}$")"
+if [ -n "$running_container" ]; then
+  if [ -n "$file" ] || [ -n "$image" ]; then
+    die 1 "A container with the name '${name}' is already running (${running_container}). Can't rebuild it."
+  fi
+
+  exec echo-run docker exec \
+    --interactive \
+    --tty \
+    "$running_container" \
+    "$@"
+fi
+
+if [ -n "$file" ]; then
+  if [ ! -f "$file" ]; then
+    die 1 "The docker file is not a file: ${file}"
+  fi
+
+  if [ ! -r "$file" ]; then
+    die 1 "The file is not readable: ${file}"
+  fi
+
+  if [ -n "$image" ]; then
+    die 1 "Something went wrong. Expected there to be no \$image set: ${image}"
+  fi
+
+  sha256="$(sha256sum "$file" | cut -d ' ' -f 1 | cut -c-16)"
+
+  image="georgewitteman/dev-dockerfile:${sha256}"
+
+  progress="auto"
+  if $verbose; then
+    progress="plain"
+  fi
 
   echo-run docker build \
+    --tag "georgewitteman/dev-dockerfile:latest" \
     --tag "$image" \
     --file "$file" \
+    --progress "$progress" \
     "$(chezmoi source-path)"
+fi
+
+if [ -z "$image" ]; then
+  image="$default_image"
 fi
 
 ssh_volumes=""
@@ -30,12 +147,14 @@ for id_file in ~/.ssh/id_*; do
 done
 
 # shellcheck disable=SC2086
-echo-run docker run \
-  --volume "dev-alpine-workspace:/home/dev/workspace" \
-  --volume "dev-alpine-pyenv-versions:/home/dev/.pyenv/versions" \
+exec echo-run docker run \
+  --volume "dev-${name}-workspace:/home/dev/workspace" \
+  --volume "dev-${name}-pyenv-versions:/home/dev/.pyenv/versions" \
   $ssh_volumes \
   --interactive \
   --tty \
   --rm \
   --detach-keys 'ctrl-q,q' \
-  "$image"
+  --name "$name" \
+  "$image" \
+  "$@"
