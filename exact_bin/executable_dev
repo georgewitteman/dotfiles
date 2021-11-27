@@ -15,12 +15,14 @@ fi
 name="default-dev"
 file="$(chezmoi source-path)/.docker/dev-alpine.Dockerfile"
 verbose="false"
+no_cache="false"
 
 USAGE="Usage: $(basename "$0") [OPTIONS] [COMMAND] [ARG...]
 
 Options:
   -n, --name string     A name for the container (default: ${name})
   -v, --verbose         Run verbosely
+      --no-cache        Build without the cache
 "
 
 die() {
@@ -57,6 +59,9 @@ while [ "$#" -gt 0 ]; do
         set -o xtrace
       fi
       verbose="true"
+      ;;
+    --no-cache)
+      no_cache="true"
       ;;
     --)
       shift
@@ -109,10 +114,16 @@ if [ -n "$file" ]; then
     progress="plain"
   fi
 
+  no_cache_arg=
+  if $no_cache; then
+    no_cache_arg="--no-cache"
+  fi
+
   echo-run docker build \
     --tag "georgewitteman/dev-dockerfile:latest" \
     --tag "$image" \
     --file "$file" \
+    $no_cache_arg \
     --progress "$progress" \
     "$(chezmoi source-path)"
 fi
