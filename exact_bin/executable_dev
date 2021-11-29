@@ -119,6 +119,7 @@ if [ -n "$file" ]; then
     no_cache_arg="--no-cache"
   fi
 
+  # shellcheck disable=SC2248,SC2086
   echo-run docker build \
     --tag "georgewitteman/dev-dockerfile:latest" \
     --tag "$image" \

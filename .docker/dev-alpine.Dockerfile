@@ -4,6 +4,7 @@ FROM alpine:latest
 # Make sure to install everything here. Using --no-cache makes apk download the
 # index every time, so running it multiple times will just waste time/bandwidth
 RUN apk --update --upgrade add \
+      alpine-sdk \
       autoconf \
       automake \
       bash \
@@ -39,8 +40,12 @@ ENV HOME /home/$USER
 
 RUN addgroup -S $USER \
       && adduser -s /bin/zsh -S $USER -G $USER \
+      && addgroup $USER abuild \
       && echo "$USER ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/$USER \
-      && chmod 0440 /etc/sudoers.d/$USER
+      && chmod 0440 /etc/sudoers.d/$USER \
+      && mkdir -p /var/cache/distfiles \
+      && chgrp abuild /var/cache/distfiles \
+      && chmod g+w /var/cache/distfiles
 
 USER $USER
 
