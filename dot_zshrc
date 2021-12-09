@@ -183,11 +183,6 @@ if command -v fzf &>/dev/null && command -v fd &>/dev/null; then
   bindkey '^R' fzf-select-history
 fi
 
-# make some commands not show up in history
-HISTIGNORE="ls:ll:la:cd:cd -:pwd:exit:date:* --help"
-HISTSIZE=10000000
-SAVEHIST=10000000
-
 # History command configuration
 # Treat the '!' character specially during expansion.
 setopt bang_hist
@@ -201,8 +196,20 @@ setopt hist_ignore_all_dups
 setopt hist_ignore_space
 # Remove superfluous blanks before recording entry.
 setopt hist_reduce_blanks
-# Don't execute immediately upon history expansion.
+
+# Whenever the user enters a line with history expansion, don’t execute the
+# line directly; instead, perform history expansion and reload the line into
+# the editing buffer.
+# https://zsh.sourceforge.io/Doc/Release/Options.html#index-history_002c-verifying-substitution
 setopt hist_verify
+
+# This option works like APPEND_HISTORY except that new history lines are added
+# to the $HISTFILE incrementally (as soon as they are entered), rather than
+# waiting until the shell exits. The file will still be periodically re-written
+# to trim it when the number of lines grows 20% beyond the value specified by
+# $SAVEHIST (see also the HIST_SAVE_BY_COPY option).
+# https://zsh.sourceforge.io/Doc/Release/Options.html#index-history_002c-incremental-appending-to-a-file
+setopt inc_append_history
 
 # Keep this at the end
 if [ -e "${HOME}/.cache/iterm2/iterm2_shell_integration.zsh" ]; then
