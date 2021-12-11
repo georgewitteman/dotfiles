@@ -6,7 +6,7 @@
 	signingKey = {{ .gpgkey | quote }}
 {{- if env "GITPOD_WORKSPACE_ID" }}
 [credential]
-        helper = /usr/bin/gp credential-helper
+	helper = /usr/bin/gp credential-helper
 {{- end }}
 [init]
 	defaultBranch = main
