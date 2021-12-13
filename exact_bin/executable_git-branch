@@ -2,6 +2,9 @@
 
 set -o errexit
 
+# Make sure we're in a git branch
+git branch >/dev/null
+
 # if ! is-clean-repo; then
 #   echo-warn "You have uncommitted changes. Commit or stash your changes."
 #   echo-run git status
