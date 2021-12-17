@@ -3,7 +3,7 @@
 set -e
 
 if command -v brew >/dev/null 2>&1; then
-  echo-run brew upgrade
+  echo-run brew upgrade --verbose
 else
   echo-info 'Skipping since brew is not installed'
 fi
