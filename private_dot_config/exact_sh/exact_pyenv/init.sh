@@ -5,7 +5,11 @@ pyenv() {
 
   remove_prefix_from_path "$PYENV_ROOT"
 
-  if [ -f "${PYENV_ROOT}/version" ]; then
+  if [ -f "${PWD}/.python-version" ]; then
+    while IFS= read -r line || [ -n "$line" ]; do
+      PYENV_PATH="${PYENV_PATH:+${PYENV_PATH}:}${PYENV_ROOT}/versions/${line}/bin"
+    done <"${PWD}/.python-version"
+  elif [ -f "${PYENV_ROOT}/version" ]; then
     while IFS= read -r line || [ -n "$line" ]; do
       PYENV_PATH="${PYENV_PATH:+${PYENV_PATH}:}${PYENV_ROOT}/versions/${line}/bin"
     done <"${PYENV_ROOT}/version"

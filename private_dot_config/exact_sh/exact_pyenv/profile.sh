@@ -2,7 +2,11 @@
 
 export PYENV_ROOT="${PYENV_ROOT:-"${HOME}/.pyenv"}"
 
-if [ -f "${PYENV_ROOT}/version" ]; then
+if [ -f "${PWD}/.python-version" ]; then
+  while IFS= read -r line || [ -n "$line" ]; do
+    PYENV_PATH="${PYENV_PATH:+${PYENV_PATH}:}${PYENV_ROOT}/versions/${line}/bin"
+  done <"${PWD}/.python-version"
+elif [ -f "${PYENV_ROOT}/version" ]; then
   while IFS= read -r line || [ -n "$line" ]; do
     PYENV_PATH="${PYENV_PATH:+${PYENV_PATH}:}${PYENV_ROOT}/versions/${line}/bin"
   done <"${PYENV_ROOT}/version"

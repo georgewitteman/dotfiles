@@ -98,7 +98,7 @@
 
 # # Adds better python syntax highlighting (e.g. indent errors, exception
 # # classes, builtins, etc.)
-# { {- template "github-vim-plugin" (list "hdima/python-syntax" "master") }}
+{{- template "github-vim-plugin" (list "hdima/python-syntax" "master") }}
 
 # Commenting these out so that when I add them back I can write down what they
 # do and why I have them
