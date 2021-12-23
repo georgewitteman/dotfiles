@@ -14,7 +14,7 @@ cmds="${cmds}chezmoi managed --no-pager | tail -r | xargs rm -dv${line}"
 cmds="${cmds}rm -fv ${HOME}/.ssh/known_hosts${line}"
 cmds="${cmds}rm -rfv"
 for f in "$HOME"/.z*; do
-  cmds=" $f"
+  cmds="${cmds} $f"
 done
 cmds="${cmds}${line}"
 cmds="${cmds}chezmoi purge --binary --force --verbose${line}"
