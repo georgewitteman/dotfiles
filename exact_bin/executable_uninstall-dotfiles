@@ -10,7 +10,8 @@ line='
 
 cmds="${line}"
 cmds="${cmds}cd ${HOME}${line}"
-cmds="${cmds}chezmoi managed --no-pager | tail -r | xargs rm -dv${line}"
+cmds="${cmds}cp -R ${HOME}/.ssh ${HOME}/Downloads/ssh_backup${line}"
+cmds="${cmds}chezmoi managed --no-pager | tail -r | tr '\\n' '\\0' | xargs -0 -n1 rm -dv${line}"
 cmds="${cmds}rm -fv ${HOME}/.ssh/known_hosts${line}"
 cmds="${cmds}rm -rfv"
 for f in "$HOME"/.z*; do
