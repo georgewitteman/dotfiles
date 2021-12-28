@@ -39,6 +39,12 @@ if executable('fzf')
   packadd! fzf.vim
 endif
 
+" This assumes that if I'm using Apple_Terminal then I don't have the correct
+" ctags version installed
+if $TERM_PROGRAM != "Apple_Terminal"
+  packadd! vim-gutentags
+endif
+
 " Environment
 if ! has('nvim')
   " Persistent Undo

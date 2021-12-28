@@ -134,6 +134,10 @@
 .vim/pack/plugins/opt/fzf.vim:
 {{- template "vim-plugin" "https://github.com/junegunn/fzf.vim/archive/master.tar.gz" }}
 
+# For automatically creating tags files
+.vim/pack/plugins/opt/vim-gutentags:
+{{- template "vim-plugin" "https://github.com/ludovicchabant/vim-gutentags/archive/master.tar.gz" }}
+
 # Better text
 {{- template "github-vim-plugin" (list "reedes/vim-pencil" "master") }}
 
@@ -142,9 +146,6 @@
 
 # A better (and faster) file manager than netrw
 {{- template "github-vim-plugin" (list "justinmk/vim-dirvish" "master") }}
-
-# For automatically creating tags files
-{{- template "github-vim-plugin" (list "ludovicchabant/vim-gutentags" "master") }}
 
 # Strips whitespace when closing files
 {{- template "github-vim-plugin" (list "ntpeters/vim-better-whitespace" "master") }}
