@@ -59,7 +59,11 @@ filetype plugin indent on
 " Turn on syntax highlighting
 syntax enable
 
-colorscheme nord
+if $TERM_PROGRAM == "Apple_Terminal"
+  colorscheme default
+else
+  colorscheme nord
+endif
 
 " Set colorscheme
 if (has('termguicolors'))
