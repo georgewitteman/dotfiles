@@ -96,9 +96,12 @@
 # is simpler/faster." - stephpy/vim-yaml/README.md
 {{- template "github-vim-plugin" (list "stephpy/vim-yaml" "master") }}
 
-# # Adds better python syntax highlighting (e.g. indent errors, exception
-# # classes, builtins, etc.)
+# Adds better python syntax highlighting (e.g. indent errors, exception
+# classes, builtins, etc.)
 {{- template "github-vim-plugin" (list "hdima/python-syntax" "master") }}
+
+# Use proper indentation formatting for python
+{{- template "github-vim-plugin" (list "Vimjas/vim-python-pep8-indent" "master") }}
 
 # Commenting these out so that when I add them back I can write down what they
 # do and why I have them
@@ -109,7 +112,6 @@
 # { {- template "github-vim-plugin" (list "saltstack/salt-vim" "master") }}
 # { {- template "github-vim-plugin" (list "pboettch/vim-cmake-syntax" "master") }}
 # { {- template "github-vim-plugin" (list "plasticboy/vim-markdown" "master") }}
-# { {- template "github-vim-plugin" (list "Vimjas/vim-python-pep8-indent" "master") }}
 # { {- template "github-vim-plugin" (list "raimon49/requirements.txt.vim" "master") }}
 # { {- template "github-vim-plugin" (list "chrismaher/vim-dbt" "master") }}
 # { {- template "github-vim-plugin" (list "jalvesaq/Nvim-R" "master") }}
