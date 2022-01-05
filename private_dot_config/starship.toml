@@ -90,3 +90,6 @@ style = 'fg:red bold'
 
 [shell]
 disabled = false
+
+[shlvl]
+disabled = false
