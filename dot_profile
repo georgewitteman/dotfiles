@@ -2,9 +2,11 @@
 
 export ENV="${HOME}/.shinit"
 
-# Don't write python .pyc files, because they're not necessary and clutter
-# directories with binary files
-export PYTHONDONTWRITEBYTECODE=1
+# Skipping this for now because there is some improvement when running python
+# tests
+# # Don't write python .pyc files, because they're not necessary and clutter
+# # directories with binary files
+# export PYTHONDONTWRITEBYTECODE=1
 
 # Locale setup
 export LC_ALL="${LC_ALL:-en_US.UTF-8}"
