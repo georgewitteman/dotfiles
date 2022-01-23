@@ -292,6 +292,17 @@ dotfiles() {
   esac
 }
 
+workspace() {
+  if [ -d "/opt/workspace" ]; then
+    echo_run cd /opt/workspace || true
+  elif [ -d "${HOME}/Code" ]; then
+    echo_run cd "${HOME}/Code" || true
+  else
+    echo-err "No workspace set"
+  fi
+}
+
+
 for dir in "$HOME"/.config/sh/*/; do
   [ -d "$dir" ] || continue
 
