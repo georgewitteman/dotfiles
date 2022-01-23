@@ -29,7 +29,8 @@ disabled = false
 style = 'fg:white bg:red bold'
 
 [git_branch]
-symbol = " "
+# symbol = " "
+symbol = ""
 
 [git_status]
 disabled = true
