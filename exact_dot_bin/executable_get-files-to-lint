@@ -2,7 +2,7 @@
 
 set -o errexit
 
-PRIVATE_BIN="${PRIVATE_BIN:-${HOME}/bin}"
+PRIVATE_BIN="${PRIVATE_BIN:-${HOME}/.bin}"
 verbose=false
 debug=false
 

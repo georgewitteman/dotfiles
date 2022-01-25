@@ -97,5 +97,5 @@ jobs:
       - if: ${{ matrix.os == 'macOS-latest' }}
         run: 'brew install shellcheck shfmt'
       - run: ./install.sh
-      - run: "${HOME}/bin/shfmt-check-all --verbose --debug"
-      - run: "${HOME}/bin/shellcheck-all --verbose --debug"
+      - run: "${HOME}/.bin/shfmt-check-all --verbose --debug"
+      - run: "${HOME}/.bin/shellcheck-all --verbose --debug"

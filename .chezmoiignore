@@ -11,6 +11,5 @@
 .vim/.netrwhist
 Dockerfile
 README.md
-bin/chezmoi
 install.sh
 tags

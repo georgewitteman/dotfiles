@@ -1,3 +1,0 @@
-#!/bin/sh
-
-"${HOME}/bin/get-files-to-lint" "$@" | xargs shellcheck --external-sources --source-path="${HOME}"

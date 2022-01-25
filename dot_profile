@@ -37,7 +37,7 @@ export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_INSTALL_FROM_API=1
 
 # https://stackoverflow.com/a/9168577
-export PRIVATE_BIN="${HOME}/bin"
+export PRIVATE_BIN="${HOME}/.bin"
 
 PATH="/usr/local/sbin:${PATH}"
 PATH="/usr/local/opt/fzf/bin:${PATH}"
