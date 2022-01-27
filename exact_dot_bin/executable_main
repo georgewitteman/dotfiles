@@ -1,17 +1,50 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 set -o errexit
 
+die() {
+  [ "$#" -ge 2 ] && echo-err "$2"
+  exit "$1"
+}
+
 if ! in-git-repo; then
-  echo-err "Not in a git repository."
-  return 128
+  die 128 "Not in a git repository."
 fi
+
+pull=false
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    -[[:alnum:]][[:alnum:]]*)
+      _value="-${1##-?}"
+      _arg="${1%%"${1##-?}"}"
+      ;;
+  esac
+  if [ -n "${_arg:-}${_value:-}" ]; then
+    shift
+    set -- "$_arg" "$_value" "$@"
+  fi
+  unset _arg _value
+  case "$1" in
+    -h | --help)
+      echo "usage: $(basename "$0") [-p|--pull]"
+      exit
+      ;;
+    -p | --pull) pull=true ;;
+    --) shift; break ;;
+    -?*) die 1 "unknown option: ${1}" ;;
+    *) break ;;
+  esac
+  shift
+done
 
 printf "Getting remote HEAD... "
 head="$(get-remote-head)"
 echo "$head"
 
 echo-run git switch "$head"
-echo-run git fetch --prune origin "$head"
-echo-run git rebase origin "$head"
+if $pull; then
+  echo-run git fetch --prune origin "$head"
+  echo-run git rebase origin "$head"
+fi
 git-show --quiet
