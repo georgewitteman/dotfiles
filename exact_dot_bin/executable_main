@@ -31,7 +31,10 @@ while [ "$#" -gt 0 ]; do
       exit
       ;;
     -p | --pull) pull=true ;;
-    --) shift; break ;;
+    --)
+      shift
+      break
+      ;;
     -?*) die 1 "unknown option: ${1}" ;;
     *) break ;;
   esac
