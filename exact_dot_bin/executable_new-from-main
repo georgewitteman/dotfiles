@@ -1,6 +1,6 @@
 #!/bin/sh
 
-USAGE="usage: $(basename "$0") [-l|--latest] <branch name>"
+USAGE="usage: $(basename "$0") [-l|--latest|-p|--pull] <branch name>"
 
 set -o errexit
 
@@ -13,7 +13,7 @@ while [ "$#" -gt 0 ]; do
       echo "$USAGE"
       exit
       ;;
-    -l | --latest)
+    -l | --latest | -p | --pull)
       latest=true
       ;;
     --)
@@ -37,7 +37,7 @@ if [ -z "$branch_name" ]; then
 fi
 
 if $latest; then
-  main
+  main --pull
 else
   printf "Getting remote HEAD... "
   head="$(get-remote-head)"
