@@ -5,10 +5,10 @@ GIT_HEAD="$(get-remote-head)"
 echo "$GIT_HEAD"
 
 if [ "$(git rev-parse --abbrev-ref HEAD)" = "${GIT_HEAD}" ]; then
-  echo-run git fetch origin "${GIT_HEAD}"
+  echo-run git fetch --prune origin "${GIT_HEAD}"
   echo-run git merge --ff-only
 else
-  echo-run git fetch origin "${GIT_HEAD}:${GIT_HEAD}"
+  echo-run git fetch --prune origin "${GIT_HEAD}:${GIT_HEAD}"
 fi
 
 "${PRIVATE_BIN}/git-show" --quiet "${GIT_HEAD}"
