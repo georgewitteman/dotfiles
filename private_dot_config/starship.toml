@@ -1,7 +1,7 @@
 add_newline = false
 
-format = """$shlvl\
-hostname\
+format = """\
+$hostname\
 $directory\
 $git_branch\
 ${custom.git_host}\
@@ -15,6 +15,7 @@ $status\
 ${custom.stashes}\
 $shell\
 $line_break\
+$shlvl\
 ${custom.container}\
 ${custom.venv}\
 $jobs\
@@ -94,3 +95,4 @@ disabled = false
 
 [shlvl]
 disabled = false
+symbol = ""
