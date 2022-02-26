@@ -31,11 +31,11 @@ case "$command" in
           ;;
       esac
     done
-    if [ "$cmd" = "safe-run" ] && echo-run chezmoi verify; then
+    if [ "$cmd" = "safe-run" ] && echo-run chezmoi verify "$@"; then
       echo-info "Nothing to apply."
       exit
     fi
-    if [ "$cmd" = "safe-run" ] && ! echo-run chezmoi diff --no-pager; then
+    if [ "$cmd" = "safe-run" ] && ! echo-run chezmoi diff --no-pager "$@"; then
       echo-warn "Error showing diff. Are you signed in to 1Password?"
       exit 1
     fi
