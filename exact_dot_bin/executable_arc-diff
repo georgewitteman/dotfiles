@@ -20,9 +20,11 @@ Options:
   --skip-staging        Don't upload to staging repository.
   --draft               Draft diff
   --nolint              Prevent lint errors from preventing diff upload.
+  --update              Update the current diff.
   --trace               Log debug info."
 
 message='' amend='' draft='' no_verify='' rebase='' skip_staging='' trace='' no_lint=false
+update=false
 
 die() {
   [ "$#" -ge 2 ] && echo-err "$2"
@@ -58,6 +60,7 @@ while [ "$#" -gt 0 ]; do
     --no-verify) no_verify=1 ;;
     --nolint) no_lint=true ;;
     --trace) trace=1 ;;
+    --update) update=true ;;
     --)
       shift
       break
@@ -162,6 +165,11 @@ arc_options+=('--amend-all')
 [[ -n $no_verify ]] && arc_options+=('--nolint' '--nounit')
 [[ -n $message ]] && arc_options+=('--message' "$message")
 [[ -n $trace ]] && arc_options+=('--trace')
+
+if $update; then
+  diff_id="$(git show --quiet '--format=format:%b' | grep "Differential Revision: " | cut '-d ' -f3 | cut '-d/' -f 4)"
+  arc_options+=('--update' "$diff_id")
+fi
 
 if ! $no_lint; then
   arc_options+=('--apply-patches')
