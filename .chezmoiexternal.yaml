@@ -56,9 +56,10 @@
   refreshPeriod: {{ $refreshPeriod }}
 
 .pyenv:
-  type: git-repo
-  url: 'https://github.com/pyenv/pyenv.git'
+  type: archive
+  url: 'https://github.com/pyenv/pyenv/archive/master.tar.gz'
   exact: true
+  stripComponents: 1
   refreshPeriod: {{ $refreshPeriod }}
 
 .nvm:
