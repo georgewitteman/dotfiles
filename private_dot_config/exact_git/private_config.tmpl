@@ -25,7 +25,6 @@
 	patch = !git --no-pager diff --no-color
 [core]
 	editor = vim
-	hooksPath = "~/.config/git/hooks"
 [diff]
 	tool = vimdiff
 	colorMoved = default
@@ -42,6 +41,8 @@
 {{- if (and (lookPath "gpg") (eq (output "sh" "-c" (cat "gpg --list-secret-keys " .gpgkey " >/dev/null 2>&1 || echo false")) "")) }}
 	gpgsign = true
 {{- end }}
+[includeIf "gitdir:{{ .chezmoi.homeDir }}/*/"]
+	path = ~/.config/git/personal
 {{- if .is_work }}
 [includeIf "gitdir:{{ .work.path }}/*/"]
 	path = ~/.config/git/work
