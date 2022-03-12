@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -o errexit
+
 if ! in-git-repo; then
   echo-err "Not in a git repository."
   exit 128
@@ -13,7 +15,7 @@ if ! git rev-parse "$ref" >/dev/null 2>&1; then
   exit 1
 fi
 
-IFS=$'\n' read -r -d '' -a refs < <(git show-ref --dereference | grep "$(git rev-parse "$ref")" | cut -d' ' -f2)
+IFS=$'\n' read -r -d '' -a refs < <(git show-ref --dereference | grep "$(git rev-parse "$ref")" | cut -d' ' -f2) || true
 
 tags=() heads=()
 for ref in "${refs[@]}"; do
