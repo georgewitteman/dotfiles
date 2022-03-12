@@ -56,52 +56,46 @@
   refreshPeriod: {{ $refreshPeriod }}
 
 .pyenv:
-  type: archive
-  url: 'https://github.com/pyenv/pyenv/archive/master.tar.gz'
-  exact: true
-  stripComponents: 1
+  type: git-repo
+  url: 'https://github.com/pyenv/pyenv.git'
   refreshPeriod: {{ $refreshPeriod }}
 
 .nvm:
-  type: archive
-  url: 'https://github.com/nvm-sh/nvm/archive/master.tar.gz'
-  exact: true
-  stripComponents: 1
+  type: git-repo
+  url: 'https://github.com/nvm-sh/nvm.git'
   refreshPeriod: {{ $refreshPeriod }}
 
 # VIM PLUGINS ================================
 {{ define "vim-plugin" }}
-  type: archive
+  type: git-repo
   url: {{ . | quote }}
-  exact: true
-  stripComponents: 1
   refreshPeriod: "168h"
 {{ end -}}
 
 {{ define "github-vim-plugin" }}
-.vim/pack/plugins/start/{{ base (index . 0) }}:
-  {{- template "vim-plugin" (list "https://github.com/" (index . 0) "/archive/" (index . 1) ".tar.gz" | join "") }}{{ end -}}
+.vim/pack/plugins/start/{{ base . }}:
+  {{- template "vim-plugin" (list "https://github.com/" . ".git" | join "") }}{{ end -}}
 
 # Enables useful syntax highlighting for .tmpl and other chezmoi files
 .vim/pack/plugins/opt/chezmoi.vim:
-{{- template "vim-plugin" "https://github.com/alker0/chezmoi.vim/archive/main.tar.gz" }}
+{{- template "vim-plugin" "https://github.com/alker0/chezmoi.vim.git" }}
 
 # Nord color scheme
 .vim/pack/plugins/opt/nord-vim:
-  {{- template "vim-plugin" "https://github.com/arcticicestudio/nord-vim/archive/develop.tar.gz" }}
+  {{- template "vim-plugin" "https://github.com/arcticicestudio/nord-vim.git" }}
 
 # Filetypes
 
 # "Yaml files in vim 7.4 are really slow, due to core yaml syntax. This syntax
 # is simpler/faster." - stephpy/vim-yaml/README.md
-{{- template "github-vim-plugin" (list "stephpy/vim-yaml" "master") }}
+{{- template "github-vim-plugin" "stephpy/vim-yaml" }}
 
 # Adds better python syntax highlighting (e.g. indent errors, exception
 # classes, builtins, etc.)
-{{- template "github-vim-plugin" (list "hdima/python-syntax" "master") }}
+{{- template "github-vim-plugin" "hdima/python-syntax" }}
 
 # Use proper indentation formatting for python
-{{- template "github-vim-plugin" (list "Vimjas/vim-python-pep8-indent" "master") }}
+{{- template "github-vim-plugin" "Vimjas/vim-python-pep8-indent" }}
 
 # Commenting these out so that when I add them back I can write down what they
 # do and why I have them
@@ -123,46 +117,46 @@
 
 # Allows calling arbitrary git commands and other things
 .vim/pack/plugins/opt/vim-fugitive:
-{{- template "vim-plugin" "https://github.com/tpope/vim-fugitive/archive/master.tar.gz" }}
+{{- template "vim-plugin" "https://github.com/tpope/vim-fugitive.git" }}
 
 # GitHub plugin for vim-fugitive
 .vim/pack/plugins/opt/vim-rhubarb:
-{{- template "vim-plugin" "https://github.com/tpope/vim-rhubarb/archive/master.tar.gz" }}
+{{- template "vim-plugin" "https://github.com/tpope/vim-rhubarb.git" }}
 
 # FZF support
 .vim/pack/plugins/opt/fzf:
-{{- template "vim-plugin" "https://github.com/junegunn/fzf/archive/master.tar.gz" }}
+{{- template "vim-plugin" "https://github.com/junegunn/fzf.git" }}
 
 .vim/pack/plugins/opt/fzf.vim:
-{{- template "vim-plugin" "https://github.com/junegunn/fzf.vim/archive/master.tar.gz" }}
+{{- template "vim-plugin" "https://github.com/junegunn/fzf.vim.git" }}
 
 # For automatically creating tags files
 .vim/pack/plugins/opt/vim-gutentags:
-{{- template "vim-plugin" "https://github.com/ludovicchabant/vim-gutentags/archive/master.tar.gz" }}
+{{- template "vim-plugin" "https://github.com/ludovicchabant/vim-gutentags.git" }}
 
 # Better text
-{{- template "github-vim-plugin" (list "reedes/vim-pencil" "master") }}
+{{- template "github-vim-plugin" "reedes/vim-pencil" }}
 
 # Improved incremental search
-{{- template "github-vim-plugin" (list "haya14busa/is.vim" "master") }}
+{{- template "github-vim-plugin" "haya14busa/is.vim" }}
 
 # A better (and faster) file manager than netrw
-{{- template "github-vim-plugin" (list "justinmk/vim-dirvish" "master") }}
+{{- template "github-vim-plugin" "justinmk/vim-dirvish" }}
 
 # Strips whitespace when closing files
-{{- template "github-vim-plugin" (list "ntpeters/vim-better-whitespace" "master") }}
+{{- template "github-vim-plugin" "ntpeters/vim-better-whitespace" }}
 
 # Adds capslock shortcut
-{{- template "github-vim-plugin" (list "tpope/vim-capslock" "master") }}
+{{- template "github-vim-plugin" "tpope/vim-capslock" }}
 
 # Shortcuts for commenting out lines/blocks of lines
-{{- template "github-vim-plugin" (list "tpope/vim-commentary" "master") }}
+{{- template "github-vim-plugin" "tpope/vim-commentary" }}
 
 # Adds `:Make` for asynchronous makes
-{{- template "github-vim-plugin" (list "tpope/vim-dispatch" "master") }}
+{{- template "github-vim-plugin" "tpope/vim-dispatch" }}
 
 # Allows repeating non-default shortcuts
-{{- template "github-vim-plugin" (list "tpope/vim-repeat" "master") }}
+{{- template "github-vim-plugin" "tpope/vim-repeat" }}
 
 # Adds shortcuts for surrounding items with things
-{{- template "github-vim-plugin" (list "tpope/vim-surround" "master") }}
+{{- template "github-vim-plugin" "tpope/vim-surround" }}
