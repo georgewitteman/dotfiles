@@ -2,7 +2,6 @@
 
 set -o errexit
 
-
 die() {
   [ "$#" -ge 2 ] && echo-err "$2" >&2
   exit "$1"
