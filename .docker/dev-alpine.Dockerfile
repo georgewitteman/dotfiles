@@ -52,7 +52,6 @@ USER $USER
 RUN rustup-init -y --no-modify-path
 
 RUN mkdir -p $HOME/workspace && chown $USER:$USER $HOME/workspace
-RUN mkdir -p $HOME/.pyenv/versions && chown $USER:$USER $HOME/.pyenv/versions
 RUN mkdir -p $HOME/.cargo/bin && chown $USER:$USER $HOME/.cargo/bin
 RUN mkdir -p $HOME/.cargo/registry/index && chown $USER:$USER $HOME/.cargo/registry/index
 RUN mkdir -p $HOME/.cargo/registry/cache && chown $USER:$USER $HOME/.cargo/registry/cache

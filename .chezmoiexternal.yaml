@@ -59,11 +59,15 @@
   type: git-repo
   url: 'https://github.com/pyenv/pyenv.git'
   refreshPeriod: {{ $refreshPeriod }}
+  pull:
+    args: ["--rebase", "--autostash"]
 
 .nvm:
   type: git-repo
   url: 'https://github.com/nvm-sh/nvm.git'
   refreshPeriod: {{ $refreshPeriod }}
+  pull:
+    args: ["--rebase", "--autostash"]
 
 # VIM PLUGINS ================================
 {{ define "vim-plugin" }}
