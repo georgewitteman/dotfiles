@@ -25,9 +25,10 @@ script_dir="$(cd -P -- "$(dirname -- "$(command -v -- "$0")")" && pwd -P)"
 # Print out the following commands before executing
 set -o xtrace
 
-ls -lah "$HOME"
+# ls -lah "$HOME"
 ls -lah "${HOME}/.pyenv" || true
-git -C "${HOME}/.pyenv" status || true
+wait
+# git -C "${HOME}/.pyenv" status || true
 # rm -rf "${HOME}/.pyenv"
 # rm -rf "${HOME}/.nvm"
 
