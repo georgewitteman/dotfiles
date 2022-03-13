@@ -30,6 +30,10 @@ ls -lah "${HOME}/.pyenv" || true
 wait
 ls -lah "${HOME}/.nvm" || true
 wait
+git -C "${HOME}/.nvm" status || true
+wait
+git -C "${HOME}/.nvm" pull --verbose || true
+wait
 # git -C "${HOME}/.pyenv" status || true
 # rm -rf "${HOME}/.pyenv"
 # rm -rf "${HOME}/.nvm"
