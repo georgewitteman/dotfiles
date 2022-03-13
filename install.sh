@@ -34,7 +34,7 @@ git -C "${HOME}/.nvm" status || true
 wait
 git -C "${HOME}/.nvm" remote show || true
 wait
-git -C "${HOME}/.nvm" log HEAD~100.. || true
+git -C "${HOME}/.nvm" log HEAD~10.. || true
 wait
 git -C "${HOME}/.nvm" pull --verbose --rebase --autostash || true
 wait
