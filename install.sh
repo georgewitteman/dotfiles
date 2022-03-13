@@ -32,7 +32,7 @@ ls -lah "${HOME}/.nvm" || true
 wait
 git -C "${HOME}/.nvm" status || true
 wait
-git -C "${HOME}/.nvm" pull --verbose || true
+git -C "${HOME}/.nvm" pull --verbose --rebase --autostash || true
 wait
 # git -C "${HOME}/.pyenv" status || true
 # rm -rf "${HOME}/.pyenv"
