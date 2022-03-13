@@ -28,6 +28,8 @@ set -o xtrace
 # ls -lah "$HOME"
 ls -lah "${HOME}/.pyenv" || true
 wait
+ls -lah "${HOME}/.nvm" || true
+wait
 # git -C "${HOME}/.pyenv" status || true
 # rm -rf "${HOME}/.pyenv"
 # rm -rf "${HOME}/.nvm"
