@@ -57,7 +57,8 @@ jobs:
       - name: Uninstall homebrew
         if: ${{ matrix.os == 'macOS-latest' }}
         run: 'sudo /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh)" -- --force'
-      - run: rm -rf ~/.nvm && ./install.sh
+      - run: rm -rf ~/.nvm
+      - run: ./install.sh
 
   codespaces:
     runs-on: ubuntu-latest
@@ -95,6 +96,7 @@ jobs:
         run: 'curl -sS https://webinstall.dev/shfmt | bash'
       - if: ${{ matrix.os == 'macOS-latest' }}
         run: 'brew install shellcheck shfmt'
+      - run: rm -rf ~/.nvm
       - run: ./install.sh
       - run: "${HOME}/.bin/shfmt-check-all --verbose --debug"
       - run: "${HOME}/.bin/shellcheck-all --verbose --debug"
