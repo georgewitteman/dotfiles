@@ -12,4 +12,5 @@ jobs:
         os: [ubuntu-latest, macOS-latest]
     runs-on: ${{ matrix.os }}
     steps:
+      - run: rm -rf ~/.nvm ~/.pyenv
       - run: 'sh -c "$(curl -fsLS git.io/chezmoi)" -- init --apply georgewitteman'
