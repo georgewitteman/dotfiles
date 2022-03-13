@@ -57,7 +57,7 @@ jobs:
       - name: Uninstall homebrew
         if: ${{ matrix.os == 'macOS-latest' }}
         run: 'sudo /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh)" -- --force'
-      - run: ./install.sh
+      - run: rm -rf ~/.nvm && ./install.sh
 
   codespaces:
     runs-on: ubuntu-latest

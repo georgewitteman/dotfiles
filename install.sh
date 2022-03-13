@@ -25,20 +25,5 @@ script_dir="$(cd -P -- "$(dirname -- "$(command -v -- "$0")")" && pwd -P)"
 # Print out the following commands before executing
 set -o xtrace
 
-# ls -lah "$HOME"
-ls -lah "${HOME}/.pyenv" || true
-wait
-ls -lah "${HOME}/.nvm" || true
-wait
-git -C "${HOME}/.nvm" status || true
-wait
-git -C "${HOME}/.nvm" remote show || true
-wait
-git -C "${HOME}/.nvm" log 39d9a42..d157cac || true
-wait
-# git -C "${HOME}/.pyenv" status || true
-# rm -rf "${HOME}/.pyenv"
-# rm -rf "${HOME}/.nvm"
-
 # exec: replace current process with chezmoi init
 exec "$chezmoi" init --apply "--source=${script_dir}"
