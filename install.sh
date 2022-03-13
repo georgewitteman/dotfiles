@@ -32,6 +32,8 @@ ls -lah "${HOME}/.nvm" || true
 wait
 git -C "${HOME}/.nvm" status || true
 wait
+git -C "${HOME}/.nvm" remote show || true
+wait
 git -C "${HOME}/.nvm" pull --verbose --rebase --autostash || true
 wait
 # git -C "${HOME}/.pyenv" status || true
@@ -39,4 +41,4 @@ wait
 # rm -rf "${HOME}/.nvm"
 
 # exec: replace current process with chezmoi init
-exec "$chezmoi" init --apply "--source=${script_dir}" --verbose --debug
+exec "$chezmoi" init --apply "--source=${script_dir}"
