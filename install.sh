@@ -34,9 +34,7 @@ git -C "${HOME}/.nvm" status || true
 wait
 git -C "${HOME}/.nvm" remote show || true
 wait
-git -C "${HOME}/.nvm" log HEAD~10.. || true
-wait
-git -C "${HOME}/.nvm" pull --verbose --rebase --autostash || true
+git -C "${HOME}/.nvm" log 39d9a42..d157cac || true
 wait
 # git -C "${HOME}/.pyenv" status || true
 # rm -rf "${HOME}/.pyenv"
