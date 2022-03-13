@@ -28,6 +28,8 @@ set -o xtrace
 ls -lah "$HOME"
 ls -lah "${HOME}/.pyenv" || true
 git -C "${HOME}/.pyenv" status || true
+rm -rf "${HOME}/.pyenv"
+rm -rf "${HOME}/.nvm"
 
 # exec: replace current process with chezmoi init
 exec "$chezmoi" init --apply "--source=${script_dir}" --verbose --debug
