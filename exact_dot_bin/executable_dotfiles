@@ -39,7 +39,7 @@ case "$command" in
       echo-warn "Error showing diff. Are you signed in to 1Password?"
       exit 1
     fi
-    if ! "$cmd" chezmoi apply; then
+    if ! "$cmd" chezmoi apply "$@"; then
       echo-info "You can run 'dotfiles add <file>...' to update the source."
       exit
     fi
