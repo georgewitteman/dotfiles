@@ -46,8 +46,9 @@ head="$(get-remote-head)"
 echo "$head"
 
 echo-run git switch "$head"
+
 if $pull; then
-  echo-run git fetch --prune origin "$head"
-  echo-run git rebase origin "$head"
+  echo-run git pull --rebase --prune
 fi
+
 git-show --quiet
