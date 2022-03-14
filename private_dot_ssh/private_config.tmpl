@@ -1,5 +1,8 @@
 {{- if and .is_work (not .is_transient) }}
 {{- if stat (joinPath .work.path .work.ssh_config) }}
 {{ output "cat" (joinPath .work.path .work.ssh_config) | replace "GREP_FOR_THIS" "georgewitteman" }}
+# https://serverfault.com/questions/515604/ssh-client-option-to-suppress-server-banners
+Host *
+  LogLevel error
 {{- end }}
 {{- end }}
