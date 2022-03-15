@@ -2,8 +2,9 @@
 
 set -o errexit
 
-USAGE="usage: $(basename "$0") [-p | --push] [-f | --force] [<commit message>]"
+USAGE="usage: $(basename "$0") [-p | --push] [-s | --pull] [-f | --force] [<commit message>]"
 
+pull=false
 push=false
 message=''
 force=false
@@ -19,6 +20,10 @@ while [ "$#" -gt 0 ]; do
       ;;
     -p | --push)
       push=true
+      ;;
+    -s | --pull)
+      # s: sync
+      pull=true
       ;;
     -*)
       echo-err "unknown option: ${1}"
@@ -57,7 +62,7 @@ fi
 
 if $push; then
   remote="$(git rev-parse --abbrev-ref --symbolic-full-name '@{upstream}' 2>/dev/null || true)"
-  if [ -n "$remote" ]; then
+  if [ -n "$remote" ] && $pull; then
     echo-run git pull --rebase
   fi
   if $force; then
