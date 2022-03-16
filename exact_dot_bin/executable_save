@@ -71,3 +71,5 @@ if $push; then
     push
   fi
 fi
+
+git-show --quiet
