@@ -11,6 +11,7 @@ if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   die 1 "Not a git repository."
 fi
 
+pull_request=false
 commit=false
 commit_id=
 
@@ -28,11 +29,15 @@ while [ "$#" -gt 0 ]; do
   unset _arg _value
   case "$1" in
     -h | --help)
-      echo "usage: $(basename "$0") [-c|--commit]"
+      echo "usage: $(basename "$0") [-c|--commit] [--with-commit <commit>] [--pull-request]"
       exit
       ;;
     -c | --commit)
       commit=true
+      ;;
+    --pull-request)
+      commit=true
+      pull_request=true
       ;;
     --with-commit)
       if [ $# -lt 2 ]; then
@@ -61,9 +66,22 @@ fi
 
 project_url="$(echo "$giturl" | sed "s~:~/~" | sed "s~git@~https://~" | sed "s~\.git~~")"
 
+if $pull_request; then
+  case $project_url in
+    *github.com*) ;;
+    *)
+      die 1 "Can't generate pull request URLs for non-GitHub PRs"
+      ;;
+  esac
+fi
+
 if $commit; then
   if [ -z "$commit_id" ]; then
-    commit_id="$(git rev-parse HEAD)"
+    commit_id="$(git rev-parse --short HEAD)"
+  fi
+  if $pull_request; then
+    echo "${project_url}/pulls?q=${commit_id}"
+    exit $?
   fi
   echo "${project_url}/commit/${commit_id}"
   exit $?
