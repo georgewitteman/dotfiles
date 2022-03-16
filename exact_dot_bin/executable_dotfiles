@@ -23,23 +23,26 @@ case "$command" in
     ;;
   apply)
     cmd="safe-run"
+    args=""
     for arg in "$@"; do
       case "$arg" in
         --noconfirm | --yes | -y)
           cmd="echo-run"
-          break
+          ;;
+        -R | --refresh-externals)
+          args+=" --refresh-externals"
           ;;
       esac
     done
-    if [ "$cmd" = "safe-run" ] && echo-run chezmoi verify "$@"; then
+    if [ "$cmd" = "safe-run" ] && echo-run chezmoi verify $args; then
       echo-info "Nothing to apply."
       exit
     fi
-    if [ "$cmd" = "safe-run" ] && ! echo-run chezmoi diff --no-pager "$@"; then
+    if ! echo-run chezmoi diff --no-pager $args; then
       echo-warn "Error showing diff. Are you signed in to 1Password?"
       exit 1
     fi
-    if ! "$cmd" chezmoi apply "$@"; then
+    if ! "$cmd" chezmoi apply $args; then
       echo-info "You can run 'dotfiles add <file>...' to update the source."
       exit
     fi
