@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -o errexit
+
 if ! in-git-repo; then
   echo-err "Not in a git repository."
   exit 128
@@ -18,8 +20,7 @@ if [[ -n "$(git status --porcelain)" ]]; then
   exit 1
 fi
 
-remote="$(git rev-parse --abbrev-ref --symbolic-full-name '@{upstream}' 2>/dev/null)"
-if [[ -z $remote ]]; then
+if ! git rev-parse --abbrev-ref --symbolic-full-name '@{upstream}' >/dev/null 2>&1; then
   set -- "$@" --set-upstream origin "$head"
 fi
 
@@ -33,3 +34,4 @@ while [[ $# -gt 0 ]]; do
 done
 
 echo-run git push "${args[@]}"
+git-show --quiet
