@@ -2,12 +2,13 @@
 
 set -o errexit
 
-USAGE="usage: $(basename "$0") [-p | --push] [-s | --pull] [-f | --force] [<commit message>]"
+USAGE="usage: $(basename "$0") [-p|--push] [-s|--pull] [-f|--force] [-n|--no-verify] [<commit message>]"
 
 pull=false
 push=false
 message=''
 force=false
+no_verify=false
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
@@ -25,6 +26,9 @@ while [ "$#" -gt 0 ]; do
       # s: sync
       pull=true
       ;;
+    -n | --no-verify)
+      no_verify=true
+      ;;
     -*)
       echo-err "unknown option: ${1}"
       exit 1
@@ -40,6 +44,8 @@ while [ "$#" -gt 0 ]; do
   shift
 done
 
+set --
+
 add
 
 status="$(git status --porcelain)"
@@ -51,25 +57,29 @@ fi
 
 if [ -n "$status" ]; then
   echo-info "Undo these changes with 'git reset $(git rev-parse --short HEAD)'"
-  if [ -n "$message" ]; then
-    echo-run git commit -m "$message"
-  else
-    echo-run git commit
+
+  set --
+  if $no_verify; then
+    set -- "$@" --no-verify
   fi
+  if [ -n "$message" ]; then
+    set -- "$@" --message "$message"
+  fi
+
+  echo-run git commit "$@"
 else
   echo-info "Skipping commit since there were no changes."
 fi
 
 if $push; then
-  remote="$(git rev-parse --abbrev-ref --symbolic-full-name '@{upstream}' 2>/dev/null || true)"
-  if [ -n "$remote" ] && $pull; then
+  if git rev-parse --abbrev-ref --symbolic-full-name '@{upstream}' >/dev/null 2>&1 && $pull; then
     echo-run git pull --rebase
   fi
-  if $force; then
-    push --force
-  else
-    push
-  fi
-fi
 
-git-show --quiet
+  set --
+  if $force; then
+    set -- "$@" --force
+  fi
+
+  push "$@"
+fi
