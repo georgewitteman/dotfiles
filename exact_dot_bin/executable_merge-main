@@ -1,0 +1,38 @@
+#!/bin/sh
+
+set -o errexit
+
+push=false
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    -h | --help)
+      echo "usage: $(basename "$0") [-p|--push]"
+      exit
+      ;;
+    -p | --push)
+      push=true
+      ;;
+    -*)
+      echo-err "unknown option: ${1}"
+      exit 1
+      ;;
+    *)
+      break
+      ;;
+  esac
+  shift
+done
+
+printf "Getting remote HEAD... "
+GIT_HEAD="$(get-remote-head)"
+echo "$GIT_HEAD"
+
+echo-run git fetch --prune origin "$GIT_HEAD"
+echo-run git merge --quiet --no-edit "origin/${GIT_HEAD}"
+
+echo-info "Run 'git reset --hard HEAD^' to revert this"
+
+if $push; then
+  "${PRIVATE_BIN}/push"
+fi
