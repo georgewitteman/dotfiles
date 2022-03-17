@@ -23,26 +23,27 @@ case "$command" in
     ;;
   apply)
     cmd="safe-run"
-    args=""
-    for arg in "$@"; do
-      case "$arg" in
+
+    # POSIX sh way to remove arguments from the list
+    for arg; do
+      shift
+      case $arg in
         --noconfirm | --yes | -y)
           cmd="echo-run"
           ;;
-        -R | --refresh-externals)
-          args+=" --refresh-externals"
-          ;;
+        *) set -- "$@" "$arg" ;;
       esac
     done
-    if [ "$cmd" = "safe-run" ] && echo-run chezmoi verify $args; then
+
+    if [ "$cmd" = "safe-run" ] && echo-run chezmoi verify "$@"; then
       echo-info "Nothing to apply."
       exit
     fi
-    if ! echo-run chezmoi diff --no-pager $args; then
+    if ! echo-run chezmoi diff --no-pager "$@"; then
       echo-warn "Error showing diff. Are you signed in to 1Password?"
       exit 1
     fi
-    if ! "$cmd" chezmoi apply $args; then
+    if ! "$cmd" chezmoi apply "$@"; then
       echo-info "You can run 'dotfiles add <file>...' to update the source."
       exit
     fi
