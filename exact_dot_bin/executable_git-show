@@ -40,10 +40,8 @@ join_by() {
   fi
 }
 
-if git branch --remotes --contains 857e0b5b2ef >/dev/null 2>&1; then
-  git_url="$(git-get-url --with-commit "$short_commit_id" 2>/dev/null)"
-  pr_url="$(git-get-url --with-commit "$short_commit_id" --pull-request 2>/dev/null)"
-fi
+git_url="$(git-get-url --with-commit "$short_commit_id" 2>/dev/null)"
+pr_url="$(git-get-url --with-commit "$short_commit_id" --pull-request 2>/dev/null)"
 
 commit_fmt=()
 commit_fmt+=("$header")
