@@ -2,11 +2,7 @@
 
 set -o errexit
 
-printf "Getting remote HEAD... "
-head="$(get-remote-head)"
-echo "$head"
-
-merge_base="$(git merge-base "$head" HEAD)"
+merge_base="$(git merge-base "origin/HEAD" HEAD)"
 
 "${PRIVATE_BIN}/add"
 echo-run pre-commit run --from-ref "$(git rev-parse --short "$merge_base")" --to-ref .
