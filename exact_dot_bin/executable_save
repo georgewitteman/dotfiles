@@ -4,6 +4,11 @@ set -o errexit
 
 USAGE="usage: $(basename "$0") [-p|--push] [-s|--pull] [-f|--force] [-n|--no-verify] [<commit message>]"
 
+die() {
+  [ "$#" -ge 2 ] && echo-err "$2"
+  exit "$1"
+}
+
 pull=false
 push=false
 message=''
@@ -77,7 +82,7 @@ if [ -n "$status" ]; then
     set -- "$@" --message "$message"
   fi
 
-  echo-run git commit "$@"
+  echo-run git commit "$@" || die $? "Failed to create a commit. Fix any errors and retry."
 else
   echo-info "Skipping commit since there were no changes."
 fi
