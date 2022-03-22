@@ -2,6 +2,32 @@
 
 set -o errexit
 
+branch=
+
+while [ "$#" -gt 0 ]; do
+  unset _arg _value
+  case "$1" in
+    -h | --help)
+      echo "usage: $(basename "$0") [<branch>]"
+      exit
+      ;;
+    --)
+      shift
+      break
+      ;;
+    -?*) die 1 "unknown option: ${1}" ;;
+    *)
+      branch="$1";
+      ;;
+  esac
+  shift
+done
+
+if [ -n "$branch" ]; then
+  echo-run git switch "$branch"
+  exit $?
+fi
+
 # Make sure we're in a git branch
 git branch >/dev/null
 
