@@ -5,9 +5,20 @@
 num_tags=1
 
 die() {
-  [ "$#" -ge 2 ] && echo-err "$2"
+  [ "$#" -ge 2 ] && echo-err "$2" >&2
   exit "$1"
 }
+
+USAGE="usage: $(basename "$0") [<options>]
+
+    -v, --by-version      sort by version
+    -d, --by-date         sort by date
+    -p, --pattern <pattern>
+                          the grep pattern to search for
+    -n, --num-tags <num>  the number of previous tags to return
+    -g, --egrep-pattern <pattern>
+                          an egrep pattern to avoid
+"
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
@@ -22,6 +33,10 @@ while [ "$#" -gt 0 ]; do
   fi
   unset _arg _value
   case "$1" in
+    -h | --help)
+      echo "$USAGE"
+      exit
+      ;;
     -v | --by-version) by_version=1 ;;
     -d | --by-date) by_date=1 ;;
     -p | --pattern)
@@ -56,11 +71,13 @@ if [[ -z $pattern ]]; then
   exit 1
 fi
 
-IFS=$'\n' read -r -d '' -a latest_tags_by_date < <(git tag --sort=taggerdate --list "$pattern" | "${egrep_cmd[@]}" | tail -"$num_tags")
+# NOTE: Ideally we'd sort by "taggerdate", but lightweight tags don't have one
+# so we sort by creatordate (https://stackoverflow.com/a/71478514).
+IFS=$'\n' read -r -d '' -a latest_tags_by_date < <(git tag --sort=creatordate --list "$pattern" | "${egrep_cmd[@]}" | tail -"$num_tags")
 IFS=$'\n' read -r -d '' -a latest_tags_by_version < <(git tag --sort=version:refname --list "$pattern" | "${egrep_cmd[@]}" | tail -"$num_tags")
 
-echo "${latest_tags_by_date[@]}"
-echo "${latest_tags_by_version[@]}"
+# echo "${latest_tags_by_date[@]}"
+# echo "${latest_tags_by_version[@]}"
 
 if [[ "$by_version$by_date" == "1" ]]; then
   if ((by_version)); then
@@ -78,19 +95,31 @@ if [[ ${#latest_tags_by_date} != "${#latest_tags_by_version}" ]]; then
 fi
 
 if [[ ${#latest_tags_by_date[@]} -eq 0 ]]; then
+  echo "No matching tags by date." >&2
   exit 1
 fi
 if [[ ${#latest_tags_by_version[@]} -eq 0 ]]; then
+  echo "No matching tags by version." >&2
   exit 1
 fi
 
-[[ ${#latest_tags_by_date} -eq 0 ]] && exit 1
-
+failed=false
 for i in $(seq 0 "$((num_tags - 1))"); do
   if [[ ${latest_tags_by_date[$i]} != "${latest_tags_by_version[$i]}" ]]; then
-    echo "index $i: ${latest_tags_by_date[$i]} != ${latest_tags_by_version[$i]}" >&2
-    exit 1
+    failed=true
   fi
 done
+
+if $failed; then
+  echo-err "Tags sorted by date and version do not match" >&2
+  for i in $(seq 0 "$((num_tags - 1))"); do
+    if [[ ${latest_tags_by_date[$i]} != "${latest_tags_by_version[$i]}" ]]; then
+      echo-err "index $i: ${latest_tags_by_date[$i]} != ${latest_tags_by_version[$i]}" >&2
+    else
+      echo-ok "   index $i: ${latest_tags_by_date[$i]} == ${latest_tags_by_version[$i]}" >&2
+    fi
+  done
+  exit 1
+fi
 
 printf "%s\n" "${latest_tags_by_version[@]}"
