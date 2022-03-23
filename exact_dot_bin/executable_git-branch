@@ -17,7 +17,7 @@ while [ "$#" -gt 0 ]; do
       ;;
     -?*) die 1 "unknown option: ${1}" ;;
     *)
-      branch="$1";
+      branch="$1"
       ;;
   esac
   shift
