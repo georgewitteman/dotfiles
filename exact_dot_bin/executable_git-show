@@ -41,7 +41,6 @@ join_by() {
 }
 
 git_url="$(git-get-url --with-commit "$short_commit_id" 2>/dev/null)"
-pr_url="$(git-get-url --with-commit "$short_commit_id" --pull-request 2>/dev/null)"
 
 commit_fmt=()
 commit_fmt+=("$header")
@@ -49,7 +48,6 @@ commit_fmt+=("   Hash: %h")
 commit_fmt+=("   %C(cyan)Tags:%Creset %C(bold)$(join_by ', ' "${tags[@]}")%Creset")
 commit_fmt+=("  %C(red)Heads:%Creset $(join_by ', ' "${heads[@]}")")
 [[ -n $git_url ]] && commit_fmt+=("    %C(yellow)URL:%Creset ${git_url}")
-[[ -n $pr_url ]] && commit_fmt+=("     %C(yellow)PR:%Creset ${pr_url}")
 commit_fmt+=(" %C(green)Author:%Creset %an <%ae>")
 commit_fmt+=("   %C(blue)Date:%Creset %cd (%ar)")
 commit_fmt+=("%C(magenta)Subject:%Creset %C(bold)%s%Creset")
