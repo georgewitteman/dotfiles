@@ -25,7 +25,7 @@ while [ "$#" -gt 0 ]; do
 done
 
 printf "Getting remote HEAD... "
-GIT_HEAD="$(get-remote-head)"
+GIT_HEAD="$(get-main-branch)"
 echo "$GIT_HEAD"
 
 echo-run git fetch --prune origin "$GIT_HEAD"

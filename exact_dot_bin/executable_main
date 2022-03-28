@@ -42,7 +42,7 @@ while [ "$#" -gt 0 ]; do
 done
 
 printf "Getting remote HEAD... "
-head="$(get-remote-head)"
+head="$(get-main-branch)"
 echo "$head"
 
 echo-run git switch "$head"

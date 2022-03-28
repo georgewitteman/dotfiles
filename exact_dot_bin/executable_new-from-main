@@ -40,7 +40,7 @@ if $latest; then
   main --pull
 else
   printf "Getting remote HEAD... "
-  head="$(get-remote-head)"
+  head="$(get-main-branch)"
   echo "$head"
   echo-run git switch "$head"
 fi

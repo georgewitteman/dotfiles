@@ -13,6 +13,6 @@ echo-run git init
 echo-run git remote add origin "$url"
 echo-run git fetch origin
 
-remote_head="$(cd "$dir" && get-remote-head)"
+remote_head="$(cd "$dir" && get-main-branch)"
 echo-run git branch -m "$remote_head"
 echo-run git reset --mixed "origin/${remote_head}"

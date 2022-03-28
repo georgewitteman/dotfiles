@@ -34,7 +34,7 @@ echo-run git remote add origin "$repository_url"
 echo-run git fetch origin
 
 printf "Getting remote HEAD... "
-head="$(get-remote-head)"
+head="$(get-main-branch)"
 echo "$head"
 
 safe-run git reset --hard origin/"$head"
