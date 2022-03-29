@@ -2,7 +2,20 @@
 
 set -o errexit
 
-USAGE="usage: $(basename "$0") [-p|--push] [-s|--pull] [-f|--force] [-n|--no-verify] [<commit message>]"
+if ! in-git-repo; then
+  echo-err "Not in a git repository."
+  exit 128
+fi
+
+USAGE="usage: $(basename "$0") [<options>] [--] [<commit message>...]
+
+    -a, --add             add all changes
+    -p, --push            push branch to remote
+    -s, --pull            pull (sync) remote changes using \`git pull --rebase\`
+    -f, --force           force updates
+    -n, --no-verify       bypass pre-commit and commit-msg hooks
+    --amend               amend previous commit
+"
 
 die() {
   [ "$#" -ge 2 ] && echo-err "$2"
@@ -14,6 +27,7 @@ push=false
 message=''
 force=false
 no_verify=false
+add=false
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
@@ -32,6 +46,9 @@ while [ "$#" -gt 0 ]; do
       echo "$USAGE"
       exit
       ;;
+    -a | --add)
+      add=true
+      ;;
     -f | --force)
       force=true
       ;;
@@ -42,8 +59,15 @@ while [ "$#" -gt 0 ]; do
       # s: sync
       pull=true
       ;;
+    --amend)
+      amend=true
+      ;;
     -n | --no-verify)
       no_verify=true
+      ;;
+    --)
+      shift
+      break
       ;;
     -*)
       echo-err "unknown option: ${1}"
@@ -60,9 +84,20 @@ while [ "$#" -gt 0 ]; do
   shift
 done
 
+if [ $# -ne 0 ]; then
+  if [ -n "$message" ]; then
+    echo-err "failed to set commit message: $*"
+    echo-err "message already set: ${message}"
+    exit 1
+  fi
+  message="$*"
+fi
+
 set --
 
-add
+if $add; then
+  add
+fi
 
 status="$(git status --porcelain)"
 
@@ -78,11 +113,30 @@ if [ -n "$status" ]; then
   if $no_verify; then
     set -- "$@" --no-verify
   fi
-  if [ -n "$message" ]; then
-    set -- "$@" --message "$message"
-  fi
+  if $amend; then
+    current_commit_author="$(git show --no-patch --format='%ae')"
+    repo_email="$(git config --get user.email)"
+    if [ -z "$repo_email" ]; then
+      repo_email="$(git config --global --get user.email)"
+    fi
 
-  echo-run git commit "$@" || die $? "Failed to create a commit. Fix any errors and retry."
+    cmd="echo-run"
+    if [ "$current_commit_author" != "$repo_email" ]; then
+      echo "Are you sure you want to amend a commit that you don't own?"
+      echo "Current commit author email: $current_commit_author"
+      echo "Your email: $repo_email"
+      cmd="safe-run"
+    fi
+
+    "$cmd" git commit --amend --no-edit "$@" || die $? "Failed to amend commit. Fix any errors and retry"
+    unset cmd
+  else
+    if [ -n "$message" ]; then
+      set -- "$@" --message "$message"
+    fi
+
+    echo-run git commit "$@" || die $? "Failed to create a commit. Fix any errors and retry."
+  fi
 else
   echo-info "Skipping commit since there were no changes."
 fi
