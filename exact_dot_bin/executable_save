@@ -28,6 +28,7 @@ message=''
 force=false
 no_verify=false
 add=false
+amend=false
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
