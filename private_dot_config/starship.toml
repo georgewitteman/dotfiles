@@ -23,6 +23,9 @@ $character"""
 
 [directory]
 fish_style_pwd_dir_length = 2
+read_only = '!'
+read_only_style = 'bold red'
+repo_root_style = 'bold bright-blue'
 
 [status]
 format = '[ $status( $signal_name) ]($style) '
