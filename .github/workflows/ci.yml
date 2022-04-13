@@ -77,8 +77,6 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ${{ matrix.image }}
-      env:
-        GIT_CEILING_DIRECTORIES: "/__w"
     steps:
       - run: apt update
       - run: apt install --yes curl openssh-client unzip gnupg vim git
