@@ -80,8 +80,7 @@ jobs:
     steps:
       - run: apt update
       - run: apt install --yes curl openssh-client unzip gnupg vim git
-      - name: work around permission issue
-        # https://github.com/actions/checkout/issues/760
+      - name: CVE-2022-24765 workaround (https://github.com/actions/checkout/issues/760)
         run: git config --global --add safe.directory /__w/dotfiles/dotfiles
       - uses: actions/checkout@v2
       - run: ./install.sh
