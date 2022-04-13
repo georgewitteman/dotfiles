@@ -1,0 +1,21 @@
+#!/bin/sh
+
+set -o errexit
+
+set -f
+IFS=:
+for d in $PATH; do
+  set +f
+  if [ -z "$d" ]; then
+    d="."
+  fi
+  for f in "$d"/.[!.]* "$d"/..?* "$d"/*; do
+    if [ -x "$f" ] && [ ! -h "$f" ]; then
+      case "${f##*/}" in
+        python | python[[:alnum:]] | python[[:alnum:]].[[:alnum:]])
+          echo-run "$f" -m pip install --upgrade pip
+          ;;
+      esac
+    fi
+  done
+done
