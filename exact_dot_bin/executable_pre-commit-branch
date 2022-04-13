@@ -2,7 +2,9 @@
 
 set -o errexit
 
+"${PRIVATE_BIN}/add"
+
 merge_base="$(git merge-base "origin/HEAD" HEAD)"
 
-"${PRIVATE_BIN}/add"
-echo-run pre-commit run --from-ref "$(git rev-parse --short "$merge_base")" --to-ref .
+# --staged is a synonym for --cached
+git diff --name-only --no-ext-diff -z --cached --merge-base "$merge_base" | xargs -0 echo-run pre-commit run --files
