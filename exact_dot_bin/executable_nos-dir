@@ -1,0 +1,12 @@
+#!/bin/sh
+
+for path in "$@"; do
+  shift
+  nos "$path" || set -- "$@" "$path"
+done
+
+if [ $# -ne 0 ]; then
+  echo-err "The following paths failed: $*"
+  echo-err "   nos-dir $*"
+  exit 1
+fi
