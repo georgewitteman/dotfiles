@@ -136,8 +136,13 @@ restart_sh() {
 
 novenv() {
   venv --save
-  "$@"
+  trap '' INT
+  (
+    trap - INT
+    "$@"
+  )
   set -- $?
+  trap - INT
   venv --restore
   return "$1"
 }
