@@ -19,10 +19,6 @@
 	ui = true
 [grep]
 	lineNumber = true
-[alias]
-	s = status
-	st = status
-	patch = !git --no-pager diff --no-color
 [core]
 	editor = vim
 [diff]
@@ -30,10 +26,13 @@
 	colorMoved = default
 [merge]
 	tool = vimdiff
+	# https://blog.nilbus.com/take-the-pain-out-of-git-conflict-resolution-use-diff3/
+	# https://stackoverflow.com/q/27417656
 	conflictstyle = diff3
 [difftool]
 	prompt = 0
 [push]
+	# https://git-scm.com/docs/git-config#Documentation/git-config.txt-pushdefault
 	default = simple
 [pull]
 	rebase = true
