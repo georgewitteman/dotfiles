@@ -1,4 +1,4 @@
-#!/bin/sh -x
+#!/bin/sh
 
 for ref in $(git for-each-ref --sort=committerdate refs/remotes/origin --format='%(authoremail) %(refname)' | grep "$(git config user.email)" | grep origin | cut -d ' ' -f 2); do
   branch="${ref##refs\/remotes\/origin\/}"
