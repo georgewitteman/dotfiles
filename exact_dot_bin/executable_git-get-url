@@ -44,7 +44,7 @@ while [ "$#" -gt 0 ]; do
         die 1 "${1} requires a value"
       fi
       commit=true
-      commit_id="$2"
+      commit_id="$(git rev-parse --short "$2")"
       shift
       ;;
     --)
