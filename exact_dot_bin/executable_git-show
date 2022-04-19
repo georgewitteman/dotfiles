@@ -2,20 +2,14 @@
 
 set -o errexit
 
-if ! in-git-repo; then
-  echo-err "Not in a git repository."
-  exit 128
-fi
+commit_id="$(git show "$@" --quiet --format="%H")"
 
-ref="$(git show "$@" --quiet --format="%H")"
-short_commit_id="$(git show "$@" --quiet --format="%h")"
-
-if ! git rev-parse "$ref" >/dev/null 2>&1; then
-  echo "Invalid ref: ${ref}"
+if ! git rev-parse "$commit_id" >/dev/null 2>&1; then
+  echo "Invalid ref: ${commit_id}"
   exit 1
 fi
 
-IFS=$'\n' read -r -d '' -a refs < <(git show-ref --dereference | grep "$(git rev-parse "$ref")" | cut -d' ' -f2) || true
+IFS=$'\n' read -r -d '' -a refs < <(git show-ref --dereference | grep "$commit_id" | cut -d' ' -f2) || true
 
 tags=() heads=()
 for ref in "${refs[@]}"; do
@@ -40,16 +34,19 @@ join_by() {
   fi
 }
 
-git_url="$(git-get-url --with-commit "$short_commit_id" 2>/dev/null)"
+git_url="$(git-get-url --with-commit "$commit_id" 2>/dev/null)"
 
 commit_fmt=()
 commit_fmt+=("$header")
 commit_fmt+=("   Hash: %h")
+# Don't use this! It's actually slower than what we do manually above
+# commit_fmt+=("   %C(red)Refs:%Creset %D")
 commit_fmt+=("   %C(cyan)Tags:%Creset %C(bold)$(join_by ', ' "${tags[@]}")%Creset")
 commit_fmt+=("  %C(red)Heads:%Creset $(join_by ', ' "${heads[@]}")")
 [[ -n $git_url ]] && commit_fmt+=("    %C(yellow)URL:%Creset ${git_url}")
 commit_fmt+=(" %C(green)Author:%Creset %an <%ae>")
-commit_fmt+=("   %C(blue)Date:%Creset %cd (%ar)")
+commit_fmt+=(" %C(blue)C Date:%Creset %cd (%cr)")
+commit_fmt+=(" %C(blue)A Date:%Creset %ad (%ar)")
 commit_fmt+=("%C(magenta)Subject:%Creset %C(bold)%s%Creset")
 commit_fmt+=("$footer")
 
