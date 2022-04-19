@@ -47,7 +47,7 @@ printf "\033[33mRun \`%s\` (y/N)?\033[0m " "${_echo_run_current_value}" >&2
 unset _echo_run_arg_needs_quotes _echo_run_current_arg _echo_run_current_arg_temp
 unset _echo_run_part_before_single_quote _echo_run_part_needs_quotes _echo_run_current_value
 
-read -r reply >&2
+read -r reply </dev/tty >&2
 if ! [ "$reply" != "${reply#[Yy]}" ]; then
   unset reply
   return 1 2>/dev/null || exit 1

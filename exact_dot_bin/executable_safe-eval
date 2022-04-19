@@ -2,7 +2,7 @@
 
 printf "\033[33mRun \`%s\` (y/N)?\033[0m " "$*" >&2
 
-read -r reply >&2
+read -r reply </dev/tty >&2
 if ! [ "$reply" != "${reply#[Yy]}" ]; then
   unset reply
   return 1 2>/dev/null || exit 1
