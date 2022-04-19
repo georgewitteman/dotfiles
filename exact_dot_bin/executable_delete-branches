@@ -101,7 +101,7 @@ git for-each-ref --sort=committerdate "$refs" --format="%(authoremail:trim)${TAB
   branch="${short_refname##origin/}"
 
   case "$branch" in
-    develop | master | main | "$current_branch" | HEAD)
+    "$main_branch_name" | "$current_branch" | HEAD)
       continue
       ;;
   esac
