@@ -1,13 +1,132 @@
 #!/bin/sh
 
+set -o errexit
+
+USAGE="usage: $(basename "$0") [-y|--yes] [--mine] [--remote] [--older-than=<days>]"
+
+die() {
+  if [ "$#" -ge 2 ]; then
+    echo "$2"
+  fi
+  exit "$1"
+}
+
+older_than_days=
+yes=false
+remote=false
+refs="refs/heads"
+mine_only=false
+others_only=false
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    -[[:alnum:]][[:alnum:]]*)
+      # Joined short args (e.g. -abc)
+      _value="-${1##-?}"
+      _arg="${1%%"${1##-?}"}"
+      ;;
+    --[[:alnum:]]*=*)
+      # Args with values separated by an '=' character
+      _value="${1#--[[:alnum:]]*=}"
+      _arg="${1%%=${_value}}"
+      ;;
+  esac
+  if [ -n "${_arg:-}${_value:-}" ]; then
+    shift
+    set -- "$_arg" "$_value" "$@"
+  fi
+  unset _arg _value
+  case "$1" in
+    -h | --help)
+      echo "$USAGE"
+      exit
+      ;;
+    -y | --yes)
+      yes=true
+      ;;
+    --older-than)
+      [ "$#" -ge 2 ] || die 1 '--older-than requires a value'
+      # Check $2 is a number
+      if [ "$2" -ne "$2" ]; then
+        die 1 "--older-than value must be a number of days"
+      fi
+      older_than_days="$2"
+      shift
+      ;;
+    --mine)
+      mine_only=true
+      ;;
+    --not-mine)
+      others_only=true
+      ;;
+    --remote)
+      remote=true
+      refs="refs/remotes/origin"
+      ;;
+    --)
+      shift
+      break
+      ;;
+    -?*) die 1 "unknown option: ${1}" ;;
+    *) break ;;
+  esac
+  shift
+done
+
+if $mine_only && $others_only; then
+  die 1 "error: --mine and --not-mine are incompatible"
+fi
+
+set --
+if $yes && ! $remote; then
+  set -- echo-run
+else
+  set -- safe-run
+fi
+
+if $remote; then
+  set -- "$@" git push origin --delete
+else
+  set -- "$@" git branch --delete --force
+fi
+
+readonly current_ts="$(date +%s)"
+readonly threshold_ts="$((current_ts - (60 * 60 * 24 * older_than_days)))"
+
+readonly TAB="	"
+main_branch_name="$(get-main-branch)"
+user_email="$(git config user.email)"
 current_branch="$(git rev-parse --abbrev-ref HEAD)"
-for branch in $(git for-each-ref --sort=committerdate refs/heads --format='%(refname:short)'); do
-  if [ "$branch" = "develop" ] || [ "$branch" = "master" ] || [ "$branch" = "$current_branch" ]; then
+git for-each-ref --sort=committerdate "$refs" --format="%(authoremail:trim)${TAB}%(committerdate:unix)${TAB}%(refname:short)" | while IFS="$TAB" read -r author committerdate short_refname; do
+  branch="${short_refname##origin/}"
+
+  case "$branch" in
+    develop | master | main | "$current_branch" | HEAD)
+      continue
+      ;;
+  esac
+
+  if $remote || $mine_only; then
+    case "$author" in
+      "$user_email") ;;
+      *) continue ;;
+    esac
+  elif $others_only; then
+    case "$author" in
+      "$user_email") continue ;;
+    esac
+  fi
+
+  if [ -z "$older_than_days" ]; then
+    git-show --quiet "${refs}/${branch}"
+    "$@" "$branch" || true
+    echo
     continue
   fi
 
-  git-show --quiet "$branch"
-  safe-run git branch -D "$branch" || echo "Not deleting..."
-
-  echo
+  if [ "$committerdate" -le "$threshold_ts" ]; then
+    git-show --quiet "${refs}/${branch}"
+    "$@" "$branch" || true
+    echo
+  fi
 done
