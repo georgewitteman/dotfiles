@@ -28,7 +28,7 @@ while [ "$#" -gt 0 ]; do
     --[[:alnum:]]*=*)
       # Args with values separated by an '=' character
       _value="${1#--[[:alnum:]]*=}"
-      _arg="${1%%=${_value}}"
+      _arg="${1%%="${_value}"}"
       ;;
   esac
   if [ -n "${_arg:-}${_value:-}" ]; then
@@ -90,13 +90,14 @@ else
   set -- "$@" git branch --delete --force
 fi
 
-readonly current_ts="$(date +%s)"
-readonly threshold_ts="$((current_ts - (60 * 60 * 24 * older_than_days)))"
-
-readonly TAB="	"
+TAB="	"
+current_ts="$(date +%s)"
+threshold_ts="$((current_ts - (60 * 60 * 24 * older_than_days)))"
 main_branch_name="$(get-main-branch)"
 user_email="$(git config user.email)"
 current_branch="$(git rev-parse --abbrev-ref HEAD)"
+readonly current_ts threshold_ts TAB main_branch_name user_email current_branch
+
 git for-each-ref --sort=committerdate "$refs" --format="%(authoremail:trim)${TAB}%(committerdate:unix)${TAB}%(refname:short)" | while IFS="$TAB" read -r author committerdate short_refname; do
   branch="${short_refname##origin/}"
 

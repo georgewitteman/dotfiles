@@ -40,7 +40,7 @@ while [ "$#" -gt 0 ]; do
     --[[:alnum:]]*=*)
       # Args with values separated by an '=' character
       _value="${1#--[[:alnum:]]*=}"
-      _arg="${1%%=${_value}}"
+      _arg="${1%%="${_value}"}"
       ;;
   esac
   if [ -n "${_arg:-}${_value:-}" ]; then
