@@ -33,8 +33,14 @@ amend=false
 while [ "$#" -gt 0 ]; do
   case "$1" in
     -[[:alnum:]][[:alnum:]]*)
+      # Joined short args (e.g. -abc)
       _value="-${1##-?}"
       _arg="${1%%"${1##-?}"}"
+      ;;
+    --[[:alnum:]]*=*)
+      # Args with values separated by an '=' character
+      _value="${1#--[[:alnum:]]*=}"
+      _arg="${1%%=${_value}}"
       ;;
   esac
   if [ -n "${_arg:-}${_value:-}" ]; then
