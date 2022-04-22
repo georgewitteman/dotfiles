@@ -140,6 +140,9 @@ restart_sh() {
 
 novenv() {
   venv --save
+  # All this `trap` stuff makes it so that if I CTRL-C in the running command
+  # the virtual environment will still be restored and the exit code will still
+  # be correct
   trap '' INT
   (
     trap - INT
