@@ -28,7 +28,11 @@ if command -v brew >/dev/null; then
   brew() {
     if [ -n "$VIRTUAL_ENV" ]; then
       echo-warn "Don't run brew from inside a venv. https://docs.brew.sh/Homebrew-and-Python"
-      return 1
+      env "PATH=$(
+        remove_prefix_from_path "$PYENV_ROOT"
+        echo "$PATH"
+      )" safe_run command brew "$@"
+      return $?
     fi
     env "PATH=$(
       remove_prefix_from_path "$PYENV_ROOT"
