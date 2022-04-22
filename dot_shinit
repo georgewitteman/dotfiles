@@ -286,6 +286,12 @@ dotfiles() {
   case "$1" in
     'cd')
       shift
+      if command -v deactivate >/dev/null 2>&1; then
+        # When going from some directory where I have a venv activated to the
+        # dotfiles directory, I almost never want to actually stay in that
+        # virtual environment and have to run `deactivate` manually.
+        echo_run deactivate
+      fi
       echo_run cd "$(chezmoi source-path "$@")"
       ;;
     *)
