@@ -82,6 +82,19 @@ autoload_script() {
   # the first time the function is called, it will load in the actual function
   # body and create a new function (with the same name) with the actual
   # business logic. Afterwards the function is fully loaded.
+  #
+  # Another thing to note is that the inner eval needs to have the `$(cat $2)`
+  # as a double quoted argument. This is so that the output of the command (the
+  # function/script implementation) is treated as an argument. If it's not, any
+  # quotes in the function/script implementation risk closing the quotes in the
+  # code that is being `eval`d, leading to weird bugs. For example:
+  # - eval 'foo() { #!/bin/sh
+  #   echo 'bar || baz'
+  #   }'
+  # This is an overly simplistic example, but you can see how the first single
+  # quote on line 2 will actually end the string that is the first argument to
+  # eval. The `||` will then be treated as a real or (i.e. `echo ... || baz
+  # ...`) instead of as part of the string 'bar || baz'.
   eval "${1}() {
     eval '${1}() {' \"\$(cat ${2})\" '}; ${1} \"\$@\"'
   }"
