@@ -57,7 +57,14 @@ jobs:
       - run: pwd
       - run: echo ~
       - run: ls -la ~
-      - uses: rtCamp/action-cleanup@master
+      # - uses: rtCamp/action-cleanup@master
+      - run: |
+        set -e
+        set -x
+        shopt -s dotglob # include hidden files
+        rm -rf *
+        [[ -d "$HOME" ]] && cd "$HOME" && rm -rf *
+        [[ -f "$GITHUB_EVENT_PATH" ]] && rm $GITHUB_EVENT_PATH
       - run: ls -la ~
       - uses: actions/checkout@v2
       - name: Uninstall homebrew
