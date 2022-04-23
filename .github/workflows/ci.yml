@@ -54,11 +54,11 @@ jobs:
         os: [ubuntu-latest, ubuntu-18.04, macOS-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
       - name: Uninstall homebrew
         if: ${{ matrix.os == 'macOS-latest' }}
         run: 'sudo /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh)" -- --force'
-      - run: rm -rf ~/.nvm
+      - run: rm -rf ~/*
+      - uses: actions/checkout@v2
       - run: ./install.sh
 
   codespaces:
