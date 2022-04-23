@@ -58,7 +58,8 @@ jobs:
       - run: echo ~
       - run: ls -la ~
       # - uses: rtCamp/action-cleanup@master
-      - run: >
+      # https://yaml-multiline.info
+      - run: |-
           set -e
           set -x
           shopt -s dotglob # include hidden files
