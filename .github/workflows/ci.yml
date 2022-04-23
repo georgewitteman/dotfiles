@@ -99,7 +99,7 @@ jobs:
       # - name: CVE-2022-24765 workaround (https://github.com/actions/checkout/issues/760)
       #   run: git config --global --add safe.directory $GITHUB_WORKSPACE
       - uses: actions/checkout@v3
-      - run: ./install.sh
+      - run: echo $PATH && ./install.sh
       - run: ls -la $HOME
 
   shfmt:
