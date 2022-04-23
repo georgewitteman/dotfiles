@@ -28,14 +28,14 @@ restart_shell() {
     # IMPORTANT: This is not needed anymore. I realized you can use -a${1} in
     # the bash solution below.
     #
-    # -* ) set -- "$(command -v login)" -p -f "$USER" "$2" ;;
+    # -*) set -- "$(command -v login)" -p -f "$USER" "$2" ;;
     #
     # The bash exec command has the -a argument which allows you to set the
     # name of the script. This allows us to keep $0 the same across processes.
     # For example, if I originally started bash by typing `bash`, $0 will
     # continue to be `bash`. If I started it with `/bin/bash`, it will continue
     # to be `/bin/bash/`.
-    * ) set -- "$(command -v bash)" -c "exec -a${1} ${2}" ;;
+    *) set -- "$(command -v bash)" -c "exec -a${1} ${2}" ;;
   esac
 
   # In case ~/.shinit breaks before loading these functions, set dummy versions
