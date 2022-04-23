@@ -13,4 +13,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - run: rm -rf ~/.nvm ~/.pyenv
+      - name: Uninstall homebrew
+        if: ${{ matrix.os == 'macOS-latest' }}
+        run: 'sudo /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh)" -- --force'
       - run: 'sh -c "$(curl -fsLS git.io/chezmoi)" -- init --apply georgewitteman'
