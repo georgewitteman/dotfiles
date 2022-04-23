@@ -22,3 +22,6 @@ else
   echo "Don't know how to install git."
   exit 1
 fi
+
+script_dir="$(cd -P -- "$(dirname -- "$(command -v -- "$0")")" && pwd -P)"
+git -C "$script_dir" status
