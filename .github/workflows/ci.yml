@@ -96,6 +96,7 @@ jobs:
     container:
       image: ${{ matrix.image }}
     steps:
+      - run: apk --update --upgrade add git
       - uses: actions/checkout@v2
       - run: ./install.sh
 
