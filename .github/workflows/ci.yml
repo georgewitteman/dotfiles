@@ -95,6 +95,8 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ${{ matrix.image }}
+      # https://github.com/actions/checkout/issues/47#issuecomment-536109176
+      options: --user 1001
     steps:
       - run: ls -lad $GITHUB_WORKSPACE
       - run: apk --update --upgrade add git
