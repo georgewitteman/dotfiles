@@ -54,8 +54,11 @@ jobs:
         os: [ubuntu-latest, ubuntu-18.04, macOS-latest]
     runs-on: ${{ matrix.os }}
     steps:
+      - run: pwd
+      - run: echo ~
       - run: ls -la ~
-      - run: sudo rm -rfv ~/*
+      - uses: rtCamp/action-cleanup@master
+      - run: ls -la ~
       - uses: actions/checkout@v2
       - name: Uninstall homebrew
         if: ${{ matrix.os == 'macOS-latest' }}
