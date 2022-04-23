@@ -128,6 +128,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: 'curl -sS https://webinstall.dev/shellcheck | bash'
+      - run: echo $PATH
       - run: rm -rf ~/.nvm
       - run: ./install.sh
       - run: "${HOME}/.bin/shellcheck-all --verbose --debug"
