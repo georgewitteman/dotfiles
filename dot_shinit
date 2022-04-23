@@ -49,7 +49,7 @@ restart_shell() {
   if ! command -v echo_eval >/dev/null 2>&1; then
     echo_eval() {
       echo "\$ $*"
-      eval "$@"
+      eval "$*"
     }
   fi
 
