@@ -80,6 +80,7 @@ jobs:
     container:
       image: ${{ matrix.image }}
     steps:
+      - run: ls -la $HOME
       - run: apt update
       - run: apt install --yes curl openssh-client unzip gnupg vim git
       - name: CVE-2022-24765 workaround (https://github.com/actions/checkout/issues/760)
@@ -97,6 +98,7 @@ jobs:
     container:
       image: ${{ matrix.image }}
     steps:
+      - run: ls -la $HOME
       - run: apk --update --upgrade add git
       - name: CVE-2022-24765 workaround (https://github.com/actions/checkout/issues/760)
         run: git config --global --add safe.directory /__w/dotfiles/dotfiles
