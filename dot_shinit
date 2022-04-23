@@ -20,7 +20,7 @@ restart_shell() {
   # Sometimes the shell will be started with a dash in front of the name of the
   # shell to indicate that it's a login shell. This breaks the restart because
   # exec thinks that the name of the shell is actually an argument.
-  set -- "-$(basename "${1#-}")" $(command -v "${1#-}")
+  set -- "-$(basename "${1#-}")" "$(command -v "${1#-}")"
   case "$1" in
     # The login command will prefix the name of the shell with a dash. The -p
     # argument tells login to not discard previous environment variables.
