@@ -72,12 +72,18 @@ remove_from_path() {
 
 autoload_script() {
   # usage: autoload_script func_name /path/to/func_name
+
+  # The outer eval is needed so that the args to autoload_script can be used by
+  # the inner function. The inner function (the one created by the outer eval)
+  # is needed so that `$(cat $2)` isn't called immediately when
+  # `autoload_script` is called. We want `cat` to only be called the first time
+  # the the function with the name defined by $1 is called. The inner eval
+  # creates the function with the actual body and runs it once. This means that
+  # the first time the function is called, it will load in the actual function
+  # body and create a new function (with the same name) with the actual
+  # business logic. Afterwards the function is fully loaded.
   eval "${1}() {
-    eval \"
-      ${1}() {
-        \$(cat ${2})
-      }
-    ${1} \\\"\\\$@\\\"\"
+    eval '${1}() {' \"\$(cat ${2})\" '}; ${1} \"\$@\"'
   }"
 }
 
