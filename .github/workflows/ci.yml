@@ -54,19 +54,6 @@ jobs:
         os: [ubuntu-latest, ubuntu-18.04, macOS-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - run: pwd
-      - run: echo ~
-      - run: ls -la ~
-      # - uses: rtCamp/action-cleanup@master
-      # https://yaml-multiline.info
-      - run: |-
-          set -e
-          set -x
-          shopt -s dotglob # include hidden files
-          rm -rf *
-          [[ -d "$HOME" ]] && cd "$HOME" && rm -rf *
-          [[ -f "$GITHUB_EVENT_PATH" ]] && rm $GITHUB_EVENT_PATH
-      - run: ls -la ~
       - uses: actions/checkout@v2
       - name: Uninstall homebrew
         if: ${{ matrix.os == 'macOS-latest' }}
@@ -97,6 +84,18 @@ jobs:
       - run: apt install --yes curl openssh-client unzip gnupg vim git
       - name: CVE-2022-24765 workaround (https://github.com/actions/checkout/issues/760)
         run: git config --global --add safe.directory /__w/dotfiles/dotfiles
+      - uses: actions/checkout@v2
+      - run: ./install.sh
+
+  docker-alpine:
+    strategy:
+      fail-fast: false
+      matrix:
+        image: ["alpine:latest"]
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ matrix.image }}
+    steps:
       - uses: actions/checkout@v2
       - run: ./install.sh
 
