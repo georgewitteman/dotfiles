@@ -115,8 +115,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: 'curl -sS https://webinstall.dev/shfmt | bash'
+      - run: echo $PATH
       - run: rm -rf ~/.nvm
       - run: ./install.sh
+      - run: echo $PATH
       - run: "${HOME}/.bin/shfmt-check-all --verbose --debug"
 
   shellcheck:
@@ -131,4 +133,5 @@ jobs:
       - run: echo $PATH
       - run: rm -rf ~/.nvm
       - run: ./install.sh
+      - run: echo $PATH
       - run: "${HOME}/.bin/shellcheck-all --verbose --debug"
