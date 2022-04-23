@@ -1,5 +1,100 @@
 #!/bin/sh
 
+# I'm putting this near the top because sometimes other stuff in this script
+# breaks while I'm testing it and then restart_shell isn't loaded and I have to
+# remember what this actually does.
+alias resh="restart_shell"
+restart_shell() {
+  # Note: You can't use $0 here since it will be the name of the function, not
+  # the shell.
+  if [ $# -eq 0 ]; then
+    if [ -f "/proc/$$/cmdline" ]; then
+      set -- "$(tr '\0' ' ' <"/proc/$$/cmdline" | cut -d ' ' -f 1)"
+    else
+      set -- "$(ps -p $$ -o comm | tail -1)"
+    fi
+  fi
+  # $1: The name of the shell prefixed with a dash (indicating a login shell)
+  # $2: The path to the shell. This is necessary since we get rid of $PATH
+  #
+  # Sometimes the shell will be started with a dash in front of the name of the
+  # shell to indicate that it's a login shell. This breaks the restart because
+  # exec thinks that the name of the shell is actually an argument.
+  set -- "-$(basename "${1#-}")" $(command -v "${1#-}")
+  case "$1" in
+    # The login command will prefix the name of the shell with a dash. The -p
+    # argument tells login to not discard previous environment variables.
+    #
+    # IMPORTANT: This is not needed anymore. I realized you can use -a${1} in
+    # the bash solution below.
+    #
+    # -* ) set -- "$(command -v login)" -p -f "$USER" "$2" ;;
+    #
+    # The bash exec command has the -a argument which allows you to set the
+    # name of the script. This allows us to keep $0 the same across processes.
+    # For example, if I originally started bash by typing `bash`, $0 will
+    # continue to be `bash`. If I started it with `/bin/bash`, it will continue
+    # to be `/bin/bash/`.
+    * ) set -- "$(command -v bash)" -c "exec -a${1} ${2}" ;;
+  esac
+
+  # In case ~/.shinit breaks before loading these functions, set dummy versions
+  # of them here so things still work.
+  if ! command -v echo_run >/dev/null 2>&1; then
+    echo_run() {
+      echo "\$ $*"
+      "$@"
+    }
+  fi
+  if ! command -v echo_eval >/dev/null 2>&1; then
+    echo_eval() {
+      echo "\$ $*"
+      eval "$@"
+    }
+  fi
+
+  if command -v zplug >/dev/null 2>&1; then
+    echo_run zplug reinit
+  fi
+
+  if [ -n "$(jobs)" ]; then
+    # Handle any issues where $PATH doesn't include my custom echo-warn
+    # command.
+    if command -v echo-warn >/dev/null 2>&1; then
+      echo-warn "Current shell has backgrounded jobs. Not restarting ${1}"
+    else
+      echo "Current shell has backgrounded jobs. Not restarting ${1}"
+    fi
+    return 1
+  fi
+
+  # Since we reset $PATH and the autoloading requires cat (which is in $PATH)
+  # preload some functions.
+  echo_run echo >/dev/null 2>&1
+  echo_eval echo >/dev/null 2>&1
+
+  # I'm using the awk approach since my original approach didn't handle
+  # newlines well.
+  #
+  # Original approach: for name in $(env | cut -d '=' -f1 | xargs echo); do
+  for name in $(awk 'BEGIN{for(v in ENVIRON) print v}' | xargs echo); do
+    case "$name" in
+      # These variables are provided by the terminal and are not automatically
+      # assigned by the shell.
+      COLORFGBG | COLORTERM | COMMAND_MODE | HOME | ITERM_PROFILE | ITERM_SESSION_ID | LANG | LC_TERMINAL | LC_TERMINAL_VERSION | LOGNAME | PWD | SHELL | SSH_AUTH_SOCK | TERM | TERM_PROGRAM | TERM_PROGRAM_VERSION | TERM_SESSION_ID | TMPDIR | USER | XPC_FLAGS | XPC_SERVICE_NAME | __CFBundleIdentifier | __CF_USER_TEXT_ENCODING) : ;;
+      *) echo_run unset -v "$name" ;;
+    esac
+  done
+
+  echo_run exec "$@"
+}
+
+login_shell() {
+  # Starts a login shell with the most prestine environment possible.
+  echo_run login -f "$USER" "$(command -v env)"
+  echo_run exec login -f "$USER"
+}
+
 alias ll='ls -l'
 alias la='ls -la'
 
@@ -108,53 +203,6 @@ autoload_script safe_run "${PRIVATE_BIN}/safe-run"
 take() {
   # shellcheck disable=SC2164
   mkdir -p "$1" && cd "$1"
-}
-
-alias resh="restart_shell"
-restart_shell() {
-  # Sometimes the shell will be started with a dash in front of the name of the
-  # shell to indicate that it's a login shell. This breaks the restart because
-  # exec thinks that the name of the shell is actually an argument.
-  if [ $# -eq 0 ]; then
-    if [ -f "/proc/$$/cmdline" ]; then
-      set -- "$(tr '\0' ' ' <"/proc/$$/cmdline" | cut -d ' ' -f 1)"
-    else
-      set -- "$(ps -p $$ -o comm | tail -1)"
-    fi
-  fi
-  set -- "${1#-}"
-  set -- "$(command -v "$1")"
-  if [ -z "$1" ]; then
-    set -- "${SHELL:-/bin/zsh}"
-  fi
-
-  if command -v zplug >/dev/null 2>&1; then
-    echo_run zplug reinit
-  fi
-
-  if [ -n "$(jobs)" ]; then
-    echo-warn "Current shell has backgrounded jobs. Not restarting ${1}"
-    return 1
-  fi
-
-  # Since we reset $PATH and the autoloading requires cat (which is in $PATH)
-  # preload some functions
-  echo_run echo >/dev/null 2>&1
-  echo_eval echo >/dev/null 2>&1
-
-  # Try using the awk approach since my original approach didn't handle
-  # newlines well
-  # for name in $(env | cut -d '=' -f1 | xargs echo); do
-  for name in $(awk 'BEGIN{for(v in ENVIRON) print v}' | xargs echo); do
-    # These variables are provided by the terminal and are not automatically
-    # assigned by the shell
-    case "$name" in
-      COLORFGBG | COLORTERM | COMMAND_MODE | HOME | ITERM_PROFILE | ITERM_SESSION_ID | LANG | LC_TERMINAL | LC_TERMINAL_VERSION | LOGNAME | PWD | SHELL | SSH_AUTH_SOCK | TERM | TERM_PROGRAM | TERM_PROGRAM_VERSION | TERM_SESSION_ID | TMPDIR | USER | XPC_FLAGS | XPC_SERVICE_NAME | __CFBundleIdentifier | __CF_USER_TEXT_ENCODING) : ;;
-      *) echo_run unset "$name" ;;
-    esac
-  done
-
-  echo_run exec "$1" -li
 }
 
 novenv() {
