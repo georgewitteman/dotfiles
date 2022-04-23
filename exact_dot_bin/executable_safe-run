@@ -55,4 +55,8 @@ fi
 
 unset reply
 
-echo-run "$@"
+if command -v echo_run >/dev/null 2>&1; then
+  echo_run "$@"
+else
+  echo-run "$@"
+fi
