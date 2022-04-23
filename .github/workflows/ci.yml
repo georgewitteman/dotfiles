@@ -54,7 +54,7 @@ jobs:
         os: [ubuntu-latest, ubuntu-18.04, macOS-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Uninstall homebrew
         if: ${{ matrix.os == 'macOS-latest' }}
         run: 'sudo /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh)" -- --force'
@@ -68,7 +68,7 @@ jobs:
       env:
         CODESPACES: true
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - run: ./install.sh
 
   docker:
@@ -84,7 +84,7 @@ jobs:
       - run: apt install --yes curl openssh-client unzip gnupg vim git
       - name: CVE-2022-24765 workaround (https://github.com/actions/checkout/issues/760)
         run: git config --global --add safe.directory /__w/dotfiles/dotfiles
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - run: ./install.sh
 
   docker-alpine:
@@ -97,7 +97,7 @@ jobs:
       image: ${{ matrix.image }}
     steps:
       - run: apk --update --upgrade add git
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - run: ./install.sh
 
   lint:
@@ -107,7 +107,7 @@ jobs:
         os: [ubuntu-latest, macOS-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - if: ${{ matrix.os == 'ubuntu-latest' }}
         run: 'sudo apt update; sudo apt install --yes shellcheck'
       - if: ${{ matrix.os == 'ubuntu-latest' }}
