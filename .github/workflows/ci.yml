@@ -97,7 +97,7 @@ jobs:
     container:
       image: ${{ matrix.image }}
     steps:
-      - run: sudo apk --update --upgrade add git
+      - run: apk --update --upgrade add git
       - name: CVE-2022-24765 workaround (https://github.com/actions/checkout/issues/760)
         run: git config --global --add safe.directory /__w/dotfiles/dotfiles
       - uses: actions/checkout@v3
