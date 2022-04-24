@@ -126,7 +126,7 @@ if command -v brew >/dev/null; then
       env "PATH=$(
         remove_prefix_from_path "$PYENV_ROOT"
         echo "$PATH"
-      )" safe_run command brew "$@"
+      )" safe-run command brew "$@"
       return $?
     fi
     env "PATH=$(
