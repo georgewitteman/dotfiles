@@ -81,7 +81,7 @@ restart_shell() {
     case "$name" in
       # These variables are provided by the terminal and are not automatically
       # assigned by the shell.
-      COLORFGBG | COLORTERM | COMMAND_MODE | HOME | ITERM_PROFILE | ITERM_SESSION_ID | LANG | LC_TERMINAL | LC_TERMINAL_VERSION | LOGNAME | PWD | SHELL | SSH_AUTH_SOCK | TERM | TERM_PROGRAM | TERM_PROGRAM_VERSION | TERM_SESSION_ID | TMPDIR | USER | XPC_FLAGS | XPC_SERVICE_NAME | __CFBundleIdentifier | __CF_USER_TEXT_ENCODING) : ;;
+      COLORFGBG | COLORTERM | COMMAND_MODE | HOME | ITERM_PROFILE | ITERM_SESSION_ID | LANG | LC_TERMINAL | LC_TERMINAL_VERSION | LOGNAME | PWD | SHELL | SSH_AUTH_SOCK | TERM | TERM_PROGRAM | TERM_PROGRAM_VERSION | TERM_SESSION_ID | TMPDIR | USER | XPC_FLAGS | XPC_SERVICE_NAME | __CFBundleIdentifier | __CF_USER_TEXT_ENCODING | OP_SESSION_*) : ;;
       *) echo_run unset -v "$name" ;;
     esac
   done
@@ -111,11 +111,11 @@ op_signin() {
     echo "command not found: op"
     return 127
   fi
-  if ! op get account >/dev/null 2>&1; then
+  if ! op account get >/dev/null 2>&1; then
     # shellcheck disable=SC2016
     echo_eval 'eval "$(op signin)"'
     # Verify we are signed in now
-    op get account >/dev/null 2>&1
+    op account get >/dev/null 2>&1
   fi
 }
 

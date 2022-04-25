@@ -23,11 +23,11 @@ fi
 
 echo-info "Importing personal GPG keys"
 
-if ! op get account >/dev/null 2>&1; then
+if ! op account get >/dev/null 2>&1; then
   # shellcheck disable=SC2016
-  eval "$(op signin my.1password.com "{{ .email }}")"
+  eval "$(op signin)"
   # Verify we are signed in now
-  op get account >/dev/null 2>&1
+  op account get >/dev/null 2>&1
 fi
 
 echo-eval 'op get document "Personal GPG Key - George Witteman (AE0381FB) – Public.asc" | gpg --batch --import'
