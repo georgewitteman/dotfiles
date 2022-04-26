@@ -18,6 +18,7 @@ for arg in "$@"; do
       if [ -f "$1" ]; then
         set -- "$@" "$1"
       fi
+      ;;
   esac
   shift
 done
