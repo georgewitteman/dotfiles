@@ -20,6 +20,8 @@ USAGE="usage: $(basename "$0") [<options>]
                           an egrep pattern to avoid
 "
 
+remote=false
+
 while [ "$#" -gt 0 ]; do
   case "$1" in
     -[[:alnum:]][[:alnum:]]*)
@@ -51,6 +53,9 @@ while [ "$#" -gt 0 ]; do
       egrep_pattern="$2"
       shift
       ;;
+    --remote)
+      remote=true
+      ;;
     --)
       shift
       break
@@ -73,8 +78,13 @@ fi
 
 # NOTE: Ideally we'd sort by "taggerdate", but lightweight tags don't have one
 # so we sort by creatordate (https://stackoverflow.com/a/71478514).
-IFS=$'\n' read -r -d '' -a latest_tags_by_date < <(git tag --sort=creatordate --list "$pattern" | "${egrep_cmd[@]}" | tail -"$num_tags")
-IFS=$'\n' read -r -d '' -a latest_tags_by_version < <(git tag --sort=version:refname --list "$pattern" | "${egrep_cmd[@]}" | tail -"$num_tags")
+if $remote; then
+  IFS=$'\n' read -r -d '' -a latest_tags_by_date < <(git ls-remote --tags --refs --sort=creatordate origin "$pattern" | cut -d '/' -f 3 | "${egrep_cmd[@]}" | tail -"$num_tags")
+  IFS=$'\n' read -r -d '' -a latest_tags_by_version < <(git ls-remote --tags --refs --sort=version:refname origin "$pattern" | cut -d '/' -f 3 | "${egrep_cmd[@]}" | tail -"$num_tags")
+else
+  IFS=$'\n' read -r -d '' -a latest_tags_by_date < <(git tag --sort=creatordate --list "$pattern" | "${egrep_cmd[@]}" | tail -"$num_tags")
+  IFS=$'\n' read -r -d '' -a latest_tags_by_version < <(git tag --sort=version:refname --list "$pattern" | "${egrep_cmd[@]}" | tail -"$num_tags")
+fi
 
 # echo "${latest_tags_by_date[@]}"
 # echo "${latest_tags_by_version[@]}"
