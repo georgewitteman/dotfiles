@@ -28,6 +28,8 @@ printf "Getting remote HEAD... "
 GIT_HEAD="$(get-main-branch)"
 echo "$GIT_HEAD"
 
+previous_head="$(git rev-parse --short HEAD)"
+
 if git ls-remote --exit-code origin >/dev/null 2>&1; then
   echo-run git fetch --prune origin "$GIT_HEAD"
   echo-run git merge --quiet --no-edit "origin/${GIT_HEAD}"
@@ -35,7 +37,7 @@ else
   echo-run git merge --quiet --no-edit "$GIT_HEAD"
 fi
 
-echo-info "Run 'git reset --hard HEAD^' to revert this"
+echo-info "Run 'git reset --hard ${previous_head}' to revert this"
 
 if $push; then
   "${PRIVATE_BIN}/push"
