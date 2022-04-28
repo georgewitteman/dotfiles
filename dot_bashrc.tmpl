@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 {{- if stat "/var/gitpod/.bashrc-prepend" }}
-{{ output "cat" "/var/gitpod/.bashrc-prepend" }}
+{{ include "/var/gitpod/.bashrc-prepend" }}
 {{- end }}
 
 if [[ -z $ENV ]]; then
@@ -30,5 +30,5 @@ fi
 {{- end -}}
 
 {{- if stat "/var/gitpod/.bashrc-prepend" }}
-{{ output "cat" "/var/gitpod/.bashrc-append" }}
+{{ include "/var/gitpod/.bashrc-append" }}
 {{ end }}
