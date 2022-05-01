@@ -4,23 +4,21 @@
 
 set -o errexit
 
-if ! command -v chezmoi >/dev/null 2>&1; then
+echo "\$USER: ${USER}"
+
+if command -v chezmoi >/dev/null 2>&1; then
+  chezmoi=chezmoi
+else
   bin_dir="${HOME}/.local/bin"
   chezmoi="${bin_dir}/chezmoi"
   if command -v curl >/dev/null 2>&1; then
     sh -c "$(curl -fsSL https://git.io/chezmoi)" -- -b "$bin_dir"
   elif command -v wget >/dev/null 2>&1; then
     sh -c "$(wget -qO- https://git.io/chezmoi)" -- -b "$bin_dir"
-  elif command -v apk >/dev/null 2>&1; then
-    sudo apk install chezmoi
-  elif command -v apt-get >/dev/null 2>&1; then
-    sudo apt-get install chezmoi
   else
     echo "To install chezmoi, you must have curl or wget installed." >&2
     exit 1
   fi
-else
-  chezmoi=chezmoi
 fi
 
 # POSIX way to get script's dir: https://stackoverflow.com/a/29834779/12156188
