@@ -11,6 +11,10 @@ if ! command -v chezmoi >/dev/null 2>&1; then
     sh -c "$(curl -fsSL https://git.io/chezmoi)" -- -b "$bin_dir"
   elif command -v wget >/dev/null 2>&1; then
     sh -c "$(wget -qO- https://git.io/chezmoi)" -- -b "$bin_dir"
+  elif command -v apk >/dev/null 2>&1; then
+    sudo apk install chezmoi
+  elif command -v apt-get >/dev/null 2>&1; then
+    sudo apt-get install chezmoi
   else
     echo "To install chezmoi, you must have curl or wget installed." >&2
     exit 1
