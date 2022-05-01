@@ -20,8 +20,8 @@ for dir in "$HOME"/.config/sh/*; do
   fi
 
   if [[ -r ${dir}/init.bash ]]; then
-  # shellcheck disable=SC1090
-    . "${dir}/init.bash"
+    # shellcheck disable=SC1090
+    source "${dir}/init.bash"
   fi
 done
 
@@ -29,7 +29,7 @@ done
 # Keep this at the end
 if [[ -e "${HOME}/.cache/iterm2/iterm2_shell_integration.bash" ]]; then
   # shellcheck source=.cache/iterm2/iterm2_shell_integration.bash
-  . "${HOME}/.cache/iterm2/iterm2_shell_integration.bash" || true
+  source "${HOME}/.cache/iterm2/iterm2_shell_integration.bash" || true
 fi
 {{- end -}}
 
