@@ -393,7 +393,7 @@ workspace() {
 }
 
 for dir in "$HOME"/.config/sh/*; do
-  if [ ! -d "$dir" ];
+  if [ ! -d "$dir" ]; then
     continue
   fi
 
