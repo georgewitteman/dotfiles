@@ -1,15 +1,19 @@
 # vim: ft=zsh
 source "${HOME}/.shinit"
 
-for dir in "$HOME"/.config/sh/*/; do
-  [ -d "$dir" ] || continue
+for dir in "$HOME"/.config/sh/*; do
+  if [[ ! -d $dir ]]; then
+    continue
+  fi
 
-  if [ -n "$CI" ]; then
-    echo "Sourcing ${dir}init.zsh"
+  if [[ -n $CI ]]; then
+    echo "Sourcing ${dir}/init.zsh"
   fi
 
   # shellcheck disable=SC1090
-  [ -r "${dir}init.zsh" ] && . "${dir}init.zsh"
+  if [[ -r ${dir}/init.zsh ]]; then
+    source "${dir}/init.zsh"
+  fi
 done
 
 # Adding this here so scripts think pyenv is initialized
@@ -18,10 +22,10 @@ done
 # Set up fpath for my autoloaded functions
 fpath=("${HOME}/.config/zsh/" "${fpath[@]}")
 autoload -Uz "${HOME}/.config"/zsh/[A-Za-z]*
-if [ -t 0 ] && [ -t 1 ] && [ -z "$CI" ]; then
+if [[ -t 0 ]] && [[ -t 1 ]] && [[ -z $CI ]]; then
   autoload -Uz compinit && compinit -C -d "${HOME}/.zcompdump"
 
-  if [ -f "${NVM_DIR:-${HOME}/.nvm}/bash_completion" ]; then
+  if [[ -f ${NVM_DIR:-${HOME}/.nvm}/bash_completion ]]; then
     source "${NVM_DIR:-${HOME}/.nvm}/bash_completion"
   fi
 fi
@@ -172,7 +176,7 @@ if command -v fzf &>/dev/null && command -v fd &>/dev/null; then
 
   fzf-select-history() {
     local command="$(fc -l -n 1 | fzf --tiebreak index --tac --query "$LBUFFER")"
-    if [[ "$status" != 0 || -z "$command" ]]; then
+    if [[ "$status" -ne 0 || -z "$command" ]]; then
       return
     fi
     BUFFER="$command"
@@ -263,6 +267,6 @@ export SAVEHIST=100000
 export HISTSIZE=100000
 
 # Keep this at the end
-if [ -e "${HOME}/.cache/iterm2/iterm2_shell_integration.zsh" ]; then
-  . "${HOME}/.cache/iterm2/iterm2_shell_integration.zsh" || true
+if [[ -e "${HOME}/.cache/iterm2/iterm2_shell_integration.zsh" ]]; then
+  source "${HOME}/.cache/iterm2/iterm2_shell_integration.zsh" || true
 fi

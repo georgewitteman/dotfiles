@@ -14,11 +14,15 @@ fi
 # shellcheck source=.shinit
 source "${HOME}/.shinit"
 
-for dir in "$HOME"/.config/sh/*/; do
-  [ -d "$dir" ] || continue
+for dir in "$HOME"/.config/sh/*; do
+  if [[ ! -d $dir ]]; then
+    continue
+  fi
 
+  if [[ -r ${dir}/init.bash ]]; then
   # shellcheck disable=SC1090
-  [ -r "${dir}init.bash" ] && . "${dir}init.bash"
+    . "${dir}/init.bash"
+  fi
 done
 
 {{- if eq .chezmoi.os "darwin" }}

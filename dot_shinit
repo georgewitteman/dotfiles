@@ -95,6 +95,10 @@ login_shell() {
   echo_run exec login -f "$USER"
 }
 
+# `man ls`: auto will make ls output escape sequences based on termcap(5), but
+# only if stdout is a tty and either the -G flag is specified or the COLORTERM
+# environment variable is set and not empty.
+alias ls='ls --color=auto'
 alias ll='ls -l'
 alias la='ls -la'
 

@@ -1,64 +1,68 @@
 #!/bin/sh
 
+# `man dash`: If the environment variable ENV is set on entry to an interactive
+# shell, or is set in the .profile of a login shell, the shell next reads
+# commands from the file named in ENV.  Therefore, a user should place commands
+# that are to be executed only at login time in the .profile file, and commands
+# that are executed for every interactive shell inside the ENV file.
 export ENV="${HOME}/.shinit"
 
-# Skipping this for now because there is some improvement when running python
-# tests
-# # Don't write python .pyc files, because they're not necessary and clutter
-# # directories with binary files
-# export PYTHONDONTWRITEBYTECODE=1
-
-# Locale setup
-export LC_ALL="${LC_ALL:-en_US.UTF-8}"
+# This variable configures all programs which use setlocale(3) to use the specified locale unless the LC_* variables are set.
 export LANG="${LANG:-en_US.UTF-8}"
 
-if command -v nvim >/dev/null 2>&1; then
-  export EDITOR="${EDITOR:-nvim}"
-else
-  export EDITOR="${EDITOR:-vim}"
+# `man environ`: Default editor name.
+if [ -z "$EDITOR" ]; then
+  if command -v nvim >/dev/null 2>&1; then
+    export EDITOR="nvim"
+  else
+    export EDITOR="vim"
+  fi
 fi
 
-export PAGER="${PAGER:-less -R}"
-export MANPAGER="${MANPAGER:-less -is}"
-export CLICOLOR="${CLICOLOR:-1}"
-export LSCOLORS="${LSCOLORS:-exfxcxdxbxegedabagacad}"
-export LS_COLORS="${LS_COLORS:-di=34:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43}"
-
-export LESSHISTFILE="${LESSHISTFILE:-/dev/null}"
-
-export FZF_DEFAULT_COMMAND="${FZF_DEFAULT_COMMAND:-fd --type f --hidden --exclude .git}"
-
 # Fixes gpg when "GPG Suite" is not installed (i.e. gpg is installed from homebrew)
-export GPG_TTY="$TTY"
+if [ -n "$TTY" ]; then
+  export GPG_TTY="$TTY"
+fi
 
-# https://github.com/Homebrew/brew/pull/10374
-export HOMEBREW_NO_ANALYTICS=1
-# Turning these off because I'm constantly getting issues with homebrew
-# and maybe these are causing it
-# export HOMEBREW_BOOTSNAP=1
-# export HOMEBREW_INSTALL_FROM_API=1
-
-# https://stackoverflow.com/a/9168577
 export PRIVATE_BIN="${HOME}/.bin"
 
 if [ -S "${HOME}/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock" ]; then
+  # `man ssh`: SSH_AUTH_SOCK Identifies the path of a UNIX-domain socket used
+  # to communicate with the agent.
   export SSH_AUTH_SOCK="${HOME}/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
 fi
 
-PATH="/usr/local/sbin:${PATH}"
-PATH="/usr/local/opt/fzf/bin:${PATH}"
-PATH="${HOME}/.local/bin:${PATH}"
-PATH="$PRIVATE_BIN:${PATH}"
-PATH="${HOME}/.cargo/bin:${PATH}"
+if [ -d "/usr/local/sbin" ]; then
+  PATH="/usr/local/sbin:${PATH}"
+fi
 
-for dir in "$HOME"/.config/sh/*/; do
-  [ -d "$dir" ] || continue
+if [ -d "/usr/local/opt/fzf/bin" ]; then
+  PATH="/usr/local/opt/fzf/bin:${PATH}"
+fi
+
+if [ -d "${HOME}/.local/bin" ]; then
+  PATH="${HOME}/.local/bin:${PATH}"
+fi
+
+if [ -d "${PRIVATE_BIN}" ]; then
+  PATH="$PRIVATE_BIN:${PATH}"
+fi
+
+if [ -d "${HOME}/.cargo/bin:${PATH}" ]; then
+  PATH="${HOME}/.cargo/bin:${PATH}"
+fi
+
+for dir in "$HOME"/.config/sh/*; do
+  if [ ! -d "$dir" ]; then
+    continue
+  fi
+
   if [ -d "${dir}/bin" ]; then
-    PATH="${dir}bin:${PATH}"
+    PATH="${dir}/bin:${PATH}"
   fi
 
   # shellcheck disable=SC1090
-  if [ -r "${dir}profile.sh" ]; then
-    . "${dir}profile.sh"
+  if [ -r "${dir}/profile.sh" ]; then
+    . "${dir}/profile.sh"
   fi
 done
