@@ -96,10 +96,11 @@ jobs:
       image: ${{ matrix.image }}
     steps:
       - run: ls -la $HOME
-      # - name: CVE-2022-24765 workaround (https://github.com/actions/checkout/issues/760)
-      #   run: git config --global --add safe.directory $GITHUB_WORKSPACE
+      - run: apk add git
+      - name: CVE-2022-24765 workaround (https://github.com/actions/checkout/issues/760)
+        run: git config --global --add safe.directory $GITHUB_WORKSPACE
       - uses: actions/checkout@v3
-      - run: echo $PATH && ./install.sh
+      - run: ./install.sh
       - run: ls -la $HOME
 
   shfmt:
