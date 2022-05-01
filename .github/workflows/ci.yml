@@ -4,12 +4,8 @@ on:
   push:
 
 jobs:
-  clone-and-install:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: ["macOS-latest"]
-    runs-on: ${{ matrix.os }}
+  macos:
+    runs-on: macOS-latest
     steps:
       - run: curl --fail --silent --show-error --location "https://git.io/chezmoi" | sh -s -- -b "${HOME}/.local/bin" -d init --apply georgewitteman --branch "${GITHUB_REF#refs/heads/}"
 
@@ -22,14 +18,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: ./install.sh
-
-  gitpod:
-    runs-on: ubuntu-latest
-    container:
-      image: gitpod/workspace-base
-    steps:
-      - run: git clone --branch "${GITHUB_REF#refs/heads/}" --depth=1 "https://github.com/georgewitteman/dotfiles.git" "${HOME}/.dotfiles"
-      - run: "${HOME}/.dotfiles/install.sh"
 
   docker:
     strategy:
