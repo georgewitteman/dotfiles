@@ -72,33 +72,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        image: ["ubuntu:18.04", "ubuntu:20.04"]
+        image: ["ubuntu:18.04", "ubuntu:20.04", "alpine:latest"]
     runs-on: ubuntu-latest
     container:
       image: ${{ matrix.image }}
     steps:
       - run: ls -la $HOME
-      - run: apt update
-      - run: apt install --yes curl openssh-client unzip gnupg vim git
-      - name: CVE-2022-24765 workaround (https://github.com/actions/checkout/issues/760)
-        run: git config --global --add safe.directory $GITHUB_WORKSPACE
-      - uses: actions/checkout@v3
-      - run: ./install.sh
-      - run: ls -la $HOME
-
-  docker-alpine:
-    strategy:
-      fail-fast: false
-      matrix:
-        image: ["alpine:latest"]
-    runs-on: ubuntu-latest
-    container:
-      image: ${{ matrix.image }}
-    steps:
-      - run: ls -la $HOME
-      - run: apk add git
-      - name: CVE-2022-24765 workaround (https://github.com/actions/checkout/issues/760)
-        run: git config --global --add safe.directory $GITHUB_WORKSPACE
       - uses: actions/checkout@v3
       - run: ./install.sh
       - run: ls -la $HOME
