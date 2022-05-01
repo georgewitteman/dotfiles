@@ -4,7 +4,7 @@
 
 set -o errexit
 
-echo "\$USER: ${USER}"
+echo "whoami: $(whoami)"
 
 if command -v chezmoi >/dev/null 2>&1; then
   chezmoi=chezmoi
