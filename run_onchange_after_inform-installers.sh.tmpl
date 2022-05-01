@@ -1,7 +1,6 @@
 #!/bin/sh
 
 set -o errexit
-set -o xtrace
 
 if ! git -C {{ .chezmoi.sourceDir }} remote -v | grep -q "git@github.com:"; then
   echo "Use ssh repo URL for dotfiles repo:"
