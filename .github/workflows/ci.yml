@@ -78,12 +78,12 @@ jobs:
       image: ${{ matrix.image }}
     steps:
       - run: ls -la $HOME
-      - run: curl --fail --silent --show-error --location "https://git.io/chezmoi" | sh -s -- -b "${HOME}/.local/bin" -d init --apply georgewitteman --branch "${GITHUB_REF#refs/heads/}"
+      - run: curl --fail --silent --show-error --location "https://git.io/chezmoi" | sh -s -- -b "${HOME}/.local/bin" -d init --apply georgewitteman --branch "${GITHUB_REF#refs/heads/}" || true
       - run: apk update && apk add curl
         if: startsWith(matrix.image, 'alpine')
       - run: apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install --yes curl
         if: startsWith(matrix.image, 'ubuntu')
-      - run: curl --fail --silent --show-error --location "https://git.io/chezmoi" | sh -s -- -b "${HOME}/.local/bin" -d init --apply georgewitteman --branch "${GITHUB_REF#refs/heads/}"
+      - run: curl --fail --silent --show-error --location "https://git.io/chezmoi" | sh -s -- -b "${HOME}/.local/bin" -d init --apply georgewitteman --branch "${GITHUB_REF#refs/heads/}" || true
       - run: apk update && apk add git
         if: startsWith(matrix.image, 'alpine')
       - run: apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install --yes git
