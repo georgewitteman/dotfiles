@@ -17,8 +17,10 @@ else
   elif command -v wget >/dev/null 2>&1; then
     wget --quiet --output-document=- "https://git.io/chezmoi" | sh -s -- -b "$bin_dir"
   elif command -v apt-get >/dev/null 2>&1; then
+    apt-get update
     apt-get install chezmoi
   elif command -v apk >/dev/null 2>&1; then
+    apk update
     apk add chezmoi
   else
     echo "To install chezmoi, you must have curl or wget installed." >&2
