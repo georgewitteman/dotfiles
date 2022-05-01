@@ -54,8 +54,6 @@ jobs:
         os: ["macOS-latest"]
     runs-on: ${{ matrix.os }}
     steps:
-      - run: curl --fail --silent --show-error --location "https://git.io/chezmoi" | sh -s -- -b "${HOME}/.local/bin" -d init --apply georgewitteman --branch "${GITHUB_REF#refs/heads/}" || true
-      - run: rm -rf ~/.nvm
       - run: curl --fail --silent --show-error --location "https://git.io/chezmoi" | sh -s -- -b "${HOME}/.local/bin" -d init --apply georgewitteman --branch "${GITHUB_REF#refs/heads/}"
 
   codespaces:
@@ -67,7 +65,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: ./install.sh
-      - uses: actions/checkout@v3
 
   docker:
     strategy:

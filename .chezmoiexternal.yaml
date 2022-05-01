@@ -67,7 +67,8 @@
   url: 'https://github.com/nvm-sh/nvm.git'
   refreshPeriod: {{ $refreshPeriod }}
   pull:
-    args: ["--rebase", "--autostash"]
+    # args: ["--rebase", "--autostash"]
+    args: ["--dry-run"]
 
 # VIM PLUGINS ================================
 {{ define "vim-plugin" }}
