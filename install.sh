@@ -11,10 +11,11 @@ if command -v chezmoi >/dev/null 2>&1; then
 else
   bin_dir="${HOME}/.local/bin"
   chezmoi="${bin_dir}/chezmoi"
+  # sh -s will read from stdin and
   if command -v curl >/dev/null 2>&1; then
-    sh -c "$(curl -fsSL https://git.io/chezmoi)" -- -b "$bin_dir"
+    curl --fail --silent --show-error --location "https://git.io/chezmoi" | sh -s -- -b "$bin_dir"
   elif command -v wget >/dev/null 2>&1; then
-    sh -c "$(wget -qO- https://git.io/chezmoi)" -- -b "$bin_dir"
+    wget --quiet --output-document=- "https://git.io/chezmoi" | sh -s -- -b "$bin_dir"
   elif command -v apt-get >/dev/null 2>&1; then
     apt-get install chezmoi
   elif command -v apk >/dev/null 2>&1; then
