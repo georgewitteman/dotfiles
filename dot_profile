@@ -62,7 +62,7 @@ for dir in "$HOME"/.config/sh/*; do
   fi
 
   if [ -r "${dir}/profile.sh" ]; then
-    # shellcheck disable=SC1090
+    # shellcheck source=/dev/null
     . "${dir}/profile.sh"
   fi
 done

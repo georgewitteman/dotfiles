@@ -17,6 +17,6 @@ PATH="${PYENV_PATH:+${PYENV_PATH}:}${PYENV_ROOT}/bin:${PATH}"
 unset PYENV_PATH
 
 if [ -n "$VIRTUAL_ENV" ]; then
-  # shellcheck disable=SC1090,SC1091
+  # shellcheck source=/dev/null
   . "${VIRTUAL_ENV}/bin/activate"
 fi

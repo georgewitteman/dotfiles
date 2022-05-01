@@ -352,7 +352,7 @@ venv() {
     return 1
   fi
 
-  # shellcheck disable=SC1090
+  # shellcheck source=/dev/null
   echo_run . "${2}/${1}/bin/activate"
 }
 
@@ -392,11 +392,15 @@ workspace() {
   fi
 }
 
-for dir in "$HOME"/.config/sh/*/; do
-  [ -d "$dir" ] || continue
+for dir in "$HOME"/.config/sh/*; do
+  if [ ! -d "$dir" ];
+    continue
+  fi
 
-  # shellcheck disable=SC1090
-  [ -r "${dir}init.sh" ] && . "${dir}init.sh"
+  if [ -r "${dir}init.sh" ]; then
+    # shellcheck source=/dev/null
+    . "${dir}init.sh"
+  fi
 done
 
 if [ -n "$VIRTUAL_ENV" ]; then
@@ -410,6 +414,6 @@ if [ -n "$VIRTUAL_ENV" ]; then
   # while in a virtual environment
   remove_prefix_from_path "$VIRTUAL_ENV"
 
-  # shellcheck disable=SC1090
+  # shellcheck source=/dev/null
   echo_run . "$VIRTUAL_ENV/bin/activate"
 fi

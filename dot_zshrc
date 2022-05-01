@@ -10,7 +10,6 @@ for dir in "$HOME"/.config/sh/*; do
     echo "Sourcing ${dir}/init.zsh"
   fi
 
-  # shellcheck disable=SC1090
   if [[ -r ${dir}/init.zsh ]]; then
     source "${dir}/init.zsh"
   fi
