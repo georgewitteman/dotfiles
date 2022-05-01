@@ -30,4 +30,4 @@ script_dir="$(cd -P -- "$(dirname -- "$(command -v -- "$0")")" && pwd -P)"
 set -o xtrace
 
 # exec: replace current process with chezmoi init
-exec "$chezmoi" --verbose --debug init --apply "--source=${script_dir}"
+exec "$chezmoi" init --apply "--source=${script_dir}"
