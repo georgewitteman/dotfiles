@@ -36,13 +36,10 @@ if [ -z "$branch_name" ]; then
   exit 1
 fi
 
+main_branch="$(get-main-branch)"
+
 if $latest; then
-  main --pull
-else
-  printf "Getting remote HEAD... "
-  head="$(get-main-branch)"
-  echo "$head"
-  echo-run git switch "$head"
+  echo-run git fetch origin "$main_branch"
 fi
 
-echo-run git switch -c "$branch_name"
+echo-run git switch --no-track --create "$branch_name" "origin/${main_branch}"
