@@ -397,9 +397,9 @@ for dir in "$HOME"/.config/sh/*; do
     continue
   fi
 
-  if [ -r "${dir}init.sh" ]; then
+  if [ -r "${dir}/init.sh" ]; then
     # shellcheck source=/dev/null
-    . "${dir}init.sh"
+    . "${dir}/init.sh"
   fi
 done
 
