@@ -14,6 +14,7 @@
 {{- $work_path := index (default dict (index . "work")) "path" -}}
 {{- $work_terms := index (default dict (index . "work")) "terms" -}}
 {{- $work_ssh_config := index (default dict (index . "work")) "ssh_config" -}}
+{{- $work_git_includeif := index (default dict (index . "work")) "git_includeif" -}}
 
 {{- if $work -}}
 {{- if not $work_email -}}
@@ -24,6 +25,9 @@
 {{- end -}}
 {{- if not $work_ssh_config -}}
 {{- $work_ssh_config = promptString "What is the relative path for the ssh config" -}}
+{{- end -}}
+{{- if not $work_git_includeif -}}
+{{- $work_git_includeif = promptString "What is the includeIf for work repositories" -}}
 {{- end -}}
 {{- end -}}
 
@@ -49,4 +53,5 @@ data:
     email: {{ $work_email | quote }}
     path: {{ $work_path | expandenv | osClean | quote }}
     ssh_config: {{ $work_ssh_config | expandenv | osClean | quote }}
+    git_includeif: {{ $work_git_includeif | quote }}
 {{- end }}

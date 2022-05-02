@@ -1,5 +1,7 @@
 {{ if .is_work -}}
 # vim: ft=gitconfig
+[core]
+	hooksPath = ".git/hooks"
 [user]
 	email = {{ .work.email | quote }}
 	signingKey = {{ .work.signingkey | quote }}
