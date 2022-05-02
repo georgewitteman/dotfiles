@@ -24,17 +24,14 @@ while [ "$#" -gt 0 ]; do
   shift
 done
 
-printf "Getting remote HEAD... "
-GIT_HEAD="$(get-main-branch)"
-echo "$GIT_HEAD"
-
+main_branch="$(get-main-branch)"
 previous_head="$(git rev-parse --short HEAD)"
 
-if git ls-remote --exit-code origin >/dev/null 2>&1; then
-  echo-run git fetch --prune origin "$GIT_HEAD"
-  echo-run git merge --quiet --no-edit "origin/${GIT_HEAD}"
+if git config remote.origin.url >/dev/null 2>&1; then
+  echo-run git fetch --prune origin "$main_branch"
+  echo-run git merge --quiet --no-edit "origin/${main_branch}"
 else
-  echo-run git merge --quiet --no-edit "$GIT_HEAD"
+  echo-run git merge --quiet --no-edit "$main_branch"
 fi
 
 echo-info "Run 'git reset --hard ${previous_head}' to revert this"
