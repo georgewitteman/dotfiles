@@ -6,6 +6,7 @@ set -o errexit
 
 branch_name=
 latest=false
+stash=false
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
@@ -15,6 +16,9 @@ while [ "$#" -gt 0 ]; do
       ;;
     -l | --latest | -p | --pull)
       latest=true
+      ;;
+    --stash)
+      stash=true
       ;;
     --)
       shift
@@ -42,4 +46,21 @@ if $latest; then
   echo-run git fetch origin "$main_branch"
 fi
 
+stashed=false
+if $stash; then
+  if [ -n "$(git status --porcelain)" ]; then
+    stashed=true
+    echo-run git stash
+  fi
+fi
+
+set +o errexit
 echo-run git switch --no-track --create "$branch_name" "origin/${main_branch}"
+exit_code=$?
+set -o errexit
+
+if $stashed; then
+  echo-run git stash pop
+fi
+
+exit $exit_code
