@@ -63,4 +63,4 @@ if $stashed; then
   echo-run git stash pop
 fi
 
-exit $exit_code
+exit "$exit_code"
