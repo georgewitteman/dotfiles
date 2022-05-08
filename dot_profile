@@ -52,6 +52,10 @@ if [ -d "${HOME}/.cargo/bin:${PATH}" ]; then
   PATH="${HOME}/.cargo/bin:${PATH}"
 fi
 
+if [ -f "${HOME}/.poetry/env" ]; then
+  . "${HOME}/.poetry/env"
+fi
+
 for dir in "$HOME"/.config/sh/*; do
   if [ ! -d "$dir" ]; then
     continue
