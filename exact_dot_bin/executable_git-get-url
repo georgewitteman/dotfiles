@@ -64,7 +64,14 @@ if [ -z "$giturl" ]; then
   die 1 "Git remote is not set for ${default_remote}"
 fi
 
-project_url="$(echo "$giturl" | sed "s~:~/~" | sed "s~git@~https://~" | sed "s~\.git~~")"
+case "$giturl" in
+  https://)
+    project_url="$(echo "$giturl" | sed "s~\.git~~")"
+    ;;
+  *)
+    project_url="$(echo "$giturl" | sed "s~:~/~" | sed "s~git@~https://~" | sed "s~\.git~~")"
+    ;;
+esac
 
 if $pull_request; then
   case $project_url in
