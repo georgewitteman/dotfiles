@@ -1,9 +1,9 @@
-{{- if stat "/usr/local/bin/pinentry-mac" }}
+{{- if lookPath "pinentry-mac" -}}
 # Connects gpg-agent to the OSX keychain via the brew-installed
 # pinentry program from GPGtools. This is the OSX 'magic sauce',
 # allowing the gpg key's passphrase to be stored in the login
 # keychain, enabling automatic key signing.
-pinentry-program /usr/local/bin/pinentry-mac
-{{- else if stat "/usr/bin/pinentry-tty" }}
-pinentry-program /usr/bin/pinentry-tty
+pinentry-program {{ lookPath "pinentry-mac" }}
+{{- else if lookPath "pinentry-tty" }}
+pinentry-program {{ lookPath "pinentry-tty" }}
 {{- end }}
