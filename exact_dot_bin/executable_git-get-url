@@ -65,7 +65,7 @@ if [ -z "$giturl" ]; then
 fi
 
 case "$giturl" in
-  https://)
+  https://*)
     project_url="$(echo "$giturl" | sed "s~\.git~~")"
     ;;
   *)
