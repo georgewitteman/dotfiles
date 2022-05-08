@@ -1,0 +1,6 @@
+{{ if and .is_work (not .is_transient) }}
+{{- $workconf := (joinPath .work.path "dotfiles/dirmngr.conf") }}
+{{- if stat $workconf }}
+{{- include $workconf -}}
+{{ end -}}
+{{ end -}}
