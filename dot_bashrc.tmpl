@@ -28,7 +28,7 @@ done
 {{- if eq .chezmoi.os "darwin" }}
 # Keep this at the end
 if [[ -e "${HOME}/.cache/iterm2/iterm2_shell_integration.bash" ]]; then
-  # shellcheck source=.cache/iterm2/iterm2_shell_integration.bash
+  # shellcheck source=/dev/null
   source "${HOME}/.cache/iterm2/iterm2_shell_integration.bash" || true
 fi
 {{- end -}}

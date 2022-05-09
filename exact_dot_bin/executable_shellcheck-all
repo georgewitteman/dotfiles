@@ -1,3 +1,8 @@
 #!/bin/sh
 
-"${HOME}/.bin/get-files-to-lint" "$@" | xargs shellcheck --external-sources --source-path="${HOME}"
+set -o errexit
+
+echo "cd ${HOME}"
+cd "$HOME" || exit 1
+
+"${HOME}/.bin/get-files-to-lint" "$@" | sed "s#${HOME}/##" | xargs echo-run shellcheck
