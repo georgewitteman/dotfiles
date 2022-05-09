@@ -11,7 +11,7 @@ fi
 echo "Making sure there are no work terms in this repository"
 
 {{ range .work.terms -}}
-if echo-run rg "{{ . }}"; then
+if FORCE_COLOR=true echo-run rg "{{ . }}"; then
   exit 1
 fi
 {{ end -}}
