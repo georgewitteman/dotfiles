@@ -3,12 +3,12 @@
 set -o errexit
 
 PRIVATE_BIN="${PRIVATE_BIN:-${HOME}/.bin}"
-verbose=false
+verbose=true
 debug=false
 
 for arg in "$@"; do
   case "$arg" in
-    -v | --verbose) verbose=true ;;
+    -q | --quiet) verbose=false ;;
     -d | --debug) debug=true ;;
     -h | --help)
       echo "usage: $(basename "$0") [-v|--verbose] [-d|--debug]" >&2
@@ -25,7 +25,11 @@ done
 
 files() {
   path="$1"
-  find "$path" -type f -not -path '*/\.git/*' -not -name 'tags'
+  # -L: Cause the file information and file type (see stat(2)) returned for
+  # each symbolic link to be those of the file referenced by the link, not the
+  # link itself. If the referenced file does not exist, the file information
+  # and type will be for the link itself.
+  find -L "$path" -type f -not -path '*/\.git/*' -not -name 'tags'
 }
 
 lint_file() {

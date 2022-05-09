@@ -2,7 +2,6 @@
 
 set -o errexit
 
-echo "cd ${HOME}"
 cd "$HOME" || exit 1
 
-"${HOME}/.bin/get-files-to-lint" "$@" | sed "s#${HOME}/##" | xargs echo-run shellcheck
+"${HOME}/.bin/get-files-to-lint" "$@" | sed "s#${HOME}/##" | xargs shellcheck
