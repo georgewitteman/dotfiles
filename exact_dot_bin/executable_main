@@ -12,6 +12,7 @@ if ! in-git-repo; then
 fi
 
 pull=false
+rebase=false
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
