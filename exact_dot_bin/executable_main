@@ -27,10 +27,11 @@ while [ "$#" -gt 0 ]; do
   unset _arg _value
   case "$1" in
     -h | --help)
-      echo "usage: $(basename "$0") [-p|--pull]"
+      echo "usage: $(basename "$0") [-p|--pull] [--rebase]"
       exit
       ;;
     -p | --pull) pull=true ;;
+    --rebase) rebase=true ;;
     --)
       shift
       break
@@ -48,8 +49,14 @@ if [ "$current_branch" != "$main_branch" ]; then
   echo-run git switch "$main_branch"
 fi
 
+set --
+
+if $rebase; then
+  set -- "$@" --rebase
+fi
+
 if $pull; then
-  echo-run git pull --rebase --prune
+  echo-run git pull --prune "$@"
 fi
 
 git-show --quiet
