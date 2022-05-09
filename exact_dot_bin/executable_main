@@ -41,11 +41,12 @@ while [ "$#" -gt 0 ]; do
   shift
 done
 
-printf "Getting remote HEAD... "
-head="$(get-main-branch)"
-echo "$head"
+main_branch="$(get-main-branch)"
+current_branch="$(git branch --show-current)"
 
-echo-run git switch "$head"
+if [ "$current_branch" != "$main_branch" ]; then
+  echo-run git switch "$main_branch"
+fi
 
 if $pull; then
   echo-run git pull --rebase --prune
