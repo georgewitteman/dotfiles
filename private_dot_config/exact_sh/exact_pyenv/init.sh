@@ -3,15 +3,11 @@
 pyenv() {
   case "$1" in
     rehash)
-      if [ $# -gt 0 ]; then
-        shift
-      fi
+      shift
       eval "$(command pyenv sh-rehash "$@")" || return $?
       ;;
     shell)
-      if [ $# -gt 0 ]; then
-        shift
-      fi
+      shift
       eval "$(command pyenv sh-shell "$@")" || return $?
       ;;
     *)
