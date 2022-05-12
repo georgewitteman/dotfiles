@@ -1,11 +1,29 @@
 #!/bin/sh
 
 pyenv() {
-  command pyenv "$@" || return "$?"
+  case "$1" in
+    rehash)
+      if [ $# -gt 0 ]; then
+        shift
+      fi
+      eval "$(command pyenv sh-rehash "$@")" || return $?
+      ;;
+    shell)
+      if [ $# -gt 0 ]; then
+        shift
+      fi
+      eval "$(command pyenv sh-shell "$@")" || return $?
+      ;;
+    *)
+      command pyenv "$@" || return $?
+      ;;
+  esac
 
   remove_prefix_from_path "$PYENV_ROOT"
 
-  if [ -f "${PWD}/.python-version" ]; then
+  if [ -n "$PYENV_VERSION" ] && [ -d "${PYENV_ROOT}/versions/${PYENV_VERSION}" ]; then
+    PYENV_PATH="${PYENV_PATH:+${PYENV_PATH}:}${PYENV_ROOT}/versions/${PYENV_VERSION}/bin"
+  elif [ -f "${PWD}/.python-version" ]; then
     while IFS= read -r line || [ -n "$line" ]; do
       PYENV_PATH="${PYENV_PATH:+${PYENV_PATH}:}${PYENV_ROOT}/versions/${line}/bin"
     done <"${PWD}/.python-version"
