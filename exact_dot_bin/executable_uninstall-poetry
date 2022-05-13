@@ -1,0 +1,3 @@
+#!/bin/sh
+
+echo-eval "curl -sSL https://install.python-poetry.org | python3 - --uninstall"
