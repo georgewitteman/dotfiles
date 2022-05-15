@@ -1,3 +1,6 @@
+{{- /* Checks if running interactively, which is not the case for GitHub Codespaces */ -}}
+{{- $interactive := stdinIsATTY -}}
+
 {{- $work := (index . "is_work") -}}
 {{- $transient := (index . "is_transient") -}}
 
@@ -31,10 +34,12 @@
 {{- end -}}
 {{- end -}}
 
-{{- if (env "GITPOD_REPO_ROOT") }}
-sourceDir: {{ env "GITPOD_REPO_ROOT" | quote }}
+{{- if $interactive -}}
+{{-   writeToStdout "💡 Tip: you can re-enter your name and email with `chezmoi init --data=false`.\n" -}}
+{{- end -}}
 
-{{- end }}
+sourceDir: {{ .chezmoi.sourceDir | quote }}
+
 data:
   is_work: {{ kindIs "bool" $work | ternary $work false }}
   is_transient: {{ kindIs "bool" $transient | ternary $transient false }}
