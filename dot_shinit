@@ -399,10 +399,10 @@ work() {
   fi
   set -- "$1" "$1"/*
   if [ $# -eq 2 ]; then
-    cd "$2"
+    cd "$2" || return $?
     return $?
   fi
-  cd "$1"
+  cd "$1" || return $?
 }
 
 for dir in "$HOME"/.config/sh/*; do
