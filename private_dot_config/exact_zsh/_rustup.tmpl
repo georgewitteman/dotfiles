@@ -1,5 +1,6 @@
 {{- if lookPath "rustup.main" -}}
 {{- /* Gitpod uses a rustup wrapper script without a shebang which causes output to fail */ -}}
+{{- /* https://github.com/gitpod-io/workspace-images/commit/0bc0dfd104d9a4483be235338be9c32a695e210a */ -}}
 {{ output "rustup.main" "completions" "zsh" }}
 {{- else if lookPath "rustup" -}}
 {{ output "rustup" "completions" "zsh" }}
