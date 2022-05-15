@@ -70,8 +70,8 @@ restart_shell() {
 
   # Since we reset $PATH and the autoloading requires cat (which is in $PATH)
   # preload some functions.
-  echo_run echo >/dev/null 2>&1
-  echo_eval echo >/dev/null 2>&1
+  echo_run :
+  echo_eval :
 
   # I'm using the awk approach since my original approach didn't handle
   # newlines well.
