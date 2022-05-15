@@ -386,14 +386,23 @@ dotfiles() {
   esac
 }
 
-workspace() {
+work() {
   if [ -d "/opt/workspace" ]; then
-    echo_run cd /opt/workspace || true
+    set -- "/opt/workspace"
   elif [ -d "${HOME}/Code" ]; then
-    echo_run cd "${HOME}/Code" || true
+    set -- "${HOME}/Code"
+  elif [ -d "/workspace" ]; then
+    set -- "/workspace"
   else
     echo-err "No workspace set"
+    return 1
   fi
+  set -- "$1" "$1"/*
+  if [ $# -eq 2 ]; then
+    cd "$2"
+    return $?
+  fi
+  cd "$1"
 }
 
 for dir in "$HOME"/.config/sh/*; do
