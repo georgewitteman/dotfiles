@@ -2,8 +2,10 @@ vscode:
   extensions:
     - golang.go
     - ms-azuretools.vscode-docker
-    - redhat.vscode-yaml
 
 tasks:
-  - init: |
+  - name: Install dotfiles
+    # This needs to be command because init will only save changes to /workspace
+    # when run as a prebuild.
+    command: |
       sh -xe install.sh
