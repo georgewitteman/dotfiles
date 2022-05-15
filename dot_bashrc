@@ -27,9 +27,10 @@ if [[ -e "${HOME}/.cache/iterm2/iterm2_shell_integration.bash" ]]; then
   source "${HOME}/.cache/iterm2/iterm2_shell_integration.bash" || true
 fi
 
-# Added for Gitpod
-# shellcheck disable=SC1091
-{
+# Added for Gitpod. Need to keep the following line for parsing.
 # Generated for envman. Do not edit.
-[ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
-}
+# https://github.com/therootcompany/pathman/blob/2c283a28649a692fea764894415cfa6b74fe2f5b/envpath/parse.go#L28
+# shellcheck source=/dev/null
+if [[ -s "$HOME/.config/envman/load.sh" ]]; then
+  source "$HOME/.config/envman/load.sh"
+fi
