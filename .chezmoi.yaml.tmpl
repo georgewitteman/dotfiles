@@ -38,7 +38,6 @@ data:
   is_transient: {{ kindIs "bool" $transient | ternary $transient false }}
   name: "George Witteman"
   email: "george@witteman.me"
-  vault: "y3wsvezcovj634l3leoly4i4qy"
   gpgkey: "3F31B900236A9F918F143AE106223EC3AE0381FB"
 {{- if $work }}
   work:
@@ -46,7 +45,6 @@ data:
       {{- range $work_terms }}
       - {{ . | quote }}
       {{- end }}
-    vault: "d2npbgiaxt5asswavzklxnkwne"
     signingkey: "3F7D97CD2491D6CD2B814EF36F1B35AC1C424C4F"
     email: {{ $work_email | quote }}
     path: {{ $work_path | expandenv | osClean | quote }}
