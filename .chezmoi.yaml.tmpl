@@ -1,6 +1,3 @@
-{{- /* Checks if running interactively, which is not the case for GitHub Codespaces */ -}}
-{{- $interactive := stdinIsATTY -}}
-
 {{- $work := (index . "is_work") -}}
 {{- $transient := (index . "is_transient") -}}
 
@@ -32,10 +29,6 @@
 {{- if not $work_git_includeif -}}
 {{- $work_git_includeif = promptString "What is the includeIf for work repositories" -}}
 {{- end -}}
-{{- end -}}
-
-{{- if $interactive -}}
-{{-   writeToStdout "💡 Tip: you can re-enter your name and email with `chezmoi init --data=false`.\n" -}}
 {{- end -}}
 
 sourceDir: {{ .chezmoi.sourceDir | quote }}

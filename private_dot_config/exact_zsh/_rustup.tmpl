@@ -1,4 +1,4 @@
 {{- if lookPath "rustup" -}}
-{{/* rustup doesn't have a shebang so force it to run with bash */}}
+{{/* rustup doesn't have a shebang so force it to run with zsh */}}
 {{ output "bash" (lookPath "rustup") "completions" "zsh" }}
 {{- end -}}
