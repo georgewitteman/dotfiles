@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-{{- if stat "/var/gitpod/.bashrc-prepend" }}
-{{ include "/var/gitpod/.bashrc-prepend" }}
-{{- end }}
-
 if [[ -z $ENV ]]; then
   # If ~/.bash_profile wasn't sourced then source it
   # shellcheck source=.bash_profile
@@ -25,14 +21,8 @@ for dir in "$HOME"/.config/sh/*; do
   fi
 done
 
-{{- if eq .chezmoi.os "darwin" }}
 # Keep this at the end
 if [[ -e "${HOME}/.cache/iterm2/iterm2_shell_integration.bash" ]]; then
   # shellcheck source=/dev/null
   source "${HOME}/.cache/iterm2/iterm2_shell_integration.bash" || true
 fi
-{{- end -}}
-
-{{- if stat "/var/gitpod/.bashrc-prepend" }}
-{{ include "/var/gitpod/.bashrc-append" }}
-{{ end }}
