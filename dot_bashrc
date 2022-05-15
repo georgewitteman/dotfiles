@@ -28,5 +28,8 @@ if [[ -e "${HOME}/.cache/iterm2/iterm2_shell_integration.bash" ]]; then
 fi
 
 # Added for Gitpod
+# shellcheck disable=SC1091
+{
 # Generated for envman. Do not edit.
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
+}
