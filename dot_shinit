@@ -195,7 +195,11 @@ autoload_script() {
   # eval. The `||` will then be treated as a real or (i.e. `echo ... || baz
   # ...`) instead of as part of the string 'bar || baz'.
   eval "${1}() {
-    eval '${1}() {' \"\$(cat ${2})\" '}; ${1} \"\$@\"'
+    eval \"
+      ${1}() {
+        \$(cat ${2})
+      }
+    ${1} \\\"\\\$@\\\"\"
   }"
 }
 
