@@ -1,4 +1,6 @@
-{{- if lookPath "rustup" -}}
-{{/* rustup doesn't have a shebang so force it to run with zsh */}}
-{{ output "bash" (lookPath "rustup") "completions" "zsh" }}
+{{- if lookPath "rustup.main" -}}
+{{- /* Gitpod uses a rustup wrapper script without a shebang which causes output to fail */ -}}
+{{ output "rustup.main" "completions" "zsh" }}
+{{- else if lookPath "rustup" -}}
+{{ output "rustup" "completions" "zsh" }}
 {{- end -}}
