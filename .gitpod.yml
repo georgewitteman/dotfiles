@@ -1,12 +1,9 @@
-image: georgewitteman/gitpod-dotfiles-base:latest
-
 vscode:
   extensions:
     - golang.go
     - ms-azuretools.vscode-docker
     - redhat.vscode-yaml
 
-# tasks:
-# - command: |
-#     sh -xe install.sh
-#     exec $SHELL -li
+tasks:
+  - init: |
+      sh -xe install.sh
