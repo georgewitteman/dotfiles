@@ -57,6 +57,11 @@ if [ -f "${HOME}/.poetry/env" ]; then
   . "${HOME}/.poetry/env"
 fi
 
+if [ -d "/workspace/.pip-modules/bin" ]; then
+  # Used for poetry. At least on Gitpod. It's unclear.
+  PATH="/workspace/.pip-modules/bin:${PATH}"
+fi
+
 for dir in "$HOME"/.config/sh/*; do
   if [ ! -d "$dir" ]; then
     continue
