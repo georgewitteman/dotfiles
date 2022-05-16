@@ -1,25 +1,6 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+format = '$hostname$directory$git_branch${custom.git_host}$git_commit$git_state$nodejs$python$time$cmd_duration$status${custom.stashes}$shell$line_break$shlvl${custom.container}${custom.venv}$jobs$character'
 add_newline = false
-
-format = """\
-$hostname\
-$directory\
-$git_branch\
-${custom.git_host}\
-$git_commit\
-$git_state\
-$nodejs\
-$python\
-$time\
-$cmd_duration\
-$status\
-${custom.stashes}\
-$shell\
-$line_break\
-$shlvl\
-${custom.container}\
-${custom.venv}\
-$jobs\
-$character"""
 
 [directory]
 fish_style_pwd_dir_length = 2
@@ -33,7 +14,7 @@ disabled = false
 style = 'fg:white bg:red bold'
 
 [git_branch]
-symbol = ""
+symbol = ''
 
 [git_status]
 disabled = true
@@ -51,45 +32,45 @@ use_12hr = true
 time_format = '%I:%M %P'
 
 [custom.container]
-shell = ["dash", "-eu"]
-when = "test -f /.dockerenv || grep -q docker /proc/1/cgroup"
+shell = ['dash', '-eu']
+when = 'test -f /.dockerenv || grep -q docker /proc/1/cgroup'
 style = 'bold fg:purple'
-command = "echo DOCKER"
-description = "Identifies that we are in a container"
+command = 'echo DOCKER'
+description = 'Identifies that we are in a container'
 
 [custom.venv]
-shell = ["dash", "-eu"]
-command = """
+shell = ['dash', '-eu']
+command = '''
 if [ "${VIRTUAL_ENV%%/src/.venv*}" != "$VIRTUAL_ENV" ]; then
   basename "${VIRTUAL_ENV%/*/*}"
 else
   echo "${VIRTUAL_ENV#${VIRTUAL_ENV%/*/*}/}"
 fi
-"""
+'''
 when = 'test -n "$VIRTUAL_ENV"'
 format = '([\($output\)]($style) )'
-style = "fg:242"
+style = 'fg:242'
 description = 'Custom formatted python virtual environment name'
 
 [custom.git_host]
-shell = ["dash", "-eu"]
-command = "command git ls-remote --get-url"
-when = "command git rev-parse --is-inside-work-tree"
-format = "at [$output]($style) "
+shell = ['dash', '-eu']
+command = 'command git ls-remote --get-url'
+when = 'command git rev-parse --is-inside-work-tree'
+format = 'at [$output]($style) '
 disabled = true
 
 [custom.stashes]
-shell = ["dash", "-eu"]
-command = """
+shell = ['dash', '-eu']
+command = '''
 stash_count=$(wc -l $(command git rev-parse --git-dir)/logs/refs/stash | awk '{ print $1 }')
 if [ "$stash_count" -eq 1 ]; then
   echo "${stash_count} stash"
 else
   echo "${stash_count} stashes"
 fi
-"""
-when = "test -f $(git rev-parse --git-dir)/logs/refs/stash"
-format = "[$output]($style) "
+'''
+when = 'test -f $(git rev-parse --git-dir)/logs/refs/stash'
+format = '[$output]($style) '
 style = 'fg:red bold'
 
 [jobs]
@@ -101,4 +82,4 @@ disabled = false
 
 [shlvl]
 disabled = false
-symbol = ""
+symbol = ''
