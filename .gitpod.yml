@@ -1,3 +1,6 @@
+image:
+  file: .gitpod.Dockerfile
+
 vscode:
   extensions:
     - golang.go
@@ -8,8 +11,4 @@ tasks:
     # This needs to be command because init will only save changes to /workspace
     # when run as a prebuild.
     command: |
-      set -o errexit
-      set -o xtrace
-      sudo apt-get update
-      sudo apt-get install --yes neovim
       sh -xe install.sh
