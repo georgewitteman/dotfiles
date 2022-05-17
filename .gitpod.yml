@@ -5,5 +5,5 @@ vscode:
 
 tasks:
   - name: Install dotfiles
-    before: sudo apt-get update && sudo apt-get install --yes neovim
+    before: sudo apt-get update && sudo apt-get install --yes neovim shellcheck
     command: sh -xe install.sh
