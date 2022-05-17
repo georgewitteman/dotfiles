@@ -2,6 +2,7 @@
 
 export NVM_DIR="${NVM_DIR:-"${HOME}/.nvm"}"
 
+# Load default node version. It's done like this to stay performant.
 if [ -f "${NVM_DIR}/alias/default" ]; then
   read -r line <"${NVM_DIR}/alias/default"
 
