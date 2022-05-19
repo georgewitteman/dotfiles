@@ -44,10 +44,9 @@ PATH="${HOME}/.local/bin:${PATH}"
 PATH="${PRIVATE_BIN}:${PATH}"
 PATH="${HOME}/.cargo/bin:${PATH}"
 PATH="${HOME}/.poetry/bin:${PATH}"
+{{- if .is_work }}
+PATH="{{ joinPath .work.path "dotfiles" "bin"}}:${PATH}"
+{{- end }}
 
 {{ template "nvm/profile.sh" }}
-{{ template "pyenv/profile.sh" }}
-
-{{ if .is_work }}
-PATH="{{ joinPath .work.path "dotfiles" "bin"}}:${PATH}"
-{{ end }}
+{{ template "pyenv/profile.sh" -}}

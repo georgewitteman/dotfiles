@@ -1,5 +1,3 @@
-#!/bin/sh
-
 export NVM_DIR="${NVM_DIR:-"${HOME}/.nvm"}"
 
 # Load default node version. It's done like this to stay performant.

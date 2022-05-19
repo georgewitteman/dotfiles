@@ -1,5 +1,3 @@
-#!/bin/sh
-
 # Lazy load nvm.
 nvm() {
   unset -f nvm

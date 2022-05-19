@@ -1,5 +1,3 @@
-#!/bin/sh
-
 export PYENV_ROOT="${PYENV_ROOT:-"${HOME}/.pyenv"}"
 
 if [ -n "$PYENV_VERSION" ] && [ -d "${PYENV_ROOT}/versions/${PYENV_VERSION}" ]; then

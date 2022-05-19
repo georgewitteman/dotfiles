@@ -408,7 +408,6 @@ work() {
 {{ template "nvm/init.sh" }}
 {{ template "prompt/init.sh" }}
 {{ template "pyenv/init.sh" }}
-
 if [ -n "$VIRTUAL_ENV" ]; then
   # Allows you to `rc` (reload config, see aliases below) from inside a virtual
   # environment without losing the virtual environment. Normally `exec` keeps

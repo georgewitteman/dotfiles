@@ -1,5 +1,3 @@
-#!/bin/sh
-
 pyenv() {
   case "$1" in
     rehash)
