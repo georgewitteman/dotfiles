@@ -230,7 +230,7 @@ novenv() {
 }
 
 tmp() {
-  set -- "${TMPDIR}$(date +%Y-%m-%dT%H%M%S)"
+  set -- "${TMPDIR:-"$(mktemp -d)/"}$(date +%Y-%m-%dT%H%M%S)"
   echo_run mkdir -p "$1"
   echo_run cd "$1"
 }
