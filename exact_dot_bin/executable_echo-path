@@ -6,8 +6,7 @@ echo_array() {
   len=$#
   num_len="${#len}"
   num=0
-  # shellcheck disable=SC2068
-  for arg in $@; do
+  for arg in "$@"; do
     printf "%${num_len}d: %s\n" "$num" "$arg"
     num=$((num + 1))
   done
