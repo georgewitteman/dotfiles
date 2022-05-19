@@ -70,6 +70,6 @@ if [ $# -gt 0 ]; then
 fi
 
 for file in $(files "$PRIVATE_BIN") ~/.shinit ~/.profile ~/.bashrc \
-  ~/.bash_profile $(files ~/.config/sh) $(files ~/.config/git); do
+  ~/.bash_profile $(files ~/.config/git); do
   lint_path "$file"
 done
