@@ -259,4 +259,6 @@ fi
 
 # Added for Gitpod
 # Generated for envman. Do not edit.
-[ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
+if [[ -s "$HOME/.config/envman/load.sh" ]];then
+  source "$HOME/.config/envman/load.sh"
+fi
