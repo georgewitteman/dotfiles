@@ -12,5 +12,4 @@ echo_array() {
   done
 }
 
-# shellcheck disable=SC2086
-IFS=: echo_array ${1:-${PATH}}
+IFS=: echo_array "${1:-${PATH}}"
