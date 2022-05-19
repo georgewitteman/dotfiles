@@ -45,17 +45,9 @@ PATH="${PRIVATE_BIN}:${PATH}"
 PATH="${HOME}/.cargo/bin:${PATH}"
 PATH="${HOME}/.poetry/bin:${PATH}"
 
-for dir in "$HOME"/.config/sh/*; do
-  if [ ! -d "$dir" ]; then
-    continue
-  fi
+{{ template "nvm/profile.sh" }}
+{{ template "pyenv/profile.sh" }}
 
-  if [ -d "${dir}/bin" ]; then
-    PATH="${dir}/bin:${PATH}"
-  fi
-
-  if [ -r "${dir}/profile.sh" ]; then
-    # shellcheck source=/dev/null
-    . "${dir}/profile.sh"
-  fi
-done
+{{ if .is_work }}
+PATH="{{ joinPath .work.path "dotfiles" "bin"}}:${PATH}"
+{{ end }}

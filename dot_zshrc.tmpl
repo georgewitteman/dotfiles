@@ -1,19 +1,7 @@
 # vim: ft=zsh
 source "${HOME}/.shinit"
 
-for dir in "$HOME"/.config/sh/*; do
-  if [[ ! -d $dir ]]; then
-    continue
-  fi
-
-  if [[ -n $CI ]]; then
-    echo "Sourcing ${dir}/init.zsh"
-  fi
-
-  if [[ -r ${dir}/init.zsh ]]; then
-    source "${dir}/init.zsh"
-  fi
-done
+{{ template "prompt/init.zsh" }}
 
 # Adding this here so scripts think pyenv is initialized
 # eval "$(pyenv init -)"
