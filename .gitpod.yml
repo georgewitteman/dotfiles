@@ -5,9 +5,9 @@ vscode:
 
 tasks:
   - name: Install dotfiles
-    before: |
+    command: |
       sudo apt-get update && sudo apt-get install --yes neovim shellcheck
       wget https://github.com/sharkdp/hyperfine/releases/download/v1.13.0/hyperfine_1.13.0_amd64.deb
       sudo dpkg -i hyperfine_1.13.0_amd64.deb
       rm -f hyperfine_1.13.0_amd64.deb
-    command: sh -xe install.sh
+      sh -xe install.sh
