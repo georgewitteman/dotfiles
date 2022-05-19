@@ -405,6 +405,11 @@ work() {
   cd "$1" || return $?
 }
 
+{{- if .is_work }}
+# shellcheck source=/dev/null
+. {{ joinPath .work.path "dotfiles" "init.sh" | quote }}
+{{- end }}
+
 {{ template "nvm/init.sh" }}
 {{ template "prompt/init.sh" }}
 {{ template "pyenv/init.sh" }}

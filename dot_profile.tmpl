@@ -46,6 +46,9 @@ PATH="${HOME}/.cargo/bin:${PATH}"
 PATH="${HOME}/.poetry/bin:${PATH}"
 {{- if .is_work }}
 PATH="{{ joinPath .work.path "dotfiles" "bin"}}:${PATH}"
+
+# shellcheck source=/dev/null
+. {{ joinPath .work.path "dotfiles" "profile.sh" | quote }}
 {{- end }}
 
 {{ template "nvm/profile.sh" }}
