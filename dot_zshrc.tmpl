@@ -240,10 +240,6 @@ setopt hist_verify
 # https://zsh.sourceforge.io/Doc/Release/Options.html#index-history_002c-incremental-appending-to-a-file
 setopt inc_append_history
 
-# Any potential history entry that matches the pattern is skipped.
-# https://zsh.sourceforge.io/Doc/Release/Parameters.html#index-index-HISTORY_005fIGNORE
-export HISTIGNORE="ls:ll:la:cd:cd -:pwd:exit:date:* --help"
-
 # The maximum number of history events to save in the history file.
 # https://zsh.sourceforge.io/Doc/Release/Parameters.html#index-SAVEHIST
 export SAVEHIST=100000
