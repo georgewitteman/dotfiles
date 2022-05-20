@@ -2,7 +2,7 @@
 
 set -o errexit
 
-"${PRIVATE_BIN}/add"
+add
 
 merge_base="$(git merge-base "origin/HEAD" HEAD)"
 

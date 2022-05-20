@@ -24,8 +24,6 @@ if [ -n "$TTY" ]; then
   export GPG_TTY="$TTY"
 fi
 
-export PRIVATE_BIN="${HOME}/.bin"
-
 if [ -S "${HOME}/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock" ]; then
   # `man ssh`: SSH_AUTH_SOCK Identifies the path of a UNIX-domain socket used
   # to communicate with the agent.
@@ -41,7 +39,7 @@ fi
 PATH="/usr/local/sbin:${PATH}"
 PATH="/usr/local/opt/fzf/bin:${PATH}"
 PATH="${HOME}/.local/bin:${PATH}"
-PATH="${PRIVATE_BIN}:${PATH}"
+PATH="{{ joinPath .chezmoi.homeDir .private_bin }}:${PATH}"
 PATH="${HOME}/.cargo/bin:${PATH}"
 PATH="${HOME}/.poetry/bin:${PATH}"
 {{- if .is_work }}

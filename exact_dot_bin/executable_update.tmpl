@@ -5,7 +5,7 @@ set -e
 # Using 'command ls' here because regular ls is aliased to add color and
 # formatting.
 IFS=$'\n' read -r -d '' -a files < <(
-  command ls "$PRIVATE_BIN" | sort | grep -E '^update-' | grep -v update-all
+  command ls "{{ joinPath .chezmoi.homeDir .private_bin }}" | sort | grep -E '^update-' | grep -v update-all
   printf '\0'
 )
 
@@ -27,7 +27,7 @@ for i in $(seq 1 "${#files[@]}"); do
     echo "============================================================="
   fi
 
-  if ! "${PRIVATE_BIN}/${file}"; then
+  if ! "{{ joinPath .chezmoi.homeDir .private_bin }}/${file}"; then
     echo-err "${file} failed"
     exit 1
   fi

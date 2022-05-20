@@ -2,7 +2,6 @@
 
 set -o errexit
 
-PRIVATE_BIN="${PRIVATE_BIN:-${HOME}/.bin}"
 verbose=true
 debug=false
 
@@ -69,7 +68,7 @@ if [ $# -gt 0 ]; then
   exit
 fi
 
-for file in $(files "$PRIVATE_BIN") ~/.shinit ~/.profile ~/.bashrc \
-  ~/.bash_profile $(files ~/.config/git); do
+for file in $(files {{ joinPath .chezmoi.homeDir .private_bin | quote }}) \
+  ~/.shinit ~/.profile ~/.bashrc ~/.bash_profile $(files ~/.config/git); do
   lint_path "$file"
 done

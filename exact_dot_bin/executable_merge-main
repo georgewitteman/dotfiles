@@ -37,5 +37,5 @@ fi
 echo-info "Run 'git reset --hard ${previous_head}' to revert this"
 
 if $push; then
-  "${PRIVATE_BIN}/push"
+  push
 fi
