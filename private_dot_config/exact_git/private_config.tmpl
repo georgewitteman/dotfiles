@@ -15,8 +15,10 @@
 [core]
 	# https://git-scm.com/docs/git-update-index#_untracked_cache
 	untrackedCache = true
+{{- if .is_work }}
 	# https://git-scm.com/docs/git-config#Documentation/git-config.txt-corehooksPath
 	hooksPath = "~/.config/git/hooks"
+{{- end }}
 [merge]
 	# https://blog.nilbus.com/take-the-pain-out-of-git-conflict-resolution-use-diff3/
 	# https://stackoverflow.com/q/27417656
