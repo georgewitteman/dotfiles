@@ -52,7 +52,11 @@ while [ "$#" -gt 0 ]; do
       break
       ;;
     -?*) die 1 "unknown option: ${1}" ;;
-    *) break ;;
+    *)
+      if git rev-parse "$1" >/dev/null 2>&1; then
+        commit=true
+        commit_id="$(git rev-parse --short "$1")"
+      fi
   esac
   shift
 done
