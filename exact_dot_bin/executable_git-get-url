@@ -103,6 +103,7 @@ if $commit; then
   fi
   if [ -z "$path" ]; then
     echo "${project_url}/commit/${commit_id}"
+    exit $?
   fi
   echo "${project_url}/blob/${commit_id}/${path}"
   exit $?
