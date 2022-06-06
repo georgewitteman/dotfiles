@@ -11,6 +11,7 @@ if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   die 1 "Not a git repository."
 fi
 
+git_toplevel="$(git rev-parse --show-toplevel)"
 pull_request=false
 commit=false
 commit_id=
@@ -53,9 +54,15 @@ while [ "$#" -gt 0 ]; do
       ;;
     -?*) die 1 "unknown option: ${1}" ;;
     *)
-      if git rev-parse "$1" >/dev/null 2>&1; then
+      if git rev-parse --short "$1" >/dev/null 2>&1; then
         commit=true
         commit_id="$(git rev-parse --short "$1")"
+      elif [ -f "$1" ]; then
+        commit=true
+        if [ -z "$commit_id" ]; then
+          commit_id="$(git rev-parse --short HEAD)"
+        fi
+        path="${1##"${git_toplevel}/"}"
       fi
   esac
   shift
@@ -94,7 +101,10 @@ if $commit; then
     echo "${project_url}/pulls?q=${commit_id}"
     exit $?
   fi
-  echo "${project_url}/commit/${commit_id}"
+  if [ -z "$path" ]; then
+    echo "${project_url}/commit/${commit_id}"
+  fi
+  echo "${project_url}/blob/${commit_id}/${path}"
   exit $?
 fi
 
