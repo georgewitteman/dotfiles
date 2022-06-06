@@ -1,0 +1,60 @@
+#!/bin/sh
+
+set -o errexit
+set -o nounset
+
+push=false
+no_edit=true
+
+USAGE="usage: $(basename "$0") [-e|--edit] [-p|--push]"
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    -[[:alnum:]][[:alnum:]]*)
+      # Joined short args (e.g. -abc)
+      _value="-${1##-?}"
+      _arg="${1%%"${1##-?}"}"
+      ;;
+    --[[:alnum:]]*=*)
+      # Args with values separated by an '=' character
+      _value="${1#--[[:alnum:]]*=}"
+      _arg="${1%%="${_value}"}"
+      ;;
+  esac
+  if [ -n "${_arg:-}${_value:-}" ]; then
+    shift
+    set -- "$_arg" "$_value" "$@"
+  fi
+  unset _arg _value
+  case "$1" in
+    -h | --help)
+      echo "$USAGE"
+      exit
+      ;;
+    -p | --push)
+      push=true
+      ;;
+    -e | --edit)
+      no_edit=false
+      ;;
+    --)
+      shift
+      break
+      ;;
+    *)
+      echo-err "unknown option: ${1}"
+      exit 1
+      ;;
+  esac
+  shift
+done
+
+if $no_edit; then
+  set -- "$@" --no-edit
+fi
+
+echo-run git commit --amend "$@"
+
+if $push; then
+  push --force
+fi
