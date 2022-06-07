@@ -64,6 +64,7 @@ while [ "$#" -gt 0 ]; do
         fi
         path="${1##"${git_toplevel}/"}"
       fi
+      ;;
   esac
   shift
 done
