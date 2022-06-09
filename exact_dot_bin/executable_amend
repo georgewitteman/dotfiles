@@ -3,10 +3,11 @@
 set -o errexit
 set -o nounset
 
+add=false
 push=false
 no_edit=true
 
-USAGE="usage: $(basename "$0") [-e|--edit] [-p|--push]"
+USAGE="usage: $(basename "$0") [-a|--add] [-e|--edit] [-p|--push]"
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
@@ -31,6 +32,9 @@ while [ "$#" -gt 0 ]; do
       echo "$USAGE"
       exit
       ;;
+    -a | --add)
+      add=true
+      ;;
     -p | --push)
       push=true
       ;;
@@ -48,6 +52,10 @@ while [ "$#" -gt 0 ]; do
   esac
   shift
 done
+
+if $add; then
+  add
+fi
 
 if $no_edit; then
   set -- "$@" --no-edit
