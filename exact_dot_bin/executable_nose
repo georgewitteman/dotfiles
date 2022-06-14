@@ -17,7 +17,9 @@ if ! python -c 'import noseprogressive.result' >/dev/null 2>&1; then
 fi
 
 for arg in "$@"; do
-  if [ -e "${arg}" ] || [ -e "${arg%:*}" ]; then
+  if [ -e "${arg}" ]; then
+    set -- "$@" "$(relative-path "$arg")"
+  elif [ -e "${arg%:*}" ]; then
     set -- "$@" "$(relative-path "${arg%:*}"):${arg##*:}"
   else
     set -- "$@" "$arg"
