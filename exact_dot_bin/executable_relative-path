@@ -4,16 +4,20 @@ set -o errexit
 set -o nounset
 
 absolute=false
+strict=false
 
 for arg; do
   shift
   case "$arg" in
     -h | --help)
-      echo "usage: $(basename "$0") [-a|--absolute] [<source=\${PWD}>] <target>" >&2
+      echo "usage: $(basename "$0") [--absolute] [--strict] [<source=\${PWD}>] <target>" >&2
       exit
       ;;
-    -a | --absolute)
+    --absolute)
       absolute=true
+      ;;
+    --strict)
+      strict=true
       ;;
     *)
       set -- "$@" "$arg"
@@ -79,7 +83,7 @@ if [ "$common_part" = "/" ]; then
   else
     result="${result}/"
   fi
-elif [ "$common_part" = "$src" ]; then
+elif $strict && [ "$common_part" = "$src" ]; then
   result=".${result}"
 fi
 
@@ -97,6 +101,8 @@ if [ -n "$result" ] && [ -n "$forward_part" ]; then
 elif [ -n "$forward_part" ]; then
   # extra slash removal
   result="${forward_part#?}"
+elif [ -z "$result" ]; then
+  result="."
 fi
 
 printf '%s\n' "$result"
