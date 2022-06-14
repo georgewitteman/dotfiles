@@ -1,0 +1,89 @@
+#! /bin/sh
+
+set -o errexit
+set -o nounset
+
+for arg in "$@"; do
+  case "$arg" in
+    -h | --help)
+      echo "usage: $(basename "$0") [<source=\${PWD}>] <target>" >&2
+      exit
+      ;;
+  esac
+done
+
+# Both $1 and $2 are absolute paths beginning with / $1 must be a canonical
+# path; that is none of its directory components may be ".", ".." or a symbolic
+# link.
+#
+# Returns relative path to $2/$target from $1/$src
+if [ $# -ge 2 ]; then
+  src="$1"
+  target="$2"
+elif [ $# -eq 1 ]; then
+  src="$PWD"
+  target="$1"
+else
+  exit 1
+fi
+
+absolute_path() {
+  if [ -d "$1" ]; then
+    echo "$(cd "$1"; pwd)"
+  elif [ -e "$1" ]; then
+    echo "$(cd "$(dirname "$1")"; pwd)/$(basename "$1")"
+  else
+    case "$1" in
+      /*)
+        echo "$1"
+        ;;
+      *)
+        echo-err "not able to be converted into an absolute path: ${1}" >&2
+        exit 1
+        ;;
+    esac
+  fi
+}
+
+src="$(absolute_path "$src")"
+target="$(absolute_path "$target")"
+
+common_part="$src"
+result=""
+
+while [ "${target#"$common_part"}" = "$target" ]; do
+  # no match, means that candidate common part is not correct
+  # go up one level (reduce common part)
+  common_part="$(dirname "$common_part")"
+  # and record that we went back, with correct / handling
+  if [ -z "$result" ]; then
+    result=".."
+  else
+    result="../${result}"
+  fi
+done
+
+if [ "$common_part" = "/" ]; then
+  # special case for root (no common path)
+  result="${result}/"
+elif [ "$common_part" = "$src" ]; then
+  result=".${result}"
+fi
+
+# since we now have identified the common part,
+# compute the non-common part
+forward_part="${target#"$common_part"}"
+
+echo "common_part: ${common_part}"
+echo "forward_part: ${forward_part}"
+echo "result: ${result}"
+
+# and now stick all parts together
+if [ -n "$result" ] && [ -n "$forward_part" ]; then
+  result="${result}${forward_part}"
+elif [ -n "$forward_part" ]; then
+  # extra slash removal
+  result="${forward_part#?}"
+fi
+
+printf '%s\n' "$result"
