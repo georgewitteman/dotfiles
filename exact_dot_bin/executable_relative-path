@@ -87,9 +87,9 @@ fi
 # compute the non-common part
 forward_part="${target#"$common_part"}"
 
-echo "common_part: ${common_part}"
-echo "forward_part: ${forward_part}"
-echo "result: ${result}"
+# echo "common_part: ${common_part}"
+# echo "forward_part: ${forward_part}"
+# echo "result: ${result}"
 
 # and now stick all parts together
 if [ -n "$result" ] && [ -n "$forward_part" ]; then
