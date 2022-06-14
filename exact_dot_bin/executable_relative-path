@@ -3,11 +3,20 @@
 set -o errexit
 set -o nounset
 
-for arg in "$@"; do
+absolute=false
+
+for arg; do
+  shift
   case "$arg" in
     -h | --help)
-      echo "usage: $(basename "$0") [<source=\${PWD}>] <target>" >&2
+      echo "usage: $(basename "$0") [-a|--absolute] [<source=\${PWD}>] <target>" >&2
       exit
+      ;;
+    -a | --absolute)
+      absolute=true
+      ;;
+    *)
+      set -- "$@" "$arg"
       ;;
   esac
 done
@@ -65,7 +74,11 @@ done
 
 if [ "$common_part" = "/" ]; then
   # special case for root (no common path)
-  result="${result}/"
+  if $absolute; then
+    result="/"
+  else
+    result="${result}/"
+  fi
 elif [ "$common_part" = "$src" ]; then
   result=".${result}"
 fi
@@ -74,9 +87,9 @@ fi
 # compute the non-common part
 forward_part="${target#"$common_part"}"
 
-# echo "common_part: ${common_part}"
-# echo "forward_part: ${forward_part}"
-# echo "result: ${result}"
+echo "common_part: ${common_part}"
+echo "forward_part: ${forward_part}"
+echo "result: ${result}"
 
 # and now stick all parts together
 if [ -n "$result" ] && [ -n "$forward_part" ]; then
