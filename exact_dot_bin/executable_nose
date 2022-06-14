@@ -1,5 +1,8 @@
 #!/bin/sh
 
+set -o errexit
+set -o nounset
+
 if ! command -v nosetests >/dev/null 2>&1; then
   echo-err "The 'nosetests' command is not available."
   exit 127
