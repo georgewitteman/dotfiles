@@ -214,7 +214,7 @@ take() {
 }
 
 novenv() {
-  if [ $# -eq 0 -a -n "$VIRTUAL_ENV" ]; then
+  if [ $# -eq 0 ] && [ -n "$VIRTUAL_ENV" ]; then
     venv
     return $?
   fi
