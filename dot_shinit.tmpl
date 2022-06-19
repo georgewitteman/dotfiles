@@ -408,6 +408,13 @@ work() {
   fi
   cd "$1" || return $?
 }
+if ! command -v tailscale >/dev/null 2>&1; then
+  if [ -x "/Applications/Tailscale.app/Contents/MacOS/Tailscale" ]; then
+    tailscale() {
+      echo_run "/Applications/Tailscale.app/Contents/MacOS/Tailscale" "$@"
+    }
+  fi
+fi
 
 {{- if .is_work }}
 # shellcheck source=/dev/null
