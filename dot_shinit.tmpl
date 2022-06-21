@@ -392,21 +392,21 @@ dotfiles() {
 
 work() {
   if [ -d "/opt/workspace" ]; then
-    set -- "/opt/workspace"
+    set -- "/opt/workspace" "$(printf "%s/" "$@")"
   elif [ -d "${HOME}/Code" ]; then
-    set -- "${HOME}/Code"
+    set -- "${HOME}/Code" "$(printf "%s/" "$@")"
   elif [ -d "/workspace" ]; then
-    set -- "/workspace"
+    set -- "/workspace" "$(printf "%s/" "$@")"
   else
     echo-err "No workspace set"
     return 1
   fi
-  set -- "$1" "$1"/*
-  if [ $# -eq 2 ]; then
-    cd "$2" || return $?
+  set -- "$1" "${2%/}" "$1"/*
+  if [ $# -eq 3 ]; then
+    cd "$3/$2" || return $?
     return $?
   fi
-  cd "$1" || return $?
+  cd "$1/$2" || return $?
 }
 if ! command -v tailscale >/dev/null 2>&1; then
   if [ -x "/Applications/Tailscale.app/Contents/MacOS/Tailscale" ]; then
