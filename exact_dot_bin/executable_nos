@@ -15,6 +15,10 @@ for arg in "$@"; do
     test_args+=("$arg")
   elif [[ $arg =~ ^[A-Z].*$ ]]; then
     test_classes+=("$arg")
+  elif [[ $arg =~ ^.*\..+\.test_.+$ ]]; then
+    test_functions+=("test_${arg##*.test_}")
+    classpath="${arg%.test_*}"
+    test_classes+=("${classpath##*.}")
   elif [[ $arg =~ ^.*\.py$ ]]; then
     if [[ ! -e $arg ]]; then
       echo-warn "Skipping ${arg} because it doesn't exist"
