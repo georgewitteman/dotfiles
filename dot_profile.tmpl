@@ -42,6 +42,7 @@ PATH="${HOME}/.local/bin:${PATH}"
 PATH="{{ joinPath .chezmoi.homeDir .private_bin }}:${PATH}"
 PATH="${HOME}/.cargo/bin:${PATH}"
 PATH="${HOME}/.poetry/bin:${PATH}"
+PATH="${HOME}/.krew/bin:${PATH}"
 {{- if .is_work }}
 PATH="{{ joinPath .work.path "dotfiles" "bin"}}:${PATH}"
 
