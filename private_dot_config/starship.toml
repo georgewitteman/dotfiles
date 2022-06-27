@@ -64,14 +64,16 @@ disabled = true
 [custom.stashes]
 shell = ['dash', '-eu']
 command = '''
-stash_count=$(wc -l $(command git rev-parse --git-dir)/logs/refs/stash | awk '{ print $1 }')
+# stash_count=$(wc -l $(command git rev-parse --git-dir)/logs/refs/stash | awk '{ print $1 }')
+stash_count="$(git rev-list --walk-reflogs --count refs/stash)"
 if [ "$stash_count" -eq 1 ]; then
   echo "${stash_count} stash"
 else
   echo "${stash_count} stashes"
 fi
 '''
-when = 'test -f $(git rev-parse --git-dir)/logs/refs/stash'
+# when = 'test -f $(git rev-parse --git-dir)/logs/refs/stash'
+when = 'git rev-list --walk-reflogs --count refs/stash'
 format = '[$output]($style) '
 style = 'fg:red bold'
 
