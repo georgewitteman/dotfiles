@@ -4,11 +4,25 @@ if ! in-git-repo; then
   exit 128
 fi
 
-GIT_HEAD="$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@')" 2>/dev/null
-if [ -z "$GIT_HEAD" ]; then
-  GIT_HEAD="$(git remote show origin 2>&1 | grep 'HEAD branch' | cut -d ':' -f 2 | cut -d ' ' -f 2)"
+# Try and get origin's HEAD first.
+GIT_HEAD="$(basename "$(git symbolic-ref --short --quiet refs/remotes/origin/HEAD)")"
+
+# If there's only one branch, that's the main branch.
+if [ -z "$GIT_HEAD" ] && git rev-parse --abbrev-ref --branches | wc -l | egrep -q '^\s*1$' ; then
+  GIT_HEAD="$(git rev-parse --abbrev-ref --branches)"
 fi
+
+# If there are no actual branches, then the symbolic-ref for HEAD is the main
+# branch. This seems like it can only happen on a brand new repository, when
+# there aren't any actual commits yet.
+if [ -z "$GIT_HEAD" ] && git rev-parse --abbrev-ref --branches | wc -l | egrep -q '^\s*0$' ; then
+  GIT_HEAD="$(git symbolic-ref --short --quiet HEAD)"
+fi
+
+# Use the configured defaultBranch.
 if [ -z "$GIT_HEAD" ]; then
   GIT_HEAD="$(git config --get init.defaultBranch)"
 fi
+
+# If all else fails, fallback to "main" as the main branch name.
 echo "${GIT_HEAD:-main}"
