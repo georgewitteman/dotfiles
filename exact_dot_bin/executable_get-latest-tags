@@ -2,6 +2,10 @@
 
 # Gets the latest tags by date and by version, and verifies that they are the same
 
+set -o nounset
+set -o errexit
+set -o pipefail
+
 num_tags=1
 
 die() {
@@ -21,6 +25,10 @@ USAGE="usage: $(basename "$0") [<options>]
 "
 
 remote=false
+egrep_pattern=
+by_version=
+by_date=
+pattern=
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
@@ -76,15 +84,27 @@ if [[ -z $pattern ]]; then
   exit 1
 fi
 
+if $remote; then
+  if ! git fetch --tags --force >/dev/null 2>&1; then
+    echo-err "Failed to fetch tags" >&2
+    exit 1
+  fi
+  # IFS=$'\n' read -r -d '' -a latest_tags_by_date < <(git ls-remote --tags --refs --sort=creatordate origin "$pattern" | cut -d '/' -f 3 | "${egrep_cmd[@]}" | tail -"$num_tags")
+  # IFS=$'\n' read -r -d '' -a latest_tags_by_version < <(git ls-remote --tags --refs --sort=version:refname origin "$pattern" | cut -d '/' -f 3 | "${egrep_cmd[@]}" | tail -"$num_tags")
+fi
+
 # NOTE: Ideally we'd sort by "taggerdate", but lightweight tags don't have one
 # so we sort by creatordate (https://stackoverflow.com/a/71478514).
-if $remote; then
-  IFS=$'\n' read -r -d '' -a latest_tags_by_date < <(git ls-remote --tags --refs --sort=creatordate origin "$pattern" | cut -d '/' -f 3 | "${egrep_cmd[@]}" | tail -"$num_tags")
-  IFS=$'\n' read -r -d '' -a latest_tags_by_version < <(git ls-remote --tags --refs --sort=version:refname origin "$pattern" | cut -d '/' -f 3 | "${egrep_cmd[@]}" | tail -"$num_tags")
-else
-  IFS=$'\n' read -r -d '' -a latest_tags_by_date < <(git tag --sort=creatordate --list "$pattern" | "${egrep_cmd[@]}" | tail -"$num_tags")
-  IFS=$'\n' read -r -d '' -a latest_tags_by_version < <(git tag --sort=version:refname --list "$pattern" | "${egrep_cmd[@]}" | tail -"$num_tags")
-fi
+#
+# Docs: For commit and tag objects, the special creatordate and creator fields
+# will correspond to the appropriate date or name-email-date tuple from the
+# committer or tagger fields depending on the object type. These are intended
+# for working on a mix of annotated and lightweight tags.
+#
+# Need to `|| true` here since "The return code is zero, unless end-of-file is
+# encountered." (https://stackoverflow.com/a/40547123)
+IFS=$'\n' read -r -d '' -a latest_tags_by_date < <(git tag --sort=creatordate --list "$pattern" | "${egrep_cmd[@]}" | tail -"$num_tags") || true
+IFS=$'\n' read -r -d '' -a latest_tags_by_version < <(git tag --sort=version:refname --list "$pattern" | "${egrep_cmd[@]}" | tail -"$num_tags") || true
 
 # echo "${latest_tags_by_date[@]}"
 # echo "${latest_tags_by_version[@]}"
@@ -102,17 +122,25 @@ fi
 debug_output() {
   echo-err "$*" >&2
   for i in $(seq 0 "$((num_tags - 1))"); do
-    if [[ ${latest_tags_by_date[$i]} != "${latest_tags_by_version[$i]}" ]]; then
-      echo-err "index $i: ${latest_tags_by_date[$i]} != ${latest_tags_by_version[$i]}" >&2
+    if [[ ${#latest_tags_by_date[@]} -gt $i ]] && [[ ${#latest_tags_by_version[@]} -gt $i ]]; then
+      if [[ ${latest_tags_by_date[$i]} != "${latest_tags_by_version[$i]}" ]]; then
+        echo-err "index $i: ${latest_tags_by_date[$i]} != ${latest_tags_by_version[$i]}" >&2
+      else
+        echo-ok "   index $i: ${latest_tags_by_date[$i]} == ${latest_tags_by_version[$i]}" >&2
+      fi
+    elif [[ ${#latest_tags_by_date[@]} -gt $i ]]; then
+      echo-err "index $i: ${latest_tags_by_date[$i]} != <unknown>" >&2
+    elif [[ ${#latest_tags_by_version[@]} -gt $i ]]; then
+      echo-err "index $i: <unknown> != ${latest_tags_by_version[$i]}" >&2
     else
-      echo-ok "   index $i: ${latest_tags_by_date[$i]} == ${latest_tags_by_version[$i]}" >&2
+      echo-err "index $i: <unknown> (${#latest_tags_by_date[@]}) != <unknown> (${#latest_tags_by_version[@]})" >&2
     fi
   done
   exit 1
 }
 
-if [[ ${#latest_tags_by_date} != "${#latest_tags_by_version}" ]]; then
-  debug_output "Different number of tags returned (date: ${#latest_tags_by_date}, version: ${#latest_tags_by_version})"
+if [[ ${#latest_tags_by_date[@]} != "${#latest_tags_by_version[@]}" ]]; then
+  debug_output "Different number of tags returned (date: ${#latest_tags_by_date[@]}, version: ${#latest_tags_by_version[@]})"
   exit 1
 fi
 
@@ -120,14 +148,20 @@ if [[ ${#latest_tags_by_date[@]} -eq 0 ]]; then
   debug_output "No matching tags by date."
   exit 1
 fi
+
 if [[ ${#latest_tags_by_version[@]} -eq 0 ]]; then
   debug_output "No matching tags by version."
   exit 1
 fi
 
 for i in $(seq 0 "$((num_tags - 1))"); do
-  if [[ ${latest_tags_by_date[$i]} != "${latest_tags_by_version[$i]}" ]]; then
-    debug_output "Tags sorted by date and version do not match"
+  # Note: we know at this point that the lengths of the lists are the same. So
+  # if we're able to access an element at index i in one, we must be able to
+  # access it in the other.
+  if [[ ${#latest_tags_by_date[@]} -gt $i ]]; then
+    if [[ ${latest_tags_by_date[$i]} != "${latest_tags_by_version[$i]}" ]]; then
+      debug_output "Tags sorted by date and version do not match"
+    fi
   fi
 done
 
