@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 set -o errexit
+set -o pipefail
 
 commit_id="$(git show "$@" --quiet --format="%H")"
 
@@ -9,7 +10,11 @@ if ! git rev-parse "$commit_id" >/dev/null 2>&1; then
   exit 1
 fi
 
-IFS=$'\n' read -r -d '' -a refs < <(git show-ref --dereference | grep "$commit_id" | cut -d' ' -f2) || true
+IFS=$'\n' read -r -d '' -a refs < <(git for-each-ref --points-at "$commit_id" --format="%(refname)") || true
+
+# This is around 2.27x faster than the above, but is a bit hackier so I'm just
+# going to use the above for now.
+# IFS=$'\n' read -r -d '' -a refs < <(git show-ref --dereference | grep "$commit_id" | cut -d' ' -f2) || true
 
 tags=() heads=()
 for ref in "${refs[@]}"; do
