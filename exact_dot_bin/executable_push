@@ -21,7 +21,7 @@ if [[ -n "$(git status --porcelain)" ]]; then
 fi
 
 if ! git rev-parse --abbrev-ref --symbolic-full-name '@{upstream}' >/dev/null 2>&1; then
-  set -- "$@" --set-upstream-to "origin/${head}"
+  set -- "$@" --set-upstream origin "$head"
 fi
 
 args=()
