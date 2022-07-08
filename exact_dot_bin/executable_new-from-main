@@ -55,7 +55,7 @@ if $stash; then
 fi
 
 set +o errexit
-echo-run git checkout -b "$branch_name" "origin/${main_branch}"
+echo-run git checkout -b "$branch_name" --no-track "origin/${main_branch}"
 exit_code=$?
 set -o errexit
 
