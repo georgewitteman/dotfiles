@@ -42,7 +42,7 @@ while [ $# -gt 0 ]; do
       ;;
     *)
       case "$1" in
-        ''|*[!0-9]*)
+        '' | *[!0-9]*)
           echo "error: COUNT must be >= 0 (got '$1')" >&2
           exit 1
           ;;
@@ -92,5 +92,5 @@ generate() {
 i=0
 while [ "$i" -lt "$count" ]; do
   generate
-  i=$((i+1))
+  i=$((i + 1))
 done

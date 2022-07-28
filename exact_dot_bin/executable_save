@@ -9,6 +9,7 @@ fi
 
 USAGE="usage: $(basename "$0") [<options>] [--] [<commit message>...]
 
+    -C=PATH               run git from this directory
     -a, --add             add all changes
     -p, --push            push branch to remote
     -s, --pull            pull (sync) remote changes using \`git pull --rebase\`
@@ -52,6 +53,13 @@ while [ "$#" -gt 0 ]; do
     -h | --help)
       echo "$USAGE"
       exit
+      ;;
+    -C)
+      if ! cd "$2"; then
+        echo "error: cannot change directory to $2" >&2
+        exit 1
+      fi
+      shift
       ;;
     -a | --add)
       add=true
