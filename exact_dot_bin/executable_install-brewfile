@@ -15,7 +15,6 @@ brew "gnupg"
 brew "htop"
 brew "hyperfine"
 brew "jq"
-brew "neovim"
 brew "pinentry-mac"
 brew "ripgrep"
 brew "rsync"
@@ -24,8 +23,9 @@ brew "starship"
 brew "terraform"
 brew "tmux"
 brew "tree"
-brew "wget"
 brew "universal-ctags"
+brew "vim"
+brew "wget"
 EOF
 
 if ! command -v "aws" >/dev/null 2>&1; then

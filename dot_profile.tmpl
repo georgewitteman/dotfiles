@@ -12,11 +12,7 @@ export LANG="${LANG:-en_US.UTF-8}"
 
 # `man environ`: Default editor name.
 if [ -z "$EDITOR" ]; then
-  if command -v nvim >/dev/null 2>&1; then
-    export EDITOR="nvim"
-  else
-    export EDITOR="vim"
-  fi
+  export EDITOR="vim"
 fi
 
 # Fixes gpg when "GPG Suite" is not installed (i.e. gpg is installed from homebrew)
