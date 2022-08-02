@@ -284,3 +284,68 @@ let g:is_posix = 1
 
 " Dockerfiles load vim-json which sets conceallevel. We don't want that
 let g:vim_json_syntax_conceal = 0
+
+" Disable netrw
+let loaded_netrwPlugin = 1
+
+" Sort directories at the top of dirvish
+let g:dirvish_mode = ':sort ,^.*[\/],'
+
+let g:better_whitespace_enabled = 0 " Disable highlighting
+let g:strip_whitespace_on_save = 1
+let g:strip_whitespace_confirm = 0 " Don't ask for confirmation
+let g:strip_whitelines_at_eof = 1 " Strip white lines at end of file
+
+" Don't add tags file to home directory
+let g:gutentags_exclude_project_root = ['/usr/local', $HOME]
+if executable('project-ctags-files')
+  let g:gutentags_file_list_command = 'project-ctags-files'
+elseif executable('project-find')
+  let g:gutentags_file_list_command = 'project-find'
+endif
+
+" Run in every buffer
+let g:hardtime_default_on = 1
+
+let g:list_of_normal_keys = ['h', 'j', 'k', 'l', '+', '<UP>', '<DOWN>', '<LEFT>', '<RIGHT>']
+let g:list_of_visual_keys = ['h', 'j', 'k', 'l', '+', '<UP>', '<DOWN>', '<LEFT>', '<RIGHT>']
+let g:list_of_insert_keys = ['<UP>', '<DOWN>', '<LEFT>', '<RIGHT>']
+let g:list_of_disabled_keys = []
+
+" The quickfix window cannot be added to the ignore buffers array
+let g:hardtime_ignore_quickfix = 1
+
+" Ignore certain buffer patterns
+let g:hardtime_ignore_buffer_patterns = [ "dirvish" ]
+
+" Maximum number of repetative key preses
+let g:hardtime_maxcount = 2
+
+augroup pencil
+  autocmd!
+  autocmd FileType markdown,mkd call pencil#init({'wrap': 'soft'})
+  autocmd Filetype git,gitsendemail,*commit*,*COMMIT* call pencil#init({'wrap': 'soft'})
+  autocmd FileType arcanist* call pencil#init({'wrap': 'soft'})
+  autocmd FileType html call pencil#init({'wrap': 'soft'})
+augroup END
+
+" Allow vim-terraform to automatically format *.tf and *.tfvars files with
+" terraform fmt.
+let g:terraform_fmt_on_save=1
+
+" Allow vim-terraform to align settings automatically with Tabularize.
+" Requires the 'godlygeek/tabular' plugin
+let g:terraform_align=1
+
+" Config for the hdima/python-syntax plugin
+"
+" Highlight syntax of str.format syntax
+let g:python_highlight_string_format = 1
+" Highlight standard exceptions
+let g:python_highlight_exceptions = 1
+" Highlight indentation errors
+let g:python_highlight_indent_errors = 1
+" Highlight all operators
+" let g:python_highlight_operators = 1
+" Highlight builtin objects, types, and functions
+let g:python_highlight_builtins = 1
