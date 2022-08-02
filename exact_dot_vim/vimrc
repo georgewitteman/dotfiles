@@ -5,6 +5,11 @@
 " NOTE: 'encoding' defaults to "latin1" or $LANG
 scriptencoding utf-8
 
+" See `:h defaults.vim`: "If you create your own .vimrc, it is
+" recommended to add these lines somewhere near the top"
+unlet! skip_defaults_vim
+source $VIMRUNTIME/defaults.vim
+
 if has('nvim')
   if ! executable($HOME.'/.config/nvim/venv3/bin/python') && executable('python3')
     execute '!python3 -m venv '.$HOME.'/.config/nvim/venv3'
