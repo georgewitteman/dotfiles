@@ -65,10 +65,10 @@ function! dirvish_helpers#make_file()
   execute 'e '.fullfilename
 endfunction
 
-function! dirvish_helpers#move_file()
+function! dirvish_helpers#move()
   let path = getline('.')
-  if !filereadable(path)
-    echo 'Not a file.'
+  if ! (isdirectory(path) || filereadable(path))
+    echo 'Path does not exist.'
     return
   endif
 
