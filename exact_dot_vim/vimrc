@@ -37,33 +37,6 @@ if $TERM_PROGRAM != "Apple_Terminal"
   packadd! vim-gutentags
 endif
 
-" Environment
-if ! has('nvim')
-  " NOTE: One thing to note about the paths in our config is
-  " that they end in a double slash. That ending enables a
-  " feature to disambiguate swaps and backups for files with
-  " the same name that live in different directories. For
-  " instance the swap file for /foo/bar will be saved in
-  " ~/.vim/swap/%foo%bar.swp (slashes escaped as percent
-  " signs). Vim had a bug until a fairly recent patch where
-  " the double slash was not honored for backupdir, and we
-  " guard against that above.
-  " (https://begriffs.com/posts/2019-07-19-history-use-vim.html)
-
-  set undofile " Automatically save undo history to an undo file. Stored in 'undodir'
-  set undodir=$HOME/.local/share/vim/undodir//
-
-  set swapfile
-  set directory=$HOME/.local/share/vim/swap// " List of dir names for the swap file
-
-  set backupdir=$HOME/.local/share/vim/backup// " List of dir names for the backup file
-  set writebackup " Protect against crash-during-write
-  set nobackup " Do not persist backup after successful write
-  set backupcopy=auto " Use rename-and-write-new method whenever safe
-
-  set viminfo+='1000,n$HOME/.local/share/vim/viminfo
-endif
-
 " Leader to <Space>
 let mapleader = "\<Space>"
 
@@ -109,12 +82,6 @@ set nosmartindent
 " When a file has been detected to have been changed outside of Vim and it has
 " not been changed inside of Vim, automatically read it again
 set autoread
-
-" Don't make a backup before overwriting a file
-set nobackup
-" Don't make a backup before overwriting a file (this option will delete the
-" backup after the file has been written if on)
-set nowritebackup
 
 " If this many miliseconds nothing is typed the swap file will be written
 " to disk. Also used for the CursorHold autocommand event
