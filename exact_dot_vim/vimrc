@@ -289,7 +289,13 @@ let g:vim_json_syntax_conceal = 0
 let loaded_netrwPlugin = 1
 
 " Sort directories at the top of dirvish
-let g:dirvish_mode = ':sort ,^.*[\/],'
+" let g:dirvish_mode = ':sort ,^.*[\/],'
+" If you use |g:dirvish_relative_paths|, try this
+let g:dirvish_mode = ':sort ,^\v(.*[\/])|\ze,'
+
+" List paths relative to the |current-directory|. (Recommended for Vim 7.3
+" because it lacks |conceal|).
+let g:dirvish_relative_paths = 1
 
 let g:better_whitespace_enabled = 0 " Disable highlighting
 let g:strip_whitespace_on_save = 1
