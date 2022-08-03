@@ -10,11 +10,11 @@ if ! git rev-parse "$commit_id" >/dev/null 2>&1; then
   exit 1
 fi
 
-IFS=$'\n' read -r -d '' -a refs < <(git for-each-ref --points-at "$commit_id" --format="%(refname)") || true
+IFS=$'\n' read -r -d '' -a refs < <(git show-ref --dereference | grep "^$commit_id " | cut -d' ' -f2) || true
 
-# This is around 2.27x faster than the above, but is a bit hackier so I'm just
-# going to use the above for now.
-# IFS=$'\n' read -r -d '' -a refs < <(git show-ref --dereference | grep "$commit_id" | cut -d' ' -f2) || true
+# This is around 2.27x slower than the above (but less hacky) so I'm just going
+# to use the above for now.
+# IFS=$'\n' read -r -d '' -a refs < <(git for-each-ref --points-at "$commit_id" --format="%(refname)") || true
 
 tags=() heads=()
 for ref in "${refs[@]}"; do
