@@ -20,39 +20,49 @@
   refreshPeriod: {{ $refreshPeriod }}
 {{ end }}
 
-.config/zsh/_alacritty:
+.local/share/zsh/functions/_alacritty:
   type: file
   url: 'https://raw.githubusercontent.com/alacritty/alacritty/master/extra/completions/_alacritty'
   refreshPeriod: {{ $refreshPeriod }}
 
-.config/zsh/_cargo:
+.local/share/zsh/functions/_cargo:
   type: file
   url: 'https://raw.githubusercontent.com/rust-lang/cargo/master/src/etc/_cargo'
   refreshPeriod: {{ $refreshPeriod }}
 
-.config/zsh/_fd:
+.local/share/zsh/functions/_fd:
   type: file
   url: 'https://raw.githubusercontent.com/sharkdp/fd/master/contrib/completion/_fd'
   refreshPeriod: {{ $refreshPeriod }}
 
-.config/zsh/_node:
+.local/share/zsh/functions/_node:
   type: file
   url: 'https://raw.githubusercontent.com/zsh-users/zsh-completions/master/src/_node'
   refreshPeriod: {{ $refreshPeriod }}
 
-.config/zsh/_rg:
+.local/share/zsh/functions/_rg:
   type: file
   url: 'https://raw.githubusercontent.com/BurntSushi/ripgrep/master/complete/_rg'
   refreshPeriod: {{ $refreshPeriod }}
 
-.config/zsh/_docker:
+.local/share/zsh/functions/_docker:
   type: file
   url: 'https://raw.githubusercontent.com/docker/cli/master/contrib/completion/zsh/_docker'
   refreshPeriod: {{ $refreshPeriod }}
 
-.config/zsh/_docker-compose:
+.local/share/zsh/functions/_docker-compose:
   type: file
   url: 'https://raw.githubusercontent.com/docker/compose/master/contrib/completion/zsh/_docker-compose'
+  refreshPeriod: {{ $refreshPeriod }}
+
+.local/share/zsh/functions/_git:
+  type: file
+  url: 'https://raw.githubusercontent.com/felipec/git-completion/master/git-completion.zsh'
+  refreshPeriod: {{ $refreshPeriod }}
+
+.local/share/bash-completion/completions/git:
+  type: file
+  url: 'https://raw.githubusercontent.com/felipec/git-completion/master/git-completion.bash'
   refreshPeriod: {{ $refreshPeriod }}
 
 .pyenv:

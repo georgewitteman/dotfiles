@@ -5,20 +5,38 @@ source "${HOME}/.shinit"
 # Adding this here so scripts think pyenv is initialized
 # eval "$(pyenv init -)"
 
-fpath=("${HOME}/.config/zsh/" "${fpath[@]}")
+fpath=("${HOME}/.local/share/zsh/functions" "${fpath[@]}")
 
-# Use menu for autocompletion when number of items >= 2
-zstyle ':completion:*' menu select=2
-# Colors for files
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-# Verbose completion results
-zstyle ':completion:*' verbose true
-# Keep directories and files separated
-zstyle ':completion:*' list-dirs-first true
-# Case insensitive completion
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'l:|=* r:|=*'
+# Note: Any of the strings ‘true’, ‘on’, ‘yes’, and ‘1’ can be used for the
+# value ‘true’ and any of the strings ‘false’, ‘off’, ‘no’, and ‘0’ for the
+# value ‘false’.
+#
 # https://zsh.sourceforge.io/Doc/Release/Completion-System.html#Control-Functions
-zstyle ':completion:*' completer _expand _complete _ignored _correct _approximate
+#
+# Note: default is '_complete _ignored'.
+#
+# _expand_alias: If the word the cursor is on is an alias, it is expanded and
+# no other completers are called. The types of aliases which are to be expanded
+# can be controlled with the styles regular, global and disabled.
+#
+# _complete: This completer generates all possible completions in a
+# context-sensitive manner, i.e. using the settings defined with the compdef
+# function explained above and the current settings of all special parameters.
+# This gives the normal completion behaviour.
+zstyle ':completion:*' completer _expand_alias _complete
+# zstyle ':completion:*' completer _expand _complete _ignored _correct _approximate
+# Use menu for autocompletion when number of items >= 2.
+zstyle ':completion:*' menu select=2
+# Colors for files. Uses the $LS_COLORS environment variable.
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+# Verbose completion results.
+zstyle ':completion:*' verbose true
+# Keep directories and files separated.
+zstyle ':completion:*' list-dirs-first true
+# Try first simple completion and, if that generates no matches,
+# case-insensitive completion.
+# https://zsh.sourceforge.io/Doc/Release/Completion-System.html#index-matcher_002dlist_002c-completion-style
+zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}'
 
 # https://github.com/zsh-users/zsh/blob/master/Completion/compinit
 autoload -Uz compinit
@@ -153,7 +171,7 @@ if command -v fzf &>/dev/null && command -v fd &>/dev/null; then
     else
       local path="$(fd --hidden --exclude .git | fzf --query "$current_word")"
     fi
-    if [[ "$status" != 0 || -z "$path" ]]; then
+    if [[ "$?" != 0 || -z "$path" ]]; then
       zle reset-prompt
       return
     fi
@@ -166,8 +184,13 @@ if command -v fzf &>/dev/null && command -v fd &>/dev/null; then
   bindkey '^T' fzf-file-widget
 
   fzf-select-history() {
+    # fc:
+    #   -n 1: suppress event (i.e. history entry) numbers when listing
+    #   -l: list commands instead of invoking an editor on them
+    # fzf:
+    #   --tac: reverse the order of input
     local command="$(fc -l -n 1 | fzf --tiebreak index --tac --query "$LBUFFER")"
-    if [[ "$status" -ne 0 || -z "$command" ]]; then
+    if [[ $? -ne 0 || -z "$command" ]]; then
       return
     fi
     BUFFER="$command"
@@ -243,7 +266,7 @@ SAVEHIST=100000
 
 # The maximum number of events stored in the internal history list
 # https://zsh.sourceforge.io/Doc/Release/Parameters.html#index-HISTSIZE
-HISTSIZE=100000
+HISTSIZE="${SAVEHIST:-100000}"
 
 # Keep this at the end
 if [[ -e "${HOME}/.cache/iterm2/iterm2_shell_integration.zsh" ]]; then
