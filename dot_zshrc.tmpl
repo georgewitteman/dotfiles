@@ -5,18 +5,35 @@ source "${HOME}/.shinit"
 # Adding this here so scripts think pyenv is initialized
 # eval "$(pyenv init -)"
 
-# Set up fpath for my autoloaded functions
 fpath=("${HOME}/.config/zsh/" "${fpath[@]}")
-autoload -Uz "${HOME}/.config"/zsh/[A-Za-z]*
-if [[ -t 0 ]] && [[ -t 1 ]] && [[ -z $CI ]]; then
-  autoload -Uz compinit && compinit -C -d "${HOME}/.zcompdump"
 
-  if [[ -f ${NVM_DIR:-${HOME}/.nvm}/bash_completion ]]; then
-    source "${NVM_DIR:-${HOME}/.nvm}/bash_completion"
-  fi
+# Use menu for autocompletion when number of items >= 2
+zstyle ':completion:*' menu select=2
+# Colors for files
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+# Verbose completion results
+zstyle ':completion:*' verbose true
+# Keep directories and files separated
+zstyle ':completion:*' list-dirs-first true
+# Case insensitive completion
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'l:|=* r:|=*'
+# https://zsh.sourceforge.io/Doc/Release/Completion-System.html#Control-Functions
+zstyle ':completion:*' completer _expand _complete _ignored _correct _approximate
+
+# https://github.com/zsh-users/zsh/blob/master/Completion/compinit
+autoload -Uz compinit
+compinit
+
+if [[ -f ${NVM_DIR:-${HOME}/.nvm}/bash_completion ]]; then
+  source "${NVM_DIR:-${HOME}/.nvm}/bash_completion"
 fi
 
 alias echo_fpath="echo_array fpath"
+
+# https://github.com/zsh-users/zsh/blob/00d20ed15e18f5af682f0daec140d6b8383c479a/StartupFiles/zshrc#L23
+alias mv='nocorrect mv'       # no spelling correction on mv
+alias cp='nocorrect cp'       # no spelling correction on cp
+alias mkdir='nocorrect mkdir' # no spelling correction on mkdir
 
 echo_array() {
   local variable_name="${1:-path}"
@@ -35,16 +52,6 @@ echo_assoc_array() {
   done
 }
 
-# Use menu for autocompletion when number of items >= 2
-zstyle ':completion:*' menu select=2
-# Colors for files
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-# Verbose completion results
-zstyle ':completion:*' verbose true
-# Keep directories and files separated
-zstyle ':completion:*' list-dirs-first true
-# Case insensitive completion
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'l:|=* r:|=*'
 
 DIRSTACKSIZE=8
 # If a command is issued that can’t be executed as a normal command, and the

@@ -18,6 +18,5 @@ fi
 
 if [ -t 0 ] && [ -t 1 ] && [ -z "$CI" ]; then
   compaudit | xargs echo-run chmod g-w
-  echo_run zplug update || true
 fi
 '

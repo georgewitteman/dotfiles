@@ -53,10 +53,6 @@ restart_shell() {
     }
   fi
 
-  if command -v zplug >/dev/null 2>&1; then
-    echo_run zplug reinit
-  fi
-
   if [ -n "$(jobs)" ]; then
     # Handle any issues where $PATH doesn't include my custom echo-warn
     # command.
@@ -72,6 +68,11 @@ restart_shell() {
   # preload some functions.
   echo_run : >/dev/null 2>&1
   echo_eval : >/dev/null 2>&1
+
+  # https://github.com/zsh-users/zsh/blob/8e1c6ed6bf416e7716b4c6d5c6822ec752db7b36/Completion/compinit#L133
+  if [ -f "${ZDOTDIR:-$HOME}/.zcompdump" ]; then
+    echo_run rm "${ZDOTDIR:-$HOME}/.zcompdump"
+  fi
 
   # I'm using the awk approach since my original approach didn't handle
   # newlines well.
