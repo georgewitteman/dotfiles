@@ -91,7 +91,7 @@ restart_shell() {
 }
 
 login_shell() {
-  # Starts a login shell with the most prestine environment possible.
+  # Starts a login shell with the most pristine environment possible.
   echo_run login -f "$USER" "$(command -v env)"
   echo_run exec login -f "$USER"
 }
