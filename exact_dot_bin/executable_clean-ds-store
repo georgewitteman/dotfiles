@@ -1,3 +1,18 @@
 #!/bin/sh
 
-safe-run fd --hidden --no-ignore '^.DS_Store$' --exec rm -rf
+USAGE="usage: $(basename "$0") [-y]"
+
+cmd=safe-run
+
+while getopts y f; do
+  case "$f" in
+    y) cmd=echo-run ;;
+    \?)
+      echo "$USAGE"
+      exit 1
+      ;;
+  esac
+  shift
+done
+
+exec "$cmd" fd --hidden --no-ignore '^.DS_Store$' --exec rm -rf
