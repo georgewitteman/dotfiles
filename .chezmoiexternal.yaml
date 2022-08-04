@@ -55,16 +55,6 @@
   url: 'https://raw.githubusercontent.com/docker/compose/master/contrib/completion/zsh/_docker-compose'
   refreshPeriod: {{ $refreshPeriod }}
 
-.local/share/zsh/functions/_git:
-  type: file
-  url: 'https://raw.githubusercontent.com/felipec/git-completion/master/git-completion.zsh'
-  refreshPeriod: {{ $refreshPeriod }}
-
-.local/share/bash-completion/completions/git:
-  type: file
-  url: 'https://raw.githubusercontent.com/felipec/git-completion/master/git-completion.bash'
-  refreshPeriod: {{ $refreshPeriod }}
-
 .pyenv:
   type: git-repo
   url: 'https://github.com/pyenv/pyenv.git'
