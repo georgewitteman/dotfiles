@@ -5,10 +5,8 @@
 " NOTE: 'encoding' defaults to "latin1" or $LANG
 scriptencoding utf-8
 
-" See `:h defaults.vim`: "If you create your own .vimrc, it is
-" recommended to add these lines somewhere near the top"
-unlet! skip_defaults_vim
-source $VIMRUNTIME/defaults.vim
+" This must be first according to the docs: https://github.com/alker0/chezmoi.vim
+packadd! chezmoi.vim
 
 if has('nvim')
   if ! executable($HOME.'/.config/nvim/venv3/bin/python') && executable('python3')
@@ -21,8 +19,10 @@ if has('nvim')
   endif
 endif
 
-" This must be first according to the docs: https://github.com/alker0/chezmoi.vim
-packadd! chezmoi.vim
+" See `:h defaults.vim`: "If you create your own .vimrc, it is
+" recommended to add these lines somewhere near the top"
+unlet! skip_defaults_vim
+source $VIMRUNTIME/defaults.vim
 
 " Add git plugins if git is installed
 if executable('git')
