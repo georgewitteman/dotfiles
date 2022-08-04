@@ -52,8 +52,6 @@ echo_assoc_array() {
   done
 }
 
-
-DIRSTACKSIZE=8
 # If a command is issued that can’t be executed as a normal command, and the
 # command is the name of a directory, perform the cd command to that directory
 setopt auto_cd
@@ -238,14 +236,6 @@ setopt hist_reduce_blanks
 # the editing buffer.
 # https://zsh.sourceforge.io/Doc/Release/Options.html#index-history_002c-verifying-substitution
 setopt hist_verify
-
-# This option works like APPEND_HISTORY except that new history lines are added
-# to the $HISTFILE incrementally (as soon as they are entered), rather than
-# waiting until the shell exits. The file will still be periodically re-written
-# to trim it when the number of lines grows 20% beyond the value specified by
-# $SAVEHIST (see also the HIST_SAVE_BY_COPY option).
-# https://zsh.sourceforge.io/Doc/Release/Options.html#index-history_002c-incremental-appending-to-a-file
-setopt inc_append_history
 
 # The maximum number of history events to save in the history file.
 # https://zsh.sourceforge.io/Doc/Release/Parameters.html#index-SAVEHIST
