@@ -30,7 +30,7 @@ if $mdfind; then
   typeset -a related_files
   IFS=$'\n' read -r -d '' -a related_files < <(mdfind -name "$1") || true
 
-  if [[ "${#related_files[@]}" -eq 0 ]]; then
+  if [[ ${#related_files[@]} -eq 0 ]]; then
     echo "No '$1' application files on your computer"
     exit 0
   fi
@@ -56,7 +56,7 @@ fi
 
 bundle_identifier="$(/usr/libexec/PlistBuddy -c "Print CFBundleIdentifier" "$1/Contents/Info.plist" 2>/dev/null)"
 
-if [[ "$bundle_identifier" = "" ]]; then
+if [[ $bundle_identifier == "" ]]; then
   printf "%s\n" "Cannot find app bundle identifier"
   exit 1
 fi
@@ -154,7 +154,7 @@ done
 # Sort and get unique paths
 IFS=$'\n' read -r -d '' -a paths < <(printf "%s\n" "${paths[@]}" | sort -u) || true
 
-if [[ "${#paths[@]}" -eq 0 ]]; then
+if [[ ${#paths[@]} -eq 0 ]]; then
   echo "No paths found." >&2
   exit 1
 fi
@@ -162,7 +162,7 @@ fi
 echo "Paths to delete:" >&2
 
 for path in "${paths[@]}"; do
-  if [[ -d "$path" ]]; then
+  if [[ -d $path ]]; then
     ls -ladh "$path"
   else
     ls -lah "$path"

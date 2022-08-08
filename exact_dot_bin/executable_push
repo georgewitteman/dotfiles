@@ -16,7 +16,7 @@ fi
 
 status="$(git status --porcelain)"
 
-if [[ -n "$status" ]]; then
+if [[ -n $status ]]; then
   echo-err "There are uncommitted files."
   echo-run git status
   exit 1

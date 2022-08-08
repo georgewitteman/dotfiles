@@ -5,7 +5,7 @@ USAGE="usage: $(basename "$0") [--recent] [--after=<date>] [--] [<path>]"
 recent=false
 after=
 
-while [[ "$#" -gt 0 ]]; do
+while [[ $# -gt 0 ]]; do
   case "$1" in
     --[[:alnum:]]*=*)
       _value="${1#--[[:alnum:]]*=}"
@@ -40,7 +40,7 @@ done
 if $recent; then
   # shellcheck disable=SC2312
   set -- --after="$(date -v-6m +%Y-%m-%d)" "$@"
-elif [[ -n "$after" ]]; then
+elif [[ -n $after ]]; then
   set -- --after="$after" "$@"
 fi
 

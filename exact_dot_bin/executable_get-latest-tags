@@ -9,7 +9,7 @@ set -o pipefail
 num_tags=1
 
 die() {
-  [[ "$#" -ge 2 ]] && echo-err "$2" >&2
+  [[ $# -ge 2 ]] && echo-err "$2" >&2
   exit "$1"
 }
 
@@ -30,7 +30,7 @@ by_version=
 by_date=
 pattern=
 
-while [[ "$#" -gt 0 ]]; do
+while [[ $# -gt 0 ]]; do
   case "$1" in
     -[[:alnum:]][[:alnum:]]*)
       _value="-${1##-?}"

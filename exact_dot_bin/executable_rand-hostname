@@ -78,10 +78,16 @@ random_noun() {
 }
 
 generate() {
-  adjective="$(set -e; random_adjective)"
-  noun="$(set -e; random_noun)"
+  adjective="$(
+    set -e
+    random_adjective
+  )"
+  noun="$(
+    set -e
+    random_noun
+  )"
 
-  if [[ "$max_id" -gt 0 ]]; then
+  if [[ $max_id -gt 0 ]]; then
     echo "${adjective}-${noun}-$(printf "%0${#max_id}d" "$((RANDOM % (max_id + 1)))")"
     return $?
   fi
@@ -90,7 +96,7 @@ generate() {
 }
 
 i=0
-while [[ "$i" -lt "$count" ]]; do
+while [[ $i -lt $count ]]; do
   generate
   i=$((i + 1))
 done

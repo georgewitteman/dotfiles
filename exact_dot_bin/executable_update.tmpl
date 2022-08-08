@@ -16,7 +16,7 @@ for i in $(seq 1 "${#files[@]}"); do
     continue
   fi
 
-  if [[ -n "$GITHUB_WORKFLOW" ]]; then
+  if [[ -n $GITHUB_WORKFLOW ]]; then
     printf "::group::"
   else
     echo "============================================================="
@@ -24,7 +24,7 @@ for i in $(seq 1 "${#files[@]}"); do
 
   printf "Running: \033[32m%s\033[0m (%s/%s)\n" "$file" "$i" "${#files[@]}"
 
-  if [[ -z "$GITHUB_WORKFLOW" ]]; then
+  if [[ -z $GITHUB_WORKFLOW ]]; then
     echo "============================================================="
   fi
 
@@ -33,7 +33,7 @@ for i in $(seq 1 "${#files[@]}"); do
     exit 1
   fi
 
-  if [[ -n "$GITHUB_WORKFLOW" ]]; then
+  if [[ -n $GITHUB_WORKFLOW ]]; then
     echo "::endgroup::"
   elif [[ $i -lt ${#files[@]} ]]; then
     echo
