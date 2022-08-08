@@ -5,14 +5,14 @@ USAGE="usage: $(basename "$0") [--recent] [--after=<date>] [--] [<path>]"
 recent=false
 after=
 
-while [ "$#" -gt 0 ]; do
+while [[ "$#" -gt 0 ]]; do
   case "$1" in
     --[[:alnum:]]*=*)
       _value="${1#--[[:alnum:]]*=}"
       _arg="${1%%="${_value}"}"
       ;;
   esac
-  if [ -n "${_arg:-}${_value:-}" ]; then
+  if [[ -n "${_arg:-}${_value:-}" ]]; then
     shift
     set -- "$_arg" "$_value" "$@"
   fi
@@ -38,8 +38,9 @@ while [ "$#" -gt 0 ]; do
 done
 
 if $recent; then
+  # shellcheck disable=SC2312
   set -- --after="$(date -v-6m +%Y-%m-%d)" "$@"
-elif [ -n "$after" ]; then
+elif [[ -n "$after" ]]; then
   set -- --after="$after" "$@"
 fi
 
@@ -51,6 +52,7 @@ current_count=""
 oldest=""
 latest=""
 
+# shellcheck disable=SC2312
 while IFS= read -r line; do
   if [[ ${#line} -lt 1 ]]; then
     output+="${current_count}|${current_name}|${oldest}|${latest}${newline}"

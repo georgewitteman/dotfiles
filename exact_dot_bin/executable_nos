@@ -49,12 +49,14 @@ if [[ ${#test_classes} -le 0 ]] && [[ ${#test_functions} -gt 0 ]]; then
   if [[ ${#test_files} -le 0 ]]; then
     test_files=("$(git rev-parse --show-toplevel)")
   fi
+  # shellcheck disable=SC2312
   IFS=$'\n' read -r -d '' -a file_data < <(rg --glob '**/tests/**/test_*.py' --files-with-matches "$(build_regex "${test_functions[@]}")" "${test_files[@]}")
 
   if [[ ${#file_data} -le 0 ]]; then
     echo-err "Could not find any tests matching the criteria"
     exit 1
   else
+    # shellcheck disable=SC2312
     nose "${test_args[@]}" "${file_data[@]}" --match="$(build_regex "${test_functions[@]}")"
     exit "$?"
   fi
@@ -76,10 +78,12 @@ if [[ ${#test_classes} -gt 0 ]]; then
       test_files=("$(git rev-parse --show-toplevel)")
     fi
 
+    # shellcheck disable=SC2312
     IFS=$'\n' read -r -d '' -a files_for_class < <(rg --glob '**/tests/**/test_*.py' --files-with-matches "$(build_regex "$test_class_without_function")" "${test_files[@]}")
 
     # If any test functions were passed limit the files to only those that contain any of the test functions
     if [[ ${#test_functions} -gt 0 ]]; then
+      # shellcheck disable=SC2312
       IFS=$'\n' read -r -d '' -a files_for_class_with_functions < <(rg --glob '**/tests/**/test_*.py' --files-with-matches "$(build_regex "${test_functions[@]}")" "${files_for_class[@]}")
     else
       files_for_class_with_functions=("${files_for_class[@]}")
@@ -96,6 +100,7 @@ if [[ ${#test_classes} -gt 0 ]]; then
   fi
 
   if [[ ${#test_functions} -gt 0 ]]; then
+    # shellcheck disable=SC2312
     nose "${test_args[@]}" "${files_with_classes[@]}" --match="$(build_regex "${test_functions[@]}")"
     exit "$?"
   else

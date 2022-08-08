@@ -9,8 +9,10 @@ restart_shell() {
   # the shell.
   if [ $# -eq 0 ]; then
     if [ -f "/proc/$$/cmdline" ]; then
+      # shellcheck disable=SC2312
       set -- "$(tr '\0' ' ' <"/proc/$$/cmdline" | cut -d ' ' -f 1)"
     else
+      # shellcheck disable=SC2312
       set -- "$(ps -p $$ -o comm | tail -1)"
     fi
   fi
@@ -20,6 +22,7 @@ restart_shell() {
   # Sometimes the shell will be started with a dash in front of the name of the
   # shell to indicate that it's a login shell. This breaks the restart because
   # exec thinks that the name of the shell is actually an argument.
+  # shellcheck disable=SC2312
   set -- "-$(basename "${1#-}")" "$(command -v "${1#-}")"
   case "$1" in
     # The login command will prefix the name of the shell with a dash. The -p
@@ -35,7 +38,10 @@ restart_shell() {
     # For example, if I originally started bash by typing `bash`, $0 will
     # continue to be `bash`. If I started it with `/bin/bash`, it will continue
     # to be `/bin/bash/`.
-    *) set -- "$(command -v bash)" -c "exec -a${1} ${2}" ;;
+    *)
+      # shellcheck disable=SC2312
+      set -- "$(command -v bash)" -c "exec -a${1} ${2}"
+      ;;
   esac
 
   # In case ~/.shinit breaks before loading these functions, set dummy versions
@@ -53,6 +59,7 @@ restart_shell() {
     }
   fi
 
+  # shellcheck disable=SC2312
   if [ -n "$(jobs)" ]; then
     # Handle any issues where $PATH doesn't include my custom echo-warn
     # command.
@@ -92,6 +99,7 @@ restart_shell() {
 
 login_shell() {
   # Starts a login shell with the most pristine environment possible.
+  # shellcheck disable=SC2312
   echo_run login -f "$USER" "$(command -v env)"
   echo_run exec login -f "$USER"
 }
@@ -129,13 +137,13 @@ if command -v brew >/dev/null; then
     if [ -n "$VIRTUAL_ENV" ]; then
       echo-warn "Don't run brew from inside a venv. https://docs.brew.sh/Homebrew-and-Python"
       env "PATH=$(
-        remove_prefix_from_path "$PYENV_ROOT"
+        remove_prefix_from_path "$PYENV_ROOT" || true
         echo "$PATH"
       )" safe-run command brew "$@"
       return $?
     fi
     env "PATH=$(
-      remove_prefix_from_path "$PYENV_ROOT"
+      remove_prefix_from_path "$PYENV_ROOT" || true
       echo "$PATH"
     )" command brew "$@" || return $?
   }
@@ -235,6 +243,7 @@ novenv() {
 }
 
 tmp() {
+  # shellcheck disable=SC2312
   set -- "${TMPDIR:-"$(mktemp -d)/"}$(date +%Y-%m-%dT%H%M%S)"
   echo_run mkdir -p "$1"
   echo_run cd "$1"
@@ -379,7 +388,7 @@ dotfiles() {
         # virtual environment and have to run `deactivate` manually.
         echo_run deactivate
       fi
-      echo_run cd "$(chezmoi source-path "$@")"
+      echo_run cd "{{ .chezmoi.sourceDir }}"
       ;;
     *)
       # Commenting this out for now since it's not actually used anywhere

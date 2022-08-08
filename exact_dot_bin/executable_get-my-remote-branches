@@ -1,8 +1,12 @@
 #!/bin/sh
 
+set -o errexit
+
+user_email="$(git config user.email)"
+
 for ref in $(git for-each-ref --sort=committerdate refs/remotes/origin \
   --format='%(authoremail) %(refname)' |
-  grep "$(git config user.email)" |
+  grep "${user_email}" |
   grep origin |
   cut -d ' ' -f 2); do
   echo "${ref##refs/remotes/origin/}"

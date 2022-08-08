@@ -122,7 +122,8 @@ if [ -z "$status" ] && [ -n "$message" ]; then
 fi
 
 if [ -n "$status" ]; then
-  echo-info "Undo these changes with 'git reset $(git rev-parse --short HEAD)'"
+  current_head="$(git rev-parse --short HEAD)"
+  echo-info "Undo these changes with 'git reset ${current_head}'"
 
   set --
   if $no_verify; then

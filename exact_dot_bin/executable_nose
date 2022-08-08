@@ -21,9 +21,9 @@ fi
 
 for arg in "$@"; do
   if [ -e "${arg}" ]; then
-    set -- "$@" "$(relative-path "$arg")"
+    set -- "$@" "$arg"
   elif [ -e "${arg%:*}" ]; then
-    set -- "$@" "$(relative-path "${arg%:*}"):${arg##*:}"
+    set -- "$@" "${arg%:*}:${arg##*:}"
   else
     set -- "$@" "$arg"
   fi

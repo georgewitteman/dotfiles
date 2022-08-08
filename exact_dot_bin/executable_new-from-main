@@ -48,7 +48,8 @@ fi
 
 stashed=false
 if $stash; then
-  if [ -n "$(git status --porcelain)" ]; then
+  status="$(git status --porcelain)"
+  if [ -n "$status" ]; then
     stashed=true
     echo-run git stash
   fi

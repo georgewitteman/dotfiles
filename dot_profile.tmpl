@@ -39,6 +39,7 @@ fi
 # Apple Terminal.
 if [ -n "$ZSH_VERSION" ] && [ "$TERM_PROGRAM" = "Apple_Terminal" ]; then
   # Disable shell save/restore mechanism. See /etc/zshrc_Apple_Terminal
+  # shellcheck disable=SC2034
   SHELL_SESSIONS_DISABLE=1
 fi
 

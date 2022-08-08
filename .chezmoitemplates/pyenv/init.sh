@@ -2,10 +2,12 @@ pyenv() {
   case "$1" in
     rehash)
       shift
+      # shellcheck disable=SC2312
       eval "$(command pyenv sh-rehash "$@")" || return $?
       ;;
     shell)
       shift
+      # shellcheck disable=SC2312
       eval "$(command pyenv sh-shell "$@")" || return $?
       ;;
     *)

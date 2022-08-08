@@ -40,7 +40,8 @@ case "$log_level" in
 esac
 
 if [ -n "${LOG_DATE:-}" ]; then
-  printf '%s ' "$(echo-date)"
+  # shellcheck disable=SC2312
+  printf '%s' "$(date "+%Y-%m-%dT%H:%M:%S")"
 fi
 
 printf "%b\033[97m %s \033[0m " "$log_color" "$log_level"

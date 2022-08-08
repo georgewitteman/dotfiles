@@ -5,24 +5,25 @@ if ! in-git-repo; then
 fi
 
 # Try and get origin's HEAD first.
-GIT_HEAD="$(basename "$(git symbolic-ref --short --quiet refs/remotes/origin/HEAD)")"
+symbolic_ref="$(git symbolic-ref --short --quiet refs/remotes/origin/HEAD)"
+main_branch_candidate="$(basename "$symbolic_ref")"
 
 # If there's only one branch, that's the main branch.
-if [ -z "$GIT_HEAD" ] && git rev-parse --abbrev-ref --branches | wc -l | grep -E -q '^\s*1$'; then
-  GIT_HEAD="$(git rev-parse --abbrev-ref --branches)"
+if [ -z "$main_branch_candidate" ] && git rev-parse --abbrev-ref --branches | wc -l | grep -E -q '^\s*1$'; then
+  main_branch_candidate="$(git rev-parse --abbrev-ref --branches)"
 fi
 
 # If there are no actual branches, then the symbolic-ref for HEAD is the main
 # branch. This seems like it can only happen on a brand new repository, when
 # there aren't any actual commits yet.
-if [ -z "$GIT_HEAD" ] && git rev-parse --abbrev-ref --branches | wc -l | grep -E -q '^\s*0$'; then
-  GIT_HEAD="$(git symbolic-ref --short --quiet HEAD)"
+if [ -z "$main_branch_candidate" ] && git rev-parse --abbrev-ref --branches | wc -l | grep -E -q '^\s*0$'; then
+  main_branch_candidate="$(git symbolic-ref --short --quiet HEAD)"
 fi
 
 # Use the configured defaultBranch.
-if [ -z "$GIT_HEAD" ]; then
-  GIT_HEAD="$(git config --get init.defaultBranch)"
+if [ -z "$main_branch_candidate" ]; then
+  main_branch_candidate="$(git config --get init.defaultBranch)"
 fi
 
 # If all else fails, fallback to "main" as the main branch name.
-echo "${GIT_HEAD:-main}"
+echo "${main_branch_candidate:-main}"

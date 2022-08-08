@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -o errexit
+
 usage="Wrapper for chezmoi.
 
 Usage:
@@ -49,7 +51,8 @@ case "$command" in
     fi
     ;;
   save)
-    save -C "$(chezmoi source-path)" "$@"
+    source_path="$(chezmoi source-path)"
+    save -C "${source_path}" "$@"
     ;;
   *)
     echo-run chezmoi "$command" "$@"

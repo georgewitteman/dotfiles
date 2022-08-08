@@ -17,7 +17,11 @@ fi
 op_signin
 
 echo export CLOUDFLARE_EMAIL={{ .email | quote }}
+# shellcheck disable=SC2312
 echo export CLOUDFLARE_API_KEY="$(op get item dyulx35qcveyzpgdij2j3vvd4y --fields password)"
+# shellcheck disable=SC2312
 echo export DNSIMPLE_TOKEN="$(op get item rbb4jo4wmrfdjjus6gqjsymm7a --fields token)"
+# shellcheck disable=SC2312
 echo export DNSIMPLE_ACCOUNT="$(op get item rbb4jo4wmrfdjjus6gqjsymm7a --fields account)"
+# shellcheck disable=SC2312
 echo export GITHUB_TOKEN="$(op get item sjrmyfeywna6zje7uf7oekhnoi --fields password)"

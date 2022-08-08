@@ -28,7 +28,7 @@ files() {
   # each symbolic link to be those of the file referenced by the link, not the
   # link itself. If the referenced file does not exist, the file information
   # and type will be for the link itself.
-  find -L "$path" -type f -not -path '*/\.git/*' -not -name 'tags'
+  find -L "$path" -type f -not -name '*.swp' -not -path '*/\.git/*' -not -name 'tags'
 }
 
 lint_file() {

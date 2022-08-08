@@ -42,11 +42,13 @@ fi
 
 absolute_path() {
   if [ -d "$1" ]; then
+    # shellcheck disable=SC2312
     echo "$(
       cd "$1"
       pwd
     )"
   elif [ -e "$1" ]; then
+    # shellcheck disable=SC2312
     echo "$(
       cd "$(dirname "$1")"
       pwd

@@ -8,7 +8,7 @@ USAGE="usage: $(basename "$0") [--max-num=NUM] [COUNT]"
 max_id=9999
 count=1
 
-while [ $# -gt 0 ]; do
+while [[ $# -gt 0 ]]; do
   case "$1" in
     -[[:alnum:]][[:alnum:]]*)
       # Joined short args (e.g. -abc)
@@ -21,7 +21,7 @@ while [ $# -gt 0 ]; do
       _arg="${1%%="${_value}"}"
       ;;
   esac
-  if [ -n "${_arg:-}${_value:-}" ]; then
+  if [[ -n "${_arg:-}${_value:-}" ]]; then
     shift
     set -- "$_arg" "$_value" "$@"
   fi
@@ -78,10 +78,10 @@ random_noun() {
 }
 
 generate() {
-  adjective="$(random_adjective)"
-  noun="$(random_noun)"
+  adjective="$(set -e; random_adjective)"
+  noun="$(set -e; random_noun)"
 
-  if [ "$max_id" -gt 0 ]; then
+  if [[ "$max_id" -gt 0 ]]; then
     echo "${adjective}-${noun}-$(printf "%0${#max_id}d" "$((RANDOM % (max_id + 1)))")"
     return $?
   fi
@@ -90,7 +90,7 @@ generate() {
 }
 
 i=0
-while [ "$i" -lt "$count" ]; do
+while [[ "$i" -lt "$count" ]]; do
   generate
   i=$((i + 1))
 done

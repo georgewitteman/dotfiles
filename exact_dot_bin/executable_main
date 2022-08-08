@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 set -o errexit
 
@@ -45,11 +45,12 @@ done
 
 main_branch="$(get-main-branch)"
 start_point="$(git rev-parse --abbrev-ref --symbolic-full-name "${main_branch}@{upstream}")"
+toplevel="$(git rev-parse --show-toplevel)"
 
 # Check if we're in a "worktree" work tree (i.e. not root repository).
-if [ -f "$(git rev-parse --show-toplevel)/.git" ]; then
+if [ -f "${toplevel}/.git" ]; then
   # The main branch name is the wortree directory name + '-main'.
-  main_branch="$(basename "$(git rev-parse --show-toplevel)")-${main_branch}"
+  main_branch="$(basename "${toplevel}")-${main_branch}"
   # Check if the branch exists, creating it if it doesn't.
   if ! git show-ref --quiet --verify "refs/heads/${main_branch}"; then
     # --track=inherit means to copy the upstream configuration of the start-point branch
