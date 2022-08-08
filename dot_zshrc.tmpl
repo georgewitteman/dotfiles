@@ -33,10 +33,12 @@ zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' verbose true
 # Keep directories and files separated.
 zstyle ':completion:*' list-dirs-first true
-# Try first simple completion and, if that generates no matches,
-# case-insensitive completion.
+# https://zsh.sourceforge.io/Guide/zshguide06.html#l170
 # https://zsh.sourceforge.io/Doc/Release/Completion-System.html#index-matcher_002dlist_002c-completion-style
-zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}'
+# 1. Simple completion
+# 2. Case insensitive completion
+# 3. Partial word completion
+zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'l:|=* r:|=*'
 
 # https://github.com/zsh-users/zsh/blob/master/Completion/compinit
 autoload -Uz compinit
