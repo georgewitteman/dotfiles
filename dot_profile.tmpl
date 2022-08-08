@@ -32,6 +32,16 @@ if [ -z "$PATH" ]; then
   export PATH="/sbin:/bin:/usr/sbin:/usr/bin"
 fi
 
+# Check if we're in zsh (.zprofile is symlinked to .profile) and that we're
+# running in the Apple Terminal. We check for Apple Terminal since the file
+# that contains the code we're trying to disable is in the
+# /etc/zshrc_Apple_Terminal file and that file is only loaded if we're in the
+# Apple Terminal.
+if [ -n "$ZSH_VERSION" ] && [ "$TERM_PROGRAM" = "Apple_Terminal" ]; then
+  # Disable shell save/restore mechanism. See /etc/zshrc_Apple_Terminal
+  SHELL_SESSIONS_DISABLE=1
+fi
+
 # Always add things to PATH so that I can use them directly after installing
 # without needing to restart my terminal.
 PATH="/usr/local/sbin:${PATH}"
