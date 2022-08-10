@@ -1,3 +1,4 @@
 .Brewfile
 .cache/fast-syntax-highlighting
 .config/sh
+.config/zsh
