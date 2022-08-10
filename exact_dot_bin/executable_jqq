@@ -1,7 +1,10 @@
 #!/bin/sh
 
+set -o errexit
+
 if test ! -t 0; then
   jq --color-output --unbuffered --raw-input --raw-output '. as $raw | try fromjson catch $raw'
 else
   printf "jq --color-output --unbuffered --raw-input --raw-output '. as \$raw | try fromjson catch \$raw'" | pbcopy
+  echo "ok: copied jq command to clipboard"
 fi
