@@ -2,14 +2,11 @@
 {{- $transient := (index . "is_transient") -}}
 
 {{- if and stdinIsATTY (not (env "CI")) (not (env "GITPOD_HOST")) -}}
-{{- if kindIs "invalid" $work -}}
-{{- $work = promptBool "Is this a work computer (y/n)" -}}
-{{- end -}}
-{{- if kindIs "invalid" $transient -}}
-{{- $transient = promptBool "Is this a transient machine (y/n)" -}}
-{{- end -}}
+{{- $work = promptBoolOnce . "is_work" "Is this a work computer (y/n)" -}}
+{{- $transient = promptBoolOnce . "is_transient" "Is this a transient machine (y/n)" -}}
 {{- end -}}
 
+{{- $work_dict := default dict (index . "work") }}
 {{- $work_email := index (default dict (index . "work")) "email" -}}
 {{- $work_path := index (default dict (index . "work")) "path" -}}
 {{- $work_terms := index (default dict (index . "work")) "terms" -}}
@@ -17,18 +14,10 @@
 {{- $work_git_includeif := index (default dict (index . "work")) "git_includeif" -}}
 
 {{- if $work -}}
-{{- if not $work_email -}}
-{{- $work_email = promptString "What is your work email" -}}
-{{- end -}}
-{{- if not $work_path -}}
-{{- $work_path = promptString "Where are your work repositories located" -}}
-{{- end -}}
-{{- if not $work_ssh_config -}}
-{{- $work_ssh_config = promptString "What is the relative path for the ssh config" -}}
-{{- end -}}
-{{- if not $work_git_includeif -}}
-{{- $work_git_includeif = promptString "What is the includeIf for work repositories" -}}
-{{- end -}}
+{{- $work_email = promptStringOnce $work_dict "email" "What is your work email" -}}
+{{- $work_path = promptStringOnce $work_dict "path" "Where are your work repositories located" -}}
+{{- $work_ssh_config = promptStringOnce $work_dict "ssh_config" "What is the relative path for the ssh config" -}}
+{{- $work_git_includeif = promptStringOnce $work_dict "git_includeif" "What is the includeIf for work repositories" -}}
 {{- end -}}
 
 sourceDir: {{ .chezmoi.sourceDir | quote }}
