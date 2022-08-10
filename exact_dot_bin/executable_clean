@@ -17,6 +17,11 @@ while getopts y f; do
   shift
 done
 
+if [ $# -eq 0 ]; then
+  echo "$USAGE"
+  exit 1
+fi
+
 clean_pycache() {
   echo "cleaning __pycache__ and .pyc files"
   "$cmd" fd --hidden --no-ignore '^__pycache__$' --exec rm -rf
