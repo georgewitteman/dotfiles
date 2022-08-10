@@ -7,7 +7,7 @@ if [ -z "$tag" ]; then
   exit 1
 fi
 
-if ! in-git-repo; then
+if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   echo-err "Not in git repository."
   exit 128
 fi

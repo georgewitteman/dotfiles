@@ -2,7 +2,7 @@
 
 set -o errexit
 
-if ! in-git-repo; then
+if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   echo-err "Not in a git repository."
   exit 128
 fi

@@ -1,9 +1,0 @@
-#!/bin/sh
-
-set -o errexit
-
-status="$(git status --porcelain)"
-
-if [ -n "$status" ]; then
-  exit 1
-fi

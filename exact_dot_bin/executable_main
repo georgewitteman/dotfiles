@@ -7,7 +7,7 @@ die() {
   exit "$1"
 }
 
-if ! in-git-repo; then
+if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   die 128 "Not in a git repository."
 fi
 
