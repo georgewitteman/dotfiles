@@ -1,0 +1,50 @@
+#!/bin/sh
+
+set -o errexit
+
+USAGE="usage: $(basename "$0") [-y] (pycache|ds_store|venv)"
+
+cmd=safe-run
+
+while getopts y f; do
+  case "$f" in
+    y) cmd=echo-run ;;
+    \?)
+      echo "$USAGE"
+      exit 1
+      ;;
+  esac
+  shift
+done
+
+clean_pycache() {
+  echo "cleaning __pycache__ and .pyc files"
+  "$cmd" fd --hidden --no-ignore '^__pycache__$' --exec rm -rf
+  "$cmd" fd --hidden --no-ignore '.pyc$' --exec rm -rf
+}
+
+clean_ds_store() {
+  echo "cleaning .DS_Store files"
+  "$cmd" fd --hidden --no-ignore '^.DS_Store$' --exec rm -rf
+}
+
+clean_venvs() {
+  echo "cleaning venvs"
+  fd --type file --full-path '^.*/bin/activate$' --hidden --no-ignore --exec "dirname" "{//}" | tee /dev/stderr | xargs -o "$cmd" rm -rf
+}
+
+for kind in "$@"; do
+  case "$kind" in
+    pycache) fn=clean_pycache ;;
+    ds_store | dsstore) fn=clean_ds_store ;;
+    venv | venvs) fn=clean_venvs ;;
+    *)
+      echo "error: cannot clean ${kind}" >&2
+      exit 1
+      ;;
+  esac
+
+  if ! eval "${fn}"; then
+    echo "error: failed to clean ${kind}" >&2
+  fi
+done

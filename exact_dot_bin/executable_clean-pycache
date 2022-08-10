@@ -1,4 +1,0 @@
-#!/bin/sh
-
-safe-run fd --hidden --no-ignore '^__pycache__$' --exec rm -rf
-safe-run fd --hidden --no-ignore '.pyc$' --exec rm -rf

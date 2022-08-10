@@ -1,3 +1,0 @@
-#!/bin/sh
-
-fd --type file --full-path '^.*/bin/activate$' --hidden --no-ignore --exec "dirname" "{//}" | tee /dev/stderr | xargs -o safe-run rm -rf
