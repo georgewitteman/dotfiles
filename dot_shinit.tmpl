@@ -124,11 +124,11 @@ op_signin() {
     echo "command not found: op"
     return 127
   fi
-  if ! op account get >/dev/null 2>&1; then
+  if ! op whoami --account my.1password.com >/dev/null 2>&1; then
     # shellcheck disable=SC2016
     echo_eval 'eval "$(op signin)"'
     # Verify we are signed in now
-    op account get >/dev/null 2>&1
+    op whoami --account my.1password.com >/dev/null 2>&1
   fi
 }
 
