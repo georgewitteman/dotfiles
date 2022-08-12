@@ -108,8 +108,8 @@ zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
 bindkey '^P' up-line-or-beginning-search
 bindkey '^N' down-line-or-beginning-search
-bindkey "^[[A" up-line-or-beginning-search
-bindkey "^[[B" down-line-or-beginning-search
+bindkey "^[[A" up-line-or-beginning-search # up
+bindkey "^[[B" down-line-or-beginning-search # down
 
 autoload -U edit-command-line
 zle -N edit-command-line
@@ -133,7 +133,7 @@ bindkey '^[b' backward-word # alt-b
 bindkey '^[d' kill-word # alt-d
 bindkey '^[#' pound-insert # alt-#
 bindkey '^[[Z' reverse-menu-complete # shift-tab
-bindkey '^[.' insert-last-word
+bindkey '^[.' insert-last-word # alt-.
 
 if command -v fzf &>/dev/null && command -v fd &>/dev/null; then
   fzf-file-widget() {

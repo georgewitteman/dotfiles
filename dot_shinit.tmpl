@@ -418,6 +418,7 @@ work() {
   fi
   cd "$1/$2" || return $?
 }
+
 if ! command -v tailscale >/dev/null 2>&1; then
   if [ -x "/Applications/Tailscale.app/Contents/MacOS/Tailscale" ]; then
     tailscale() {
