@@ -16,9 +16,26 @@ if [ -z "$EDITOR" ]; then
 fi
 
 # Fixes gpg when "GPG Suite" is not installed (i.e. gpg is installed from homebrew)
-if [ -n "$TTY" ]; then
-  export GPG_TTY="$TTY"
+#
+# From the Docs
+# =============
+#
+# You should always add the following lines to your .bashrc or whatever
+# initialization file is used for all shell invocations:
+#
+#     GPG_TTY=$(tty)
+#     export GPG_TTY
+#
+# It is important that this environment variable always reflects the output of
+# the tty command.  For W32 systems this option is not required.
+if [ -z "$GPG_TTY" ]; then
+  if [ -n "$TTY" ]; then
+    GPG_TTY="$TTY"
+  else
+    GPG_TTY="$(tty)"
+  fi
 fi
+export GPG_TTY
 
 export LS_COLORS="di=1:fi=0:ln=31:pi=5:so=5:bd=5:cd=5:or=31"
 
