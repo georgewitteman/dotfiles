@@ -27,8 +27,8 @@ zstyle ':completion:*' completer _expand_alias _complete
 # zstyle ':completion:*' completer _expand _complete _ignored _correct _approximate
 # Use menu for autocompletion when number of items >= 2.
 zstyle ':completion:*' menu select=2
-# Colors for files. Uses the $LSCOLORS environment variable.
-zstyle ':completion:*' list-colors ${(s.:.)LSCOLORS}
+# Colors for files. Uses the $LS_COLORS environment variable.
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 # Verbose completion results.
 zstyle ':completion:*' verbose true
 # Keep directories and files separated.

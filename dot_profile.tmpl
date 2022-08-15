@@ -37,11 +37,7 @@ if [ -z "$GPG_TTY" ]; then
 fi
 export GPG_TTY
 
-# `man ls`: The value of this variable describes what color to use for which
-# attribute when colors are enabled with CLICOLOR or COLORTERM.  This string is
-# a concatenation of pairs of the format fb, where f is the foreground color
-# and b is the background color.
-export LSCOLORS="di=1:fi=0:ln=31:pi=5:so=5:bd=5:cd=5:or=31"
+export LS_COLORS="di=1:fi=0:ln=31:pi=5:so=5:bd=5:cd=5:or=31"
 
 if [ -S "${HOME}/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock" ]; then
   # `man ssh`: SSH_AUTH_SOCK Identifies the path of a UNIX-domain socket used
