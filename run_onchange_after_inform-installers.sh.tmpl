@@ -4,7 +4,7 @@ set -o errexit
 
 if ! git -C {{ .chezmoi.sourceDir }} remote -v | grep -q "git@github.com:"; then
   echo "Use ssh repo URL for dotfiles repo:"
-  echo '  $ (cd "$({{ .chezmoi.executable }} source-path)" && git-https-to-ssh)'
+  echo '  $ {{ .chezmoi.executable }} git -- remote set-url origin git@github.com:georgewitteman/dotfiles.git'
   echo
 fi
 
