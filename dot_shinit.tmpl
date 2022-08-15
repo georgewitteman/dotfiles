@@ -143,24 +143,6 @@ remove_prefix_from_path() {
   done
 }
 
-remove_from_path() {
-  while [ $# -gt 0 ]; do
-    while true; do
-      case $PATH in
-        "$1")
-          unset PATH
-          break
-          ;;
-        "$1:"*) PATH=${PATH#"$1:"} ;;
-        *":$1") PATH=${PATH%":$1"} ;;
-        *":$1:"*) PATH=${PATH%%":$1:"*}:${PATH#*":$1:"} ;;
-        *) break ;;
-      esac
-    done
-    shift
-  done
-}
-
 autoload_script() {
   # usage: autoload_script func_name /path/to/func_name
 
