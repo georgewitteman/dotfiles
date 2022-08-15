@@ -40,18 +40,18 @@ jobs:
       - run: apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install --yes git
         if: startsWith(matrix.image, 'ubuntu')
       - run: curl --fail --silent --show-error --location "https://git.io/chezmoi" | sh -s -- -b "${HOME}/.local/bin" -d init --apply georgewitteman --branch "${GITHUB_REF#refs/heads/}"
+      - uses: extractions/setup-just@v1
+        # Docs: In rare circumstances you might get rate limiting errors, this
+        # is because this workflow has to make requests to GitHub API in order
+        # to list available releases. If this happens you can set the
+        # GITHUB_TOKEN environment variable.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: ls -la $HOME
       - run: |
-          set -o errexit
-          set -o xtrace
-          for sh in sh bash dash zsh ksh; do
-            if command -v "$sh"; then
-              "$sh" -xlic exit
-              "$sh" -xlc exit
-              "$sh" -xic exit
-              "$sh" -xeuc exit
-            fi
-          done
+          PATH="${HOME}/.local/bin:${PATH}"
+          cd "${HOME}/.local/share/chezmoi"
+          just verbose=true sanity
 
   lint:
     strategy:
@@ -72,4 +72,4 @@ jobs:
       - run: 'curl -sS https://webinstall.dev/shellcheck | bash'
       - run: rm -rf ~/.nvm
       - run: ./install.sh
-      - run: 'set -x; . ${HOME}/.profile && just lint'
+      - run: 'set -x; . ${HOME}/.profile && just verbose=true lint'
