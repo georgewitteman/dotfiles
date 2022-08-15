@@ -35,7 +35,7 @@ clean_ds_store() {
 
 clean_venvs() {
   echo "cleaning venvs"
-  find "$PWD" -type f -path '*/bin/activate' | while read line; do dirname "$(dirname "$line")"; done | xargs -o "$cmd" rm -rf
+  find "$PWD" -type f -path '*/bin/activate' | while read -r line; do dirname "$(dirname "$line")"; done | xargs -o "$cmd" rm -rf
 }
 
 for kind in "$@"; do
