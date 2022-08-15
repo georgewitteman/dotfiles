@@ -41,8 +41,19 @@ jobs:
         if: startsWith(matrix.image, 'ubuntu')
       - run: curl --fail --silent --show-error --location "https://git.io/chezmoi" | sh -s -- -b "${HOME}/.local/bin" -d init --apply georgewitteman --branch "${GITHUB_REF#refs/heads/}"
       - run: ls -la $HOME
+      - run: |
+          set -o errexit
+          set -o xtrace
+          for sh in sh bash dash zsh ksh; do
+            if command -v "$sh"; then
+              "$sh" -xlic exit
+              "$sh" -xlc exit
+              "$sh" -xic exit
+              "$sh" -xeuc exit
+            fi
+          done
 
-  shfmt:
+  lint:
     strategy:
       fail-fast: false
       matrix:
@@ -50,20 +61,15 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
+      - uses: extractions/setup-just@v1
+        # Docs: In rare circumstances you might get rate limiting errors, this
+        # is because this workflow has to make requests to GitHub API in order
+        # to list available releases. If this happens you can set the
+        # GITHUB_TOKEN environment variable.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: 'curl -sS https://webinstall.dev/shfmt | bash'
-      - run: rm -rf ~/.nvm
-      - run: ./install.sh
-      - run: ". ${HOME}/.profile && ${HOME}/.bin/shfmt-check-all --verbose --debug"
-
-  shellcheck:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macOS-latest]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v3
       - run: 'curl -sS https://webinstall.dev/shellcheck | bash'
       - run: rm -rf ~/.nvm
       - run: ./install.sh
-      - run: ". ${HOME}/.profile && ${HOME}/.bin/shellcheck-all --verbose --debug"
+      - run: 'set -x; . ${HOME}/.profile && just lint'

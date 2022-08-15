@@ -32,7 +32,7 @@ if [ -z "$GPG_TTY" ]; then
   if [ -n "$TTY" ]; then
     GPG_TTY="$TTY"
   else
-    GPG_TTY="$(tty)"
+    GPG_TTY="$(tty || true)"
   fi
 fi
 export GPG_TTY

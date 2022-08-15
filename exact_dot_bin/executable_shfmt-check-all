@@ -1,3 +1,0 @@
-#!/bin/sh
-
-"${HOME}/.bin/get-files-to-lint" "$@" | xargs shfmt -i 2 -ci -d -s
