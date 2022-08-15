@@ -104,6 +104,28 @@ login_shell() {
   echo_run exec login -f "$USER"
 }
 
+# Fixes gpg when "GPG Suite" is not installed (i.e. gpg is installed from homebrew)
+#
+# From the Docs
+# =============
+#
+# You should always add the following lines to your .bashrc or whatever
+# initialization file is used for all shell invocations:
+#
+#     GPG_TTY=$(tty)
+#     export GPG_TTY
+#
+# It is important that this environment variable always reflects the output of
+# the tty command.  For W32 systems this option is not required.
+if [ -z "$GPG_TTY" ]; then
+  if [ -n "$TTY" ]; then
+    GPG_TTY="$TTY"
+  else
+    GPG_TTY="$(tty || true)"
+  fi
+fi
+export GPG_TTY
+
 # `man ls`: auto will make ls output escape sequences based on termcap(5), but
 # only if stdout is a tty and either the -G flag is specified or the COLORTERM
 # environment variable is set and not empty.
