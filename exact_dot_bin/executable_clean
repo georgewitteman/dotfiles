@@ -24,18 +24,18 @@ fi
 
 clean_pycache() {
   echo "cleaning __pycache__ and .pyc files"
-  "$cmd" fd --hidden --no-ignore '^__pycache__$' --exec rm -rf
-  "$cmd" fd --hidden --no-ignore '.pyc$' --exec rm -rf
+  "$cmd" find "$PWD" -type d -a -name '__pycache__' -print -delete
+  "$cmd" find "$PWD" -type f -name '*.pyc' -print -delete
 }
 
 clean_ds_store() {
   echo "cleaning .DS_Store files"
-  "$cmd" fd --hidden --no-ignore '^.DS_Store$' --exec rm -rf
+  "$cmd" find "$PWD" -type f -name ".DS_Store" -print -delete
 }
 
 clean_venvs() {
   echo "cleaning venvs"
-  fd --type file --full-path '^.*/bin/activate$' --hidden --no-ignore --exec "dirname" "{//}" | tee /dev/stderr | xargs -o "$cmd" rm -rf
+  find "$PWD" -type f -path '*/bin/activate' | while read line; do dirname "$(dirname "$line")"; done | xargs -o "$cmd" rm -rf
 }
 
 for kind in "$@"; do
