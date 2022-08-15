@@ -8,9 +8,9 @@ if ! git -C {{ .chezmoi.sourceDir }} remote -v | grep -q "git@github.com:"; then
   echo
 fi
 
-# Installers hash: {{ glob ".bin/install*" | join "\n" | sha256sum }}
+# Installers hash: {{ glob (joinPath .private_bin "install*") | join "\n" | sha256sum }}
 echo "You can now run specific installers for any programs you need:"
-ls "$HOME"/.bin/install* | xargs -n 1 basename | xargs -n 1 printf "  $ %s\n"
+ls "$HOME"/{{ .private_bin }}/install* | xargs -n 1 basename | xargs -n 1 printf "  $ %s\n"
 
 echo
 echo "Restart your terminal:"
