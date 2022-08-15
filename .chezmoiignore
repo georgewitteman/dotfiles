@@ -12,5 +12,6 @@
 Dockerfile
 README.md
 install.sh
+justfile
 tags
 tags.lock
