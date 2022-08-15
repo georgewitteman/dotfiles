@@ -27,8 +27,6 @@ zstyle ':completion:*' completer _expand_alias _complete
 # zstyle ':completion:*' completer _expand _complete _ignored _correct _approximate
 # Use menu for autocompletion when number of items >= 2.
 zstyle ':completion:*' menu select=2
-# Colors for files. Uses the $LS_COLORS environment variable.
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 # Verbose completion results.
 zstyle ':completion:*' verbose true
 # Keep directories and files separated.
@@ -39,6 +37,16 @@ zstyle ':completion:*' list-dirs-first true
 # 2. Case insensitive completion
 # 3. Partial word completion
 zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'l:|=* r:|=*'
+# Colors for files
+# - https://zsh.sourceforge.io/Doc/Release/Zsh-Modules.html#The-zsh_002fcomplist-Module
+# - https://zsh.sourceforge.io/Doc/Release/Completion-System.html
+# - https://gist.github.com/thomd/7667642
+# - I'm setting this to the same as the default for macOS `ls`. I got the
+# default (exfxcxdxbxegedabagacad) from `man ls` and then used [this
+# website](https://geoff.greer.fm/lscolors/) to convert that to LS_COLORS
+# format and then used `echo ${(s.:.)LS_COLORS}` to separate that out into
+# spaces.
+zstyle ':completion:*' list-colors "di=34" "ln=35" "so=32" "pi=33" "ex=31" "bd=34;46" "cd=34;43" "su=30;41" "sg=30;46" "tw=30;42" "ow=30;43"
 
 # https://github.com/zsh-users/zsh/blob/master/Completion/compinit
 autoload -Uz compinit
