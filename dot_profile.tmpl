@@ -37,6 +37,10 @@ if [ -n "$ZSH_VERSION" ] && [ "$TERM_PROGRAM" = "Apple_Terminal" ]; then
 fi
 
 {{ if eq .chezmoi.os "darwin" }}
+# From installer: ==> Next steps:
+# - Run these two commands in your terminal to add Homebrew to your PATH:
+#     echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/<user>/.zprofile
+#     eval "$(/opt/homebrew/bin/brew shellenv)"
 export HOMEBREW_PREFIX="/opt/homebrew";
 export HOMEBREW_CELLAR="/opt/homebrew/Cellar";
 export HOMEBREW_REPOSITORY="/opt/homebrew";
