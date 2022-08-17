@@ -27,11 +27,3 @@ brew "universal-ctags"
 brew "vim"
 brew "wget"
 EOF
-
-if ! command -v "aws" >/dev/null 2>&1; then
-  echo-run brew install awscli
-fi
-
-if ! ls /usr/local/Cellar/*openssl*; then
-  echo-run brew install openssl
-fi
