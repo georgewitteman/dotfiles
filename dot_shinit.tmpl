@@ -416,8 +416,10 @@ if ! command -v tailscale >/dev/null 2>&1; then
 fi
 
 {{- if .is_work }}
-# shellcheck source=/dev/null
-. {{ joinPath .work.path "dotfiles" "init.sh" | quote }}
+if [ -f {{ joinPath .work.path "dotfiles/init.sh" | quote }} ]; then
+  # shellcheck source=/dev/null
+  . {{ joinPath .work.path "dotfiles/init.sh" | quote }}
+fi
 {{- end }}
 
 {{ template "nvm/init.sh" }}

@@ -61,8 +61,10 @@ PATH="${HOME}/.krew/bin:${PATH}"
 {{- if .is_work }}
 PATH="{{ joinPath .work.path "dotfiles" "bin"}}:${PATH}"
 
-# shellcheck source=/dev/null
-. {{ joinPath .work.path "dotfiles" "profile.sh" | quote }}
+if [ -f {{ joinPath .work.path "dotfiles/profile.sh" | quote }} ]; then
+  # shellcheck source=/dev/null
+  . {{ joinPath .work.path "dotfiles/profile.sh" | quote }}
+fi
 {{- end }}
 
 {{ template "nvm/profile.sh" }}
