@@ -1,15 +1,5 @@
-{{- if and .is_work (not .is_transient) }}
-{{- if stat (joinPath .work.path .work.ssh_config) }}
-{{ include (joinPath .work.path .work.ssh_config) | replace "GREP_FOR_THIS" "georgewitteman" }}
-Host *
-  # https://serverfault.com/questions/515604/ssh-client-option-to-suppress-server-banners
-  LogLevel error
-{{- end }}
-{{- end }}
-
 {{- $filename := (joinPath .chezmoi.homeDir "Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock") }}
 {{- if and (stat $filename) (eq (default 0 (get (stat $filename) "mode")) 16777600) }}
-
 Host *
   # https://developer.1password.com/docs/ssh/get-started#step-4-configure-your-ssh-or-git-client
   IdentityAgent {{ $filename | quote }}
