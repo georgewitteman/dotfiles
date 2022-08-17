@@ -103,6 +103,9 @@
 # Use proper indentation formatting for python
 {{- template "github-vim-plugin" "Vimjas/vim-python-pep8-indent" }}
 
+# Adds support for justfile syntax
+{{- template "github-vim-plugin" "NoahTheDuke/vim-just" }}
+
 # Commenting these out so that when I add them back I can write down what they
 # do and why I have them
 # { {- template "github-vim-plugin" (list "gisphm/vim-gitignore" "master") }}
