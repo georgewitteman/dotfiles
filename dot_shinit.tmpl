@@ -391,6 +391,10 @@ dotfiles() {
 work() {
   if [ -d "/opt/workspace" ]; then
     set -- "/opt/workspace" "$(printf "%s/" "$@")"
+  {{- if .is_work }}
+  elif [ -d {{ .work.path | quote }} ]; then
+    set -- {{ .work.path | quote }} "$(printf "%s/" "$@")"
+  {{- end }}
   elif [ -d "${HOME}/Code" ]; then
     set -- "${HOME}/Code" "$(printf "%s/" "$@")"
   elif [ -d "/workspace" ]; then
