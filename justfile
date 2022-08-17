@@ -16,16 +16,15 @@ shellcheck: apply
 sanity: apply
   #!/bin/sh
   set -o errexit
+  set -o xtrace
   if {{ verbose }}; then
     set -- -x
   fi
   for sh in sh bash dash zsh ksh; do
-    set -x
     if command -v "$sh"; then
       "$sh" "$@" -lic exit
       "$sh" "$@" -lc exit
       "$sh" "$@" -ic exit
       "$sh" "$@" -euc exit
     fi
-    set +x
   done
