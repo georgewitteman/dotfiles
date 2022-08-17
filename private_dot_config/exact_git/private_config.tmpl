@@ -20,10 +20,10 @@
 	# https://stackoverflow.com/q/27417656
 	conflictstyle = diff3
 [commit]
-{{- if (and (lookPath "gpg") (eq (output "sh" "-c" (cat "gpg --list-secret-keys " .gpgkey " >/dev/null 2>&1 || echo false")) "")) }}
+{{- if (and (lookPath "gpg") (eq (output "sh" "-c" (cat "gpg --list-secret-keys " (quote .gpgkey) " >/dev/null 2>&1 || echo false")) "")) }}
 	gpgsign = true
 {{- end }}
-{{- if .is_work }}
+{{- if and .is_work (index .work "git_includeif") }}
 [includeIf {{ .work.git_includeif | quote }}]
 	path = ~/.config/git/work
 {{- end }}

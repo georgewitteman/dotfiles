@@ -2,8 +2,10 @@
 # vim: ft=gitconfig
 [user]
 	email = {{ .work.email | quote }}
+{{- if .work.signingkey }}
 	signingKey = {{ .work.signingkey | quote }}
-{{- if (and (lookPath "gpg") (eq (output "sh" "-c" (cat "gpg --list-secret-keys " .work.signingkey " >/dev/null 2>&1 || echo false")) "")) }}
+{{- end }}
+{{- if (and (lookPath "gpg") (eq (output "sh" "-c" (cat "gpg --list-secret-keys " (quote .work.signingkey) " >/dev/null 2>&1 || echo false")) "")) }}
 [commit]
 	gpgsign = true
 {{- end }}
