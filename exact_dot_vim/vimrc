@@ -240,9 +240,9 @@ set showcmd
 set fillchars+=vert:│
 
 " Minimal number of columns for the current window (default 20)
-set winwidth=90
+set winwidth=70
 " Minimal number of rows for the current window (default 1)
-set winheight=20
+set winheight=10
 " The minimal height of a window, when it's not the current window. This is a
 " hard minimum, windows will never become smaller (default 1, 0-3 reasonable)
 " FIXME: Commented out to fix issue on raspberry pi under neovim
