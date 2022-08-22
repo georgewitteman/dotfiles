@@ -169,3 +169,6 @@
 
 # Adds shortcuts for surrounding items with things
 {{- template "github-vim-plugin" "tpope/vim-surround" }}
+
+# Support for the Prisma ORM
+{{- template "github-vim-plugin" "pantharshit00/vim-prisma" }}
