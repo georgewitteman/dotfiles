@@ -23,7 +23,3 @@
 {{- if (and (lookPath "gpg") (eq (output "sh" "-c" (cat "gpg --list-secret-keys " (quote .gpgkey) " >/dev/null 2>&1 || echo false")) "")) }}
 	gpgsign = true
 {{- end }}
-{{- if and .is_work (index .work "git_includeif") }}
-[includeIf {{ .work.git_includeif | quote }}]
-	path = ~/.config/git/work
-{{- end }}
