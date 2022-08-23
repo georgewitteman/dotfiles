@@ -87,6 +87,8 @@ style = 'fg:red bold'
 
 [shell]
 disabled = false
+bash_indicator = 'bash'
+fish_indicator = 'fish'
 
 [shlvl]
 disabled = false
