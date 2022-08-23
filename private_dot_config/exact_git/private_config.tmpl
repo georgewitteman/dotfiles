@@ -15,8 +15,8 @@
 [merge]
 	# https://blog.nilbus.com/take-the-pain-out-of-git-conflict-resolution-use-diff3/
 	# https://stackoverflow.com/q/27417656
-	conflictstyle = diff3
+	conflictStyle = diff3
 [commit]
 {{- if (and (lookPath "gpg") (eq (output "sh" "-c" (cat "gpg --list-secret-keys " (quote .gpgkey) " >/dev/null 2>&1 || echo false")) "")) }}
-	gpgsign = true
+	gpgSign = true
 {{- end }}
