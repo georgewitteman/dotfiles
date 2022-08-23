@@ -1,8 +1,13 @@
 # vim: ft=gitconfig
-# NOTE: user.email is not configured to force configuration of each repoisitory
 [user]
 	name = {{ .name | quote }}
+	# NOTE: user.email is not configured to force configuration
+	# of each repoisitory.
 	signingKey = {{ .gpgkey | quote }}
+	# Instruct Git to avoid trying to guess defaults for
+	# user.email and user.name, and instead retrieve the values
+	# only from the configuration.
+	useConfigOnly = true
 [init]
 	defaultBranch = main
 [pull]
