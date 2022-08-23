@@ -12,7 +12,11 @@ export LANG="${LANG:-en_US.UTF-8}"
 
 # `man environ`: Default editor name.
 if [ -z "$EDITOR" ]; then
-  export EDITOR="vim"
+  if [ -n "$REMOTE_CONTAINERS" ] && command -v code >/dev/null 2>&1; then
+    export EDITOR="code"
+  else
+    export EDITOR="vim"
+  fi
 fi
 
 if [ -S "${HOME}/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock" ]; then
