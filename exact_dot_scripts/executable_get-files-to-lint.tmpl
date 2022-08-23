@@ -70,6 +70,6 @@ fi
 
 for file in $(files {{ joinPath .chezmoi.homeDir .private_bin | quote }}) \
   ~/.shinit ~/.profile ~/.bashrc ~/.bash_profile \
-  $(files ~/.config/git){{ if .is_work }} $(files {{ joinPath .work.path "dotfiles" | quote }}){{ end }}; do
+  $(files ~/.config/git); do
   lint_path "$file"
 done

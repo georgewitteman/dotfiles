@@ -397,29 +397,6 @@ dotfiles() {
   esac
 }
 
-work() {
-  if [ -d "/opt/workspace" ]; then
-    set -- "/opt/workspace" "$(printf "%s/" "$@")"
-  {{- if .is_work }}
-  elif [ -d {{ .work.path | quote }} ]; then
-    set -- {{ .work.path | quote }} "$(printf "%s/" "$@")"
-  {{- end }}
-  elif [ -d "${HOME}/Code" ]; then
-    set -- "${HOME}/Code" "$(printf "%s/" "$@")"
-  elif [ -d "/workspace" ]; then
-    set -- "/workspace" "$(printf "%s/" "$@")"
-  else
-    echo-err "No workspace set"
-    return 1
-  fi
-  set -- "$1" "${2%/}" "$1"/*
-  if [ $# -eq 3 ]; then
-    cd "$3/$2" || return $?
-    return $?
-  fi
-  cd "$1/$2" || return $?
-}
-
 if ! command -v tailscale >/dev/null 2>&1; then
   if [ -x "/Applications/Tailscale.app/Contents/MacOS/Tailscale" ]; then
     tailscale() {
@@ -427,13 +404,6 @@ if ! command -v tailscale >/dev/null 2>&1; then
     }
   fi
 fi
-
-{{- if .is_work }}
-if [ -f {{ joinPath .work.path "dotfiles/init.sh" | quote }} ]; then
-  # shellcheck source=/dev/null
-  . {{ joinPath .work.path "dotfiles/init.sh" | quote }}
-fi
-{{- end }}
 
 {{ template "nvm/init.sh" }}
 {{ template "prompt/init.sh" }}

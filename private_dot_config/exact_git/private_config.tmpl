@@ -1,20 +1,12 @@
 # vim: ft=gitconfig
-# This is Git's per-user configuration file.
+# NOTE: user.email is not configured to force configuration of each repoisitory
 [user]
 	name = {{ .name | quote }}
-	email = {{ .email | quote }}
 	signingKey = {{ .gpgkey | quote }}
-{{- if env "GITPOD_WORKSPACE_ID" }}
-[credential]
-	helper = /usr/bin/gp credential-helper
-{{- end }}
 [init]
 	defaultBranch = main
 [pull]
 	ff = "only"
-[core]
-	# https://git-scm.com/docs/git-update-index#_untracked_cache
-	untrackedCache = true
 [merge]
 	# https://blog.nilbus.com/take-the-pain-out-of-git-conflict-resolution-use-diff3/
 	# https://stackoverflow.com/q/27417656
