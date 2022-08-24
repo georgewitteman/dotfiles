@@ -22,7 +22,7 @@ else
   fi
 fi
 
-source_path="$(chezmoi source-path)"
+source_path="$("$chezmoi" source-path)"
 if [ -d "$source_path" ]; then
   echo "warning: chezmoi already set up" >&2
   exit 1
