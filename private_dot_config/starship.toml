@@ -39,7 +39,7 @@ time_format = '%I:%M %P'
 shell = ['dash', '-eu']
 when = 'test -f /.dockerenv || grep -q docker /proc/1/cgroup'
 style = 'bold fg:purple'
-command = 'echo DOCKER'
+command = 'echo 🐳'
 description = 'Identifies that we are in a container'
 
 [custom.venv]
