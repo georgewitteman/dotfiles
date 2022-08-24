@@ -9,6 +9,7 @@
         "terminal.integrated.profiles.linux": {
           "zsh": {
             "path": "zsh",
+            "env": {"SHLVL": "0"},
             "args": ["-li"]
           }
         },
