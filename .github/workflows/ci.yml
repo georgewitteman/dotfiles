@@ -10,9 +10,17 @@ jobs:
       - run: curl --fail --silent --show-error --location "https://git.io/chezmoi" | sh -s -- -b "${HOME}/.local/bin" -d init --apply georgewitteman --branch "${GITHUB_REF#refs/heads/}"
 
   codespaces:
+    strategy:
+      fail-fast: false
+      matrix:
+        image:
+          - mcr.microsoft.com/vscode/devcontainers/base:ubuntu
+          - mcr.microsoft.com/vscode/devcontainers/base:alpine
+          - mcr.microsoft.com/vscode/devcontainers/base:debian
+          - mcr.microsoft.com/vscode/devcontainers/universal
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/vscode/devcontainers/base:ubuntu
+      image: ${{ matrix.image }}
       env:
         CODESPACES: true
     steps:
