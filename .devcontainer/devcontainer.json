@@ -1,8 +1,6 @@
 {
   "name": "dotfiles",
-  "dockerComposeFile": "docker-compose.yml",
-  "service": "debian",
-  "workspaceFolder": "/workspace",
+  "image": "mcr.microsoft.com/vscode/devcontainers/base:debian",
   "remoteUser": "vscode",
   "postCreateCommand": "./install.sh",
   "customizations": {
