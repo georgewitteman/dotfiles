@@ -20,7 +20,7 @@
 {{- if (and (lookPath "gpg") (eq (output "sh" "-c" (cat "gpg --list-secret-keys " (quote .gpgkey) " >/dev/null 2>&1 || echo false")) "")) }}
 	gpgSign = true
 {{- end }}
-{{- $credential_helper := output "git" "config" "credential.helper" | trim }}
+{{- $credential_helper := output "sh" "-c" "git config credential.helper 2>/dev/null || true" | trim }}
 {{- if and (not (empty $credential_helper)) (not (eq $credential_helper "osxkeychain")) }}
 [credential]
 	helper = {{ $credential_helper  | quote }}
