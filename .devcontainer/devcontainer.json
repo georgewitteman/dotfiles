@@ -7,6 +7,9 @@
   "postCreateCommand": "./install.sh",
   "customizations": {
     "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh"
+      },
       "extensions": [
         "bungcip.better-toml"
       ]
