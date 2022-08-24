@@ -2,7 +2,7 @@
 
 set -o errexit
 
-if [ "$REMOTE_CONTAINERS" != "true" ]; then
+if [ "$REMOTE_CONTAINERS" != "true" ] && [ -z "$CODESPACES" ]; then
   echo "skipping dev container setup (not in dev container)" >&2
   exit
 fi
