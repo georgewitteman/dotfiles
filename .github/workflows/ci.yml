@@ -23,6 +23,7 @@ jobs:
       image: ${{ matrix.image }}
       env:
         CODESPACES: true
+      options: "--user root"
     steps:
       - uses: actions/checkout@v3
       - run: ./install.sh
