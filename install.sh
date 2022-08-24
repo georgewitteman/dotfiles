@@ -22,6 +22,12 @@ else
   fi
 fi
 
+source_path="$(chezmoi source-path)"
+if [ -d "$source_path" ]; then
+  echo "warning: chezmoi already set up" >&2
+  exit 1
+fi
+
 # POSIX way to get script's dir: https://stackoverflow.com/a/29834779/12156188
 script_dir="$(cd -P -- "$(dirname -- "$(command -v -- "$0")")" && pwd -P)"
 
