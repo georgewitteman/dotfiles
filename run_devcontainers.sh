@@ -21,10 +21,8 @@ else
 fi
 
 if command -v apt-get >/dev/null 2>&1; then
-  if ! command -v fzf >/dev/null 2>&1; then
-    sudo apt-get update
-    sudo apt-get install fzf
-  fi
+  sudo apt-get update
+  DEBIAN_FRONTEND=noninteractive sudo apt-get install --yes fzf vim universal-ctags ripgrep
 else
   echo "skipping fzf install (no apt-get)" >&2
 fi
