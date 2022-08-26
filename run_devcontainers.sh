@@ -22,7 +22,7 @@ fi
 
 if command -v apt-get >/dev/null 2>&1; then
   sudo apt-get update
-  DEBIAN_FRONTEND=noninteractive sudo apt-get install --yes fzf vim universal-ctags ripgrep
+  DEBIAN_FRONTEND=noninteractive sudo apt-get install --yes fzf vim universal-ctags ripgrep fd-find
 else
   echo "skipping fzf install (no apt-get)" >&2
 fi
