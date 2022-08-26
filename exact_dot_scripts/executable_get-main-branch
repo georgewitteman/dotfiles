@@ -8,6 +8,19 @@ fi
 symbolic_ref="$(git symbolic-ref --short --quiet refs/remotes/origin/HEAD)"
 main_branch_candidate="$(basename "$symbolic_ref")"
 
+# If we failed to get the symbolic ref for refs/remotes/origin/HEAD...
+if [ -z "$main_branch_candidate" ]; then
+  # ... and there's an origin, we may just need to set-head first. I've seen
+  # this happen in Codespaces
+  if git remote get-url origin >/dev/null 2>&1; then
+    git remote set-head --auto origin >/dev/null 2>&1
+  fi
+
+  # Then try and get the symbolic ref for origin/HEAD again.
+  symbolic_ref="$(git symbolic-ref --short --quiet refs/remotes/origin/HEAD)"
+  main_branch_candidate="$(basename "$symbolic_ref")"
+fi
+
 # If there's only one branch, that's the main branch.
 if [ -z "$main_branch_candidate" ] && git rev-parse --abbrev-ref --branches | wc -l | grep -E -q '^\s*1$'; then
   main_branch_candidate="$(git rev-parse --abbrev-ref --branches)"
