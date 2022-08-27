@@ -2,11 +2,6 @@
 
 set -o errexit
 
-if [ "$REMOTE_CONTAINERS" != "true" ] && [ -z "$CODESPACES" ]; then
-  echo "skipping dev container setup (not in dev container)" >&2
-  exit
-fi
-
 if ! sudo --validate --non-interactive >/dev/null 2>&1; then
   echo "skipping dev container setup that requires sudo" >&2
   exit
