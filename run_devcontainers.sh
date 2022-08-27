@@ -17,7 +17,17 @@ fi
 
 if command -v apt-get >/dev/null 2>&1; then
   sudo apt-get update
-  DEBIAN_FRONTEND=noninteractive sudo apt-get install --yes fzf vim universal-ctags ripgrep fd-find
+  DEBIAN_FRONTEND=noninteractive sudo apt-get install --yes \
+    dnsutils \
+    fd-find \
+    fzf \
+    iputils-ping \
+    neovim \
+    ripgrep \
+    telnet \
+    universal-ctags \
+    vim \
+    zsh
 else
   echo "skipping fzf install (no apt-get)" >&2
 fi
