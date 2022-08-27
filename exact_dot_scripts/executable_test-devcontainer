@@ -1,0 +1,37 @@
+#!/bin/sh
+
+set -o errexit
+set -o nounset
+
+USAGE="usage: $(basename "$0") [-h|--help] [ssh args...]"
+
+no_cache=false
+
+for arg; do
+  shift
+  case "$arg" in
+    -h | --help)
+      echo "$USAGE" >&2
+      exit
+      ;;
+    --no-cache) no_cache=true ;;
+    *) set -- "$@" "$arg" ;;
+  esac
+done
+
+# Launch the dev containers (optional arg: --remove-existing-container).
+if $no_cache; then
+  echo-run devcontainer up --workspace-folder . --remove-existing-container --build-no-cache --log-level trace
+else
+  echo-run devcontainer up --workspace-folder . --remove-existing-container --log-level trace
+fi
+
+# Configure the dev container to allow logging in with your SSH key.
+echo-run devcontainer exec --workspace-folder . sh -c "mkdir -p ~/.ssh && chmod 700 ~/.ssh && echo '$(ssh-add -L)' >> ~/.ssh/authorized_keys && sudo chmod 600 ~/.ssh/authorized_keys"
+
+# Pull public GPG key into dev container. This is needed for commit signing. Note the private key isn't copied. This is just importing the public key. The ssh command will forward the GPG agent. Forwarding the GPG agent allows signing commits without exposing your private key to the dev container.
+# IMPORTANT: For whatever reason the GPG agent must be forwarded for this to work.
+echo-run ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o GlobalKnownHostsFile=/dev/null -A -R /home/node/.gnupg/S.gpg-agent:"$(gpgconf --list-dirs agent-extra-socket)" -p 2222 node@localhost gpg --recv-keys "$(gpg --list-public-keys --with-colons $(git config user.email) | grep fpr | cut -d: -f10 | head -1)"
+
+# DONE! You're now ready to SSH into the dev container.
+echo-run ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o GlobalKnownHostsFile=/dev/null -A -R /home/node/.gnupg/S.gpg-agent:"$(gpgconf --list-dirs agent-extra-socket)" -p 2222 node@localhost "$@"
