@@ -2,6 +2,9 @@
 format = '$hostname$directory$git_branch${custom.git_host}$git_commit$git_state$nodejs$python$time$cmd_duration$status${custom.stashes}$shell$line_break$shlvl${custom.container}${custom.venv}$jobs$character'
 add_newline = false
 
+[hostname]
+ssh_symbol = ''
+
 [cmd_duration]
 min_time = 0
 show_milliseconds = true
