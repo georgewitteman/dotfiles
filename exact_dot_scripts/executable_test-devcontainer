@@ -27,11 +27,18 @@ else
 fi
 
 # Configure the dev container to allow logging in with your SSH key.
-echo-run devcontainer exec --workspace-folder . sh -c "mkdir -p ~/.ssh && chmod 700 ~/.ssh && echo '$(ssh-add -L)' >> ~/.ssh/authorized_keys && sudo chmod 600 ~/.ssh/authorized_keys"
+ssh_public_key="$(ssh-add -L)"
+echo-run devcontainer exec --workspace-folder . sh -c "mkdir -p ~/.ssh && chmod 700 ~/.ssh && echo '${ssh_public_key}' >> ~/.ssh/authorized_keys && sudo chmod 600 ~/.ssh/authorized_keys"
 
 # Pull public GPG key into dev container. This is needed for commit signing. Note the private key isn't copied. This is just importing the public key. The ssh command will forward the GPG agent. Forwarding the GPG agent allows signing commits without exposing your private key to the dev container.
 # IMPORTANT: For whatever reason the GPG agent must be forwarded for this to work.
-echo-run ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o GlobalKnownHostsFile=/dev/null -A -R /home/node/.gnupg/S.gpg-agent:"$(gpgconf --list-dirs agent-extra-socket)" -p 2222 node@localhost gpg --recv-keys "$(gpg --list-public-keys --with-colons $(git config user.email) | grep fpr | cut -d: -f10 | head -1)"
+user_email="$(git config user.email)"
+agent_extra_socket="$(gpgconf --list-dirs agent-extra-socket)"
+gpg_public_key="$(gpg --list-public-keys --with-colons "$user_email" | grep fpr | cut -d: -f10 | head -1)"
+echo-run ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o GlobalKnownHostsFile=/dev/null \
+  -A -R /home/node/.gnupg/S.gpg-agent:"${agent_extra_socket}" -p 2222 node@localhost \
+  gpg --recv-keys "$gpg_public_key"
 
 # DONE! You're now ready to SSH into the dev container.
-echo-run ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o GlobalKnownHostsFile=/dev/null -A -R /home/node/.gnupg/S.gpg-agent:"$(gpgconf --list-dirs agent-extra-socket)" -p 2222 node@localhost "$@"
+echo-run ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o GlobalKnownHostsFile=/dev/null \
+  -A -R /home/node/.gnupg/S.gpg-agent:"${agent_extra_socket}" -p 2222 node@localhost "$@"
