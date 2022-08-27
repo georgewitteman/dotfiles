@@ -270,6 +270,13 @@ nnoremap <leader>5 :let @*=expand("%:p")<CR>:echo expand('%:p')<CR>
 nnoremap [<Space> :call append(line('.')-1, '')<CR>k
 nnoremap ]<Space> :call append(line('.'), '')<CR>j
 
+augroup filetypedetect
+  autocmd!
+
+  autocmd! BufNewFile,BufRead *.jsx set filetype=javascript.jsx
+  autocmd! BufNewFile,BufRead devcontainer.json set filetype=jsonc
+augroup END
+
 if executable('rg')
   " Set grepprg for rg
   set grepprg=rg\ --vimgrep
