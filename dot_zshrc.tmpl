@@ -143,7 +143,7 @@ bindkey '^[#' pound-insert # alt-#
 bindkey '^[[Z' reverse-menu-complete # shift-tab
 bindkey '^[.' insert-last-word # alt-.
 
-if command -v fzf &>/dev/null && command -v fd &>/dev/null; then
+if command -v fzf &>/dev/null; then
   fzf-file-widget() {
     # Need extended_glob for trimming $current_word
     setopt localoptions extended_glob
@@ -176,10 +176,14 @@ if command -v fzf &>/dev/null && command -v fd &>/dev/null; then
     # Trim leading and trailing whitespace
     current_word="${${current_word##[[:space:]]##}%%[[:space:]]##}"
 
-    if command -v project-find >/dev/null 2>&1; then
+    if command -v project-find &>/dev/null; then
       local path="$(project-find -d | fzf --query "$current_word")"
-    else
+    elif command -v fd &>/dev/null; then
       local path="$(fd --hidden --exclude .git | fzf --query "$current_word")"
+    elif command -v fdfind &>/dev/null; then
+      local path="$(fdfind --hidden --exclude .git | fzf --query "$current_word")"
+    else
+      local path="$(find . -not -name '.' -not -name "*.swp" -not -path "*/\.git/*" -not -name "tags" | fzf --query "$current_word")"
     fi
     if [[ "$?" != 0 || -z "$path" ]]; then
       zle reset-prompt
