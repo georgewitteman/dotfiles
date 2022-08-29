@@ -26,7 +26,7 @@ if command -v apt-get >/dev/null 2>&1; then
     ripgrep \
     telnet \
     universal-ctags \
-    vim-gtk \
+    vim-nox \
     zsh
 else
   echo "skipping fzf install (no apt-get)" >&2
