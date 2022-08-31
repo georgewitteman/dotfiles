@@ -21,6 +21,11 @@
   refreshPeriod: {{ $refreshPeriodWeek }}
 {{ end }}
 
+.local/share/zsh/zsh-completions:
+  type: git-repo
+  url: 'https://github.com/zsh-users/zsh-completions.git'
+  refreshPeriod: {{ $refreshPeriodDay }}
+
 .local/share/zsh/functions/_alacritty:
   type: file
   url: 'https://raw.githubusercontent.com/alacritty/alacritty/master/extra/completions/_alacritty'

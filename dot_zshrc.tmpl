@@ -5,7 +5,11 @@ source "${HOME}/.shinit"
 # Adding this here so scripts think pyenv is initialized
 # eval "$(pyenv init -)"
 
-fpath=("${HOME}/.local/share/zsh/functions" "${fpath[@]}")
+fpath=(
+  "${HOME}/.local/share/zsh/functions"
+  "${HOME}/.local/share/zsh/zsh-completions/src"
+  "${fpath[@]}"
+)
 
 # Note: Any of the strings ‘true’, ‘on’, ‘yes’, and ‘1’ can be used for the
 # value ‘true’ and any of the strings ‘false’, ‘off’, ‘no’, and ‘0’ for the
