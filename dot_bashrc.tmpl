@@ -10,6 +10,10 @@ fi
 # shellcheck source=.shinit
 source "${HOME}/.shinit"
 
+if command -v "gh" &>/dev/null; then
+  eval "$(gh completion --shell bash)"
+fi
+
 {{ template "nvm/init.bash" }}
 {{ template "prompt/init.bash" }}
 # Keep this at the end
