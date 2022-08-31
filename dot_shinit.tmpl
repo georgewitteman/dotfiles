@@ -135,7 +135,7 @@ if [ -z "$FZF_DEFAULT_COMMAND" ]; then
   if command -v fd >/dev/null 2>&1; then
     export FZF_DEFAULT_COMMAND="fd --hidden --exclude .git --strip-cwd-prefix"
   elif command -v fdfind >/dev/null 2>&1; then
-    export FZF_DEFAULT_COMMAND="fdfind --hidden --exclude .git --strip-cwd-prefix"
+    export FZF_DEFAULT_COMMAND="fdfind --hidden --exclude .git"
   fi
 fi
 
