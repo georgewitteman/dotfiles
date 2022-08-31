@@ -85,14 +85,17 @@ restart_shell() {
   # newlines well.
   #
   # Original approach: for name in $(env | cut -d '=' -f1 | xargs echo); do
-  for name in $(awk 'BEGIN{for(v in ENVIRON) print v}' | xargs echo); do
-    case "$name" in
-      # These variables are provided by the terminal and are not automatically
-      # assigned by the shell.
-      COLORFGBG | COLORTERM | COMMAND_MODE | HOME | ITERM_PROFILE | ITERM_SESSION_ID | LANG | LC_TERMINAL | LC_TERMINAL_VERSION | LOGNAME | PWD | SHELL | SSH_AUTH_SOCK | TERM | TERM_PROGRAM | TERM_PROGRAM_VERSION | TERM_SESSION_ID | TMPDIR | USER | XPC_FLAGS | XPC_SERVICE_NAME | __CFBundleIdentifier | __CF_USER_TEXT_ENCODING | OP_SESSION_*) : ;;
-      *) echo_run unset -v "$name" ;;
-    esac
-  done
+  #
+  # NOTE: Commenting this out for now since it does not work in dev containers.
+  #
+  # for name in $(awk 'BEGIN{for(v in ENVIRON) print v}' | xargs echo); do
+  #   case "$name" in
+  #     # These variables are provided by the terminal and are not automatically
+  #     # assigned by the shell.
+  #     COLORFGBG | COLORTERM | COMMAND_MODE | HOME | ITERM_PROFILE | ITERM_SESSION_ID | LANG | LC_TERMINAL | LC_TERMINAL_VERSION | LOGNAME | PWD | SHELL | SSH_AUTH_SOCK | TERM | TERM_PROGRAM | TERM_PROGRAM_VERSION | TERM_SESSION_ID | TMPDIR | USER | XPC_FLAGS | XPC_SERVICE_NAME | __CFBundleIdentifier | __CF_USER_TEXT_ENCODING | OP_SESSION_*) : ;;
+  #     *) echo_run unset -v "$name" ;;
+  #   esac
+  # done
 
   echo_run exec "$@"
 }
