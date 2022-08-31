@@ -181,3 +181,6 @@
 
 # Support for clipboard over SSH via ANSI OSC52 sequence
 {{- template "github-vim-plugin" "ojroques/vim-oscyank" }}
+
+# TOML syntax support
+{{- template "github-vim-plugin" "cespare/vim-toml" }}
