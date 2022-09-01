@@ -11,7 +11,7 @@ fi
 source "${HOME}/.shinit"
 
 if command -v "gh" &>/dev/null; then
-  eval "$(gh completion --shell bash)"
+  eval "$(gh completion --shell bash || true)"
 fi
 
 {{ template "nvm/init.bash" }}
