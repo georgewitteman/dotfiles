@@ -6,6 +6,7 @@ set -o nounset
 add=false
 push=false
 no_edit=true
+no_verify=false
 
 USAGE="usage: $(basename "$0") [-a|--add] [-e|--edit] [-p|--push]"
 
@@ -41,6 +42,9 @@ while [ "$#" -gt 0 ]; do
     -e | --edit)
       no_edit=false
       ;;
+    --no-verify)
+      no_verify=true
+      ;;
     --)
       shift
       break
@@ -59,6 +63,10 @@ fi
 
 if $no_edit; then
   set -- "$@" --no-edit
+fi
+
+if $no_verify; then
+  set -- "$@" --no-verify
 fi
 
 echo-run git commit --amend "$@"
