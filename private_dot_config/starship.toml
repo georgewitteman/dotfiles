@@ -3,7 +3,7 @@ format = '$hostname$directory$git_branch${custom.git_host}$git_commit$git_state$
 add_newline = false
 
 [hostname]
-disable = true
+disabled = true
 ssh_symbol = ''
 
 [cmd_duration]
