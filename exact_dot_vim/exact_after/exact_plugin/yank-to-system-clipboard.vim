@@ -1,12 +1,12 @@
-if !has('clipboard')
-  finish
-endif
-
 " Copy to clipboard for yank commands
-nnoremap <expr> y (v:register ==# '"' ? '"+' : '') . 'y'
-nnoremap <expr> yy (v:register ==# '"' ? '"+' : '') . 'yy'
-nnoremap <expr> Y (v:register ==# '"' ? '"+' : '') . 'Y'
-xnoremap <expr> y (v:register ==# '"' ? '"+' : '') . 'y'
-xnoremap <expr> Y (v:register ==# '"' ? '"+' : '') . 'Y'
+nnoremap <expr> y (v:register ==# '"' ? '"c' : '') . 'y'
+nnoremap <expr> yy (v:register ==# '"' ? '"c' : '') . 'yy'
+nnoremap <expr> Y (v:register ==# '"' ? '"c' : '') . 'Y'
+xnoremap <expr> y (v:register ==# '"' ? '"c' : '') . 'y'
+xnoremap <expr> Y (v:register ==# '"' ? '"c' : '') . 'Y'
 
-autocmd TextYankPost * if v:event.operator is 'y' && v:event.regname is '*' | execute 'OSCYankReg *' | endif
+augroup YankCmds
+  autocmd!
+  autocmd TextYankPost * if v:event.operator is 'y' && v:event.regname is 'c' | execute 'OSCYankReg c' | endif
+  " autocmd TextYankPost * echo v:event
+augroup END

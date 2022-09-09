@@ -263,8 +263,16 @@ set statusline+=%{exists('*gutentags#statusline')?gutentags#statusline('[',']'):
 set statusline+=%=\ %(%l,%c%V%)\ %P
 
 " Quickly echo the full file path
-nnoremap <leader>% :let @*=expand("%:p")<CR>:OSCYankReg *<CR>:echo expand('%:p')<CR>
-nnoremap <leader>5 :let @*=expand("%:p")<CR>:OSCYankReg *<CR>:echo expand('%:p')<CR>
+function! RelativePathname()
+  let path = fnamemodify(expand("%"), ":~:.")
+  if path != ''
+    return path
+  endif
+  return expand("%")
+endfunction
+nnoremap <leader>% :let @c=RelativePathname()<CR>:OSCYankReg c<CR>:echo RelativePathname()<CR>
+nnoremap <leader>5 :let @c=RelativePathname()<CR>:OSCYankReg c<CR>:echo RelativePathname()<CR>
+
 
 " Add new lines without entering insert mode
 nnoremap [<Space> :call append(line('.')-1, '')<CR>k
