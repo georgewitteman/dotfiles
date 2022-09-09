@@ -318,6 +318,12 @@ elseif executable('project-find')
   let g:gutentags_file_list_command = 'project-find'
 endif
 
+command! -bang -nargs=* Rg
+      \ call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case --hidden-- ".shellescape(<q-args>),
+      \ 1,
+      \ fzf#vim#with_preview(),
+      \ <bang>0)
+
 " Run in every buffer
 let g:hardtime_default_on = 1
 
