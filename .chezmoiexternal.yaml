@@ -125,7 +125,6 @@
 # { {- template "github-vim-plugin" (list "chrismaher/vim-dbt" "master") }}
 # { {- template "github-vim-plugin" (list "jalvesaq/Nvim-R" "master") }}
 # { {- template "github-vim-plugin" (list "chrisbra/csv.vim" "master") }}
-# { {- template "github-vim-plugin" (list "hashivim/vim-terraform" "master") }}
 # { {- template "github-vim-plugin" (list "darfink/vim-plist" "master") }}
 # { {- template "github-vim-plugin" (list "rust-lang/rust.vim" "master") }}
 # { {- template "github-vim-plugin" (list "Glench/Vim-Jinja2-Syntax" "master") }}
@@ -184,3 +183,6 @@
 
 # TOML syntax support
 {{- template "github-vim-plugin" "cespare/vim-toml" }}
+
+# Support for terraform files
+{{- template "github-vim-plugin" "hashivim/vim-terraform" }}
