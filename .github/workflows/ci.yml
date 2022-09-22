@@ -1,7 +1,10 @@
 name: CI
 
-on:
+"on":
   push:
+
+env:
+  DEBIAN_FRONTEND: noninteractive
 
 jobs:
   macos:
@@ -37,13 +40,14 @@ jobs:
     container:
       image: ${{ matrix.image }}
     steps:
+      - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
       - run: ls -la $HOME
       - name: "chezmoi init (expect failure)"
         run: curl --fail --silent --show-error --location "https://git.io/chezmoi" | sh -s -- -b "${HOME}/.local/bin" -d init --apply georgewitteman --branch "${GITHUB_REF#refs/heads/}" || true
       - name: "Install curl"
         run: |
           if command -v apt-get >/dev/null 2>&1; then
-            apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install --yes curl
+            apt-get update && apt-get install --yes curl
           elif command -v apk >/dev/null 2>&1; then
             apk update && apk add curl
           else
@@ -55,7 +59,7 @@ jobs:
       - name: "Install git"
         run: |
           if command -v apt-get >/dev/null 2>&1; then
-            apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install --yes git
+            apt-get update && apt-get install --yes git
           elif command -v apk >/dev/null 2>&1; then
             apk update && apk add git
           else
@@ -72,11 +76,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: ls -la $HOME
+      - run: echo "::set-output name=path::$(chezmoi source-path)"
+        id: chezmoi_workdir
       - name: "Run sanity checks"
-        run: |
-          PATH="${HOME}/.local/bin:${PATH}"
-          cd "${HOME}/.local/share/chezmoi"
-          just verbose=true sanity
+        working-directory: ${{ steps.chezmoi_workdir.outputs.path }}
+        run: just verbose=true sanity
 
   lint:
     strategy:
@@ -85,6 +89,7 @@ jobs:
         os: [ubuntu-latest, macOS-latest]
     runs-on: ${{ matrix.os }}
     steps:
+      - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
       - uses: actions/checkout@v3
       - uses: extractions/setup-just@v1
         # Docs: In rare circumstances you might get rate limiting errors, this
@@ -97,4 +102,4 @@ jobs:
       - run: 'curl -sS https://webinstall.dev/shellcheck | bash'
       - run: rm -rf ~/.nvm
       - run: ./install.sh
-      - run: 'set -x; . ${HOME}/.profile && just verbose=true lint'
+      - run: just verbose=true lint
