@@ -8,7 +8,7 @@ apply:
   chezmoi apply
 
 shfmt: apply
-  cd "$HOME" && "${HOME}/.scripts/get-files-to-lint" | xargs shfmt -i 2 -ci -d -s
+  cd "$HOME" && "${HOME}/.scripts/get-files-to-lint" | xargs shfmt --indent 2 --case-indent -diff --simplify
 
 shellcheck: apply
   cd "$HOME" && "${HOME}/.scripts/get-files-to-lint" | sed "s#${HOME}/##" | xargs shellcheck
