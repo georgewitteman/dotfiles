@@ -1,27 +1,23 @@
 #!/usr/bin/env bash
 
+set -o errexit
+
 if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   echo-err "Not in a git repository."
   exit 128
 fi
 
-if [[ $1 == "" ]]; then
-  echo-info -n "Getting remote HEAD... "
-  GIT_HEAD="$(get-main-branch)"
-  echo "$GIT_HEAD"
+main_branch="$(get-main-branch)"
 
+if [[ $1 == "" ]]; then
   echo-run git fetch --quiet --prune &&
-    echo-run git rebase --autostash origin/"$GIT_HEAD"
+    echo-run git rebase --autostash origin/"$main_branch"
   exit $?
 fi
 
 if [[ ($1 == "-i" || $1 == "--interactive") && $# -le 1 ]]; then
-  echo-info -n "Getting remote HEAD... "
-  GIT_HEAD="$(get-main-branch)"
-  echo "$GIT_HEAD"
-
   echo-run git fetch --quiet --prune &&
-    echo-run git rebase --interactive --autostash origin/"$GIT_HEAD"
+    echo-run git rebase --interactive --autostash origin/"$main_branch"
   exit $?
 fi
 
