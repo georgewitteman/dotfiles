@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if [ $# -gt 0 ]; then
+  exec echo-run gh codespace "$@"
+fi
+
+exec echo-run gh codespace ssh
