@@ -11,6 +11,11 @@ fpath=(
   "${fpath[@]}"
 )
 
+# https://docs.brew.sh/Shell-Completion
+if [ -n "${HOMEBREW_PREFIX}" ]; then
+  fpath=("${HOMEBREW_PREFIX}/share/zsh/site-functions" "${fpath[@]}")
+fi
+
 # Note: Any of the strings ‘true’, ‘on’, ‘yes’, and ‘1’ can be used for the
 # value ‘true’ and any of the strings ‘false’, ‘off’, ‘no’, and ‘0’ for the
 # value ‘false’.

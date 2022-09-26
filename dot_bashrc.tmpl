@@ -14,6 +14,20 @@ if command -v "gh" &>/dev/null; then
   eval "$(gh completion --shell bash || true)"
 fi
 
+# https://docs.brew.sh/Shell-Completion
+if [[ -r "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh" ]]; then
+  # shellcheck source=/dev/null
+  source "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
+elif [[ -d "${HOMEBREW_PREFIX}/etc/bash_completion.d" ]]; then
+  for COMPLETION in "${HOMEBREW_PREFIX}/etc/bash_completion.d/"*; do
+    if [[ -r ${COMPLETION} ]]; then
+      # shellcheck source=/dev/null
+      source "${COMPLETION}"
+    fi
+  done
+  unset COMPLETION
+fi
+
 {{ template "nvm/init.bash" }}
 {{ template "prompt/init.bash" }}
 # Keep this at the end
