@@ -61,9 +61,21 @@ zstyle ':completion:*' list-colors "di=34" "ln=35" "so=32" "pi=33" "ex=31" "bd=3
 autoload -Uz compinit
 compinit
 
-if [[ -f ${NVM_DIR:-${HOME}/.nvm}/bash_completion ]]; then
+# https://github.com/zsh-users/zsh/blob/master/Completion/bashcompinit
+autoload -U +X bashcompinit
+bashcompinit
+
+# Don't run if nvm completion has already been set up. This fixes an issue on
+# Codespaces which uses a version of the completion script before
+# https://github.com/nvm-sh/nvm/issues/2489 was fixed.
+if ! whence __nvm >/dev/null 2>&1 && [[ -f ${NVM_DIR:-${HOME}/.nvm}/bash_completion ]]; then
   source "${NVM_DIR:-${HOME}/.nvm}/bash_completion"
 fi
+
+{{ if lookPath "terraform" -}}
+# https://github.com/posener/complete/blob/v1/cmd/install/zsh.go
+complete -o nospace -C {{ lookPath "terraform" }} terraform
+{{- end }}
 
 alias echo_fpath="echo_array fpath"
 

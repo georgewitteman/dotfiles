@@ -1,0 +1,7 @@
+{{- if lookPath "terraform" -}}
+#!/bin/sh
+
+# This command exits with a non-zero exit status when completions are already
+# installed.
+terraform -install-autocomplete || true
+{{ end -}}

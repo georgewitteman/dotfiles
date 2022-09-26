@@ -39,7 +39,9 @@ case "$command" in
 
     if [ "$cmd" = "safe-run" ] && echo-run chezmoi verify "$@"; then
       echo-info "Nothing to apply."
-      exit
+      # Always run scripts
+      echo-run chezmoi apply --include=scripts
+      exit $?
     fi
     if ! echo-run chezmoi diff --no-pager "$@"; then
       echo-warn "Error showing diff. Are you signed in to 1Password?"
