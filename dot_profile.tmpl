@@ -5,6 +5,9 @@
 # commands from the file named in ENV.  Therefore, a user should place commands
 # that are to be executed only at login time in the .profile file, and commands
 # that are executed for every interactive shell inside the ENV file.
+#
+# WARNING: If for whatever reason this gets removed make sure to update the
+# check at the top of ~/.bashrc.
 export ENV="${HOME}/.shinit"
 
 # This variable configures all programs which use setlocale(3) to use the specified locale unless the LC_* variables are set.
