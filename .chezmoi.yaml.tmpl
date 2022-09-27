@@ -1,6 +1,8 @@
 {{- $installPackages := false -}}
 {{- if stdinIsATTY }}
 {{- $installPackages = promptBoolOnce . "install_packages" "Do you want to automatically install packages" -}}
+{{- else if (env "CODESPACES") }}
+{{- $installPackages = true }}
 {{- end -}}
 
 sourceDir: {{ .chezmoi.sourceDir | quote }}
