@@ -16,6 +16,10 @@ if [ -n "${HOMEBREW_PREFIX}" ]; then
   fpath=("${HOMEBREW_PREFIX}/share/zsh/site-functions" "${fpath[@]}")
 fi
 
+# Resources:
+# https://github.com/finnurtorfa/zsh/blob/master/completion.zsh
+# https://zsh.sourceforge.io/Doc/Release/Completion-System.html
+#
 # Note: Any of the strings ‘true’, ‘on’, ‘yes’, and ‘1’ can be used for the
 # value ‘true’ and any of the strings ‘false’, ‘off’, ‘no’, and ‘0’ for the
 # value ‘false’.
@@ -36,7 +40,9 @@ zstyle ':completion:*' completer _expand_alias _complete
 # zstyle ':completion:*' completer _expand _complete _ignored _correct _approximate
 # Use menu for autocompletion when number of items >= 2.
 zstyle ':completion:*' menu select=2
-# Verbose completion results.
+# If set, as it is by default, the completion listing is more verbose. In
+# particular many commands show descriptions for options if this style is
+# ‘true’.
 zstyle ':completion:*' verbose true
 # Keep directories and files separated.
 zstyle ':completion:*' list-dirs-first true
@@ -56,6 +62,34 @@ zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'l:|=* r:|=*'
 # format and then used `echo ${(s.:.)LS_COLORS}` to separate that out into
 # spaces.
 zstyle ':completion:*' list-colors "di=34" "ln=35" "so=32" "pi=33" "ex=31" "bd=34;46" "cd=34;43" "su=30;41" "sg=30;46" "tw=30;42" "ow=30;43"
+# If set, this style’s value will be used as the description for options that
+# are not described by the completion functions, but that have exactly one
+# argument. The sequence ‘%d’ in the value will be replaced by the description
+# for this argument. Depending on personal preferences, it may be useful to set
+# this style to something like ‘specify: %d’. Note that this may not work for
+# some commands.
+zstyle ':completion:*' auto-description 'specify: %d'
+# If this is set for the descriptions tag, its value is used as a string to
+# display above matches in completion lists. The sequence ‘%d’ in this string
+# will be replaced with a short description of what these matches are.
+zstyle ':completion:*:descriptions' format 'Completing %d'
+# Finally, the format string is looked up with the warnings tag, for use when
+# no matches could be generated at all. In this case the ‘%d’ is replaced with
+# the descriptions for the matches that were expected separated by spaces. The
+# sequence ‘%D’ is replaced with the same descriptions separated by newlines.
+zstyle ':completion:*:warnings' format 'No matches for: %d'
+# Some completion functions display messages that may be customised by setting
+# this style for the messages tag. Here, the ‘%d’ is replaced with a message
+# given by the completion function.
+zstyle ':completion:*:messages' format '%d'
+# The completion system can group different types of matches, which appear in
+# separate lists. This style can be used to give the names of groups for
+# particular tags. For example, in command position the completion system
+# generates names of builtin and external commands, names of aliases, shell
+# functions and parameters and reserved words as possible completions. ... If
+# the name given is the empty string the name of the tag for the matches will
+# be used as the name of the group.
+zstyle ':completion:*' group-name ''
 
 # https://github.com/zsh-users/zsh/blob/master/Completion/compinit
 autoload -Uz compinit
