@@ -1,6 +1,9 @@
 {{- if lookPath "terraform" -}}
 #!/bin/sh
 
+set -o xtrace
+set -o errexit
+
 # This command exits with a non-zero exit status when completions are already
 # installed.
 terraform -install-autocomplete || true
