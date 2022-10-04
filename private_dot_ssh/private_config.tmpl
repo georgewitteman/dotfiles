@@ -4,3 +4,5 @@ Host *
   # https://developer.1password.com/docs/ssh/get-started#step-4-configure-your-ssh-or-git-client
   IdentityAgent {{ $filename | quote }}
 {{- end }}
+
+include ~/.ssh/codespaces
