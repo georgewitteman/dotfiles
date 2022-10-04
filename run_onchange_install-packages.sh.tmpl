@@ -16,6 +16,7 @@ if command -v apt-get >/dev/null 2>&1; then
   export DEBIAN_FRONTEND=noninteractive
   sudo --non-interactive apt-get update
   sudo --non-interactive apt-get install --yes \
+    amazon-ecr-credential-helper \
     dnsutils \
     fd-find \
     fzf \
