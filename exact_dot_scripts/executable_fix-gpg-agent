@@ -1,3 +1,6 @@
 #!/bin/sh
 
-echo-run killall -v gpg-agent
+echo-run gpg-connect-agent reloadagent /bye
+echo-run gpgconf --kill all
+echo-run pkill -9 gpg-agent
+echo-run gpg-connect-agent reloadagent /bye
