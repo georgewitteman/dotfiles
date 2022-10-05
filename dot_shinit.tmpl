@@ -109,7 +109,7 @@ login_shell() {
 
 # -O: True if file exists and its owner matches the effective user id of this
 # process.
-if [ ! -O "$HOMEBREW_PREFIX" ] && command -v sudo >/dev/null 2>&1; then
+if [ -d "$HOMEBREW_PREFIX" ] && [ ! -O "$HOMEBREW_PREFIX" ] && command -v sudo >/dev/null 2>&1; then
   if stat -c '%U' "$HOMEBREW_PREFIX" >/dev/null 2>&1; then
     brew_user="$(stat -c '%U' "$HOMEBREW_PREFIX")"
   else
