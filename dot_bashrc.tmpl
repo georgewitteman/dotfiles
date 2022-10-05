@@ -29,7 +29,6 @@ elif [[ -d "${HOMEBREW_PREFIX}/etc/bash_completion.d" ]]; then
 fi
 
 {{ template "terraform-completion.bash" }}
-
 {{ template "nvm/init.bash" }}
 {{ template "prompt/init.bash" }}
 # Keep this at the end
