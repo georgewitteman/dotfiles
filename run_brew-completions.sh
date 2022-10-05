@@ -4,5 +4,10 @@ set -o errexit
 set -o xtrace
 
 if command -v brew >/dev/null 2>&1; then
-  brew completions link
+  brew_prefix="$(brew --prefix)"
+  # -O: True if file exists and its owner matches the effective user id of this
+  # process.
+  if [ -O "$brew_prefix" ]; then
+    brew completions link
+  fi
 fi

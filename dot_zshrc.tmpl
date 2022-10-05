@@ -11,8 +11,11 @@ fpath=(
   "${fpath[@]}"
 )
 
-# https://docs.brew.sh/Shell-Completion
-if [ -n "${HOMEBREW_PREFIX}" ]; then
+# -O: True if file exists and its owner matches the effective user id of this
+# process. This is used to avoid the error "zsh compinit: insecure directories
+# and files, run compaudit for list."
+if [ -n "$HOMEBREW_PREFIX" ] && [ -O "$HOMEBREW_PREFIX" ]; then
+  # https://docs.brew.sh/Shell-Completion
   fpath=("${HOMEBREW_PREFIX}/share/zsh/site-functions" "${fpath[@]}")
 fi
 
