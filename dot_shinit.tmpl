@@ -107,6 +107,21 @@ login_shell() {
   echo_run exec login -f "$USER"
 }
 
+# -O: True if file exists and its owner matches the effective user id of this
+# process.
+if [ ! -O "$HOMEBREW_PREFIX" ] && command -v sudo >/dev/null 2>&1; then
+  if stat -c '%U' "$HOMEBREW_PREFIX" >/dev/null 2>&1; then
+    brew_user="$(stat -c '%U' "$HOMEBREW_PREFIX")"
+  else
+    brew_user="$(stat -f '%Su' "$HOMEBREW_PREFIX")"
+  fi
+  if [ -n "$brew_user" ]; then
+    # shellcheck disable=SC2139
+    alias brew="echo-run sudo --set-home --user=${brew_user} brew"
+  fi
+  unset brew_user
+fi
+
 # Fixes gpg when "GPG Suite" is not installed (i.e. gpg is installed from homebrew)
 #
 # From the Docs
