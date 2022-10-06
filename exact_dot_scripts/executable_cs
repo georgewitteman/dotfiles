@@ -1,7 +1,21 @@
 #!/bin/sh
 
-if [ $# -gt 0 ]; then
-  exec echo-run gh codespace "$@"
+if [ $# -eq 0 ]; then
+  exec echo-run gh codespace ssh
 fi
 
-exec echo-run gh codespace ssh
+case "$1" in
+  create)
+    if git config --get remote.origin.url >/dev/null 2>&1; then
+      url="$(git config --get remote.origin.url)"
+      url="${url##git@github.com:}"
+      url="${url%.git}"
+      case "$url" in
+        :*) : ;;
+        */*) set -- --repo "$url" "$@" ;;
+      esac
+    fi
+    ;;
+esac
+
+exec echo-run gh codespace "$@"
