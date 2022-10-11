@@ -3,6 +3,9 @@
 set -o errexit
 set -o nounset
 
+# Don't use fancy tty output
+export BUILDKIT_PROGRESS=plain
+
 USAGE="usage: $(basename "$0") [-h|--help] [ssh args...]"
 
 no_cache=false
