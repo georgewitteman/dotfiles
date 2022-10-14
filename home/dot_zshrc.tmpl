@@ -201,6 +201,13 @@ bindkey '^[#' pound-insert # alt-#
 bindkey '^[[Z' reverse-menu-complete # shift-tab
 bindkey '^[.' insert-last-word # alt-.
 
+zle_expand_alias() {
+  zle _expand_alias
+  zle self-insert
+}
+zle -N zle_expand_alias
+bindkey -M main ' ' zle_expand_alias
+
 if command -v fzf &>/dev/null; then
   fzf-file-widget() {
     # Need extended_glob for trimming $current_word
