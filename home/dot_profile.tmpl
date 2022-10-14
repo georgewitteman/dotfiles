@@ -61,7 +61,6 @@ PATH="${HOME}/.local/bin:${PATH}"
 PATH="{{ joinPath .chezmoi.homeDir .private_bin }}:${PATH}"
 PATH="${HOME}/.cargo/bin:${PATH}"
 PATH="${HOME}/.poetry/bin:${PATH}"
-PATH="${HOME}/.krew/bin:${PATH}"
 
 {{ template "nvm/profile.sh" }}
 {{ template "pyenv/profile.sh" -}}
