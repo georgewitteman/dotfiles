@@ -41,9 +41,9 @@ user_email="$(git config user.email)"
 agent_extra_socket="$(gpgconf --list-dirs agent-extra-socket)"
 gpg_public_key="$(gpg --list-public-keys --with-colons "$user_email" | grep fpr | cut -d: -f10 | head -1)"
 echo-run ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o GlobalKnownHostsFile=/dev/null \
-  -A -R /home/${user}/.gnupg/S.gpg-agent:"${agent_extra_socket}" -p 2222 ${user}@localhost \
+  -A -R "/home/${user}/.gnupg/S.gpg-agent:${agent_extra_socket}" -p 2222 "${user}@localhost" \
   gpg --recv-keys "$gpg_public_key"
 
 # DONE! You're now ready to SSH into the dev container.
 echo-run ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o GlobalKnownHostsFile=/dev/null \
-  -A -R /home/${user}/.gnupg/S.gpg-agent:"${agent_extra_socket}" -p 2222 ${user}@localhost "$@"
+  -A -R "/home/${user}/.gnupg/S.gpg-agent:${agent_extra_socket}" -p 2222 "${user}@localhost" "$@"
