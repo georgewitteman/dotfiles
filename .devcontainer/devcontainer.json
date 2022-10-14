@@ -2,22 +2,9 @@
   "name": "dotfiles",
   "image": "mcr.microsoft.com/devcontainers/base",
   "remoteUser": "vscode",
-  "postCreateCommand": "./install.sh",
-  "customizations": {
-    "vscode": {
-      "settings": {
-        "terminal.integrated.profiles.linux": {
-          "zsh": {
-            "path": "zsh",
-            "env": {"SHLVL": "0"},
-            "args": ["-li"]
-          }
-        },
-        "terminal.integrated.defaultProfile.linux": "zsh"
-      },
-      "extensions": [
-        "bungcip.better-toml"
-      ]
-    }
+  "postCreateCommand": ".devcontainer/postCreate.sh",
+  "appPort": 2222,
+  "features": {
+    "ghcr.io/devcontainers/features/sshd": {}
   }
 }
