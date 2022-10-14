@@ -11,11 +11,12 @@ if command -v chezmoi >/dev/null 2>&1; then
 else
   bin_dir="${HOME}/.local/bin"
   chezmoi="${bin_dir}/chezmoi"
+
   # sh -s will read from stdin
   if command -v curl >/dev/null 2>&1; then
-    curl --fail --silent --show-error --location "https://git.io/chezmoi" | sh -s -- -b "$bin_dir"
+    curl --fail --silent --show-error --location "https://get.chezmoi.io" | sh -s -- -b "$bin_dir"
   elif command -v wget >/dev/null 2>&1; then
-    wget --quiet --output-document=- "https://git.io/chezmoi" | sh -s -- -b "$bin_dir"
+    wget --quiet --output-document=- "https://get.chezmoi.io" | sh -s -- -b "$bin_dir"
   else
     echo "To install chezmoi, you must have curl or wget installed." >&2
     exit 1
