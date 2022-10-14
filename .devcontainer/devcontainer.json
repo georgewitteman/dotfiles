@@ -1,6 +1,6 @@
 {
   "name": "dotfiles",
-  "image": "mcr.microsoft.com/vscode/devcontainers/base:debian",
+  "image": "mcr.microsoft.com/devcontainers/base",
   "remoteUser": "vscode",
   "postCreateCommand": "./install.sh",
   "customizations": {
