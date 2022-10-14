@@ -409,7 +409,7 @@ dotfiles() {
         # virtual environment and have to run `deactivate` manually.
         echo_run deactivate
       fi
-      echo_run cd "{{ .chezmoi.sourceDir }}"
+      echo_run cd "{{ .chezmoi.workingTree }}"
       ;;
     *)
       # Commenting this out for now since it's not actually used anywhere
