@@ -1,9 +1,8 @@
 # vim: ft=gitconfig
 [user]
-	name = {{ .name | quote }}
 	# NOTE: user.email is not configured to force configuration
 	# of each repoisitory.
-	signingKey = {{ .gpgkey | quote }}
+	name = {{ .name | quote }}
 	# Instruct Git to avoid trying to guess defaults for
 	# user.email and user.name, and instead retrieve the values
 	# only from the configuration.
@@ -16,10 +15,27 @@
 	# https://blog.nilbus.com/take-the-pain-out-of-git-conflict-resolution-use-diff3/
 	# https://stackoverflow.com/q/27417656
 	conflictStyle = diff3
-[commit]
-{{- if (and (lookPath "gpg") (eq (output "sh" "-c" (cat "gpg --list-secret-keys " (quote .gpgkey) " >/dev/null 2>&1 || echo false")) "")) }}
-	gpgSign = true
+
+# NOTE: To resign use either (https://superuser.com/a/1123928)
+# - git commit --amend --no-edit -n -S
+# - git rebase --exec 'git commit --amend --no-edit -n -S' -i development
+
+{{- $ssh_sign := (eq (output "sh" "-c" (cat "ssh-add -L | grep --quiet " (quote .sshkey) " >/dev/null 2>&1 || echo false")) "") }}
+{{- $gpg_sign := (and (lookPath "gpg") (eq (output "sh" "-c" (cat "gpg --list-secret-keys " (quote .gpgkey) " >/dev/null 2>&1 || echo false")) "")) }}
+
+{{- if $ssh_sign }}
+[user]
+	signingKey = {{ .sshkey | quote }}
+[gpg]
+	format = ssh
+{{- else if $gpg_sign }}
+[user]
+	signingKey = {{ .gpgkey | quote }}
 {{- end }}
+
+[commit]
+	gpgSign = true
+
 {{- $credential_helper := output "/bin/sh" "-c" "git config credential.helper 2>/dev/null || true" | trim }}
 {{- if and (not (empty $credential_helper)) (not (eq $credential_helper "osxkeychain")) }}
 [credential]
