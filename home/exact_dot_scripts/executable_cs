@@ -1,6 +1,10 @@
 #!/bin/sh
 
 if [ $# -eq 0 ]; then
+  codespaces="$(gh codespace list --json name --jq '.[].name')"
+  if [ "$(echo "$codespaces" | wc -l)" -eq 1 ]; then
+    exec echo-run gh codespace ssh --codespace "$codespaces"
+  fi
   exec echo-run gh codespace ssh
 fi
 
