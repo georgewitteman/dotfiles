@@ -20,7 +20,7 @@
 # - git commit --amend --no-edit -n -S
 # - git rebase --exec 'git commit --amend --no-edit -n -S' -i development
 
-{{- $ssh_sign := (eq (output "sh" "-c" (cat "ssh-add -L >/dev/null 2>&1 | grep --quiet " (quote .sshkey) " || echo false")) "") }}
+{{- $ssh_sign := (eq (output "sh" "-c" (cat "ssh-add -L 2>/dev/null | grep --quiet " (quote .sshkey) " || echo false")) "") }}
 {{- $gpg_sign := (and (lookPath "gpg") (eq (output "sh" "-c" (cat "gpg --list-secret-keys " (quote .gpgkey) " >/dev/null 2>&1 || echo false")) "")) }}
 
 {{- if $ssh_sign }}
