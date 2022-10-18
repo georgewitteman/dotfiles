@@ -35,9 +35,3 @@
 
 [commit]
 	gpgSign = true
-
-{{- $credential_helper := output "/bin/sh" "-c" "git config credential.helper 2>/dev/null || true" | trim }}
-{{- if and (not (empty $credential_helper)) (not (eq $credential_helper "osxkeychain")) }}
-[credential]
-	helper = {{ $credential_helper  | quote }}
-{{- end }}
