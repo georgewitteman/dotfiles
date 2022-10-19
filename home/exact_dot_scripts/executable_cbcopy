@@ -13,7 +13,8 @@ elif command -v base64 >/dev/null 2>&1; then
   # https://chromium.googlesource.com/apps/libapps/+/a5fb83c190aa9d74f4a9bca233dac6be2664e9e9/hterm/doc/ControlSequences.md#OSC
   # https://github.com/rumpelsepp/oscclip/blob/master/oscclip/__init__.py
   # https://github.com/samoshkin/tmux-config/blob/af2efd9561f41f30c51c9deeeab9451308c4086b/tmux/yank.sh
-  printf "\e]52;c;%s\a" "$(base64)"
+  base64="$(base64)"
+  printf "\e]52;c;%s\a" "$base64"
 else
   printf "error: unable to copy to clipboard" >&2
 fi
