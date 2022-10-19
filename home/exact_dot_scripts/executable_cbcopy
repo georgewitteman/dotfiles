@@ -1,0 +1,19 @@
+#!/bin/sh
+
+set -o errexit
+
+if false && command -v pbcopy >/dev/null 2>&1; then
+  # https://ss64.com/osx/pbcopy.html
+  exec pbcopy
+elif command -v xclip >/dev/null 2>&1; then
+  # https://linux.die.net/man/1/xclip
+  exec xclip -selection clipboard
+elif command -v base64 >/dev/null 2>&1; then
+  # https://github.com/ojroques/vim-oscyank/blob/main/plugin/oscyank.vim
+  # https://chromium.googlesource.com/apps/libapps/+/a5fb83c190aa9d74f4a9bca233dac6be2664e9e9/hterm/doc/ControlSequences.md#OSC
+  # https://github.com/rumpelsepp/oscclip/blob/master/oscclip/__init__.py
+  # https://github.com/samoshkin/tmux-config/blob/af2efd9561f41f30c51c9deeeab9451308c4086b/tmux/yank.sh
+  printf "\e]52;c;%s\a" "$(base64)"
+else
+  printf "error: unable to copy to clipboard" >&2
+fi

@@ -1,0 +1,20 @@
+#!/bin/sh
+
+set -o errexit
+
+# https://github.com/rumpelsepp/oscclip/blob/6a4847ed5497baa9a9357b389f492f5d52c6867c/oscclip/__init__.py#L104
+# set -x
+# printf "\e]52;c;?\a"
+# while IFS= read -r line || [ -n "$line" ]; do
+#   printf "%s\n" "$line"
+# done < /dev/tty
+
+if command -v pbpaste >/dev/null 2>&1; then
+  # https://ss64.com/osx/pbpaste.html
+  exec pbpaste
+elif command -v xclip >/dev/null 2>&1; then
+  # https://linux.die.net/man/1/xclip
+  exec xclip -selection clipboard -o
+else
+  printf "error: unable to paste from clipboard" >&2
+fi
