@@ -1,8 +1,11 @@
 #!/bin/sh
 
+set -o errexit
+
 if [ $# -eq 0 ]; then
   codespaces="$(gh codespace list --json name --jq '.[].name')"
-  if [ "$(echo "$codespaces" | wc -l)" -eq 1 ]; then
+  cs_count="$(echo "$codespaces" | wc -l)"
+  if [ "$cs_count" -eq 1 ]; then
     exec echo-run gh codespace ssh --codespace "$codespaces"
   fi
   exec echo-run gh codespace ssh
