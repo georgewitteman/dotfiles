@@ -5,9 +5,6 @@
 " NOTE: 'encoding' defaults to "latin1" or $LANG
 scriptencoding utf-8
 
-" This must be first according to the docs: https://github.com/alker0/chezmoi.vim
-packadd! chezmoi.vim
-
 if has('nvim')
   if ! executable($HOME.'/.config/nvim/venv3/bin/python') && executable('python3')
     execute '!python3 -m venv '.$HOME.'/.config/nvim/venv3'
@@ -19,37 +16,111 @@ if has('nvim')
   endif
 endif
 
-" See `:h defaults.vim`: "If you create your own .vimrc, it is
-" recommended to add these lines somewhere near the top"
+" See `:h defaults.vim`: If you create your own .vimrc, it is
+" recommended to add these lines somewhere near the top
 unlet! skip_defaults_vim
 source $VIMRUNTIME/defaults.vim
 
+" Run PlugInstall if there are missing plugins
+autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+  \| PlugInstall --sync | source $MYVIMRC
+\| endif
+
+call plug#begin()
+" The default plugin directory will be as follows:
+"   - Vim (Linux/macOS): '~/.vim/plugged'
+"   - Vim (Windows): '~/vimfiles/plugged'
+"   - Neovim (Linux/macOS/Windows): stdpath('data') . '/plugged'
+" You can specify a custom plugin directory by passing it as the argument
+"   - e.g. `call plug#begin('~/.vim/plugged')`
+"   - Avoid using standard Vim directory names like 'plugin'
+
+" Enables useful syntax highlighting for .tmpl and other chezmoi files
+Plug 'alker0/chezmoi.vim'
+
 " Add git plugins if git is installed
 if executable('git')
-  packadd! vim-fugitive
-  packadd! vim-rhubarb
+  Plug 'tpope/vim-fugitive'
+  Plug 'tpope/vim-rhubarb'
 endif
 
 " Add fzf plugins if fzf is installed
 if executable('fzf')
-  packadd! fzf
-  packadd! fzf.vim
+  Plug 'junegunn/fzf'
+  Plug 'junegunn/fzf.vim'
 endif
 
 " This assumes that if I'm using Apple_Terminal then I don't have the correct
 " ctags version installed
 if $TERM_PROGRAM != "Apple_Terminal"
-  packadd! vim-gutentags
+  Plug 'ludovicchabant/vim-gutentags'
 endif
+
+" Nord color scheme
+Plug 'arcticicestudio/nord-vim'
+
+" "Yaml files in vim 7.4 are really slow, due to core yaml syntax. This syntax
+" is simpler/faster." - stephpy/vim-yaml/README.md
+Plug 'stephpy/vim-yaml'
+
+" Adds better python syntax highlighting (e.g. indent errors, exception
+" classes, builtins, etc.)
+Plug 'hdima/python-syntax'
+
+" Use proper indentation formatting for python
+Plug 'Vimjas/vim-python-pep8-indent'
+
+" Adds support for justfile syntax
+Plug 'NoahTheDuke/vim-just'
+
+" Better text
+Plug 'reedes/vim-pencil'
+
+" Improved incremental search
+Plug 'haya14busa/is.vim'
+
+" A better (and faster) file manager than netrw
+Plug 'justinmk/vim-dirvish'
+
+" Strips whitespace when closing files
+Plug 'ntpeters/vim-better-whitespace'
+
+" Adds capslock shortcut
+Plug 'tpope/vim-capslock'
+
+" Shortcuts for commenting out lines/blocks of lines
+Plug 'tpope/vim-commentary'
+
+" Adds `:Make` for asynchronous makes
+Plug 'tpope/vim-dispatch'
+
+" Allows repeating non-default shortcuts
+Plug 'tpope/vim-repeat'
+
+" Adds shortcuts for surrounding items with things
+Plug 'tpope/vim-surround'
+
+" Support for the Prisma ORM
+Plug 'pantharshit00/vim-prisma'
+
+" Support for clipboard over SSH via ANSI OSC52 sequence
+Plug 'ojroques/vim-oscyank'
+
+" TOML syntax support
+Plug 'cespare/vim-toml'
+
+" Support for terraform files
+Plug 'hashivim/vim-terraform'
+
+" Initialize plugin system
+" - Automatically executes `filetype plugin indent on` and `syntax enable`.
+call plug#end()
+" You can revert the settings after the call like so:
+"   filetype indent off   " Disable file-type-specific indentation
+"   syntax off            " Disable syntax highlighting
 
 " Leader to <Space>
 let mapleader = "\<Space>"
-
-" Turn on file type detection and loading ftplugin and indent files
-filetype plugin indent on
-
-" Turn on syntax highlighting
-syntax enable
 
 if $TERM_PROGRAM == "Apple_Terminal"
   colorscheme default
