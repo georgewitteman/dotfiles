@@ -17,10 +17,10 @@ jobs:
       fail-fast: false
       matrix:
         image:
-          - mcr.microsoft.com/vscode/devcontainers/base:ubuntu
-          - mcr.microsoft.com/vscode/devcontainers/base:alpine
-          - mcr.microsoft.com/vscode/devcontainers/base:debian
-          - mcr.microsoft.com/vscode/devcontainers/universal
+          - mcr.microsoft.com/devcontainers/base:ubuntu
+          - mcr.microsoft.com/devcontainers/base:alpine
+          - mcr.microsoft.com/devcontainers/base:debian
+          - mcr.microsoft.com/devcontainers/universal
     runs-on: ubuntu-latest
     container:
       image: ${{ matrix.image }}
