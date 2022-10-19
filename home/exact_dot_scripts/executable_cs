@@ -19,8 +19,9 @@ case "$1" in
       url="${url%.git}"
       case "$url" in
         :*) : ;;
-        */*) set -- --repo "$url" "$@" ;;
+        */*) set -- "$@" --repo "$url" ;;
       esac
+      echo-run gh codespace "$@" --status
     fi
     ;;
 esac
