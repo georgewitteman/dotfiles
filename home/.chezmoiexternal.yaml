@@ -1,24 +1,16 @@
  {{- $refreshPeriodDay := "24h" -}}
  {{- $refreshPeriodWeek := "168h" -}}
 
-# Removing this for now since it's being annoying
-# .cache/fast-syntax-highlighting:
-#   type: archive
-#   url: 'https://github.com/zdharma-continuum/fast-syntax-highlighting/archive/master.tar.gz'
-#   exact: true
-#   stripComponents: 1
-#   refreshPeriod: {{ $refreshPeriodWeek }}
-
 {{ if eq .chezmoi.os "darwin" }}
 .cache/iterm2/iterm2_shell_integration.bash:
   type: file
   url: 'https://gitlab.com/gnachman/iterm2/-/raw/master/Resources/shell_integration/iterm2_shell_integration.bash'
-  refreshPeriod: {{ $refreshPeriodWeek }}
+  refreshPeriod: {{ $refreshPeriodDay }}
 
 .cache/iterm2/iterm2_shell_integration.zsh:
   type: file
   url: 'https://gitlab.com/gnachman/iterm2/-/raw/master/Resources/shell_integration/iterm2_shell_integration.zsh'
-  refreshPeriod: {{ $refreshPeriodWeek }}
+  refreshPeriod: {{ $refreshPeriodDay }}
 {{ end }}
 
 .local/share/zsh/zsh-completions:
@@ -26,58 +18,49 @@
   url: 'https://github.com/zsh-users/zsh-completions.git'
   refreshPeriod: {{ $refreshPeriodDay }}
 
-.local/share/zsh/functions/_alacritty:
-  type: file
-  url: 'https://raw.githubusercontent.com/alacritty/alacritty/master/extra/completions/_alacritty'
-  refreshPeriod: {{ $refreshPeriodWeek }}
-
 .local/share/zsh/functions/_cargo:
   type: file
   url: 'https://raw.githubusercontent.com/rust-lang/cargo/master/src/etc/_cargo'
-  refreshPeriod: {{ $refreshPeriodWeek }}
+  refreshPeriod: {{ $refreshPeriodDay }}
 
 .local/share/zsh/functions/_fd:
   type: file
   url: 'https://raw.githubusercontent.com/sharkdp/fd/master/contrib/completion/_fd'
-  refreshPeriod: {{ $refreshPeriodWeek }}
+  refreshPeriod: {{ $refreshPeriodDay }}
 
 .local/share/zsh/functions/_node:
   type: file
   url: 'https://raw.githubusercontent.com/zsh-users/zsh-completions/master/src/_node'
-  refreshPeriod: {{ $refreshPeriodWeek }}
+  refreshPeriod: {{ $refreshPeriodDay }}
 
 .local/share/zsh/functions/_rg:
   type: file
   url: 'https://raw.githubusercontent.com/BurntSushi/ripgrep/master/complete/_rg'
-  refreshPeriod: {{ $refreshPeriodWeek }}
+  refreshPeriod: {{ $refreshPeriodDay }}
 
 .local/share/zsh/functions/_docker:
   type: file
   url: 'https://raw.githubusercontent.com/docker/cli/master/contrib/completion/zsh/_docker'
-  refreshPeriod: {{ $refreshPeriodWeek }}
+  refreshPeriod: {{ $refreshPeriodDay }}
 
 .local/share/zsh/functions/_docker-compose:
   type: file
   url: 'https://raw.githubusercontent.com/docker/compose/master/contrib/completion/zsh/_docker-compose'
-  refreshPeriod: {{ $refreshPeriodWeek }}
-
-.pyenv:
-  type: git-repo
-  url: 'https://github.com/pyenv/pyenv.git'
-  refreshPeriod: {{ $refreshPeriodWeek }}
-  pull:
-    args: ["--rebase", "--autostash"]
-
-.nvm:
-  type: git-repo
-  url: 'https://github.com/nvm-sh/nvm.git'
-  refreshPeriod: {{ $refreshPeriodWeek }}
-  pull:
-    # Only do the initial clone
-    args: ["--dry-run"]
-    # args: ["--rebase", "--autostash"]
+  refreshPeriod: {{ $refreshPeriodDay }}
 
 .vim/autoload/plug.vim:
   type: file
   url: 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-  refreshPeriod: {{ $refreshPeriodWeek }}
+  refreshPeriod: {{ $refreshPeriodDay }}
+
+{{- if (or (eq (env "NVM_DIR") (joinPath .chezmoi.homeDir ".nvm")) (empty (env "NVM_DIR"))) }}
+
+.nvm:
+  type: git-repo
+  url: 'https://github.com/nvm-sh/nvm.git'
+  refreshPeriod: {{ $refreshPeriodDay }}
+  pull:
+    # Only do the initial clone
+    args: ["--dry-run"]
+    # args: ["--rebase", "--autostash"]
+{{- end }}
