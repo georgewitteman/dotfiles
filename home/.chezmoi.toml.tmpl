@@ -1,0 +1,16 @@
+{{- $codespaces:= env "CODESPACES" | not | not -}}
+{{- $installPackages := false -}}
+{{- if stdinIsATTY }}
+{{- $installPackages = promptBoolOnce . "install_packages" "Do you want to automatically install packages" -}}
+{{- else if $codespaces }}
+{{- $installPackages = true }}
+{{- end -}}
+
+sourceDir = {{ .chezmoi.sourceDir | quote }}
+
+[diff]
+  exclude = ["scripts"]
+
+[data]
+  codespaces = {{ $codespaces }}
+  install_packages = {{ $installPackages }}

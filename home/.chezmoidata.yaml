@@ -1,7 +1,0 @@
-name: "George Witteman"
-email: "george@witteman.me"
-
-gpgkey: "3F31B900236A9F918F143AE106223EC3AE0381FB"
-sshkey: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFBNCIplFb70z+C9pxD9oOchI3JbDAhuNzUDpL9+9ehK"
-
-private_bin: ".scripts"
