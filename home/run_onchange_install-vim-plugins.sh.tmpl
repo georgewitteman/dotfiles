@@ -1,9 +1,0 @@
-#!/bin/sh
-
-set -o errexit
-set -o xtrace
-
-# vimrc hash: {{ include "./exact_dot_vim/vimrc" | sha256sum }}
-
-# https://github.com/junegunn/vim-plug/wiki/tips#install-plugins-on-the-command-line
-vim -es -u "${HOME}/.vim/vimrc" -i NONE -c "PlugInstall" -c "qa" || true
