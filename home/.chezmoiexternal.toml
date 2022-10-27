@@ -60,8 +60,7 @@
   url = "https://github.com/nvm-sh/nvm.git"
   refreshPeriod = {{ $refreshPeriodDay | quote }}
 
-  # [".nvm.pull"]
-  #   # Only do the initial clone
-  #   args = ["--dry-run"]
-  #   # args = ["--rebase", "--autostash"]
+  # Only do the initial clone
+  pull = { args = ["--dry-run"] }
+  # pull = { args = ["--rebase", "--autostash"] }
 {{- end }}
