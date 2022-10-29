@@ -1,64 +1,61 @@
-{{- $refreshPeriodDay := "24h" -}}
-{{- $refreshPeriodWeek := "168h" -}}
-
 {{ if eq .chezmoi.os "darwin" -}}
 [".cache/iterm2/iterm2_shell_integration.bash"]
   type = "file"
   url = "https://gitlab.com/gnachman/iterm2/-/raw/master/Resources/shell_integration/iterm2_shell_integration.bash"
-  refreshPeriod = {{ $refreshPeriodDay | quote }}
+  refreshPeriod = "24h"
 
 [".cache/iterm2/iterm2_shell_integration.zsh"]
   type = "file"
   url = "https://gitlab.com/gnachman/iterm2/-/raw/master/Resources/shell_integration/iterm2_shell_integration.zsh"
-  refreshPeriod = {{ $refreshPeriodDay | quote}}
+  refreshPeriod = "24h"
 {{- end }}
 
 [".local/share/zsh/zsh-completions"]
   type = "git-repo"
   url = "https://github.com/zsh-users/zsh-completions.git"
-  refreshPeriod = {{ $refreshPeriodDay | quote }}
+  refreshPeriod = "24h"
 
 [".local/share/zsh/functions/_cargo"]
   type = "file"
   url = "https://raw.githubusercontent.com/rust-lang/cargo/master/src/etc/_cargo"
-  refreshPeriod = {{ $refreshPeriodDay | quote }}
+  refreshPeriod = "24h"
 
 [".local/share/zsh/functions/_fd"]
   type = "file"
   url = "https://raw.githubusercontent.com/sharkdp/fd/master/contrib/completion/_fd"
-  refreshPeriod = {{ $refreshPeriodDay | quote }}
+  refreshPeriod = "24h"
 
 [".local/share/zsh/functions/_node"]
   type = "file"
   url = "https://raw.githubusercontent.com/zsh-users/zsh-completions/master/src/_node"
-  refreshPeriod = {{ $refreshPeriodDay | quote }}
+  refreshPeriod = "24h"
 
 [".local/share/zsh/functions/_rg"]
   type = "file"
   url = "https://raw.githubusercontent.com/BurntSushi/ripgrep/master/complete/_rg"
-  refreshPeriod = {{ $refreshPeriodDay | quote }}
+  refreshPeriod = "24h"
 
 [".local/share/zsh/functions/_docker"]
   type = "file"
   url = "https://raw.githubusercontent.com/docker/cli/master/contrib/completion/zsh/_docker"
-  refreshPeriod = {{ $refreshPeriodDay | quote }}
+  refreshPeriod = "24h"
 
 [".local/share/zsh/functions/_docker-compose"]
   type = "file"
   url = "https://raw.githubusercontent.com/docker/compose/master/contrib/completion/zsh/_docker-compose"
-  refreshPeriod = {{ $refreshPeriodDay | quote }}
+  refreshPeriod = "24h"
 
 [".vim/autoload/plug.vim"]
   type = "file"
   url = "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
-  refreshPeriod = {{ $refreshPeriodDay | quote }}
+  refreshPeriod = "24h"
 
 {{- if (or (eq (env "NVM_DIR") (joinPath .chezmoi.homeDir ".nvm")) (empty (env "NVM_DIR"))) }}
 
 [".nvm"]
   type = "git-repo"
   url = "https://github.com/nvm-sh/nvm.git"
-  refreshPeriod = {{ $refreshPeriodDay | quote }}
+  refreshPeriod = "24h"
 
   # Only do the initial clone
   pull = { args = ["--dry-run"] }
