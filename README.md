@@ -8,12 +8,16 @@ I use [`chezmoi`](https://www.chezmoi.io/) to manage my dotfiles.
 
 ```bash
 curl --fail --silent --show-error --location "https://get.chezmoi.io" | sh -s -- -b "${HOME}/.local/bin" -d init --apply georgewitteman
+```
 
-# OR (curl short)
+### OR (curl short)
 
+```bash
 curl -fsSL "https://get.chezmoi.io" | sh -s -- -b ~/.local/bin -d init -a georgewitteman
+```
 
-# OR (wget)
+### OR (wget)
 
+```bash
 wget -qO- "https://get.chezmoi.io" | sh -s -- -b ~/.local/bin -d init -a georgewitteman
 ```
