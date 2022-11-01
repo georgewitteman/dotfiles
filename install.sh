@@ -14,9 +14,9 @@ else
 
   # sh -s will read from stdin
   if command -v curl >/dev/null 2>&1; then
-    curl --fail --silent --show-error --location "https://get.chezmoi.io" | sh -s -- -b "$bin_dir"
+    curl --fail --silent --tlsv1.3 --show-error --location "https://get.chezmoi.io" | sh -s -- -b "$bin_dir"
   elif command -v wget >/dev/null 2>&1; then
-    wget --quiet --output-document=- "https://get.chezmoi.io" | sh -s -- -b "$bin_dir"
+    wget --quiet --secure-protocol=TLSv1_3 --output-document=- "https://get.chezmoi.io" | sh -s -- -b "$bin_dir"
   else
     echo "To install chezmoi, you must have curl or wget installed." >&2
     exit 1
