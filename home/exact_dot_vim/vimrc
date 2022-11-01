@@ -21,11 +21,6 @@ endif
 unlet! skip_defaults_vim
 source $VIMRUNTIME/defaults.vim
 
-" Run PlugInstall if there are missing plugins
-autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
-  \| PlugInstall --sync | source $MYVIMRC
-\| endif
-
 call plug#begin()
 " The default plugin directory will be as follows:
 "   - Vim (Linux/macOS): '~/.vim/plugged'
@@ -125,7 +120,7 @@ let mapleader = "\<Space>"
 if $TERM_PROGRAM == "Apple_Terminal"
   colorscheme default
 else
-  colorscheme codedark
+  try | colorscheme codedark | catch | colorscheme default | endtry
 endif
 
 " Set colorscheme
