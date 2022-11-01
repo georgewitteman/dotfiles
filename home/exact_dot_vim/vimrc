@@ -56,8 +56,8 @@ if $TERM_PROGRAM != "Apple_Terminal"
   Plug 'ludovicchabant/vim-gutentags'
 endif
 
-" Nord color scheme
-Plug 'arcticicestudio/nord-vim'
+" Visual Studio Code Dark color scheme
+Plug 'tomasiser/vim-code-dark'
 
 " "Yaml files in vim 7.4 are really slow, due to core yaml syntax. This syntax
 " is simpler/faster." - stephpy/vim-yaml/README.md
@@ -125,7 +125,7 @@ let mapleader = "\<Space>"
 if $TERM_PROGRAM == "Apple_Terminal"
   colorscheme default
 else
-  colorscheme nord
+  colorscheme codedark
 endif
 
 " Set colorscheme

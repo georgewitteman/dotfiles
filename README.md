@@ -21,3 +21,7 @@ curl -fsSL "https://get.chezmoi.io" | sh -s -- -b ~/.local/bin -d init -a george
 ```bash
 wget -qO- "https://get.chezmoi.io" | sh -s -- -b ~/.local/bin -d init -a georgewitteman
 ```
+
+## Colors
+
+- [iTerm2](https://github.com/tallpants/vscode-theme-iterm2)
