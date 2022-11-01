@@ -167,10 +167,6 @@ dotfiles() {
       echo_run cd "{{ .chezmoi.workingTree }}"
       ;;
     *)
-      # Commenting this out for now since it's not actually used anywhere
-      # if command -v op >/dev/null 2>&1; then
-      #   op_signin || return "$?"
-      # fi
       command dotfiles "$@"
       ;;
   esac
