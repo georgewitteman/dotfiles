@@ -120,6 +120,7 @@ let mapleader = "\<Space>"
 if $TERM_PROGRAM == "Apple_Terminal"
   colorscheme default
 else
+  " This is needed for the automatic plugin install. I'm not sure why
   try | colorscheme codedark | catch | colorscheme default | endtry
 endif
 
