@@ -138,54 +138,9 @@ alias gb='git-branch'
 
 alias tf="terraform"
 
-# 1Password
-op_signin() {
-  if ! command -v op >/dev/null 2>&1; then
-    echo "command not found: op"
-    return 127
-  fi
-  if ! op whoami --account my.1password.com >/dev/null 2>&1; then
-    # shellcheck disable=SC2016
-    echo_eval 'eval "$(op signin)"'
-    # Verify we are signed in now
-    op whoami --account my.1password.com >/dev/null 2>&1
-  fi
-}
-
-remove_prefix_from_path() {
-  # NOTE: Removes only a prefix (i.e. $PYENV_ROOT not $PYENV_ROOT/bin)
-  while true; do
-    case ":$PATH" in
-      *:"$1"/*:*) PATH="${PATH%%"${1}"*}${PATH#*"${1}"*:}" ;;
-      *"$1"/*) PATH="${PATH%%"${1}"*}" ;;
-      *) break ;;
-    esac
-  done
-}
-
 take() {
   # shellcheck disable=SC2164
   mkdir -p "$1" && cd "$1"
-}
-
-novenv() {
-  if [ $# -eq 0 ] && [ -n "$VIRTUAL_ENV" ]; then
-    venv
-    return $?
-  fi
-  venv --save
-  # All this `trap` stuff makes it so that if I CTRL-C in the running command
-  # the virtual environment will still be restored and the exit code will still
-  # be correct
-  trap '' INT
-  (
-    trap - INT
-    "$@"
-  )
-  set -- $?
-  trap - INT
-  venv --restore
-  return "$1"
 }
 
 tmp() {
@@ -193,131 +148,6 @@ tmp() {
   set -- "${TMPDIR:-"$(mktemp -d)/"}$(date +%Y-%m-%dT%H%M%S)"
   echo_run mkdir -p "$1"
   echo_run cd "$1"
-}
-
-venv() {
-  while [ $# -gt 0 ]; do
-    case "$1" in
-      -[[:alnum:]][[:alnum:]]*)
-        _value="-${1##-?}"
-        _arg="${1%%"${1##-?}"}"
-        ;;
-    esac
-    if [ -n "${_arg:-}${_value:-}" ]; then
-      shift
-      set -- "$_arg" "$_value" "$@"
-    fi
-    unset _arg _value
-    case "$1" in
-      -h | --help)
-        echo "Usage: venv [options] [<venv_name>]"
-        echo
-        echo "Manges virtual environments. Passing no options will attempt to find"
-        echo "and activate a virtual environment with the default name (.venv) or "
-        echo "<venv_name>."
-        echo
-        echo "Options:"
-        echo "  -c --create --create3  Create a python 3 virtual environment."
-        echo "  --create2              Create a python 2 virtual environment."
-        echo "  -s --save              Save a virtual environment to the stack."
-        echo "  -r --restore           Restore a virtual environment from the stack."
-        echo "  -d --deactivate        Deactivate a virtual environment."
-        echo
-        echo "Examples:"
-        echo "  venv  # Activate a virtual environment with the name .venv"
-        echo "  venv --create .venv3"
-        echo "  venv --save && do_something && venv --restore"
-        return
-        ;;
-      --create2)
-        shift
-        if [ -n "$VIRTUAL_ENV" ]; then
-          echo_run deactivate
-        fi
-        if [ -d "${1:-.venv}" ]; then
-          echo_run rm -rf "${1:-.venv}"
-        fi
-        echo_run python2 -m pip install virtualenv
-        echo_run python2 -m virtualenv "${1:-.venv}"
-        echo_run . "${1:-.venv}/bin/activate"
-        if [ -f requirements.txt ]; then
-          echo_run pip install -r requirements.txt
-        fi
-        return $?
-        ;;
-      -s | --save)
-        if [ -z "$VIRTUAL_ENV" ]; then
-          return
-        fi
-
-        echo "\033[2m# Saving venv '${VIRTUAL_ENV}'\033[m"
-        SAVED_VENVS="${VIRTUAL_ENV}:${SAVED_VENVS:-}"
-        echo_run deactivate
-        return $?
-        ;;
-      -r | --restore)
-        if command -v deactivate >/dev/null 2>&1; then
-          echo_run deactivate
-        fi
-
-        if [ -n "${SAVED_VENVS:-}" ]; then
-          echo "\033[2m# Restoring '${SAVED_VENVS%%:*}'\033[m"
-          echo_run . "${SAVED_VENVS%%:*}/bin/activate"
-          SAVED_VENVS="${SAVED_VENVS#"${SAVED_VENVS%%:*}:"}"
-        fi
-        return $?
-        ;;
-      -c | --create | --create3)
-        shift
-        if [ -n "$VIRTUAL_ENV" ]; then
-          echo_run deactivate
-        fi
-        if [ -d "${1:-.venv}" ]; then
-          echo_run rm -rf "${1:-.venv}"
-        fi
-        echo_run python3 -m venv "${1:-.venv}"
-        echo_run . "${1:-.venv}/bin/activate"
-        if [ -f requirements.txt ]; then
-          echo_run pip install -r requirements.txt
-        fi
-        return $?
-        ;;
-      -d | --deactivate)
-        if [ -n "$VIRTUAL_ENV" ] && command -v deactivate >/dev/null 2>&1; then
-          echo_run deactivate
-          return $?
-        fi
-        return $?
-        ;;
-      *)
-        break
-        ;;
-    esac
-    shift
-  done
-
-  # Recursively search up until home directory for a virtual environment with
-  # the desired name. This allows you to activate a venv from the root of your
-  # project while you're deep in the directory structure
-  set -- "${1:-.venv}" "$PWD" "$1"
-  while [ "$2" != "$HOME" ] && [ "$2" != "/" ] && [ ! -f "${2}/${1}/bin/activate" ]; do
-    set -- "$1" "$(dirname "$2")" "$3"
-  done
-
-  # If you're in a venv and you didn't specify a different one explicitly then
-  # you probably want to deactivate the current one
-  if [ -n "$VIRTUAL_ENV" ] && [ -z "$3" ]; then
-    echo_run deactivate
-    return
-  fi
-
-  if [ ! -f "${2}/${1}/bin/activate" ]; then
-    echo-err "Couldn't find a valid venv for '${1}'"
-    return 1
-  fi
-
-  # shellcheck source=/dev/null
-  echo_run . "${2}/${1}/bin/activate"
 }
 
 dotfiles() {
@@ -354,18 +184,10 @@ if ! command -v tailscale >/dev/null 2>&1; then
   fi
 fi
 
-{{ template "prompt/init.sh" }}
-if [ -n "$VIRTUAL_ENV" ]; then
-  # Allows you to `rc` (reload config, see aliases below) from inside a virtual
-  # environment without losing the virtual environment. Normally `exec` keeps
-  # all environment variables, but certain ones get overwritten during zsh
-  # initialization. This reinitializes them. Keep this after anything else that
-  # sets the path.
-
-  # Clean the front of $PATH. This is really only used when starting a subshell
-  # while in a virtual environment
-  remove_prefix_from_path "$VIRTUAL_ENV"
-
-  # shellcheck source=/dev/null
-  echo_run . "$VIRTUAL_ENV/bin/activate"
+if [ "$(id -u || true)" -eq 0 ]; then
+  PS1='$PWD $'
+else
+  PS1='$PWD $ '
 fi
+PS2='> '
+PS4='+ '

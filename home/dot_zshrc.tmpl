@@ -1,9 +1,11 @@
 # vim: ft=zsh
 source "${HOME}/.shinit"
 
-{{ template "prompt/init.zsh" }}
-# Adding this here so scripts think pyenv is initialized
-# eval "$(pyenv init -)"
+if command -v starship >/dev/null 2>/dev/null; then
+  eval "$(starship init zsh)"
+else
+  PS1="%F{14}%B%~%f%b %# "
+fi
 
 fpath=(
   "${HOME}/.local/share/zsh/functions"

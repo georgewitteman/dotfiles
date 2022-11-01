@@ -1,5 +1,5 @@
 "$schema" = 'https://starship.rs/config-schema.json'
-format = '$hostname$directory$git_branch${custom.git_host}$git_commit$git_state$nodejs$python$time$cmd_duration$status${custom.stashes}$shell$line_break$shlvl${custom.container}${custom.venv}$jobs$character'
+format = '$hostname$directory$git_branch${custom.git_host}$git_commit$git_state$nodejs$time$cmd_duration$status${custom.stashes}$shell$line_break$shlvl${custom.container}$jobs$character'
 add_newline = false
 
 [hostname]
@@ -27,10 +27,6 @@ symbol = ''
 [git_status]
 disabled = true
 
-[python]
-disabled = true
-format = 'via [${pyenv_prefix}(${version} )(\($virtualenv\))]($style) '
-
 [nodejs]
 symbol = ''
 
@@ -45,22 +41,6 @@ when = 'test -f /.dockerenv || grep -q docker /proc/1/cgroup'
 style = 'bold fg:purple'
 command = 'echo 🐳'
 description = 'Identifies that we are in a container'
-
-[custom.venv]
-shell = ['dash', '-eu']
-command = '''
-if [ "${VIRTUAL_ENV%%/src/.venv3}" != "$VIRTUAL_ENV" ]; then
-  basename "${VIRTUAL_ENV%/*/*}3"
-elif [ "${VIRTUAL_ENV%%/src/.venv*}" != "$VIRTUAL_ENV" ]; then
-  basename "${VIRTUAL_ENV%/*/*}"
-else
-  echo "${VIRTUAL_ENV#${VIRTUAL_ENV%/*/*}/}"
-fi
-'''
-when = 'test -n "$VIRTUAL_ENV"'
-format = '([\($output\)]($style) )'
-style = 'fg:242'
-description = 'Custom formatted python virtual environment name'
 
 [custom.git_host]
 shell = ['dash', '-eu']

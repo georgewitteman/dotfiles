@@ -35,7 +35,13 @@ fi
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
 {{ template "terraform-completion.bash" }}
-{{ template "prompt/init.bash" }}
+if command -v starship >/dev/null 2>/dev/null; then
+  # shellcheck disable=SC2312
+  eval "$(starship init bash)"
+else
+  PS1='\[\033[01;34m\]\w\[\033[00m\] \$ '
+fi
+
 # Keep this at the end
 if [[ -e "${HOME}/.cache/iterm2/iterm2_shell_integration.bash" ]]; then
   # shellcheck source=/dev/null
