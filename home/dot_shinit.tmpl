@@ -5,6 +5,12 @@
 # remember what this actually does.
 alias resh="restart_shell"
 restart_shell() {
+  # shellcheck disable=SC2312
+  if [ -n "$(jobs)" ]; then
+    echo "Current shell has backgrounded jobs. Not restarting ${1}"
+    return 1
+  fi
+
   # Note: You can't use $0 here since it will be the name of the function, not
   # the shell.
   if [ $# -eq 0 ]; then
@@ -16,96 +22,54 @@ restart_shell() {
       set -- "$(ps -p $$ -o comm | tail -1)"
     fi
   fi
-  # $1: The name of the shell prefixed with a dash (indicating a login shell)
-  # $2: The path to the shell. This is necessary since we get rid of $PATH
-  #
-  # Sometimes the shell will be started with a dash in front of the name of the
-  # shell to indicate that it's a login shell. This breaks the restart because
-  # exec thinks that the name of the shell is actually an argument.
-  # shellcheck disable=SC2312
-  set -- "-$(basename "${1#-}")" "$(command -v "${1#-}")"
-  case "$1" in
-    # The login command will prefix the name of the shell with a dash. The -p
-    # argument tells login to not discard previous environment variables.
-    #
-    # IMPORTANT: This is not needed anymore. I realized you can use -a${1} in
-    # the bash solution below.
-    #
-    # -*) set -- "$(command -v login)" -p -f "$USER" "$2" ;;
-    #
-    # The bash exec command has the -a argument which allows you to set the
-    # name of the script. This allows us to keep $0 the same across processes.
-    # For example, if I originally started bash by typing `bash`, $0 will
-    # continue to be `bash`. If I started it with `/bin/bash`, it will continue
-    # to be `/bin/bash/`.
-    *)
-      # shellcheck disable=SC2312
-      set -- "$(command -v bash)" -c "exec -a${1} ${2}"
-      ;;
-  esac
-
-  # In case ~/.shinit breaks before loading these functions, set dummy versions
-  # of them here so things still work.
-  if ! command -v echo_run >/dev/null 2>&1; then
-    echo_run() {
-      echo "\$ $*"
-      "$@"
-    }
-  fi
-  if ! command -v echo_eval >/dev/null 2>&1; then
-    echo_eval() {
-      echo "\$ $*"
-      eval "$*"
-    }
-  fi
-
-  # shellcheck disable=SC2312
-  if [ -n "$(jobs)" ]; then
-    # Handle any issues where $PATH doesn't include my custom echo-warn
-    # command.
-    if command -v echo-warn >/dev/null 2>&1; then
-      echo-warn "Current shell has backgrounded jobs. Not restarting ${1}"
-    else
-      echo "Current shell has backgrounded jobs. Not restarting ${1}"
-    fi
-    return 1
-  fi
-
-  # Since we reset $PATH and the autoloading requires cat (which is in $PATH)
-  # preload some functions.
-  echo_run : >/dev/null 2>&1
-  echo_eval : >/dev/null 2>&1
+  set -- "${1#-}" -li
 
   # https://github.com/zsh-users/zsh/blob/8e1c6ed6bf416e7716b4c6d5c6822ec752db7b36/Completion/compinit#L133
   if [ -f "${ZDOTDIR:-$HOME}/.zcompdump" ]; then
     echo_run rm "${ZDOTDIR:-$HOME}/.zcompdump"
   fi
 
-  # I'm using the awk approach since my original approach didn't handle
-  # newlines well.
-  #
-  # Original approach: for name in $(env | cut -d '=' -f1 | xargs echo); do
-  #
-  # NOTE: Commenting this out for now since it does not work in dev containers.
-  #
-  # for name in $(awk 'BEGIN{for(v in ENVIRON) print v}' | xargs echo); do
-  #   case "$name" in
-  #     # These variables are provided by the terminal and are not automatically
-  #     # assigned by the shell.
-  #     COLORFGBG | COLORTERM | COMMAND_MODE | HOME | ITERM_PROFILE | ITERM_SESSION_ID | LANG | LC_TERMINAL | LC_TERMINAL_VERSION | LOGNAME | PWD | SHELL | SSH_AUTH_SOCK | TERM | TERM_PROGRAM | TERM_PROGRAM_VERSION | TERM_SESSION_ID | TMPDIR | USER | XPC_FLAGS | XPC_SERVICE_NAME | __CFBundleIdentifier | __CF_USER_TEXT_ENCODING | OP_SESSION_*) : ;;
-  #     *) echo_run unset -v "$name" ;;
-  #   esac
-  # done
-
   echo_run exec "$@"
 }
 
-login_shell() {
-  # Starts a login shell with the most pristine environment possible.
-  # shellcheck disable=SC2312
-  echo_run login -f "$USER" "$(command -v env)"
-  echo_run exec login -f "$USER"
+autoload_script() {
+  # usage: autoload_script func_name /path/to/func_name
+
+  # The outer eval is needed so that the args to autoload_script can be used by
+  # the inner function. The inner function (the one created by the outer eval)
+  # is needed so that `$(cat $2)` isn't called immediately when
+  # `autoload_script` is called. We want `cat` to only be called the first time
+  # the the function with the name defined by $1 is called. The inner eval
+  # creates the function with the actual body and runs it once. This means that
+  # the first time the function is called, it will load in the actual function
+  # body and create a new function (with the same name) with the actual
+  # business logic. Afterwards the function is fully loaded.
+  #
+  # Another thing to note is that the inner eval needs to have the `$(cat $2)`
+  # as a double quoted argument. This is so that the output of the command (the
+  # function/script implementation) is treated as an argument. If it's not, any
+  # quotes in the function/script implementation risk closing the quotes in the
+  # code that is being `eval`d, leading to weird bugs. For example:
+  # - eval 'foo() { #!/bin/sh
+  #   echo 'bar || baz'
+  #   }'
+  # This is an overly simplistic example, but you can see how the first single
+  # quote on line 2 will actually end the string that is the first argument to
+  # eval. The `||` will then be treated as a real or (i.e. `echo ... || baz
+  # ...`) instead of as part of the string 'bar || baz'.
+  eval "${1}() {
+    eval \"
+      ${1}() {
+        \$(cat ${2})
+      }
+    ${1} \\\"\\\$@\\\"\"
+  }"
 }
+
+autoload_script echo_eval {{ joinPath .chezmoi.homeDir .private_bin "echo-eval" | quote }}
+autoload_script safe_eval {{ joinPath .chezmoi.homeDir .private_bin "safe-eval" | quote }}
+autoload_script echo_run {{ joinPath .chezmoi.homeDir .private_bin "echo-run" | quote }}
+autoload_script safe_run {{ joinPath .chezmoi.homeDir .private_bin "safe-run" | quote }}
 
 # -O: True if file exists and its owner matches the effective user id of this
 # process.
@@ -198,45 +162,6 @@ remove_prefix_from_path() {
     esac
   done
 }
-
-autoload_script() {
-  # usage: autoload_script func_name /path/to/func_name
-
-  # The outer eval is needed so that the args to autoload_script can be used by
-  # the inner function. The inner function (the one created by the outer eval)
-  # is needed so that `$(cat $2)` isn't called immediately when
-  # `autoload_script` is called. We want `cat` to only be called the first time
-  # the the function with the name defined by $1 is called. The inner eval
-  # creates the function with the actual body and runs it once. This means that
-  # the first time the function is called, it will load in the actual function
-  # body and create a new function (with the same name) with the actual
-  # business logic. Afterwards the function is fully loaded.
-  #
-  # Another thing to note is that the inner eval needs to have the `$(cat $2)`
-  # as a double quoted argument. This is so that the output of the command (the
-  # function/script implementation) is treated as an argument. If it's not, any
-  # quotes in the function/script implementation risk closing the quotes in the
-  # code that is being `eval`d, leading to weird bugs. For example:
-  # - eval 'foo() { #!/bin/sh
-  #   echo 'bar || baz'
-  #   }'
-  # This is an overly simplistic example, but you can see how the first single
-  # quote on line 2 will actually end the string that is the first argument to
-  # eval. The `||` will then be treated as a real or (i.e. `echo ... || baz
-  # ...`) instead of as part of the string 'bar || baz'.
-  eval "${1}() {
-    eval \"
-      ${1}() {
-        \$(cat ${2})
-      }
-    ${1} \\\"\\\$@\\\"\"
-  }"
-}
-
-autoload_script echo_eval {{ joinPath .chezmoi.homeDir .private_bin "echo-eval" | quote }}
-autoload_script safe_eval {{ joinPath .chezmoi.homeDir .private_bin "safe-eval" | quote }}
-autoload_script echo_run {{ joinPath .chezmoi.homeDir .private_bin "echo-run" | quote }}
-autoload_script safe_run {{ joinPath .chezmoi.homeDir .private_bin "safe-run" | quote }}
 
 take() {
   # shellcheck disable=SC2164
@@ -429,9 +354,7 @@ if ! command -v tailscale >/dev/null 2>&1; then
   fi
 fi
 
-{{ template "nvm/init.sh" }}
 {{ template "prompt/init.sh" }}
-{{ template "pyenv/init.sh" }}
 if [ -n "$VIRTUAL_ENV" ]; then
   # Allows you to `rc` (reload config, see aliases below) from inside a virtual
   # environment without losing the virtual environment. Normally `exec` keeps

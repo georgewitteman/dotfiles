@@ -28,19 +28,16 @@ elif [[ -d "${HOMEBREW_PREFIX}/etc/bash_completion.d" ]]; then
   unset COMPLETION
 fi
 
+# https://github.com/nvm-sh/nvm#manual-install
+# shellcheck disable=SC1091,SC2292
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+# shellcheck disable=SC1091,SC2292
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
 {{ template "terraform-completion.bash" }}
-{{ template "nvm/init.bash" }}
 {{ template "prompt/init.bash" }}
 # Keep this at the end
 if [[ -e "${HOME}/.cache/iterm2/iterm2_shell_integration.bash" ]]; then
   # shellcheck source=/dev/null
   source "${HOME}/.cache/iterm2/iterm2_shell_integration.bash" || true
-fi
-
-# Added for Gitpod. Need to keep the following line for parsing.
-# Generated for envman. Do not edit.
-# https://github.com/therootcompany/pathman/blob/2c283a28649a692fea764894415cfa6b74fe2f5b/envpath/parse.go#L28
-# shellcheck source=/dev/null
-if [[ -s "$HOME/.config/envman/load.sh" ]]; then
-  source "$HOME/.config/envman/load.sh"
 fi

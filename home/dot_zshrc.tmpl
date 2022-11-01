@@ -19,6 +19,10 @@ if [ -n "$HOMEBREW_PREFIX" ] && [ -O "$HOMEBREW_PREFIX" ]; then
   fpath=("${HOMEBREW_PREFIX}/share/zsh/site-functions" "${fpath[@]}")
 fi
 
+# https://github.com/nvm-sh/nvm#manual-install
+# shellcheck disable=SC1091
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
 # Resources:
 # https://github.com/finnurtorfa/zsh/blob/master/completion.zsh
 # https://zsh.sourceforge.io/Doc/Release/Completion-System.html
@@ -354,10 +358,4 @@ fi
 # Keep this at the end
 if [[ -e "${HOME}/.cache/iterm2/iterm2_shell_integration.zsh" ]]; then
   source "${HOME}/.cache/iterm2/iterm2_shell_integration.zsh" || true
-fi
-
-# Added for Gitpod
-# Generated for envman. Do not edit.
-if [[ -s "$HOME/.config/envman/load.sh" ]];then
-  source "$HOME/.config/envman/load.sh"
 fi

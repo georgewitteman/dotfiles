@@ -62,5 +62,6 @@ PATH="{{ joinPath .chezmoi.homeDir .private_bin }}:${PATH}"
 PATH="${HOME}/.cargo/bin:${PATH}"
 PATH="${HOME}/.poetry/bin:${PATH}"
 
-{{ template "nvm/profile.sh" }}
-{{ template "pyenv/profile.sh" -}}
+if [ -z "$NVM_DIR" ]; then
+  export NVM_DIR="${HOME}/.nvm"
+fi
