@@ -19,10 +19,6 @@ if [ -n "$HOMEBREW_PREFIX" ] && [ -O "$HOMEBREW_PREFIX" ]; then
   fpath=("${HOMEBREW_PREFIX}/share/zsh/site-functions" "${fpath[@]}")
 fi
 
-# https://github.com/nvm-sh/nvm#manual-install
-# shellcheck disable=SC1091
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-
 # Resources:
 # https://github.com/finnurtorfa/zsh/blob/master/completion.zsh
 # https://zsh.sourceforge.io/Doc/Release/Completion-System.html
@@ -106,11 +102,15 @@ compinit
 autoload -U +X bashcompinit
 bashcompinit
 
+# https://github.com/nvm-sh/nvm#manual-install
+# shellcheck disable=SC1091
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
 # Don't run if nvm completion has already been set up. This fixes an issue on
 # Codespaces which uses a version of the completion script before
 # https://github.com/nvm-sh/nvm/issues/2489 was fixed.
-if ! whence __nvm >/dev/null 2>&1 && [[ -f ${NVM_DIR:-${HOME}/.nvm}/bash_completion ]]; then
-  source "${NVM_DIR:-${HOME}/.nvm}/bash_completion"
+if ! whence __nvm >/dev/null 2>&1 && [[ -f ${NVM_DIR}/bash_completion ]]; then
+  source "$NVM_DIR/bash_completion"
 fi
 
 {{ if lookPath "terraform" -}}

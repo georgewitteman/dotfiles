@@ -103,3 +103,14 @@ jobs:
       - run: rm -rf ~/.nvm
       - run: ./install.sh
       - run: just verbose=true lint
+
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - uses: actions/checkout@v3
+      - run: ./install.sh
+      - name: "Run nvm install script"
+        run: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
+      - name: "Check nvm install script is idempotent"
+        run: set -x; chezmoi --exclude scripts diff || true; chezmoi --exclude scripts verify
