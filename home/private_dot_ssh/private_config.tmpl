@@ -1,8 +1,9 @@
 {{- $filename := (joinPath .chezmoi.homeDir "Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock") }}
 {{- if and (stat $filename) (eq (default 0 (get (stat $filename) "mode")) 16777600) }}
+# https://developer.1password.com/docs/ssh/get-started#step-4-configure-your-ssh-or-git-client
+# Don't change this since 1Password preferences looks for it exactly.
 Host *
-  # https://developer.1password.com/docs/ssh/get-started#step-4-configure-your-ssh-or-git-client
-  IdentityAgent {{ $filename | quote }}
+  IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
 {{- end }}
 
 include ~/.ssh/codespaces
