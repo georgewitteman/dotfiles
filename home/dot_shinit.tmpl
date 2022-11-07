@@ -1,5 +1,18 @@
 #!/bin/sh
 
+# Visual Studio Code only loads the profile once at startup. So, if I install
+# my dotfiles in an already loaded session, it will not run the ~/.profile
+# script again (so custom scripts, etc. aren't available). In the ~/.profile
+# file, I set the $ENV variable (which doesn't seem to normally be set).
+# Therefore, I can use that as a sanity check to see whether the ~/.profile
+# script has been sourced, and if not, source it here manually.
+#
+# This also relies on the fact that nothing is really happening in
+# ~/.bash_profile or ~/.zprofile.
+if [ -z "$ENV" ]; then
+  . "${HOME}/.profile"
+fi
+
 # I'm putting this near the top because sometimes other stuff in this script
 # breaks while I'm testing it and then restart_shell isn't loaded and I have to
 # remember what this actually does.
