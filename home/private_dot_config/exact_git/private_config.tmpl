@@ -35,3 +35,9 @@
 
 [commit]
 	gpgSign = true
+
+{{- $credential_helper := output "git" "config" "--default" "" "--global" "credential.helper" | trim }}
+{{- if (not (empty $credential_helper)) }}
+[credential]
+       helper = {{ $credential_helper | quote }}
+{{- end }}
