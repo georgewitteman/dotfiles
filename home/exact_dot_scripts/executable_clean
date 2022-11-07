@@ -41,7 +41,7 @@ clean_venvs() {
 clean_node_modules() {
   echo "cleaning node_modules folders"
   # It seems like -prune is ignored when using -delete
-  find . -name "node_modules" -type d -prune | xargs -o "$cmd" rm -rf
+  find . -name "node_modules" -type d -prune -print0 | xargs -0 -o "$cmd" rm -rf
 }
 
 for kind in "$@"; do
