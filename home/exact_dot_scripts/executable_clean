@@ -2,7 +2,7 @@
 
 set -o errexit
 
-USAGE="usage: $(basename "$0") [-y] (pycache|ds_store|venv)"
+USAGE="usage: $(basename "$0") [-y] (pycache|ds_store|venv|node_modules)"
 
 cmd=safe-run
 
@@ -38,11 +38,18 @@ clean_venvs() {
   find "$PWD" -type f -path '*/bin/activate' | while read -r line; do dirname "$(dirname "$line")"; done | xargs -o "$cmd" rm -rf
 }
 
+clean_node_modules() {
+  echo "cleaning node_modules folders"
+  # It seems like -prune is ignored when using -delete
+  find . -name "node_modules" -type d -prune | xargs -o "$cmd" rm -rf
+}
+
 for kind in "$@"; do
   case "$kind" in
     pycache) fn=clean_pycache ;;
     ds_store | dsstore) fn=clean_ds_store ;;
     venv | venvs) fn=clean_venvs ;;
+    node_modules | nodemodules) fn=clean_node_modules ;;
     *)
       echo "error: cannot clean ${kind}" >&2
       exit 1
