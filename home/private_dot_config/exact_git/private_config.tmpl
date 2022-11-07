@@ -40,7 +40,7 @@
 {{- if (not (empty $credential_helper)) }}
 [credential]
        helper = {{ $credential_helper | quote }}
-{{/* This seems to be needed for local dev containers in Visual Studio Code. Not sure why. */}}
+{{- /* This seems to be needed for local dev containers in Visual Studio Code. Not sure why. */}}
 {{- $credential_helper2 := output "git" "config" "--default" "" "--global" "credential.helper2" | trim }}
 {{- if (not (empty $credential_helper2)) }}
        helper2 = {{ $credential_helper2 }}
