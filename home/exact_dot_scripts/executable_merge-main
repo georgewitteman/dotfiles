@@ -55,4 +55,4 @@ fi
 main_branch="$(get-main-branch)"
 
 echo-run git fetch "$remote" "$main_branch"
-echo-run git merge "${remote}/${main_branch}"
+echo-run git merge --no-edit "${remote}/${main_branch}"
