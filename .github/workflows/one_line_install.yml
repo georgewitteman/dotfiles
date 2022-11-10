@@ -19,4 +19,4 @@ jobs:
       - name: Uninstall homebrew
         if: ${{ matrix.os == 'macOS-latest' }}
         run: 'sudo /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh)" -- --force'
-      - run: 'sh -c "$(curl -fsLS git.io/chezmoi)" -- init --apply georgewitteman'
+      - run: 'curl -fsSL "https://get.chezmoi.io" | sh -s -- -b ~/.local/bin -d init -a georgewitteman'
