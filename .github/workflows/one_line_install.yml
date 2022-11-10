@@ -1,6 +1,9 @@
 name: Quick Install
 
 on:
+  push:
+    branches:
+      - main
   schedule:
     # 5am PT daily
     - cron: '30 12 * * *'
