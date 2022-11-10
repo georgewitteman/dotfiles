@@ -31,7 +31,9 @@ call plug#begin()
 "   - Avoid using standard Vim directory names like 'plugin'
 
 " Enables useful syntax highlighting for .tmpl and other chezmoi files
-Plug 'alker0/chezmoi.vim'
+" Temporarily pinning the version to resolve
+" https://github.com/georgewitteman/dotfiles/actions/runs/3437841248/jobs/5733133559
+Plug 'alker0/chezmoi.vim', { 'commit': 'c4a6024ffb999c798ce1698c615bf228e6333c52' }
 
 " Add git plugins if git is installed
 if executable('git')
