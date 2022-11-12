@@ -1,10 +1,5 @@
 {
   "name": "dotfiles",
   "image": "mcr.microsoft.com/devcontainers/base",
-  "remoteUser": "vscode",
-  "postCreateCommand": ".devcontainer/postCreate.sh",
-  "appPort": 2222,
-  "features": {
-    "ghcr.io/devcontainers/features/sshd": {}
-  }
+  "remoteUser": "vscode"
 }
