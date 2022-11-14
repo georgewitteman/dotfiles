@@ -1,4 +1,4 @@
-default: lint sanity
+default: lint sanity test
 
 verbose := "false"
 
@@ -32,4 +32,16 @@ sanity: apply
       env -i HOME="$HOME" "$sh" "$@" -eic exit
       env -i HOME="$HOME" "$sh" "$@" -euc exit
     fi
+  done
+
+test: apply
+  #!/bin/sh
+  set -o errexit
+  if {{ verbose }}; then
+    set -- -x
+  fi
+  for test_file in ./tests/test_*; do
+    echo "running: ${test_file}"
+    sh "$@" -eu "$test_file"
+    echo "passed: ${test_file}"
   done
