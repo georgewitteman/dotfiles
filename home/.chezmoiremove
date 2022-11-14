@@ -4,3 +4,5 @@
 .config/sh
 .config/zsh
 .config/chezmoi/chezmoi.yaml
+
+.zcompdump
