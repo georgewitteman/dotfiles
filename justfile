@@ -22,9 +22,9 @@ sanity: apply
   fi
   for sh in sh bash dash zsh ksh; do
     if command -v "$sh"; then
-      "$sh" "$@" -lic exit
-      "$sh" "$@" -lc exit
-      "$sh" "$@" -ic exit
+      "$sh" "$@" -elic exit
+      "$sh" "$@" -elc exit
+      "$sh" "$@" -eic exit
       "$sh" "$@" -euc exit
     fi
   done
