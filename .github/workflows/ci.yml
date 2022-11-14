@@ -105,12 +105,43 @@ jobs:
       - run: just verbose=true lint
 
   tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        image:
+          - mcr.microsoft.com/devcontainers/base:ubuntu
+          - mcr.microsoft.com/devcontainers/base:alpine
+          - mcr.microsoft.com/devcontainers/base:debian
     runs-on: ubuntu-latest
+    container:
+      image: ${{ matrix.image }}
+      env:
+        CODESPACES: true
+      options: "--user root"
     steps:
       - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
       - uses: actions/checkout@v3
+      - uses: extractions/setup-just@v1
+        # Docs: In rare circumstances you might get rate limiting errors, this
+        # is because this workflow has to make requests to GitHub API in order
+        # to list available releases. If this happens you can set the
+        # GITHUB_TOKEN environment variable.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: ./install.sh
-      - name: "Run nvm install script"
-        run: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
-      - name: "Check nvm install script is idempotent"
-        run: set -x; chezmoi --exclude scripts diff || true; chezmoi --exclude scripts verify
+      - run: just verbose=true check
+
+  tests-macos:
+    runs-on: macos-latest
+    steps:
+      - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - uses: actions/checkout@v3
+      - uses: extractions/setup-just@v1
+        # Docs: In rare circumstances you might get rate limiting errors, this
+        # is because this workflow has to make requests to GitHub API in order
+        # to list available releases. If this happens you can set the
+        # GITHUB_TOKEN environment variable.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: ./install.sh
+      - run: just verbose=true check

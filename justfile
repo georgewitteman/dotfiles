@@ -2,6 +2,8 @@ default: lint sanity test
 
 verbose := "false"
 
+check: sanity test
+
 lint: shellcheck shfmt
 
 apply:
@@ -41,7 +43,7 @@ test: apply
     set -- -x
   fi
   for test_file in ./tests/test_*; do
-    echo "running: ${test_file}"
+    echo "RUNNING: ${test_file}"
     sh "$@" -eu "$test_file"
-    echo "passed: ${test_file}"
+    echo "PASSED: ${test_file}"
   done
