@@ -4,14 +4,6 @@
 set -o errexit
 set -o xtrace
 
-if ! command -v starship >/dev/null 2>&1; then
-  if command -v brew >/dev/null 2>&1; then
-    brew install starship
-  elif command -v curl >/dev/null 2>&1; then
-    curl -sS https://starship.rs/install.sh | sh -s -- --yes --verbose
-  fi
-fi
-
 if command -v sudo >/dev/null 2>&1 && command -v apt-get >/dev/null 2>&1; then
   export DEBIAN_FRONTEND=noninteractive
   sudo --non-interactive apt-get update
@@ -21,7 +13,6 @@ if command -v sudo >/dev/null 2>&1 && command -v apt-get >/dev/null 2>&1; then
     fzf \
     iputils-ping \
     ripgrep \
-    telnet \
     universal-ctags \
     vim-nox \
     zsh
@@ -31,21 +22,19 @@ elif command -v brew >/dev/null 2>&1; then
 brew "fd"
 brew "fzf"
 brew "gnupg"
-brew "htop"
-brew "hyperfine"
 brew "jq"
 brew "pinentry-mac"
 brew "ripgrep"
-brew "rsync"
-brew "shellcheck"
-brew "starship"
-brew "telnet"
-brew "terraform"
-brew "tmux"
-brew "tree"
 brew "universal-ctags"
 brew "vim"
-brew "wget"
 EOF
+fi
+
+if ! command -v starship >/dev/null 2>&1; then
+  if command -v brew >/dev/null 2>&1; then
+    brew install starship
+  elif command -v curl >/dev/null 2>&1; then
+    curl -sS https://starship.rs/install.sh | sh -s -- --yes --verbose
+  fi
 fi
 {{- end }}
