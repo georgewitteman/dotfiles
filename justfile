@@ -26,5 +26,10 @@ sanity: apply
       "$sh" "$@" -elc exit
       "$sh" "$@" -eic exit
       "$sh" "$@" -euc exit
+
+      env -i HOME="$HOME" "$sh" "$@" -elic exit
+      env -i HOME="$HOME" "$sh" "$@" -elc exit
+      env -i HOME="$HOME" "$sh" "$@" -eic exit
+      env -i HOME="$HOME" "$sh" "$@" -euc exit
     fi
   done
