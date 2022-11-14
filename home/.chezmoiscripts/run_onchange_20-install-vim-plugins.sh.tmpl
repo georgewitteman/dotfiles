@@ -7,6 +7,9 @@ if ! command -v vim >/dev/null 2>&1; then
   exit
 fi
 
+ls -la ~/.vim/plugins || true
+ls -la ~/.vim/plugged || true
+
 # vimrc hash: {{ include "./exact_dot_vim/vimrc" | sha256sum }}
 # installed plugins: {{ glob (joinPath .chezmoi.homeDir ".vim/plugged") | join "\n" | sha256sum }}
 
