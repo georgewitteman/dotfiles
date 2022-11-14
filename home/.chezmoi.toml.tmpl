@@ -1,9 +1,10 @@
 {{- $codespaces:= env "CODESPACES" | not | not -}}
 {{- $devContainers:= env "REMOTE_CONTAINERS" | not | not -}}
+{{- $ci:= env "CI" | not | not -}}
 {{- $installPackages := false -}}
 {{- if stdinIsATTY }}
 {{- $installPackages = promptBoolOnce . "install_packages" "Do you want to automatically install packages" -}}
-{{- else if (or $codespaces $devContainers) }}
+{{- else if (or $codespaces $devContainers $ci) }}
 {{- $installPackages = true }}
 {{- end -}}
 
