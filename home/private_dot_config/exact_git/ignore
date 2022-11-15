@@ -1,10 +1,2 @@
-# ctags
-tags
-# gutentags
-tags.lock
-tags.temp
-tags.temp.tmp
-tags.files
-
 # vim swapfiles
 *.swp

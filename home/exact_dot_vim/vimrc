@@ -47,12 +47,6 @@ if executable('fzf')
   Plug 'junegunn/fzf.vim'
 endif
 
-" This assumes that if I'm using Apple_Terminal then I don't have the correct
-" ctags version installed
-if $TERM_PROGRAM != "Apple_Terminal"
-  Plug 'ludovicchabant/vim-gutentags'
-endif
-
 " "Yaml files in vim 7.4 are really slow, due to core yaml syntax. This syntax
 " is simpler/faster." - stephpy/vim-yaml/README.md
 Plug 'stephpy/vim-yaml'
@@ -307,7 +301,6 @@ set statusline=[%n]\ %<%.99f
 set statusline+=\ %{exists('*FugitiveStatusline')?FugitiveStatusline():''}
 set statusline+=%y%h%w%m%r
 set statusline+=%{exists('*CapsLockStatusline')?CapsLockStatusline():''}
-set statusline+=%{exists('*gutentags#statusline')?gutentags#statusline('[',']'):''}
 set statusline+=%=\ %(%l,%c%V%)\ %P
 
 " Quickly echo the full file path
@@ -357,14 +350,6 @@ let g:better_whitespace_enabled = 0 " Disable highlighting
 let g:strip_whitespace_on_save = 1
 let g:strip_whitespace_confirm = 0 " Don't ask for confirmation
 let g:strip_whitelines_at_eof = 1 " Strip white lines at end of file
-
-" Don't add tags file to home directory
-let g:gutentags_exclude_project_root = ['/usr/local', $HOME]
-if executable('project-ctags-files')
-  let g:gutentags_file_list_command = 'project-ctags-files'
-elseif executable('project-find')
-  let g:gutentags_file_list_command = 'project-find'
-endif
 
 command! -bang -nargs=* Rg
       \ call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case --hidden --glob '!.git'-- ".shellescape(<q-args>),
