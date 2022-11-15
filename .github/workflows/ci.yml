@@ -11,6 +11,19 @@ jobs:
     runs-on: macOS-latest
     steps:
       - run: curl --fail --silent --show-error --location "https://git.io/chezmoi" | sh -s -- -b "${HOME}/.local/bin" -d init --apply georgewitteman --branch "${GITHUB_REF#refs/heads/}"
+      - uses: extractions/setup-just@v1
+        # Docs: In rare circumstances you might get rate limiting errors, this
+        # is because this workflow has to make requests to GitHub API in order
+        # to list available releases. If this happens you can set the
+        # GITHUB_TOKEN environment variable.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: ls -la $HOME
+      - run: echo "path=$(chezmoi source-path)" >> $GITHUB_OUTPUT
+        id: chezmoi_workdir
+      - name: "Run sanity checks"
+        working-directory: ${{ steps.chezmoi_workdir.outputs.path }}
+        run: just verbose=true check
 
   codespaces:
     strategy:
@@ -30,6 +43,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: ./install.sh
+      - uses: extractions/setup-just@v1
+        # Docs: In rare circumstances you might get rate limiting errors, this
+        # is because this workflow has to make requests to GitHub API in order
+        # to list available releases. If this happens you can set the
+        # GITHUB_TOKEN environment variable.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: just verbose=true check
 
   docker:
     strategy:
@@ -76,11 +97,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: ls -la $HOME
-      - run: echo "::set-output name=path::$(chezmoi source-path)"
+      - run: echo "path=$(chezmoi source-path)" >> $GITHUB_OUTPUT
         id: chezmoi_workdir
       - name: "Run sanity checks"
         working-directory: ${{ steps.chezmoi_workdir.outputs.path }}
-        run: just verbose=true sanity
+        run: just verbose=true check
 
   lint:
     strategy:
@@ -103,45 +124,3 @@ jobs:
       - run: rm -rf ~/.nvm
       - run: ./install.sh
       - run: just verbose=true lint
-
-  tests:
-    strategy:
-      fail-fast: false
-      matrix:
-        image:
-          - mcr.microsoft.com/devcontainers/base:ubuntu
-          - mcr.microsoft.com/devcontainers/base:alpine
-          - mcr.microsoft.com/devcontainers/base:debian
-    runs-on: ubuntu-latest
-    container:
-      image: ${{ matrix.image }}
-      env:
-        CODESPACES: true
-      options: "--user root"
-    steps:
-      - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
-      - uses: actions/checkout@v3
-      - uses: extractions/setup-just@v1
-        # Docs: In rare circumstances you might get rate limiting errors, this
-        # is because this workflow has to make requests to GitHub API in order
-        # to list available releases. If this happens you can set the
-        # GITHUB_TOKEN environment variable.
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: ./install.sh
-      - run: just verbose=true check
-
-  tests-macos:
-    runs-on: macos-latest
-    steps:
-      - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
-      - uses: actions/checkout@v3
-      - uses: extractions/setup-just@v1
-        # Docs: In rare circumstances you might get rate limiting errors, this
-        # is because this workflow has to make requests to GitHub API in order
-        # to list available releases. If this happens you can set the
-        # GITHUB_TOKEN environment variable.
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: ./install.sh
-      - run: just verbose=true check
