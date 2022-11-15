@@ -52,6 +52,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: just verbose=true check
+        # Don't run the checker for the universal container. It has nvs
+        # installed which runs `[ -n "${BASH_SOURCE}" ]` which fails when the
+        # `nounset` option is on.
+        if: ${{ ! contains(matrix.image, 'universal') }}
 
   docker:
     strategy:
