@@ -32,7 +32,6 @@ jobs:
       matrix:
         image:
           - mcr.microsoft.com/devcontainers/base:ubuntu
-          - mcr.microsoft.com/devcontainers/base:alpine
           - mcr.microsoft.com/devcontainers/base:debian
           - mcr.microsoft.com/devcontainers/universal
     runs-on: ubuntu-latest
@@ -58,7 +57,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        image: ["ubuntu:20.04", "ubuntu:latest", "alpine:latest"]
+        image: ["ubuntu:20.04", "ubuntu:latest"]
     runs-on: ubuntu-latest
     container:
       image: ${{ matrix.image }}
@@ -71,8 +70,6 @@ jobs:
         run: |
           if command -v apt-get >/dev/null 2>&1; then
             apt-get update && apt-get install --yes curl
-          elif command -v apk >/dev/null 2>&1; then
-            apk update && apk add curl
           else
             echo "unknown package manager"
             exit 1
@@ -83,8 +80,6 @@ jobs:
         run: |
           if command -v apt-get >/dev/null 2>&1; then
             apt-get update && apt-get install --yes git
-          elif command -v apk >/dev/null 2>&1; then
-            apk update && apk add git
           else
             echo "unknown package manager"
             exit 1
