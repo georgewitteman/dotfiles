@@ -11,6 +11,7 @@ jobs:
     runs-on: macOS-latest
     steps:
       - run: curl --fail --silent --show-error --location "https://git.io/chezmoi" | sh -s -- -b "${HOME}/.local/bin" -d init --apply georgewitteman --branch "${GITHUB_REF#refs/heads/}"
+      - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
       - uses: extractions/setup-just@v1
         # Docs: In rare circumstances you might get rate limiting errors, this
         # is because this workflow has to make requests to GitHub API in order
@@ -43,6 +44,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: ./install.sh
+      - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
       - uses: extractions/setup-just@v1
         # Docs: In rare circumstances you might get rate limiting errors, this
         # is because this workflow has to make requests to GitHub API in order
