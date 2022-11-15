@@ -41,9 +41,3 @@ if command -v starship >/dev/null 2>/dev/null; then
 else
   PS1='\[\033[01;34m\]\w\[\033[00m\] \$ '
 fi
-
-# Keep this at the end
-if [[ -e "${HOME}/.cache/iterm2/iterm2_shell_integration.bash" ]]; then
-  # shellcheck source=/dev/null
-  source "${HOME}/.cache/iterm2/iterm2_shell_integration.bash" || true
-fi

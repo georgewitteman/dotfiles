@@ -1,15 +1,3 @@
-{{ if eq .chezmoi.os "darwin" -}}
-[".cache/iterm2/iterm2_shell_integration.bash"]
-  type = "file"
-  url = "https://gitlab.com/gnachman/iterm2/-/raw/master/Resources/shell_integration/iterm2_shell_integration.bash"
-  refreshPeriod = "24h"
-
-[".cache/iterm2/iterm2_shell_integration.zsh"]
-  type = "file"
-  url = "https://gitlab.com/gnachman/iterm2/-/raw/master/Resources/shell_integration/iterm2_shell_integration.zsh"
-  refreshPeriod = "24h"
-{{- end }}
-
 [".local/share/zsh/zsh-completions"]
   type = "git-repo"
   url = "https://github.com/zsh-users/zsh-completions.git"

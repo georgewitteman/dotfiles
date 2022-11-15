@@ -356,8 +356,3 @@ HISTSIZE="${SAVEHIST:-100000}"
 if [ "$CODESPACES" = "true" ] && [ -d "/workspaces/.codespaces/.persistedshare" ]; then
   HISTFILE="/workspaces/.codespaces/.persistedshare/.zsh_history"
 fi
-
-# Keep this at the end
-if [[ -e "${HOME}/.cache/iterm2/iterm2_shell_integration.zsh" ]]; then
-  source "${HOME}/.cache/iterm2/iterm2_shell_integration.zsh" || true
-fi
