@@ -7,11 +7,6 @@ if ! git -C {{ .chezmoi.sourceDir }} remote -v | grep -q "git@github.com:"; then
   echo '  $ {{ .chezmoi.executable }} git -- remote set-url origin git@github.com:georgewitteman/dotfiles.git'
   echo
 fi
-
-# Installers hash: {{ glob (joinPath .private_bin "install*") | join "\n" | sha256sum }}
-echo "You can now run specific installers for any programs you need:"
-ls "$HOME"/{{ .private_bin }}/install* | xargs -n 1 basename | xargs -n 1 printf "  $ %s\n"
-
 echo
 echo "Restart your terminal:"
 echo "  $ exec ${SHELL:-/bin/bash} -li"
