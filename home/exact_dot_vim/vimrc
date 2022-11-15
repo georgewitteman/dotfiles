@@ -53,9 +53,6 @@ if $TERM_PROGRAM != "Apple_Terminal"
   Plug 'ludovicchabant/vim-gutentags'
 endif
 
-" Visual Studio Code Dark color scheme
-Plug 'tomasiser/vim-code-dark'
-
 " "Yaml files in vim 7.4 are really slow, due to core yaml syntax. This syntax
 " is simpler/faster." - stephpy/vim-yaml/README.md
 Plug 'stephpy/vim-yaml'
@@ -118,24 +115,6 @@ call plug#end()
 
 " Leader to <Space>
 let mapleader = "\<Space>"
-
-if $TERM_PROGRAM == "Apple_Terminal"
-  colorscheme default
-else
-  " This is needed for the automatic plugin install. I'm not sure why
-  try | colorscheme codedark | catch | colorscheme default | endtry
-endif
-
-" Set colorscheme
-if (has('termguicolors')) && empty($SSH_CONNECTION) && empty($SSH_TTY)
-  " Sometimes setting 'termguicolors' is not enough and one has to set the
-  " |t_8f| and |t_8b| options explicitly. Default values of these options are
-  " '^[[38;2;%lu;%lu;%lum' and '^[[48;2;%lu;%lu;%lum' respectively, but it is
-  " only set when `$TERM` is `xterm`.
-  let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
-  let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
-  set termguicolors
-endif
 
 " How many whitespace characters a literal \t is worth
 set tabstop=8
