@@ -115,10 +115,10 @@ if ! whence __nvm >/dev/null 2>&1 && [[ -f ${NVM_DIR}/bash_completion ]]; then
   source "$NVM_DIR/bash_completion"
 fi
 
-{{ if lookPath "terraform" -}}
-# https://github.com/posener/complete/blob/v1/cmd/install/zsh.go
-complete -o nospace -C {{ lookPath "terraform" }} terraform
-{{- end }}
+if command -v terraform &>/dev/null; then
+  # https://github.com/posener/complete/blob/v1/cmd/install/zsh.go
+  complete -o nospace -C "$(command -v terraform)" terraform
+fi
 
 alias echo_fpath="echo_array fpath"
 

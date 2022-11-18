@@ -42,7 +42,6 @@ if [ -n "$ZSH_VERSION" ] && [ "$TERM_PROGRAM" = "Apple_Terminal" ]; then
   SHELL_SESSIONS_DISABLE=1
 fi
 
-{{- if eq .chezmoi.os "darwin" }}
 # From installer: ==> Next steps:
 # - Run these two commands in your terminal to add Homebrew to your PATH:
 #     echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/<user>/.zprofile
@@ -50,14 +49,13 @@ fi
 if [ -x "/opt/homebrew/bin/brew" ]; then
   eval "$(/opt/homebrew/bin/brew shellenv || true)"
 fi
-{{- end }}
 
 # Always add things to PATH so that I can use them directly after installing
 # without needing to restart my terminal.
 PATH="/usr/local/sbin:${PATH}"
 PATH="/usr/local/opt/fzf/bin:${PATH}"
 PATH="${HOME}/.local/bin:${PATH}"
-PATH="{{ joinPath .chezmoi.homeDir .private_bin }}:${PATH}"
+PATH="${HOME}/.scripts:${PATH}"
 PATH="${HOME}/.cargo/bin:${PATH}"
 PATH="${HOME}/.poetry/bin:${PATH}"
 

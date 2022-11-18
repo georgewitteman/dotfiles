@@ -5,5 +5,3 @@ source "${HOME}/.profile"
 
 # shellcheck source=.bashrc
 source "${HOME}/.bashrc"
-
-{{ template "terraform-completion.bash" }}

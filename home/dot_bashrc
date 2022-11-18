@@ -34,7 +34,13 @@ fi
 # shellcheck disable=SC1091,SC2292
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
-{{ template "terraform-completion.bash" }}
+# https://github.com/posener/complete/blob/v1/cmd/install/bash.go
+# https://github.com/posener/complete/blob/9a4745ac49b29530e07dc2581745a218b646b7a3/cmd/install/install.go#L86-L89
+if command -v "terraform" &>/dev/null; then
+  # shellcheck disable=SC2312
+  complete -C "$(command -v terraform)" terraform
+fi
+
 if command -v starship >/dev/null 2>/dev/null; then
   # shellcheck disable=SC2312
   eval "$(starship init bash)"

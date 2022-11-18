@@ -79,10 +79,10 @@ autoload_script() {
   }"
 }
 
-autoload_script echo_eval {{ joinPath .chezmoi.homeDir .private_bin "echo-eval" | quote }}
-autoload_script safe_eval {{ joinPath .chezmoi.homeDir .private_bin "safe-eval" | quote }}
-autoload_script echo_run {{ joinPath .chezmoi.homeDir .private_bin "echo-run" | quote }}
-autoload_script safe_run {{ joinPath .chezmoi.homeDir .private_bin "safe-run" | quote }}
+autoload_script echo_eval "${HOME}/.scripts"
+autoload_script safe_eval "${HOME}/.scripts"
+autoload_script echo_run "${HOME}/.scripts"
+autoload_script safe_run "${HOME}/.scripts"
 
 # -O: True if file exists and its owner matches the effective user id of this
 # process.
@@ -177,7 +177,7 @@ dotfiles() {
         # virtual environment and have to run `deactivate` manually.
         echo_run deactivate
       fi
-      echo_run cd "{{ .chezmoi.workingTree }}"
+      echo_run cd "$(chezmoi git -- rev-parse --show-toplevel || true)"
       ;;
     *)
       command dotfiles "$@"

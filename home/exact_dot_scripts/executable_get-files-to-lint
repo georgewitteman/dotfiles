@@ -68,7 +68,7 @@ if [ $# -gt 0 ]; then
   exit
 fi
 
-for file in $(files {{ joinPath .chezmoi.homeDir .private_bin | quote }}) \
+for file in $(files "${HOME}/.scripts") \
   ~/.shinit ~/.profile ~/.bashrc ~/.bash_profile \
   $(files ~/.config/git); do
   lint_path "$file"
