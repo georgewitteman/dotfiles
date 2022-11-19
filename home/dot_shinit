@@ -79,10 +79,10 @@ autoload_script() {
   }"
 }
 
-autoload_script echo_eval "${HOME}/.scripts"
-autoload_script safe_eval "${HOME}/.scripts"
-autoload_script echo_run "${HOME}/.scripts"
-autoload_script safe_run "${HOME}/.scripts"
+autoload_script echo_eval "${HOME}/.scripts/echo-eval"
+autoload_script safe_eval "${HOME}/.scripts/safe-eval"
+autoload_script echo_run "${HOME}/.scripts/echo-run"
+autoload_script safe_run "${HOME}/.scripts/safe-run"
 
 # -O: True if file exists and its owner matches the effective user id of this
 # process.
