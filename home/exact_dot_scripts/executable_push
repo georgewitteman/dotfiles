@@ -14,14 +14,6 @@ if [[ $head == "HEAD" ]]; then
   exit 1
 fi
 
-status="$(git status --porcelain)"
-
-if [[ -n $status ]]; then
-  echo-err "There are uncommitted files."
-  echo-run git status
-  exit 1
-fi
-
 if ! git rev-parse --abbrev-ref --symbolic-full-name '@{upstream}' >/dev/null 2>&1; then
   set -- "$@" --set-upstream origin "$head"
 fi
