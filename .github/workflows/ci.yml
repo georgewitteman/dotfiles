@@ -125,3 +125,14 @@ jobs:
       - run: rm -rf ~/.nvm
       - run: ./install.sh
       - run: just verbose=true lint
+
+  misspell:
+    name: misspell
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: reviewdog/action-misspell@v1
+        with:
+          locale: US
+          filter_mode: nofilter
+          fail_on_error: true
