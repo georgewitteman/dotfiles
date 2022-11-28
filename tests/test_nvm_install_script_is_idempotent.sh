@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -o errexit
+. "tests/setup.sh"
 
 if ! command -v bash >/dev/null 2>&1; then
   exit 0

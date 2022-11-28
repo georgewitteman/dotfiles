@@ -9,14 +9,19 @@ on:
     - cron: '30 12 * * *'
 
 jobs:
-  scripts:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macOS-latest]
-    runs-on: ${{ matrix.os }}
+  macos:
+    runs-on: macos-12
     steps:
       - run: rm -rf ~/.nvm ~/.pyenv
       - name: Uninstall homebrew
-        if: ${{ matrix.os == 'macOS-latest' }}
         run: 'sudo /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh)" -- --force'
+      - run: 'curl -fsSL "https://get.chezmoi.io" | sh -s -- -b ~/.local/bin -d init -a georgewitteman'
+
+  codespaces:
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/devcontainers/javascript-node
+      env:
+        CODESPACES: true
+    steps:
       - run: 'curl -fsSL "https://get.chezmoi.io" | sh -s -- -b ~/.local/bin -d init -a georgewitteman'

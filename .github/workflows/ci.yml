@@ -7,10 +7,19 @@ env:
   DEBIAN_FRONTEND: noninteractive
 
 jobs:
-  macos:
-    runs-on: macOS-latest
+  runners:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - macos-11
+          - macos-12
+          - ubuntu-20.04
+          - ubuntu-22.04
+    runs-on: ${{ matrix.os }}
     steps:
-      - run: curl --fail --silent --show-error --location "https://git.io/chezmoi" | sh -s -- -b "${HOME}/.local/bin" -d init --apply georgewitteman --branch "${GITHUB_REF#refs/heads/}"
+      - uses: actions/checkout@v3
+      - run: ./install.sh -t "v$(cat .chezmoiversion)"
       - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
       - uses: extractions/setup-just@v1
         # Docs: In rare circumstances you might get rate limiting errors, this
@@ -19,11 +28,7 @@ jobs:
         # GITHUB_TOKEN environment variable.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: ls -la $HOME
-      - run: echo "path=$(chezmoi source-path)" >> $GITHUB_OUTPUT
-        id: chezmoi_workdir
       - name: "Run sanity checks"
-        working-directory: ${{ steps.chezmoi_workdir.outputs.path }}
         run: just verbose=true check
 
   codespaces:
@@ -31,9 +36,10 @@ jobs:
       fail-fast: false
       matrix:
         image:
-          - mcr.microsoft.com/devcontainers/base:ubuntu
+          - mcr.microsoft.com/devcontainers/base:alpine
           - mcr.microsoft.com/devcontainers/base:debian
-          - mcr.microsoft.com/devcontainers/universal
+          - mcr.microsoft.com/devcontainers/base:ubuntu
+          - mcr.microsoft.com/devcontainers/universal:linux
     runs-on: ubuntu-latest
     container:
       image: ${{ matrix.image }}
@@ -42,7 +48,7 @@ jobs:
       options: "--user root"
     steps:
       - uses: actions/checkout@v3
-      - run: ./install.sh
+      - run: ./install.sh -t "v$(cat .chezmoiversion)"
       - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
       - uses: extractions/setup-just@v1
         # Docs: In rare circumstances you might get rate limiting errors, this
@@ -56,53 +62,6 @@ jobs:
         # installed which runs `[ -n "${BASH_SOURCE}" ]` which fails when the
         # `nounset` option is on.
         if: ${{ ! contains(matrix.image, 'universal') }}
-
-  docker:
-    strategy:
-      fail-fast: false
-      matrix:
-        image: ["ubuntu:20.04", "ubuntu:latest"]
-    runs-on: ubuntu-latest
-    container:
-      image: ${{ matrix.image }}
-    steps:
-      - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
-      - run: ls -la $HOME
-      - name: "chezmoi init (expect failure)"
-        run: curl --fail --silent --show-error --location "https://git.io/chezmoi" | sh -s -- -b "${HOME}/.local/bin" -d init --apply georgewitteman --branch "${GITHUB_REF#refs/heads/}" || true
-      - name: "Install curl"
-        run: |
-          if command -v apt-get >/dev/null 2>&1; then
-            apt-get update && apt-get install --yes curl
-          else
-            echo "unknown package manager"
-            exit 1
-          fi
-      - name: "chezmoi init (expect failure)"
-        run: curl --fail --silent --show-error --location "https://git.io/chezmoi" | sh -s -- -b "${HOME}/.local/bin" -d init --apply georgewitteman --branch "${GITHUB_REF#refs/heads/}" || true
-      - name: "Install git"
-        run: |
-          if command -v apt-get >/dev/null 2>&1; then
-            apt-get update && apt-get install --yes git
-          else
-            echo "unknown package manager"
-            exit 1
-          fi
-      - name: "chezmoi init (expect success)"
-        run: curl --fail --silent --show-error --location "https://git.io/chezmoi" | sh -s -- -b "${HOME}/.local/bin" -d init --apply georgewitteman --branch "${GITHUB_REF#refs/heads/}"
-      - uses: extractions/setup-just@v1
-        # Docs: In rare circumstances you might get rate limiting errors, this
-        # is because this workflow has to make requests to GitHub API in order
-        # to list available releases. If this happens you can set the
-        # GITHUB_TOKEN environment variable.
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: ls -la $HOME
-      - run: echo "path=$(chezmoi source-path)" >> $GITHUB_OUTPUT
-        id: chezmoi_workdir
-      - name: "Run sanity checks"
-        working-directory: ${{ steps.chezmoi_workdir.outputs.path }}
-        run: just verbose=true check
 
   lint:
     strategy:

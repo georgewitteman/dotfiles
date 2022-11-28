@@ -4,6 +4,15 @@
 
 set -o errexit
 
+TAGARG=latest
+
+while getopts "t:" arg; do
+  case "${arg}" in
+    t) TAGARG="${OPTARG}" ;;
+    *) exit 1 ;;
+  esac
+done
+
 echo "whoami: $(whoami)"
 
 if command -v chezmoi >/dev/null 2>&1; then
@@ -14,9 +23,9 @@ else
 
   # sh -s will read from stdin
   if command -v curl >/dev/null 2>&1; then
-    curl --fail --silent --tlsv1.3 --show-error --location "https://get.chezmoi.io" | sh -s -- -b "$bin_dir"
+    curl --fail --silent --tlsv1.2 --show-error --location "https://get.chezmoi.io" | sh -s -- -b "$bin_dir" -t "$TAGARG"
   elif command -v wget >/dev/null 2>&1; then
-    wget --quiet --secure-protocol=TLSv1_3 --output-document=- "https://get.chezmoi.io" | sh -s -- -b "$bin_dir"
+    wget --quiet --output-document=- "https://get.chezmoi.io" | sh -s -- -b "$bin_dir" -t "$TAGARG"
   else
     echo "To install chezmoi, you must have curl or wget installed." >&2
     exit 1
