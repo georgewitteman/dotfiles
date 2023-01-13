@@ -1,0 +1,11 @@
+#compdef save
+
+_save() {
+  _arguments \
+    {-a,--add}'[add all changes]' \
+    {-p,--push}'[push branch to remote]' \
+    {-s,--pull}'[pull (sync) remote changes using git pull --rebase]' \
+    {-f,--force}'[force push]' \
+    {-n,--no-verify}'[bypass pre-commit and commit-msg hooks]' \
+    '--amend[amend previous commit]'
+}
