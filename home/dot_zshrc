@@ -356,3 +356,6 @@ HISTSIZE="${SAVEHIST:-100000}"
 if [ "$CODESPACES" = "true" ] && [ -d "/workspaces/.codespaces/.persistedshare" ]; then
   HISTFILE="/workspaces/.codespaces/.persistedshare/.zsh_history"
 fi
+
+# Generated for envman. Do not edit.
+[ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"

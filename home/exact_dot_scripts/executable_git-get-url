@@ -23,7 +23,7 @@ while [ "$#" -gt 0 ]; do
       _arg="${1%%"${1##-?}"}"
       ;;
   esac
-  if [ -n "${_arg:-}${_value:-}" ]; then
+  if [ -n "${_arg-}${_value-}" ]; then
     shift
     set -- "$_arg" "$_value" "$@"
   fi
@@ -100,14 +100,14 @@ if $commit; then
   fi
   if $pull_request; then
     echo "${project_url}/pulls?q=${commit_id}"
-    exit $?
+    exit
   fi
   if [ -z "$path" ]; then
     echo "${project_url}/commit/${commit_id}"
-    exit $?
+    exit
   fi
   echo "${project_url}/blob/${commit_id}/${path}"
-  exit $?
+  exit
 fi
 
 echo "$project_url"

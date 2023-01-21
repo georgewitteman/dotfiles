@@ -37,7 +37,7 @@ while [[ $# -gt 0 ]]; do
       _arg="${1%%"${1##-?}"}"
       ;;
   esac
-  if [[ -n "${_arg:-}${_value:-}" ]]; then
+  if [[ -n "${_arg-}${_value-}" ]]; then
     shift
     set -- "$_arg" "$_value" "$@"
   fi
@@ -141,17 +141,14 @@ debug_output() {
 
 if [[ ${#latest_tags_by_date[@]} != "${#latest_tags_by_version[@]}" ]]; then
   debug_output "Different number of tags returned (date: ${#latest_tags_by_date[@]}, version: ${#latest_tags_by_version[@]})"
-  exit 1
 fi
 
 if [[ ${#latest_tags_by_date[@]} -eq 0 ]]; then
   debug_output "No matching tags by date."
-  exit 1
 fi
 
 if [[ ${#latest_tags_by_version[@]} -eq 0 ]]; then
   debug_output "No matching tags by version."
-  exit 1
 fi
 
 for i in $(seq 0 "$((num_tags - 1))"); do

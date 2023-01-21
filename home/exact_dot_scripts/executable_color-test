@@ -19,5 +19,6 @@ for FGs in '    m' '   1m' '  30m' '1;30m' '  31m' '1;31m' '  32m' \
   echo
 done
 
+# shellcheck disable=SC2028
 echo "Clear formatting: \\\033[0m"
 echo

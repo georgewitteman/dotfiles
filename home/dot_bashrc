@@ -47,3 +47,8 @@ if command -v starship >/dev/null 2>/dev/null; then
 else
   PS1='\[\033[01;34m\]\w\[\033[00m\] \$ '
 fi
+
+# Generated for envman. Do not edit.
+# shellcheck disable=SC2292
+# shellcheck source=/dev/null
+[ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"

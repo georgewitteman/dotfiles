@@ -20,7 +20,7 @@ while [ "$#" -gt 0 ]; do
       _arg="${1%%="${_value}"}"
       ;;
   esac
-  if [ -n "${_arg:-}${_value:-}" ]; then
+  if [ -n "${_arg-}${_value-}" ]; then
     shift
     set -- "$_arg" "$_value" "$@"
   fi
