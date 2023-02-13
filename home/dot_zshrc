@@ -7,6 +7,10 @@ else
   PS1="%F{14}%B%~%f%b %# "
 fi
 
+if command -v rtx &>/dev/null; then
+  eval "$(rtx activate zsh)"
+fi
+
 fpath=(
   "${HOME}/.local/share/zsh/functions"
   "${HOME}/.local/share/zsh/zsh-completions/src"
