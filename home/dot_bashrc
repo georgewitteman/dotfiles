@@ -11,7 +11,7 @@ fi
 source "${HOME}/.shinit"
 
 if command -v "rtx" &>/dev/null; then
-  eval "$(rtx activate bash)"
+  eval "$(rtx activate bash || true)"
   eval "$(rtx complete --shell bash || true)"
 fi
 
