@@ -9,6 +9,10 @@ BIN="${HOME}/.local/bin/rtx"
 ARCH="{{ eq "amd64" .chezmoi.arch | ternary "x64" .chezmoi.arch }}"
 
 {{ if eq .chezmoi.os "linux" -}}
+if [ -f "/etc/alpine-release" ]; then
+  apk add rtx --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing/
+  exit $?
+fi
 URL="https://rtx.pub/rtx-latest-linux-${ARCH}"
 {{ else if eq .chezmoi.os "darwin" -}}
 URL="https://rtx.pub/rtx-latest-macos-${ARCH}"
