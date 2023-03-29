@@ -10,11 +10,6 @@ fi
 # shellcheck source=.shinit
 source "${HOME}/.shinit"
 
-if command -v "rtx" &>/dev/null; then
-  eval "$(rtx activate bash || true)"
-  eval "$(rtx complete --shell bash || true)"
-fi
-
 if command -v "gh" &>/dev/null; then
   eval "$(gh completion --shell bash || true)"
 fi
