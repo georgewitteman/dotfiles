@@ -12,9 +12,7 @@ if command -v sudo >/dev/null 2>&1 && command -v apt-get >/dev/null 2>&1; then
     fd-find \
     fzf \
     iputils-ping \
-    ripgrep \
-    vim-nox \
-    zsh
+    ripgrep
 elif command -v brew >/dev/null 2>&1; then
   brew bundle --verbose --no-lock --file=- <<-EOF
 brew "fd"
@@ -24,7 +22,6 @@ brew "jq"
 brew "pinentry-mac"
 brew "ripgrep"
 brew "starship"
-brew "vim"
 EOF
 fi
 
