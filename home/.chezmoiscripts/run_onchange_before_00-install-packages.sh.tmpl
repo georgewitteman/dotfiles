@@ -8,10 +8,8 @@ if command -v sudo >/dev/null 2>&1 && command -v apt-get >/dev/null 2>&1; then
   export DEBIAN_FRONTEND=noninteractive
   sudo --non-interactive apt-get update
   sudo --non-interactive apt-get install --yes \
-    dnsutils \
     fd-find \
     fzf \
-    iputils-ping \
     ripgrep
 elif command -v brew >/dev/null 2>&1; then
   brew bundle --verbose --no-lock --file=- <<-EOF
