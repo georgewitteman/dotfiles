@@ -5,8 +5,8 @@ set -o errexit
 
 if command -v sudo >/dev/null 2>&1 && command -v apt-get >/dev/null 2>&1; then
   export DEBIAN_FRONTEND=noninteractive
-  sudo --non-interactive apt-get update --quiet --quiet
-  sudo --non-interactive apt-get install --quiet --quiet --yes \
+  sudo --non-interactive apt-get update
+  sudo --non-interactive apt-get install --yes \
     fd-find \
     fzf \
     ripgrep
@@ -25,7 +25,7 @@ fi
 if ! command -v starship >/dev/null 2>&1; then
   if command -v curl >/dev/null 2>&1; then
     echo "Installing starship"
-    curl -sS https://starship.rs/install.sh | sh -s -- --yes >/dev/null 2>&1
+    curl -sS https://starship.rs/install.sh | sh -s -- --yes
   fi
 fi
 {{- end }}
