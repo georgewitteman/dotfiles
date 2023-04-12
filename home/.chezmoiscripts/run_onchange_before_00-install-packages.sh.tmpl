@@ -24,14 +24,13 @@ brew "gnupg"
 brew "jq"
 brew "pinentry-mac"
 brew "ripgrep"
+brew "starship"
 brew "vim"
 EOF
 fi
 
 if ! command -v starship >/dev/null 2>&1; then
-  if command -v brew >/dev/null 2>&1; then
-    brew install starship
-  elif command -v curl >/dev/null 2>&1; then
+  if command -v curl >/dev/null 2>&1; then
     curl -sS https://starship.rs/install.sh | sh -s -- --yes --verbose
   fi
 fi
