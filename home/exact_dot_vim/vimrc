@@ -352,7 +352,7 @@ let g:strip_whitespace_confirm = 0 " Don't ask for confirmation
 let g:strip_whitelines_at_eof = 1 " Strip white lines at end of file
 
 command! -bang -nargs=* Rg
-      \ call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case --hidden --glob '!.git'-- ".shellescape(<q-args>),
+      \ call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case --hidden --glob '!.git' -- ".shellescape(<q-args>),
       \ 1,
       \ fzf#vim#with_preview(),
       \ <bang>0)
