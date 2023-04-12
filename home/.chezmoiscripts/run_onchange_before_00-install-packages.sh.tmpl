@@ -5,8 +5,8 @@ set -o errexit
 
 if command -v sudo >/dev/null 2>&1 && command -v apt-get >/dev/null 2>&1; then
   export DEBIAN_FRONTEND=noninteractive
-  sudo --non-interactive apt-get update --quiet
-  sudo --non-interactive apt-get install --quiet --yes \
+  sudo --non-interactive apt-get update --quiet --quiet
+  sudo --non-interactive apt-get install --quiet --quiet --yes \
     fd-find \
     fzf \
     ripgrep
