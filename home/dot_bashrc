@@ -41,6 +41,12 @@ if command -v "terraform" &>/dev/null; then
   complete -C "$(command -v terraform)" terraform
 fi
 
+# https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-completion.html
+if command -v "aws_completer" &>/dev/null; then
+  # shellcheck disable=SC2312
+  complete -C "$(command -v aws_completer)" aws
+fi
+
 if command -v starship >/dev/null 2>/dev/null; then
   # shellcheck disable=SC2312
   eval "$(starship init bash)"

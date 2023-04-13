@@ -115,6 +115,11 @@ if ! whence __nvm >/dev/null 2>&1 && [[ -f ${NVM_DIR}/bash_completion ]]; then
   source "$NVM_DIR/bash_completion"
 fi
 
+# https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-completion.html
+if ! whence _aws >/dev/null 2>&1 && command -v aws_completer >/dev/null 2>&1; then
+  complete -C "$(command -v aws_completer)" aws
+fi
+
 if command -v terraform &>/dev/null; then
   # https://github.com/posener/complete/blob/v1/cmd/install/zsh.go
   complete -o nospace -C "$(command -v terraform)" terraform
