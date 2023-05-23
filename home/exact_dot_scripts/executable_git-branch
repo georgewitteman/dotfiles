@@ -24,9 +24,12 @@ while [ "$#" -gt 0 ]; do
 done
 
 if [ -n "$branch" ]; then
+  echo-run git fetch origin "$branch"
   echo-run git switch "$branch"
   exit $?
 fi
+
+echo-run git fetch
 
 # Make sure we're in a git branch
 git branch >/dev/null
