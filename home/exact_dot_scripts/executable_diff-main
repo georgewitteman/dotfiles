@@ -1,3 +1,3 @@
 #!/bin/sh
 
-echo-run git diff --merge-base origin/main
+echo-run git diff --merge-base origin/main "$@"
