@@ -24,7 +24,10 @@ while [ "$#" -gt 0 ]; do
 done
 
 if [ -n "$branch" ]; then
-  echo-run git fetch origin "$branch"
+  # Only fetch if the branch exists on the remote
+  if git ls-remote --exit-code --heads origin "$branch"; then
+    echo-run git fetch origin "$branch"
+  fi
   echo-run git switch "$branch"
   exit $?
 fi
