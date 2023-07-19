@@ -1,0 +1,33 @@
+#!/bin/sh
+
+if [ -z "$CODESPACE_NAME" ]; then
+  echo "error: CODESPACE_NAME is empty" >&2
+  exit 1
+fi
+
+if [ -z "$GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN" ]; then
+  echo "error: GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN is empty" >&2
+  exit 1
+fi
+
+PORT=
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    -h | --help)
+      echo "usage: $(basename "$0") [PORT]" >&2
+      exit 1
+      ;;
+    *)
+      PORT="$1"
+      ;;
+  esac
+  shift
+done
+
+if [ -z "$PORT" ]; then
+  echo "error: PORT is empty" >&2
+  exit 1
+fi
+
+echo "https://${CODESPACE_NAME}-${PORT}.${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}"
