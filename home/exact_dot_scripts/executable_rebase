@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+set -o errexit
+
+if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  echo-err "Not in a git repository."
+  exit 128
+fi
+
+main_branch="$(get-main-branch)"
+
+if [[ $1 == "" ]]; then
+  echo-run git fetch --quiet --prune &&
+    echo-run git rebase --autostash origin/"$main_branch"
+  exit $?
+fi
+
+if [[ ($1 == "-i" || $1 == "--interactive") && $# -le 1 ]]; then
+  echo-run git fetch --quiet --prune &&
+    echo-run git rebase --interactive --autostash origin/"$main_branch"
+  exit $?
+fi
+
+if [[ $1 == "--continue" && $# -le 1 ]]; then
+  echo-run git rebase --continue
+  exit $?
+fi
+
+if [[ $1 == "-h" ]] || [[ $1 == "--help" ]]; then
+  echo "Usage: $0 [<git rebase args>]"
+  exit
+fi
+
+echo-run git fetch --prune --quiet &&
+  echo-run git rebase "$@"
