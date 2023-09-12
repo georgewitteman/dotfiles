@@ -1,12 +1,13 @@
 #!/bin/sh
 
-USAGE="usage: $(basename "$0") [-l|--latest|-p|--pull] <branch name>"
+USAGE="usage: $(basename "$0") [-l|--latest|-p|--pull] <branch name> [<base branch>]"
 
 set -o errexit
 
 branch_name=
 latest=false
 stash=false
+base_branch=
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
@@ -29,7 +30,11 @@ while [ "$#" -gt 0 ]; do
       exit 1
       ;;
     *)
-      branch_name="$1"
+      if [ -z "$branch_name" ]; then
+        base_branch="$1"
+      else
+        branch_name="$1"
+      fi
       ;;
   esac
   shift
@@ -40,10 +45,12 @@ if [ -z "$branch_name" ]; then
   exit 1
 fi
 
-main_branch="$(get-main-branch)"
+if [ -z "$base_branch" ]; then
+  base_branch="$(get-main-branch)"
+fi
 
 if $latest; then
-  echo-run git fetch origin "$main_branch"
+  echo-run git fetch origin "$base_branch"
 fi
 
 stashed=false
@@ -56,7 +63,7 @@ if $stash; then
 fi
 
 set +o errexit
-echo-run git checkout -b "$branch_name" --no-track "origin/${main_branch}"
+echo-run git checkout -b "$branch_name" --no-track "origin/${base_branch}"
 exit_code=$?
 set -o errexit
 
