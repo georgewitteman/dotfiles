@@ -151,6 +151,10 @@ alias gb='git-branch'
 
 alias tf="terraform"
 
+# work
+alias yws="yarn workspace server"
+# /work
+
 take() {
   # shellcheck disable=SC2164
   mkdir -p "$1" && cd "$1"
