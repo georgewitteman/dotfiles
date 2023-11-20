@@ -1,0 +1,8 @@
+#compdef merge
+
+_merge() {
+  _arguments \
+    {-c,--continue}'[finish merge]' \
+    '--no-verify[bypass pre-commit and commit-msg hooks]' \
+    '--remote[which remote to merge from (defaults to "origin")]'
+}
