@@ -20,7 +20,7 @@
 
 [".local/share/zsh/functions/_rg"]
   type = "file"
-  url = "https://raw.githubusercontent.com/BurntSushi/ripgrep/master/complete/_rg"
+  url = "https://raw.githubusercontent.com/BurntSushi/ripgrep/master/crates/core/flags/complete/rg.zsh"
   refreshPeriod = "24h"
 
 [".local/share/zsh/functions/_docker"]
