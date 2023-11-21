@@ -58,6 +58,7 @@ PATH="${HOME}/.local/bin:${PATH}"
 PATH="${HOME}/.scripts:${PATH}"
 PATH="${HOME}/.cargo/bin:${PATH}"
 PATH="${HOME}/.poetry/bin:${PATH}"
+PATH="${HOME}/.bun/bin:${PATH}"
 
 if [ -z "$NVM_DIR" ]; then
   export NVM_DIR="${HOME}/.nvm"
