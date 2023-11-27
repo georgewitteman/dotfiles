@@ -3,11 +3,12 @@
 set -o errexit
 set -o nounset
 
-USAGE="usage: $(basename "$0") [--remote=origin] [-c|--continue [--no-verify]]"
+USAGE="usage: $(basename "$0") [--remote=origin] [-c|--continue [--no-verify]] [--abort]"
 
 remote="origin"
-continue=false
+continue_=false
 no_verify=false
+abort=false
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
@@ -32,8 +33,11 @@ while [ "$#" -gt 0 ]; do
       echo "$USAGE" >&2
       exit
       ;;
+    --abort)
+      abort=true
+      ;;
     -c | --continue)
-      continue=true
+      continue_=true
       ;;
     --no-verify)
       no_verify=true
@@ -63,7 +67,12 @@ if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   exit 128
 fi
 
-if $continue; then
+if $abort; then
+  echo-run git merge --abort
+  exit $?
+fi
+
+if $continue_; then
   if ! git rev-parse -q --verify MERGE_HEAD >/dev/null 2>&1; then
     echo-err "Not in an active merge" >&2
     exit 1
