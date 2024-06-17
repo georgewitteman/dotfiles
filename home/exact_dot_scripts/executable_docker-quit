@@ -1,3 +1,0 @@
-#!/bin/sh
-
-echo-run osascript -e 'quit app "Docker"'
