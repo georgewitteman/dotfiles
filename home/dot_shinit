@@ -14,6 +14,7 @@ if [ -z "$ENV" ]; then
 fi
 
 if [ -f "${HOME}/.config/op/plugins.sh" ]; then
+  # shellcheck disable=SC1091
   . "${HOME}/.config/op/plugins.sh"
 fi
 
