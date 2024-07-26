@@ -1,0 +1,27 @@
+#!/bin/sh
+
+set -o errexit
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    -h | --help)
+      echo "usage: $(basename "$0")"
+      echo
+      echo "cleans up the url that's on the clipboard"
+      exit
+      ;;
+    --)
+      shift
+      break
+      ;;
+    -?*) die 1 "unknown option: ${1}" ;;
+    *) break ;;
+  esac
+  shift
+done
+
+if pbpaste | grep --extended-regexp --only-matching 'https:\/\/linear.app\/\w+\/issue\/([A-Z])+-\d+' >/dev/null; then
+  pbpaste | grep --extended-regexp --only-matching 'https:\/\/linear.app\/\w+\/issue\/([A-Z])+-\d+' | tee /dev/stderr | pbcopy
+else
+  echo "not a valid linear url in the clipboard" >&2
+fi
