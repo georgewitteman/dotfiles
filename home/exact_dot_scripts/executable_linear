@@ -21,7 +21,7 @@ while [ "$#" -gt 0 ]; do
 done
 
 if pbpaste | grep --extended-regexp --only-matching 'https:\/\/linear.app\/\w+\/issue\/([A-Z])+-\d+' >/dev/null; then
-  pbpaste | grep --extended-regexp --only-matching 'https:\/\/linear.app\/\w+\/issue\/([A-Z])+-\d+' | tee /dev/stderr | pbcopy
+  pbpaste | grep --extended-regexp --only-matching 'https:\/\/linear.app\/\w+\/issue\/([A-Z])+-\d+' | tee /dev/stderr | tr -d '\n' | pbcopy
 else
   echo "not a valid linear url in the clipboard" >&2
 fi
