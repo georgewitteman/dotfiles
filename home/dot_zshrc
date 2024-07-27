@@ -40,7 +40,7 @@ fi
 # _complete: This completer generates all possible completions in a
 # context-sensitive manner, i.e. using the settings defined with the compdef
 # function explained above and the current settings of all special parameters.
-# This gives the normal completion behaviour.
+# This gives the normal completion behavior.
 zstyle ':completion:*' completer _expand_alias _complete
 # zstyle ':completion:*' completer _expand _complete _ignored _correct _approximate
 # Use menu for autocompletion when number of items >= 2.
@@ -83,7 +83,7 @@ zstyle ':completion:*:descriptions' format 'Completing %d'
 # the descriptions for the matches that were expected separated by spaces. The
 # sequence ‘%D’ is replaced with the same descriptions separated by newlines.
 zstyle ':completion:*:warnings' format 'No matches for: %d'
-# Some completion functions display messages that may be customised by setting
+# Some completion functions display messages that may be customized by setting
 # this style for the messages tag. Here, the ‘%d’ is replaced with a message
 # given by the completion function.
 zstyle ':completion:*:messages' format '%d'
@@ -332,7 +332,7 @@ setopt hist_ignore_all_dups
 # Remove command lines from the history list when the first character on the
 # line is a space, or when one of the expanded aliases contains a leading
 # space. Only normal aliases (not global or suffix aliases) have this
-# behaviour. Note that the command lingers in the internal history until the
+# behavior. Note that the command lingers in the internal history until the
 # next command is entered before it vanishes, allowing you to briefly reuse or
 # edit the line. If you want to make it vanish right away without entering
 # another command, type a space and press return.
