@@ -77,7 +77,8 @@ if $continue_; then
     echo-err "Not in an active merge" >&2
     exit 1
   fi
-  add
+  toplevel="$(git rev-parse --show-toplevel)"
+  git add "$toplevel"
   if $no_verify; then
     echo-run git commit --no-edit --no-verify
   else
