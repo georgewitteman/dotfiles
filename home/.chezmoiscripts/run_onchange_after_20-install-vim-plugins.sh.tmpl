@@ -29,5 +29,7 @@ fi
 #     writing a viminfo file. The optional number N is the value for 'verbose'.
 #     Default is 10.
 # https://github.com/junegunn/vim-plug/wiki/tips#install-plugins-on-the-command-line
-vim -es -u "${HOME}/.vim/vimrc" -i NONE -c "PlugClean!" -c "quitall"
+#
+# PlugClean! will return a non-zero status code in some cases
+vim -es -u "${HOME}/.vim/vimrc" -i NONE -c "PlugClean!" -c "quitall" || true
 vim -es -u "${HOME}/.vim/vimrc" -i NONE -c "PlugInstall" -c "quitall"
