@@ -3,12 +3,13 @@
 set -o errexit
 set -o nounset
 
-USAGE="usage: $(basename "$0") [--remote=origin] [-c|--continue [--no-verify]] [--abort]"
+USAGE="usage: $(basename "$0") [--remote=origin] [--theirs] [-c|--continue [--no-verify]] [--abort]"
 
 remote="origin"
 continue_=false
 no_verify=false
 abort=false
+theirs=false
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
@@ -41,6 +42,9 @@ while [ "$#" -gt 0 ]; do
       ;;
     --no-verify)
       no_verify=true
+      ;;
+    --theirs)
+      theirs=true
       ;;
     --remote)
       if [ -z "$2" ]; then
@@ -90,4 +94,8 @@ fi
 main_branch="$(get-main-branch)"
 
 echo-run git fetch "$remote" "$main_branch"
-echo-run git merge --no-edit "${remote}/${main_branch}"
+if $theirs; then
+  echo-run git merge --no-edit --strategy-option=theirs "${remote}/${main_branch}"
+else
+  echo-run git merge --no-edit "${remote}/${main_branch}"
+fi
