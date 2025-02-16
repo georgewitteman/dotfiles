@@ -15,12 +15,11 @@ jobs:
           - macos-13
           - macos-14
           - macos-15
-          - ubuntu-20.04
           - ubuntu-22.04
           - ubuntu-24.04
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - run: ./install.sh -t "v$(cat .chezmoiversion)"
       - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
       - uses: extractions/setup-just@v1
@@ -49,7 +48,7 @@ jobs:
         CODESPACES: true
       options: "--user root"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - run: ./install.sh -t "v$(cat .chezmoiversion)"
       - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
       - uses: extractions/setup-just@v1
@@ -69,11 +68,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macOS-latest]
+        os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: extractions/setup-just@v1
         # Docs: In rare circumstances you might get rate limiting errors, this
         # is because this workflow has to make requests to GitHub API in order
@@ -91,9 +90,9 @@ jobs:
     name: misspell
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: reviewdog/action-misspell@v1
         with:
           locale: US
           filter_mode: nofilter
-          fail_on_error: true
+          fail_level: error
