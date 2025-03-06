@@ -11,6 +11,21 @@
 	defaultBranch = main
 [pull]
 	ff = "only"
+[diff]
+	# Better diffing algorithm
+	# https://blog.gitbutler.com/how-git-core-devs-configure-git/
+	algorithm = histogram
+	# Shows moved text in a different color
+	# https://blog.gitbutler.com/how-git-core-devs-configure-git/
+	colorMoved = plain
+	# diff.mnemonicPrefix will replace the a/ and b/ in your diff
+	# header output with where the diff is coming from, so i/
+	# (index), w/ (working directory) or c/ commit
+	# https://blog.gitbutler.com/how-git-core-devs-configure-git/
+	mnemonicPrefix = true
+	# Detects if a file has been renamed
+	# https://blog.gitbutler.com/how-git-core-devs-configure-git/
+	renames = true
 [merge]
 	# https://blog.nilbus.com/take-the-pain-out-of-git-conflict-resolution-use-diff3/
 	# https://stackoverflow.com/q/27417656
