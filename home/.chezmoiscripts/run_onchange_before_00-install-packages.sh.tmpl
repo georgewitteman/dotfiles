@@ -11,15 +11,14 @@ if command -v sudo >/dev/null 2>&1 && command -v apt-get >/dev/null 2>&1; then
     fzf \
     ripgrep
 elif command -v brew >/dev/null 2>&1; then
-  brew bundle --verbose --no-lock --file=- <<-EOF
-brew "fd"
-brew "fzf"
-brew "gnupg"
-brew "jq"
-brew "pinentry-mac"
-brew "ripgrep"
-brew "starship"
-EOF
+  brew install \
+    fd \
+    fzf \
+    gnupg \
+    jq \
+    pinentry-mac \
+    ripgrep \
+    starship
 fi
 
 if ! command -v starship >/dev/null 2>&1; then
