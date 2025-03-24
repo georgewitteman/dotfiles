@@ -1,6 +1,7 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 format = '$hostname$directory$git_branch${custom.git_host}$git_commit$git_state$nodejs$time$cmd_duration$status${custom.stashes}$shell$line_break$shlvl${custom.container}$jobs$character'
 add_newline = false
+command_timeout = 2000
 
 [hostname]
 disabled = true
