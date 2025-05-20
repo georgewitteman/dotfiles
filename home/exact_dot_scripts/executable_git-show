@@ -45,6 +45,12 @@ join_by() {
 
 git_url="$(git-get-url --with-commit "$commit_id" 2>/dev/null)"
 
+abbrev_ref="$(git rev-parse --abbrev-ref HEAD 2>/dev/null)"
+git_compare_url=
+if git show-ref --verify refs/heads/"${abbrev_ref}" >/dev/null 2>&1; then
+  git_compare_url="$(git-get-url --branch "${abbrev_ref}" 2>/dev/null)"
+fi
+
 commit_fmt=()
 commit_fmt+=("$header")
 commit_fmt+=("     Hash: %h")
@@ -61,6 +67,7 @@ commit_fmt+=("    %C(red)Heads:%Creset $(
   join_by ', ' "${heads[@]}"
 )")
 [[ -n $git_url ]] && commit_fmt+=("      %C(yellow)URL:%Creset ${git_url}")
+[[ -n $git_compare_url ]] && commit_fmt+=("  %C(yellow)Compare:%Creset ${git_compare_url}")
 commit_fmt+=("   %C(green)Author:%Creset %an <%ae>")
 commit_fmt+=("%C(green)Committer:%Creset %cn <%ce>")
 commit_fmt+=("   %C(blue)A Date:%Creset %ad (%ar)")

@@ -15,6 +15,7 @@ git_toplevel="$(git rev-parse --show-toplevel)"
 pull_request=false
 commit=false
 commit_id=
+branch=
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
@@ -30,7 +31,7 @@ while [ "$#" -gt 0 ]; do
   unset _arg _value
   case "$1" in
     -h | --help)
-      echo "usage: $(basename "$0") [-c|--commit] [--with-commit <commit>] [--pull-request]"
+      echo "usage: $(basename "$0") [-c|--commit] [--with-commit <commit>] [--pull-request] [--branch <branch>]"
       exit
       ;;
     -c | --commit)
@@ -39,6 +40,10 @@ while [ "$#" -gt 0 ]; do
     --pull-request)
       commit=true
       pull_request=true
+      ;;
+    --branch)
+      branch="${2}"
+      shift
       ;;
     --with-commit)
       if [ $# -lt 2 ]; then
@@ -92,6 +97,11 @@ if $pull_request; then
       die 1 "Can't generate pull request URLs for non-GitHub PRs"
       ;;
   esac
+fi
+
+if [ -n "$branch" ]; then
+  echo "${project_url}/compare/${branch}"
+  exit
 fi
 
 if $commit; then
