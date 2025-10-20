@@ -50,6 +50,11 @@ if [ -x "/opt/homebrew/bin/brew" ]; then
   eval "$(/opt/homebrew/bin/brew shellenv || true)"
 fi
 
+# Parallel downloads in homebrew
+# https://brew.sh/2025/08/05/homebrew-4.6.0/
+# https://github.com/Homebrew/brew/pull/20342
+export HOMEBREW_DOWNLOAD_CONCURRENCY=auto
+
 # Always add things to PATH so that I can use them directly after installing
 # without needing to restart my terminal.
 PATH="/usr/local/sbin:${PATH}"
