@@ -13,10 +13,10 @@ if [ -z "$ENV" ]; then
   . "${HOME}/.profile"
 fi
 
-if [ -f "${HOME}/.config/op/plugins.sh" ]; then
-  # shellcheck disable=SC1091
-  . "${HOME}/.config/op/plugins.sh"
-fi
+# if [ -f "${HOME}/.config/op/plugins.sh" ]; then
+#   # shellcheck disable=SC1091
+#   . "${HOME}/.config/op/plugins.sh"
+# fi
 
 # I'm putting this near the top because sometimes other stuff in this script
 # breaks while I'm testing it and then restart_shell isn't loaded and I have to
