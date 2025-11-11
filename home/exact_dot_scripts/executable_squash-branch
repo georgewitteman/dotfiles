@@ -1,0 +1,92 @@
+#!/bin/sh
+# squash-branch.sh
+#
+# Squash all commits on the current branch (since it diverged from BASE)
+# into a single commit.
+
+set -eu
+
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0") [base-branch] [commit-message]
+
+Squash all commits on the current branch (since it diverged from BASE)
+into a single commit.
+
+Arguments:
+  base-branch      Base branch to squash against (default: origin/main)
+  commit-message   Commit message for the new squashed commit
+                   (default: "Squash branch into a single commit")
+
+Options:
+  -h, --help       Show this help message and exit
+
+Examples:
+  $(basename "$0")
+  $(basename "$0") origin/develop
+  $(basename "$0") origin/main "My single squashed commit"
+
+Notes:
+  • Must be run on the feature/topic branch you want to squash.
+  • Rewrites history. After running, push with:
+        git push --force-with-lease
+  • Requires a clean working tree.
+EOF
+}
+
+# Parse help flag early
+if [ "${1:-}" = "-h" ] || [ "${1:-}" = "--help" ]; then
+  show_help
+  exit 0
+fi
+
+# Determine base branch and commit message
+if [ "$#" -ge 1 ]; then
+  BASE_BRANCH=$1
+  shift
+else
+  BASE_BRANCH=origin/main
+fi
+
+if [ "$#" -ge 1 ]; then
+  COMMIT_MSG="$*"
+else
+  COMMIT_MSG="Squash branch into a single commit"
+fi
+
+# Ensure we're in a git repo
+if ! git rev-parse --git-dir >/dev/null 2>&1; then
+  echo "Error: not a git repository." >&2
+  exit 1
+fi
+
+# Ensure clean working tree
+if ! git diff-index --quiet HEAD --; then
+  echo "Error: working tree is not clean. Commit or stash your changes first." >&2
+  exit 1
+fi
+
+# Make sure base exists locally or remotely
+if ! git rev-parse --verify "$BASE_BRANCH" >/dev/null 2>&1; then
+  echo "Error: base branch '$BASE_BRANCH' not found." >&2
+  exit 1
+fi
+
+# Find fork point between base and current HEAD
+FORK_POINT=$(git merge-base "$BASE_BRANCH" HEAD || true)
+
+if [ -z "$FORK_POINT" ]; then
+  echo "Error: could not determine merge-base with '$BASE_BRANCH'." >&2
+  exit 1
+fi
+
+# Soft reset to fork point: keeps changes staged, rewinds commits
+git reset --soft "$FORK_POINT"
+
+# Create the single squashed commit
+git commit -m "$COMMIT_MSG"
+
+echo "✅ Done."
+echo "All commits since '$BASE_BRANCH' have been squashed into one."
+echo "If this branch is pushed to a remote, run:"
+echo "  git push --force-with-lease"
