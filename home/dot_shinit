@@ -89,19 +89,22 @@ autoload_script safe_eval "${HOME}/.scripts/safe-eval"
 autoload_script echo_run "${HOME}/.scripts/echo-run"
 autoload_script safe_run "${HOME}/.scripts/safe-run"
 
-# -O: True if file exists and its owner matches the effective user id of this
-# process.
-if [ -d "$HOMEBREW_PREFIX" ] && [ ! -O "$HOMEBREW_PREFIX" ] && command -v sudo >/dev/null 2>&1; then
-  if stat -c '%U' "$HOMEBREW_PREFIX" >/dev/null 2>&1; then
+# If Homebrew prefix is not owned by the current user, use sudo to run brew as
+# the owner of the Homebrew prefix.
+if [ -d "$HOMEBREW_PREFIX" ] && command -v sudo >/dev/null 2>&1; then
+  # Get owner UID of HOMEBREW_PREFIX (GNU stat vs BSD stat)
+  if stat -c '%u' "$HOMEBREW_PREFIX" >/dev/null 2>&1; then
+    brew_owner_uid="$(stat -c '%u' "$HOMEBREW_PREFIX")"
     brew_user="$(stat -c '%U' "$HOMEBREW_PREFIX")"
   else
+    brew_owner_uid="$(stat -f '%u' "$HOMEBREW_PREFIX")"
     brew_user="$(stat -f '%Su' "$HOMEBREW_PREFIX")"
   fi
-  if [ -n "$brew_user" ]; then
+  if [ -n "$brew_user" ] && [ "$brew_owner_uid" != "$(id -u || true)" ]; then
     # shellcheck disable=SC2139
     alias brew="echo-run sudo --set-home --user=${brew_user} brew"
   fi
-  unset brew_user
+  unset brew_owner_uid brew_user
 fi
 
 # Fixes gpg when "GPG Suite" is not installed (i.e. gpg is installed from homebrew)
