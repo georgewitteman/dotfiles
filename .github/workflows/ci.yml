@@ -12,23 +12,17 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - macos-13
           - macos-14
           - macos-15
+          - macos-26
           - ubuntu-22.04
           - ubuntu-24.04
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - run: ./install.sh -t "v$(cat .chezmoiversion)"
       - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
-      - uses: extractions/setup-just@v1
-        # Docs: In rare circumstances you might get rate limiting errors, this
-        # is because this workflow has to make requests to GitHub API in order
-        # to list available releases. If this happens you can set the
-        # GITHUB_TOKEN environment variable.
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: extractions/setup-just@v3
       - name: "Run sanity checks"
         run: just verbose=true check
 
@@ -48,16 +42,10 @@ jobs:
         CODESPACES: true
       options: "--user root"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - run: ./install.sh -t "v$(cat .chezmoiversion)"
       - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
-      - uses: extractions/setup-just@v1
-        # Docs: In rare circumstances you might get rate limiting errors, this
-        # is because this workflow has to make requests to GitHub API in order
-        # to list available releases. If this happens you can set the
-        # GITHUB_TOKEN environment variable.
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: extractions/setup-just@v3
       - run: just verbose=true check
         # Don't run the checker for the universal container. It has nvs
         # installed which runs `[ -n "${BASH_SOURCE}" ]` which fails when the
@@ -72,14 +60,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
-      - uses: actions/checkout@v4
-      - uses: extractions/setup-just@v1
-        # Docs: In rare circumstances you might get rate limiting errors, this
-        # is because this workflow has to make requests to GitHub API in order
-        # to list available releases. If this happens you can set the
-        # GITHUB_TOKEN environment variable.
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v6
+      - uses: extractions/setup-just@v3
       - run: 'curl -sS https://webinstall.dev/shfmt | bash'
       - run: 'curl -sS https://webinstall.dev/shellcheck | bash'
       - run: rm -rf ~/.nvm
@@ -90,7 +72,7 @@ jobs:
     name: misspell
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: reviewdog/action-misspell@v1
         with:
           locale: US
