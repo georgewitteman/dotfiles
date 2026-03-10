@@ -51,6 +51,15 @@ if git show-ref --verify refs/heads/"${abbrev_ref}" >/dev/null 2>&1; then
   git_compare_url="$(git-get-url --branch "${abbrev_ref}" 2>/dev/null)"
 fi
 
+# Fetch PR URLs for the current branch. Bail fast if gh is missing or unauthed.
+pr_urls=()
+if command -v gh &>/dev/null && gh auth status &>/dev/null; then
+  if git show-ref --verify refs/heads/"${abbrev_ref}" >/dev/null 2>&1; then
+    # shellcheck disable=SC2312
+    IFS=$'\n' read -r -d '' -a pr_urls < <(gh pr list --head "${abbrev_ref}" --json url --jq '.[].url' 2>/dev/null) || true
+  fi
+fi
+
 commit_fmt=()
 commit_fmt+=("$header")
 commit_fmt+=("     Hash: %h")
@@ -68,6 +77,11 @@ commit_fmt+=("    %C(red)Heads:%Creset $(
 )")
 [[ -n $git_url ]] && commit_fmt+=("      %C(yellow)URL:%Creset ${git_url}")
 [[ -n $git_compare_url ]] && commit_fmt+=("  %C(yellow)Compare:%Creset ${git_compare_url}")
+# shellcheck disable=SC2312
+[[ ${#pr_urls[@]} -gt 0 ]] && commit_fmt+=("       %C(yellow)PR:%Creset $(
+  set -e
+  join_by ', ' "${pr_urls[@]}"
+)")
 commit_fmt+=("   %C(green)Author:%Creset %an <%ae>")
 commit_fmt+=("%C(green)Committer:%Creset %cn <%ce>")
 commit_fmt+=("   %C(blue)A Date:%Creset %ad (%ar)")
