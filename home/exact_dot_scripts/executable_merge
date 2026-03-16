@@ -93,7 +93,12 @@ fi
 
 main_branch="$(get-main-branch)"
 
-echo-run git fetch "$remote" "$main_branch"
+current_branch="$(git branch --show-current)"
+if [ "$current_branch" = "$main_branch" ]; then
+  echo-run git fetch "$remote" "$main_branch"
+else
+  echo-run git fetch "$remote" "$main_branch":"$main_branch"
+fi
 if $theirs; then
   echo-run git merge --no-edit --strategy-option=theirs "${remote}/${main_branch}"
 else

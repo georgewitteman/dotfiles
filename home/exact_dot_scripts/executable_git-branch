@@ -26,7 +26,12 @@ done
 if [ -n "$branch" ]; then
   # Only fetch if the branch exists on the remote
   if git ls-remote --exit-code --heads origin "$branch" >/dev/null 2>&1; then
-    echo-run git fetch origin "$branch"
+    current_branch="$(git branch --show-current)"
+    if [ "$current_branch" = "$branch" ]; then
+      echo-run git fetch origin "$branch"
+    else
+      echo-run git fetch origin "$branch":"$branch"
+    fi
   fi
   echo-run git switch "$branch"
   exit $?
