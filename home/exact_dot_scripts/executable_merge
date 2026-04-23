@@ -116,7 +116,7 @@ fi
 conflicted_files="$(git diff --name-only --diff-filter=U)"
 if [ "$conflicted_files" = "yarn.lock" ]; then
   toplevel="$(git rev-parse --show-toplevel)"
-  echo-run cd "$toplevel"
+  cd "$toplevel"
   echo-run yarn install
   echo-run git add yarn.lock
   echo-run git commit --no-edit
