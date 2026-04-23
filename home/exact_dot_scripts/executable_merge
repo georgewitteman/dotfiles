@@ -99,8 +99,28 @@ if [ "$current_branch" = "$main_branch" ]; then
 else
   echo-run git fetch "$remote" "$main_branch":"$main_branch"
 fi
+
+merge_status=0
 if $theirs; then
-  echo-run git merge --no-edit --strategy-option=theirs "${remote}/${main_branch}"
+  echo-run git merge --no-edit --strategy-option=theirs "${remote}/${main_branch}" || merge_status=$?
 else
-  echo-run git merge --no-edit "${remote}/${main_branch}"
+  echo-run git merge --no-edit "${remote}/${main_branch}" || merge_status=$?
 fi
+
+if [ "$merge_status" -eq 0 ]; then
+  exit 0
+fi
+
+# Merge had conflicts. Check whether yarn.lock is the *only* conflicted file;
+# if so, regenerate it with `yarn install` and finish the merge.
+conflicted_files="$(git diff --name-only --diff-filter=U)"
+if [ "$conflicted_files" = "yarn.lock" ]; then
+  toplevel="$(git rev-parse --show-toplevel)"
+  echo-run cd "$toplevel"
+  echo-run yarn install
+  echo-run git add yarn.lock
+  echo-run git commit --no-edit
+  exit $?
+fi
+
+exit "$merge_status"
