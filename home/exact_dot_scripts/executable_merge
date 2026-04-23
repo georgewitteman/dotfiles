@@ -82,7 +82,7 @@ if $continue_; then
     exit 1
   fi
   toplevel="$(git rev-parse --show-toplevel)"
-  git add "$toplevel"
+  echo-run git add "$toplevel"
   if $no_verify; then
     echo-run git commit --no-edit --no-verify
   else
