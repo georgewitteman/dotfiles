@@ -1,0 +1,27 @@
+#!/bin/sh
+
+# -P forces POSIX output format (consistent columns across macOS/Linux)
+# -k forces 1024-byte blocks so we can do the math ourselves
+df -Pk | awk '
+    function human(kb,    units, i, n) {
+        # kb is in 1024-byte blocks; pick the largest unit that keeps it >= 1
+        units[0] = "K"; units[1] = "M"; units[2] = "G"; units[3] = "T"; units[4] = "P"
+        n = kb
+        i = 0
+        while (n >= 1024 && i < 4) {
+            n = n / 1024
+            i++
+        }
+        return sprintf("%.1f%s", n, units[i])
+    }
+
+    NR == 1 {
+        printf "%-25s %8s %8s %8s %6s  %s\n", \
+            "Filesystem", "Size", "Used", "Avail", "Use%", "Mount"
+        next
+    }
+    {
+        printf "%-25s %8s %8s %8s %6s  %s\n", \
+            $1, human($2), human($3), human($4), $5, $6
+    }
+'
