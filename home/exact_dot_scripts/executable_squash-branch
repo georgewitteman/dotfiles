@@ -2,21 +2,21 @@
 # squash-branch.sh
 #
 # Squash all commits on the current branch (since it diverged from BASE)
-# into a single commit.
+# into a single commit. The new commit message is built from all the
+# original commit messages stacked on top of each other (oldest first).
 
 set -eu
 
 show_help() {
   cat <<EOF
-Usage: $(basename "$0") [base-branch] [commit-message]
+Usage: $(basename "$0") [base-branch]
 
 Squash all commits on the current branch (since it diverged from BASE)
-into a single commit.
+into a single commit. The squashed commit's message is the concatenation
+of all the original commit messages, oldest first.
 
 Arguments:
   base-branch      Base branch to squash against (default: origin/main)
-  commit-message   Commit message for the new squashed commit
-                   (default: "Squash branch into a single commit")
 
 Options:
   -h, --help       Show this help message and exit
@@ -24,7 +24,6 @@ Options:
 Examples:
   $(basename "$0")
   $(basename "$0") origin/develop
-  $(basename "$0") origin/main "My single squashed commit"
 
 Notes:
   • Must be run on the feature/topic branch you want to squash.
@@ -40,18 +39,11 @@ if [ "${1:-}" = "-h" ] || [ "${1:-}" = "--help" ]; then
   exit 0
 fi
 
-# Determine base branch and commit message
+# Determine base branch
 if [ "$#" -ge 1 ]; then
   BASE_BRANCH=$1
-  shift
 else
   BASE_BRANCH=origin/main
-fi
-
-if [ "$#" -ge 1 ]; then
-  COMMIT_MSG="$*"
-else
-  COMMIT_MSG="Squash branch into a single commit"
 fi
 
 # Ensure we're in a git repo
@@ -80,13 +72,29 @@ if [ -z "$FORK_POINT" ]; then
   exit 1
 fi
 
+# Bail out if there's nothing to squash
+COMMIT_COUNT=$(git rev-list --count "$FORK_POINT"..HEAD)
+if [ "$COMMIT_COUNT" -eq 0 ]; then
+  echo "Nothing to squash: HEAD is at the fork point with '$BASE_BRANCH'." >&2
+  exit 1
+fi
+if [ "$COMMIT_COUNT" -eq 1 ]; then
+  echo "Only one commit since '$BASE_BRANCH'; nothing to squash." >&2
+  exit 1
+fi
+
+# Collect all commit messages on this branch, oldest first, separated by
+# a blank line. %B is the full message (subject + body); --reverse gives
+# us oldest -> newest.
+COMMIT_MSG=$(git log --reverse --format='%B%n' "$FORK_POINT"..HEAD)
+
 # Soft reset to fork point: keeps changes staged, rewinds commits
-git reset --soft "$FORK_POINT"
+echo-run git reset --soft "$FORK_POINT"
 
 # Create the single squashed commit
-git commit -m "$COMMIT_MSG"
+echo-run git commit -m "$COMMIT_MSG"
 
 echo "✅ Done."
-echo "All commits since '$BASE_BRANCH' have been squashed into one."
+echo "Squashed $COMMIT_COUNT commits since '$BASE_BRANCH' into one."
 echo "If this branch is pushed to a remote, run:"
-echo "  git push --force-with-lease"
+echo "    git push --force-with-lease"
