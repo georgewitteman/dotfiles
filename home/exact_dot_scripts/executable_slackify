@@ -1,0 +1,81 @@
+#!/usr/bin/env python3
+"""Convert standard Markdown on the clipboard to Slack markup.
+
+Reads the clipboard (pbpaste), rewrites Markdown formatting into Slack's
+mrkdwn syntax (https://slack.com/help/articles/360039953113), prints the
+result, and copies it back to the clipboard (pbcopy).
+"""
+
+import re
+import subprocess
+import sys
+
+# Sentinels used to shield already-converted spans from later passes.
+BOLD = "\x00B\x00"
+CODE = "\x00C{}\x00"
+
+
+def transform(text):
+    # 1. Pull code out so its contents are never reformatted, restoring later.
+    blocks = []
+
+    def stash(match):
+        blocks.append(match.group(0))
+        return CODE.format(len(blocks) - 1)
+
+    text = re.sub(r"```.*?```", stash, text, flags=re.DOTALL)
+    text = re.sub(r"`[^`\n]+`", stash, text)
+
+    lines = []
+    for line in text.split("\n"):
+        # Headings (# ...) become bold; Slack has no heading syntax.
+        m = re.match(r"^\s*#{1,6}\s+(.*?)\s*#*\s*$", line)
+        if m:
+            line = BOLD + m.group(1) + BOLD
+        else:
+            # Normalize bullet markers -, *, + to - (so * isn't read as italic).
+            line = re.sub(r"^(\s*)[-*+]\s+", r"\1- ", line)
+        lines.append(line)
+    text = "\n".join(lines)
+
+    # Links are left in Markdown form: [text](url) stays as-is.
+
+    # Bold: **x** and __x__ -> shielded sentinel (Slack bold is *x*).
+    text = re.sub(r"\*\*(.+?)\*\*", BOLD + r"\1" + BOLD, text)
+    text = re.sub(r"__(.+?)__", BOLD + r"\1" + BOLD, text)
+
+    # Italic: *x* and _x_ -> _x_ (Slack italic).
+    text = re.sub(r"(?<![\*\w])\*(?!\s)([^*\n]+?)(?<!\s)\*(?![\*\w])", r"_\1_", text)
+    text = re.sub(r"(?<![_\w])_(?!\s)([^_\n]+?)(?<!\s)_(?![_\w])", r"_\1_", text)
+
+    # Strikethrough: ~~x~~ -> ~x~
+    text = re.sub(r"~~(.+?)~~", r"~\1~", text)
+
+    # Reveal shielded bold.
+    text = text.replace(BOLD, "*")
+
+    # Restore code spans/blocks.
+    text = re.sub(r"\x00C(\d+)\x00", lambda m: blocks[int(m.group(1))], text)
+
+    return text
+
+
+def main():
+    if len(sys.argv) > 1 and sys.argv[1] in ("-h", "--help"):
+        print("usage: {}".format(sys.argv[0].split("/")[-1]))
+        print()
+        print("converts markdown on the clipboard to slack markup")
+        return
+
+    source = subprocess.run(["pbpaste"], capture_output=True, text=True).stdout
+    result = transform(source)
+
+    sys.stdout.write(result)
+    if not result.endswith("\n"):
+        sys.stdout.write("\n")
+
+    subprocess.run(["pbcopy"], input=result, text=True)
+
+
+if __name__ == "__main__":
+    main()
