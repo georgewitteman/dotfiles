@@ -3,3 +3,10 @@ email = "george@witteman.me"
 
 gpgkey = "3F31B900236A9F918F143AE106223EC3AE0381FB"
 sshkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFBNCIplFb70z+C9pxD9oOchI3JbDAhuNzUDpL9+9ehK"
+
+# Packages this repo manages: installed by run_onchange_before_00-install-packages
+# and kept current by run_onchange_after_10-updates. Keep these lists in sync with
+# what the dotfiles actually depend on.
+[packages]
+apt = ["fd-find", "fzf", "ripgrep"]
+brew = ["fd", "fzf", "gnupg", "jq", "pinentry-mac", "ripgrep", "starship"]

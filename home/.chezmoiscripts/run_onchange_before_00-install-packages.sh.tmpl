@@ -6,19 +6,9 @@ set -o errexit
 if command -v sudo >/dev/null 2>&1 && command -v apt-get >/dev/null 2>&1; then
   export DEBIAN_FRONTEND=noninteractive
   sudo --non-interactive apt-get update
-  sudo --non-interactive apt-get install --yes \
-    fd-find \
-    fzf \
-    ripgrep
+  sudo --non-interactive apt-get install --yes {{ .packages.apt | join " " }}
 elif command -v brew >/dev/null 2>&1; then
-  brew install \
-    fd \
-    fzf \
-    gnupg \
-    jq \
-    pinentry-mac \
-    ripgrep \
-    starship
+  brew install {{ .packages.brew | join " " }}
 fi
 
 if ! command -v starship >/dev/null 2>&1; then

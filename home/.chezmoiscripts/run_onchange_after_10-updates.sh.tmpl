@@ -10,6 +10,14 @@ if command -v brew >/dev/null 2>&1; then
   # -O: True if file exists and its owner matches the effective user id of this
   # process.
   if [ -O "$brew_prefix" ]; then
-    brew upgrade
+    # Only upgrade the packages this repo manages. A blanket `brew upgrade`
+    # also upgrades formulae we never installed (e.g. ones preinstalled on CI
+    # runners), and a single unrelated formula's failing post-install step
+    # would abort the whole apply.
+    for package in {{ range .packages.brew }}{{ . | quote }} {{ end }}; do
+      if brew list --formula --versions "$package" >/dev/null 2>&1; then
+        brew upgrade "$package"
+      fi
+    done
   fi
 fi
