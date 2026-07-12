@@ -14,10 +14,19 @@ if command -v brew >/dev/null 2>&1; then
     # also upgrades formulae we never installed (e.g. ones preinstalled on CI
     # runners), and a single unrelated formula's failing post-install step
     # would abort the whole apply.
+    #
+    # Narrow the managed list to what's actually installed (`brew upgrade`
+    # errors on a not-installed formula), then upgrade in one invocation.
+    installed="$(brew list --formula -1)"
+    to_upgrade=""
     for package in {{ range .packages.brew }}{{ . | quote }} {{ end }}; do
-      if brew list --formula --versions "$package" >/dev/null 2>&1; then
-        brew upgrade "$package"
+      if echo "$installed" | grep -qxF "$package"; then
+        to_upgrade="$to_upgrade $package"
       fi
     done
+    if [ -n "$to_upgrade" ]; then
+      # shellcheck disable=SC2086 # intentional word splitting of the list
+      brew upgrade $to_upgrade
+    fi
   fi
 fi
