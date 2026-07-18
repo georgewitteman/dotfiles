@@ -5,7 +5,7 @@
 
 [".local/share/zsh/functions/_cargo"]
   type = "file"
-  url = "https://raw.githubusercontent.com/rust-lang/cargo/master/src/etc/_cargo"
+  url = "https://raw.githubusercontent.com/rust-lang/cargo/master/etc/_cargo"
   refreshPeriod = "24h"
 
 [".local/share/zsh/functions/_fd"]
