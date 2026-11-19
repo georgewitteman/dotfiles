@@ -32,6 +32,11 @@ if [ -n "$branch" ]; then
     else
       echo-run git fetch origin "$branch":"$branch"
     fi
+    # Fetching into a local branch does not set its upstream, so set it here.
+    # Without this, a plain "git pull" fails on the new branch.
+    if ! git rev-parse --abbrev-ref --symbolic-full-name "${branch}@{upstream}" >/dev/null 2>&1; then
+      echo-run git branch --set-upstream-to="origin/$branch" "$branch"
+    fi
   fi
   echo-run git switch "$branch"
   exit $?
