@@ -9,7 +9,8 @@ while [ "$#" -gt 0 ]; do
     -h | --help)
       echo "usage: $(basename "$0") [-r] [<directory>]"
       echo
-      echo "Deletes <directory>/node_modules (default: the current directory)."
+      echo "Deletes <directory>/node_modules (default: the current directory) without"
+      echo "waiting. The deleting finishes in the background."
       echo
       echo "    -r, --recursive   delete every node_modules under <directory> instead"
       exit
@@ -37,7 +38,9 @@ if [ -n "$dir" ]; then
 fi
 
 if $recursive; then
-  dirs="$(find . -name node_modules -type d -prune)"
+  # Skip trash from an earlier run that's still being deleted. find can still
+  # trip over that trash vanishing mid-search, so ignore its errors.
+  dirs="$(find . -name '.rmnm.*' -prune -o -name node_modules -type d -prune -print 2>/dev/null || true)"
   if [ -z "$dirs" ]; then
     echo-info "no node_modules under ${PWD}"
     exit
@@ -49,11 +52,21 @@ else
   exit 1
 fi
 
-echo-info "removing:"
+# Renaming is instant, so move everything into a hidden trash folder first and
+# delete that afterward. Each one keeps the name node_modules inside the trash
+# so .gitignore still hides it while it's being deleted.
+trash="$(mktemp -d ./.rmnm.XXXXXX)"
+count=0
+echo-info "removing in the background:"
 while IFS= read -r path; do
+  count=$((count + 1))
   # Show the path relative to where rmnm was run, like the directory argument.
   echo "  ${dir:+${dir%/}/}${path#./}"
-  rm -rf "$path"
+  mkdir "${trash}/${count}"
+  mv "$path" "${trash}/${count}/node_modules"
 done <<EOF
 $dirs
 EOF
+
+# nohup so the delete keeps going if the terminal closes.
+nohup rm -rf "$trash" >/dev/null 2>&1 &
