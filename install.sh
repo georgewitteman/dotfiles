@@ -13,8 +13,6 @@ while getopts "t:" arg; do
   esac
 done
 
-echo "whoami: $(whoami)"
-
 if command -v chezmoi >/dev/null 2>&1; then
   chezmoi=chezmoi
 else
@@ -41,12 +39,23 @@ fi
 # POSIX way to get script's dir: https://stackoverflow.com/a/29834779/12156188
 script_dir="$(cd -P -- "$(dirname -- "$(command -v -- "$0")")" && pwd -P)"
 
-# TEMPORARY: debugging slow installs in codespaces. Remove once found.
-echo "CODESPACES=${CODESPACES-<unset>} SSH_AUTH_SOCK=${SSH_AUTH_SOCK-<unset>}"
-echo "chezmoi debug log: ${HOME}/chezmoi-install-debug.log"
+# While a codespace is being created its disk is busy, and each fsync takes
+# about 0.25s. chezmoi fsyncs every file it writes and every update to its
+# state database, which added up to 80s. So write files in place
+# (--safe=false), and keep the state database in memory until the end.
+state="${HOME}/.config/chezmoi/chezmoistate.boltdb"
+tmp_state="$state"
+if [ -d /dev/shm ] && [ -w /dev/shm ]; then
+  tmp_dir="$(mktemp -d /dev/shm/chezmoi.XXXXXX)"
+  tmp_state="${tmp_dir}/chezmoistate.boltdb"
+fi
 
 # Print out the following commands before executing
 set -o xtrace
 
-# exec: replace current process with chezmoi init
-exec "$chezmoi" init --apply "--source=${script_dir}" --debug 2>"${HOME}/chezmoi-install-debug.log"
+"$chezmoi" init --apply --safe=false "--persistent-state=${tmp_state}" "--source=${script_dir}"
+
+if [ "$tmp_state" != "$state" ]; then
+  mv "$tmp_state" "$state"
+  rmdir "$tmp_dir"
+fi
