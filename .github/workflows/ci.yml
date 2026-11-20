@@ -5,6 +5,9 @@ name: CI
 
 # Plain shell commands only (no third-party actions), so there's nothing here
 # that needs updating.
+#
+# Every job runs with both the oldest supported chezmoi (.chezmoiversion) and
+# the latest one.
 
 jobs:
   runners:
@@ -12,7 +15,10 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-latest, ubuntu-latest]
+        chezmoi: [oldest, latest]
     runs-on: ${{ matrix.os }}
+    env:
+      CHEZMOI: ${{ matrix.chezmoi }}
     steps:
       - name: Check out
         run: |
@@ -20,7 +26,12 @@ jobs:
           git fetch --quiet --depth 1 "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}" "$GITHUB_SHA"
           git checkout --quiet FETCH_HEAD
       - name: Install dotfiles
-        run: ./install.sh
+        run: |
+          if [ "$CHEZMOI" = oldest ]; then
+            ./install.sh -t "v$(cat .chezmoiversion)"
+          else
+            ./install.sh
+          fi
       - name: Run tests
         run: |
           for test_file in tests/test_*; do
@@ -43,7 +54,10 @@ jobs:
           - mcr.microsoft.com/devcontainers/base:debian
           - mcr.microsoft.com/devcontainers/base:ubuntu
           - mcr.microsoft.com/devcontainers/universal:linux
+        chezmoi: [oldest, latest]
     runs-on: ubuntu-latest
+    env:
+      CHEZMOI: ${{ matrix.chezmoi }}
     container:
       image: ${{ matrix.image }}
       env:
@@ -60,7 +74,11 @@ jobs:
             cd ~/dotfiles
             git fetch --quiet --depth 1 "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}" "$GITHUB_SHA"
             git checkout --quiet FETCH_HEAD
-            ./install.sh
+            if [ "$CHEZMOI" = oldest ]; then
+              ./install.sh -t "v$(cat .chezmoiversion)"
+            else
+              ./install.sh
+            fi
             for test_file in tests/test_*; do
               echo "RUNNING: ${test_file}"
               sh -eux "$test_file"
