@@ -32,4 +32,4 @@ fi
 #
 # PlugClean! will return a non-zero status code in some cases
 vim -es -u "${HOME}/.vim/vimrc" -i NONE -c "PlugClean!" -c "quitall" || true
-vim -es -u "${HOME}/.vim/vimrc" -i NONE -c "PlugInstall" -c "quitall"
+vim -es -u "${HOME}/.vim/vimrc" -i NONE -c "PlugInstall --sync" -c "quitall"
