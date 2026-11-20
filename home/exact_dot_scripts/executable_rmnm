@@ -38,8 +38,9 @@ if [ -n "$dir" ]; then
 fi
 
 if $recursive; then
-  # Skip trash from an earlier run that's still being deleted.
-  dirs="$(find . -name '.rmnm.*' -prune -o -name node_modules -type d -prune -print)"
+  # Skip trash from an earlier run that's still being deleted. find can still
+  # trip over that trash vanishing mid-search, so ignore its errors.
+  dirs="$(find . -name '.rmnm.*' -prune -o -name node_modules -type d -prune -print 2>/dev/null || true)"
   if [ -z "$dirs" ]; then
     echo-info "no node_modules under ${PWD}"
     exit
