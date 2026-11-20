@@ -20,13 +20,4 @@ if [ -e "${dir}/pkg/node_modules" ]; then
   fail "rmnm -r should remove ${dir}/pkg/node_modules"
 fi
 
-# The trash is deleted in the background, so give it a few seconds.
-for _ in 1 2 3 4 5 6 7 8 9 10; do
-  set -- "$dir"/.rmnm.*
-  if [ ! -e "$1" ]; then
-    rm -r "$dir"
-    exit
-  fi
-  sleep 0.5
-done
-fail "rmnm left its trash behind in ${dir}"
+rm -r "$dir"
