@@ -118,14 +118,7 @@ git for-each-ref --sort=committerdate "$refs" --format="%(authoremail:trim)${TAB
     esac
   fi
 
-  if [ -z "$older_than_days" ]; then
-    git-show --quiet "${refs}/${branch}"
-    "$@" "$branch" || true
-    echo
-    continue
-  fi
-
-  if [ "$committerdate" -le "$threshold_ts" ]; then
+  if [ -z "$older_than_days" ] || [ "$committerdate" -le "$threshold_ts" ]; then
     git-show --quiet "${refs}/${branch}"
     "$@" "$branch" || true
     echo
