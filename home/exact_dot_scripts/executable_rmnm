@@ -58,6 +58,7 @@ trash="$(mktemp -d ./.rmnm.XXXXXX)"
 count=0
 while IFS= read -r path; do
   count=$((count + 1))
+  echo "${PWD}/${path#./}"
   mkdir "${trash}/${count}"
   mv "$path" "${trash}/${count}/node_modules"
 done <<EOF
