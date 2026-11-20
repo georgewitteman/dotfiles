@@ -1,12 +1,5 @@
 #!/usr/bin/env bash
 
-if [[ -z $ENV ]]; then
-  # If ~/.bash_profile wasn't sourced then source it
-  # shellcheck source=.bash_profile
-  source "${HOME}/.bash_profile"
-  return $?
-fi
-
 # shellcheck source=.shinit
 source "${HOME}/.shinit"
 
