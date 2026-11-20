@@ -40,7 +40,8 @@
        created its forwarded agent can hang ssh-add for minutes. */}}
 {{- $ssh_sign := false }}
 {{- if not (env "CODESPACES") }}
-{{-   $ssh_sign = (eq (output "sh" "-c" (cat "ssh-add -L 2>/dev/null | grep --quiet " (quote .sshkey) " || echo false")) "") }}
+{{- /* `|| true` because output fails the template if ssh-add fails */}}
+{{-   $ssh_sign = contains .sshkey (output "sh" "-c" "ssh-add -L 2>/dev/null || true") }}
 {{- end }}
 
 {{- if $ssh_sign }}
