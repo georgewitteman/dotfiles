@@ -1,3 +1,6 @@
 #!/bin/sh
 
-echo-run git diff --merge-base "origin/$(get-main-branch)" "$@"
+set -o errexit
+
+main_branch="$(get-main-branch)"
+echo-run git diff --merge-base "origin/${main_branch}" "$@"
