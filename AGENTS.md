@@ -23,5 +23,9 @@ hard rules: break one when the value is clearly worth it, and say why.
   something unexpected.
 - **Keep it minimal.** Small diffs, few files, no features nobody asked for.
   Delete anything that's no longer used.
+- **No doc comments at the top of files.** Comments go next to the code they
+  explain. A script's description goes in its help message; why any other
+  file exists goes in the commit that adds it. Lines a tool needs at the top
+  (shebangs, `# vim:` modelines, `#compdef`) are fine.
 
 Update this file when a preference changes. Keep it short.

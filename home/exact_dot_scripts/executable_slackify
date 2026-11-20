@@ -1,10 +1,4 @@
 #!/usr/bin/env python3
-"""Convert standard Markdown on the clipboard to Slack markup.
-
-Reads the clipboard (pbpaste), rewrites Markdown formatting into Slack's
-mrkdwn syntax (https://slack.com/help/articles/360039953113), prints the
-result, and copies it back to the clipboard (pbcopy).
-"""
 
 import re
 import subprocess
@@ -15,6 +9,7 @@ BOLD = "\x00B\x00"
 CODE = "\x00C{}\x00"
 
 
+# Slack's mrkdwn syntax: https://slack.com/help/articles/360039953113
 def transform(text):
     # 1. Pull code out so its contents are never reformatted, restoring later.
     blocks = []
@@ -64,7 +59,8 @@ def main():
     if len(sys.argv) > 1 and sys.argv[1] in ("-h", "--help"):
         print("usage: {}".format(sys.argv[0].split("/")[-1]))
         print()
-        print("converts markdown on the clipboard to slack markup")
+        print("Converts Markdown on the clipboard to Slack markup, prints the result, and")
+        print("copies it back to the clipboard.")
         return
 
     source = subprocess.run(["pbpaste"], capture_output=True, text=True).stdout

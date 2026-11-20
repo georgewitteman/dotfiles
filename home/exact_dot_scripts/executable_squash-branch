@@ -1,9 +1,4 @@
 #!/bin/sh
-# squash-branch.sh
-#
-# Squash all commits on the current branch (since it diverged from BASE)
-# into a single commit. The new commit message is built from all the
-# original commit messages stacked on top of each other (oldest first).
 
 set -eu
 

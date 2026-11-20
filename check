@@ -1,9 +1,16 @@
 #!/bin/sh
 
-# Runs the tests, then lints the installed shell files with shellcheck and
-# shfmt if they're installed. Run it after `chezmoi apply`.
-
 set -o errexit
+
+case "${1:-}" in
+  -h | --help)
+    echo "usage: $(basename "$0")"
+    echo
+    echo "Runs the tests, then lints the installed shell files with shellcheck and"
+    echo "shfmt if they're installed. Run it after \`chezmoi apply\`."
+    exit
+    ;;
+esac
 
 for test_file in tests/test_*; do
   echo "RUNNING: ${test_file}"

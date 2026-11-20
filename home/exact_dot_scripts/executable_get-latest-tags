@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# Gets the latest tags by date and by version, and verifies that they are the same
-
 set -o nounset
 set -o errexit
 set -o pipefail
@@ -14,6 +12,9 @@ die() {
 }
 
 USAGE="usage: $(basename "$0") [<options>]
+
+Gets the latest tags by date and by version, and verifies that they are the
+same.
 
     -v, --by-version      sort by version
     -d, --by-date         sort by date
