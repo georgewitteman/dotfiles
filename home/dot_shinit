@@ -155,7 +155,7 @@ if ! command -v sudoedit >/dev/null; then
 fi
 
 alias gs='echo_run git status'
-alias gb='git-branch'
+alias gb='switch-branch'
 
 alias tf="terraform"
 
