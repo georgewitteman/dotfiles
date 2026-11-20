@@ -45,6 +45,7 @@ script_dir="$(cd -P -- "$(dirname -- "$(command -v -- "$0")")" && pwd -P)"
 # state database, which added up to 80s. So write files in place
 # (--safe=false), and keep the state database in memory until the end.
 tmp_dir=""
+set --
 if [ -d /dev/shm ] && [ -w /dev/shm ]; then
   tmp_dir="$(mktemp -d /dev/shm/chezmoi.XXXXXX)"
   set -- "--persistent-state=${tmp_dir}/chezmoistate.boltdb"
