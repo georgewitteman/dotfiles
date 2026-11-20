@@ -220,15 +220,7 @@ set statusline+=%{exists('*CapsLockStatusline')?CapsLockStatusline():''}
 set statusline+=%=\ %(%l,%c%V%)\ %P
 
 " Quickly echo the full file path
-function! RelativePathname()
-  let path = fnamemodify(expand("%"), ":~:.")
-  if path != ''
-    return path
-  endif
-  return expand("%")
-endfunction
-nnoremap <leader>% :let @c=RelativePathname()<CR>:OSCYankReg c<CR>:echo RelativePathname()<CR>
-nnoremap <leader>5 :let @c=RelativePathname()<CR>:OSCYankReg c<CR>:echo RelativePathname()<CR>
+nnoremap <leader>% :let @c=expand('%:~:.')<CR>:OSCYankReg c<CR>:echo @c<CR>
 
 
 " Add new lines without entering insert mode
