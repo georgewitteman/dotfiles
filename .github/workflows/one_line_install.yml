@@ -24,5 +24,12 @@ jobs:
       image: mcr.microsoft.com/devcontainers/universal:linux
       env:
         CODESPACES: true
+      # The image defaults to a non-root user, which can't write to the
+      # directories GitHub Actions mounts into the container.
+      options: "--user root"
     steps:
-      - run: curl -fsSL "https://get.chezmoi.io" | sh -s -- -b ~/.local/bin -d init -a georgewitteman
+      # Codespaces apply dotfiles as the image's regular user (uid 1000), not
+      # root, so do the same here.
+      - run: |
+          user="$(awk -F: '$3 == 1000 { print $1 }' /etc/passwd)"
+          su "$user" -c 'curl -fsSL "https://get.chezmoi.io" | sh -s -- -b ~/.local/bin -d init -a georgewitteman'

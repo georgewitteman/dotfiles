@@ -20,7 +20,7 @@ jobs:
           git fetch --quiet --depth 1 "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}" "$GITHUB_SHA"
           git checkout --quiet FETCH_HEAD
       - name: Install dotfiles
-        run: ./install.sh -t "v$(cat .chezmoiversion)"
+        run: ./install.sh
       - name: Run tests
         run: |
           for test_file in tests/test_*; do
@@ -48,18 +48,24 @@ jobs:
       image: ${{ matrix.image }}
       env:
         CODESPACES: true
+      # Some images default to a non-root user, which can't write to the
+      # directories GitHub Actions mounts into the container.
       options: "--user root"
     steps:
-      - name: Check out
+      # Codespaces clone and apply dotfiles as the image's regular user (uid
+      # 1000), not root, so do the same here.
+      - name: Install dotfiles and run tests
         run: |
-          git init --quiet .
-          git fetch --quiet --depth 1 "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}" "$GITHUB_SHA"
-          git checkout --quiet FETCH_HEAD
-      - name: Install dotfiles
-        run: ./install.sh -t "v$(cat .chezmoiversion)"
-      - name: Run tests
-        run: |
-          for test_file in tests/test_*; do
-            echo "RUNNING: ${test_file}"
-            sh -eux "$test_file"
-          done
+          user="$(awk -F: '$3 == 1000 { print $1 }' /etc/passwd)"
+          su "$user" -c '
+            set -e
+            git init --quiet ~/dotfiles
+            cd ~/dotfiles
+            git fetch --quiet --depth 1 "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}" "$GITHUB_SHA"
+            git checkout --quiet FETCH_HEAD
+            ./install.sh
+            for test_file in tests/test_*; do
+              echo "RUNNING: ${test_file}"
+              sh -eux "$test_file"
+            done
+          '
