@@ -11,7 +11,7 @@ into a single commit. The squashed commit's message is the concatenation
 of all the original commit messages, oldest first.
 
 Arguments:
-  base-branch      Base branch to squash against (default: origin/main)
+  base-branch      Base branch to squash against (default: origin/<main branch>)
 
 Options:
   -h, --help       Show this help message and exit
@@ -38,7 +38,7 @@ fi
 if [ "$#" -ge 1 ]; then
   BASE_BRANCH=$1
 else
-  BASE_BRANCH=origin/main
+  BASE_BRANCH="origin/$(get-main-branch)"
 fi
 
 # Ensure we're in a git repo
