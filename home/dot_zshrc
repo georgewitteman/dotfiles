@@ -200,24 +200,11 @@ zle -N edit-command-line
 bindkey '^xe' edit-command-line
 bindkey '^x^e' edit-command-line
 
-# Perform history expansion and insert a space into the buffer. If you type a
-# space after a command that starts with ! (or ^) to refer to (part of) a
-# previous command, that history reference is expanded
-bindkey ' ' magic-space
-bindkey '^A' beginning-of-line
-bindkey '^K' kill-line
-bindkey '^W' backward-kill-word
-bindkey '^H' backward-delete-char
 bindkey '^U' backward-kill-line
-bindkey '^R' history-incremental-search-backward
 bindkey '^[[1;3C' forward-word # alt-right
-bindkey '^[f' forward-word # alt-f
 bindkey '^[[1;3D' backward-word # alt-left
-bindkey '^[b' backward-word # alt-b
-bindkey '^[d' kill-word # alt-d
 bindkey '^[#' pound-insert # alt-#
 bindkey '^[[Z' reverse-menu-complete # shift-tab
-bindkey '^[.' insert-last-word # alt-.
 
 zle_expand_alias() {
   zle _expand_alias
