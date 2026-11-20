@@ -18,13 +18,14 @@ for test_file in tests/test_*; do
 done
 
 cd "$HOME"
+files="$("${HOME}/.scripts/get-files-to-lint" | sed "s#${HOME}/##")"
 if command -v shellcheck >/dev/null 2>&1; then
   echo "RUNNING: shellcheck"
   # -x: follow sourced files, like .profile, which isn't linted on its own when
   # Docker Desktop's block is above its shebang.
-  "${HOME}/.scripts/get-files-to-lint" | sed "s#${HOME}/##" | xargs shellcheck -x
+  echo "$files" | xargs shellcheck -x
 fi
 if command -v shfmt >/dev/null 2>&1; then
   echo "RUNNING: shfmt"
-  "${HOME}/.scripts/get-files-to-lint" | xargs shfmt --indent 2 --case-indent --diff --simplify
+  echo "$files" | xargs shfmt --indent 2 --case-indent --diff --simplify
 fi
