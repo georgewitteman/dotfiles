@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# Runs the tests, then lints the installed shell files with shellcheck and
+# shfmt if they're installed. Run it after `chezmoi apply`.
+
+set -o errexit
+
+for test_file in tests/test_*; do
+  echo "RUNNING: ${test_file}"
+  sh -eux "$test_file"
+done
+
+cd "$HOME"
+if command -v shellcheck >/dev/null 2>&1; then
+  echo "RUNNING: shellcheck"
+  "${HOME}/.scripts/get-files-to-lint" | sed "s#${HOME}/##" | xargs shellcheck
+fi
+if command -v shfmt >/dev/null 2>&1; then
+  echo "RUNNING: shfmt"
+  "${HOME}/.scripts/get-files-to-lint" | xargs shfmt --indent 2 --case-indent --diff --simplify
+fi

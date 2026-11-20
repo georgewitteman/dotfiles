@@ -32,18 +32,9 @@ jobs:
           else
             ./install.sh
           fi
+      # Lints too where shellcheck is installed (e.g. the Ubuntu runner)
       - name: Run tests
-        run: |
-          for test_file in tests/test_*; do
-            echo "RUNNING: ${test_file}"
-            sh -eux "$test_file"
-          done
-      # shellcheck comes preinstalled on the Ubuntu runner
-      - name: Lint
-        if: runner.os == 'Linux'
-        run: |
-          cd "$HOME"
-          "${HOME}/.scripts/get-files-to-lint" | sed "s#${HOME}/##" | xargs shellcheck
+        run: ./check
 
   codespaces:
     strategy:
@@ -79,8 +70,5 @@ jobs:
             else
               ./install.sh
             fi
-            for test_file in tests/test_*; do
-              echo "RUNNING: ${test_file}"
-              sh -eux "$test_file"
-            done
+            ./check
           '
