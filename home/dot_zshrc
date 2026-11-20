@@ -326,6 +326,28 @@ setopt hist_ignore_all_dups
 # https://zsh.sourceforge.io/Doc/Release/Options.html#index-HISTIGNORESPACE
 setopt hist_ignore_space
 
+# Keep commands that look like they contain a secret out of the history file.
+# Returning 2 keeps them in this shell's history, so the up arrow still works.
+# https://zsh.sourceforge.io/Doc/Release/Functions.html#index-zshaddhistory
+zshaddhistory() {
+  emulate -L zsh
+  setopt extended_glob
+  local line="${1%$'\n'}"
+  # Long pastes, like "Copy as cURL" from browser devtools
+  (( ${#line} < 2000 )) || return 2
+  # A literal value in a secret-named variable, like FOO_TOKEN=abc or
+  # PGPASSWORD="abc", but not TOKEN="$(op read ...)" or TOKEN=$OTHER
+  [[ $line == (#i)*(token|secret|passw(or|)d|api[-_]#key)[[:alnum:]_]#=[\"\']#[^\$\"\'[:space:]]* ]] && return 2
+  # Secret flags, like --password=abc or --api-key abc
+  [[ $line == (#i)*--(password|passwd|token|secret|client-secret|access-token|auth-token|api[-_]#key)[=\ ]* ]] && return 2
+  # Auth headers and cookies, like curl -H 'Authorization: ...' or -b 'a=b'
+  [[ $line == (#i)*(-H|--header)[=\ ]#[\"\']#(authorization|cookie|[[:alnum:]-]#(token|key|secret)):* ]] && return 2
+  [[ $line == *curl*(\ -b|\ --cookie)[=\ ]* ]] && return 2
+  # Credentials in a URL, like postgres://user:password@host
+  [[ $line == *://[^/@[:space:]]##:[^/@[:space:]]##@* ]] && return 2
+  return 0
+}
+
 # Remove superfluous blanks from each command line being added to the history
 # list.
 # https://zsh.sourceforge.io/Doc/Release/Options.html#index-HISTREDUCEBLANKS
