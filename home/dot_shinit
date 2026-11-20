@@ -90,8 +90,9 @@ autoload_script echo_run "${HOME}/.scripts/echo-run"
 autoload_script safe_run "${HOME}/.scripts/safe-run"
 
 # If Homebrew prefix is not owned by the current user, use sudo to run brew as
-# the owner of the Homebrew prefix.
-if [ -d "$HOMEBREW_PREFIX" ] && command -v sudo >/dev/null 2>&1; then
+# the owner of the Homebrew prefix. The -w check skips the slower stat calls
+# below in the usual case where it's mine.
+if [ -d "$HOMEBREW_PREFIX" ] && [ ! -w "$HOMEBREW_PREFIX" ] && command -v sudo >/dev/null 2>&1; then
   # Get owner UID of HOMEBREW_PREFIX (GNU stat vs BSD stat)
   if stat -c '%u' "$HOMEBREW_PREFIX" >/dev/null 2>&1; then
     brew_owner_uid="$(stat -c '%u' "$HOMEBREW_PREFIX")"
@@ -205,7 +206,9 @@ if ! command -v tailscale >/dev/null 2>&1; then
   fi
 fi
 
-if [ "$(id -u || true)" -eq 0 ]; then
+# $EUID is set by bash and zsh, which saves running id.
+# shellcheck disable=SC3028
+if [ "${EUID:-$(id -u || true)}" -eq 0 ]; then
   PS1='$PWD # '
 else
   PS1='$PWD $ '
