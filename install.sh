@@ -41,8 +41,12 @@ fi
 # POSIX way to get script's dir: https://stackoverflow.com/a/29834779/12156188
 script_dir="$(cd -P -- "$(dirname -- "$(command -v -- "$0")")" && pwd -P)"
 
+# TEMPORARY: debugging slow installs in codespaces. Remove once found.
+echo "CODESPACES=${CODESPACES-<unset>} SSH_AUTH_SOCK=${SSH_AUTH_SOCK-<unset>}"
+echo "chezmoi debug log: ${HOME}/chezmoi-install-debug.log"
+
 # Print out the following commands before executing
 set -o xtrace
 
 # exec: replace current process with chezmoi init
-exec "$chezmoi" init --apply "--source=${script_dir}"
+exec "$chezmoi" init --apply "--source=${script_dir}" --debug 2>"${HOME}/chezmoi-install-debug.log"
