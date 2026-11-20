@@ -36,16 +36,12 @@
 # - git rebase --exec 'git commit --amend --no-edit -n -S' -i development
 
 {{- $ssh_sign := (eq (output "sh" "-c" (cat "ssh-add -L 2>/dev/null | grep --quiet " (quote .sshkey) " || echo false")) "") }}
-{{- $gpg_sign := (and (lookPath "gpg") (eq (output "sh" "-c" (cat "gpg --list-secret-keys " (quote .gpgkey) " >/dev/null 2>&1 || echo false")) "")) }}
 
 {{- if $ssh_sign }}
 [user]
 	signingKey = {{ .sshkey | quote }}
 [gpg]
 	format = ssh
-{{- else if $gpg_sign }}
-[user]
-	signingKey = {{ .gpgkey | quote }}
 {{- end }}
 
 [commit]

@@ -3,27 +3,36 @@ name: CI
 "on":
   push:
 
-env:
-  DEBIAN_FRONTEND: noninteractive
+# Plain shell commands only (no third-party actions), so there's nothing here
+# that needs updating.
 
 jobs:
   runners:
     strategy:
       fail-fast: false
       matrix:
-        os:
-          - macos-15
-          - macos-26
-          - ubuntu-24.04
-          - ubuntu-26.04
+        os: [macos-latest, ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v7
-      - run: ./install.sh -t "v$(cat .chezmoiversion)"
-      - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
-      - uses: extractions/setup-just@v4
-      - name: "Run sanity checks"
-        run: just verbose=true check
+      - name: Check out
+        run: |
+          git init --quiet .
+          git fetch --quiet --depth 1 "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}" "$GITHUB_SHA"
+          git checkout --quiet FETCH_HEAD
+      - name: Install dotfiles
+        run: ./install.sh
+      - name: Run tests
+        run: |
+          for test_file in tests/test_*; do
+            echo "RUNNING: ${test_file}"
+            sh -eux "$test_file"
+          done
+      # shellcheck comes preinstalled on the Ubuntu runner
+      - name: Lint
+        if: runner.os == 'Linux'
+        run: |
+          cd "$HOME"
+          "${HOME}/.scripts/get-files-to-lint" | sed "s#${HOME}/##" | xargs shellcheck
 
   codespaces:
     strategy:
@@ -34,46 +43,26 @@ jobs:
           - mcr.microsoft.com/devcontainers/base:debian
           - mcr.microsoft.com/devcontainers/base:ubuntu
           - mcr.microsoft.com/devcontainers/universal:linux
-    runs-on: ubuntu-26.04
+    runs-on: ubuntu-latest
     container:
       image: ${{ matrix.image }}
       env:
         CODESPACES: true
-      options: "--user root"
     steps:
-      - uses: actions/checkout@v7
-      - run: ./install.sh -t "v$(cat .chezmoiversion)"
-      - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
-      - uses: extractions/setup-just@v4
-      - run: just verbose=true check
-        # Don't run the checker for the universal container. It has nvs
-        # installed which runs `[ -n "${BASH_SOURCE}" ]` which fails when the
-        # `nounset` option is on.
-        if: ${{ ! contains(matrix.image, 'universal') }}
-
-  lint:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-26.04, macos-26]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
-      - uses: actions/checkout@v7
-      - uses: extractions/setup-just@v4
-      - run: 'curl -sS https://webinstall.dev/shfmt | bash'
-      - run: 'curl -sS https://webinstall.dev/shellcheck | bash'
-      - run: rm -rf ~/.nvm
-      - run: ./install.sh
-      - run: just verbose=true lint
-
-  misspell:
-    name: misspell
-    runs-on: ubuntu-26.04
-    steps:
-      - uses: actions/checkout@v7
-      - uses: reviewdog/action-misspell@v1.31.0
-        with:
-          locale: US
-          filter_mode: nofilter
-          fail_level: error
+      # The container starts as root, but codespaces clone and apply dotfiles as
+      # the image's regular user (uid 1000), so do the same here.
+      - name: Install dotfiles and run tests
+        run: |
+          user="$(awk -F: '$3 == 1000 { print $1 }' /etc/passwd)"
+          su "$user" -c '
+            set -e
+            git init --quiet ~/dotfiles
+            cd ~/dotfiles
+            git fetch --quiet --depth 1 "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}" "$GITHUB_SHA"
+            git checkout --quiet FETCH_HEAD
+            ./install.sh
+            for test_file in tests/test_*; do
+              echo "RUNNING: ${test_file}"
+              sh -eux "$test_file"
+            done
+          '
