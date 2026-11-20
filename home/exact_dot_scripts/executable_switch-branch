@@ -55,9 +55,13 @@ git branch >/dev/null
 list_branches() {
   git for-each-ref --sort=-committerdate --count=20 refs/heads/ "$@"
 }
-list_branches --color=always --format='%(HEAD) %(color:green)%(refname:short)%(color:reset) - %(contents:subject) - %(color:yellow)%(committerdate:relative)%(color:reset)' |
+# Turn off line wrapping while listing so long subjects get cut off at the edge
+# of the terminal instead of wrapping.
+printf '\033[?7l'
+list_branches --color=always --format='%(HEAD) %(color:green)%(refname:short)%(color:reset) - %(color:yellow)%(committerdate:relative)%(color:reset) - %(contents:subject)' |
   nl -w 2 -s ') ' |
   awk '{ lines[NR] = $0 } END { for (i = NR; i > 0; i--) print lines[i] }'
+printf '\033[?7h'
 printf 'Branch number: '
 read -r choice
 case "$choice" in
