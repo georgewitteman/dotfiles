@@ -24,8 +24,8 @@ jobs:
       image: mcr.microsoft.com/devcontainers/universal:linux
       env:
         CODESPACES: true
-      # The image defaults to a non-root user, which can't write to the
-      # directories GitHub Actions mounts into the container.
+      # Start as root (some images default to their regular user) so `su` below
+      # can switch to that user without a password.
       options: "--user root"
     steps:
       # Codespaces apply dotfiles as the image's regular user (uid 1000), not
