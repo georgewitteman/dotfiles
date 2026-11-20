@@ -276,6 +276,9 @@ if command -v fzf &>/dev/null; then
   }
   zle -N fzf-select-history
   bindkey '^R' fzf-select-history
+else
+  # Like the default ^R, but the search can be a pattern, like git*main
+  bindkey '^R' history-incremental-pattern-search-backward
 fi
 
 # Perform textual history expansion, csh-style, treating the character '!'
