@@ -50,12 +50,7 @@ if [ -z "$base_branch" ]; then
 fi
 
 if $latest; then
-  current_branch="$(git branch --show-current)"
-  if [ "$current_branch" = "$base_branch" ]; then
-    echo-run git fetch origin "$base_branch"
-  else
-    echo-run git fetch origin "$base_branch":"$base_branch"
-  fi
+  echo-run git fetch origin "$base_branch"
 fi
 
 stashed=false
