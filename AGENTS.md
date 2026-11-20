@@ -13,6 +13,13 @@ hard rules: break one when the value is clearly worth it, and say why.
   provides before adding a plugin or tool.
 - **Prefer things that don't need updating.** A copy committed as-is beats
   something fetched or kept current. Third-party GitHub Actions count too.
+- **Simple over complete.** A close-enough built-in beats custom code that
+  recreates what another tool did.
+- **Works everywhere I use it.** The same files apply on my Mac and in fresh
+  Linux codespaces and containers. Don't assume one OS, shell, or package
+  manager.
+- **Applying can delete files.** Preview with `chezmoi diff` and ask before
+  applying to my real home directory.
 - **Keep it minimal.** Small diffs, few files, no features nobody asked for.
   Delete anything that's no longer used.
 
