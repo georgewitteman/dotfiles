@@ -12,17 +12,16 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - macos-14
           - macos-15
           - macos-26
-          - ubuntu-22.04
           - ubuntu-24.04
+          - ubuntu-26.04
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: ./install.sh -t "v$(cat .chezmoiversion)"
       - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
-      - uses: extractions/setup-just@v3
+      - uses: extractions/setup-just@v4
       - name: "Run sanity checks"
         run: just verbose=true check
 
@@ -35,17 +34,17 @@ jobs:
           - mcr.microsoft.com/devcontainers/base:debian
           - mcr.microsoft.com/devcontainers/base:ubuntu
           - mcr.microsoft.com/devcontainers/universal:linux
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     container:
       image: ${{ matrix.image }}
       env:
         CODESPACES: true
       options: "--user root"
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: ./install.sh -t "v$(cat .chezmoiversion)"
       - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
-      - uses: extractions/setup-just@v3
+      - uses: extractions/setup-just@v4
       - run: just verbose=true check
         # Don't run the checker for the universal container. It has nvs
         # installed which runs `[ -n "${BASH_SOURCE}" ]` which fails when the
@@ -56,12 +55,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-26.04, macos-26]
     runs-on: ${{ matrix.os }}
     steps:
       - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
-      - uses: actions/checkout@v6
-      - uses: extractions/setup-just@v3
+      - uses: actions/checkout@v7
+      - uses: extractions/setup-just@v4
       - run: 'curl -sS https://webinstall.dev/shfmt | bash'
       - run: 'curl -sS https://webinstall.dev/shellcheck | bash'
       - run: rm -rf ~/.nvm
@@ -70,10 +69,10 @@ jobs:
 
   misspell:
     name: misspell
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
-      - uses: actions/checkout@v6
-      - uses: reviewdog/action-misspell@v1
+      - uses: actions/checkout@v7
+      - uses: reviewdog/action-misspell@v1.31.0
         with:
           locale: US
           filter_mode: nofilter

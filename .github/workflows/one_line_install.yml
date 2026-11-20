@@ -10,7 +10,7 @@ on:
 
 jobs:
   macos:
-    runs-on: macos-latest
+    runs-on: macos-26
     steps:
       - run: rm -rf ~/.nvm ~/.pyenv
       - name: Uninstall homebrew
@@ -18,7 +18,7 @@ jobs:
       - run: 'curl -fsSL "https://get.chezmoi.io" | sh -s -- -b ~/.local/bin -d init -a georgewitteman'
 
   codespaces:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     container:
       image: mcr.microsoft.com/devcontainers/javascript-node
       env:
