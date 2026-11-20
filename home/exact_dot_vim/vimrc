@@ -239,8 +239,6 @@ if executable('rg')
   " Set grepprg for rg
   set grepprg=rg\ --vimgrep
   set grepformat=%f:%l:%c:%m
-
-  let g:ackprg = 'rg --vimgrep'
 endif
 
 " Default to treating /bin/sh as POSIX shell (not the super duper old bourne
