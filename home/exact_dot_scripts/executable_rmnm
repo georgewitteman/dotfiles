@@ -56,9 +56,11 @@ fi
 # so .gitignore still hides it while it's being deleted.
 trash="$(mktemp -d ./.rmnm.XXXXXX)"
 count=0
+echo-info "removing in the background:"
 while IFS= read -r path; do
   count=$((count + 1))
-  echo "${PWD}/${path#./}"
+  # Show the path relative to where rmnm was run, like the directory argument.
+  echo "  ${dir:+${dir%/}/}${path#./}"
   mkdir "${trash}/${count}"
   mv "$path" "${trash}/${count}/node_modules"
 done <<EOF
@@ -67,4 +69,3 @@ EOF
 
 # nohup so the delete keeps going if the terminal closes.
 nohup rm -rf "$trash" >/dev/null 2>&1 &
-echo-info "removing ${count} node_modules in the background"
