@@ -17,7 +17,9 @@ for sh in bash zsh; do
 
   # -i flag not passed
   if run "$sh" -c "echo-run true >/dev/null 2>&1"; then
-    fail "wasn't expecting to be able to run echo-run at this stage"
+    # shellcheck disable=SC2016 # $PATH should expand in the inner shell
+    found="$(run "$sh" -c 'echo "echo-run=$(command -v echo-run) PATH=$PATH"')"
+    fail "${sh} wasn't expecting to be able to run echo-run at this stage: ${found}"
   fi
 
   # -i flag passed
