@@ -76,4 +76,6 @@ jobs:
         with:
           locale: US
           filter_mode: nofilter
+          # Vendored vim plugins are copied as-is from upstream
+          exclude: ./home/exact_dot_vim/exact_pack/*
           fail_level: error

@@ -42,6 +42,11 @@ if [ -n "$branch" ]; then
   exit $?
 fi
 
+if ! command -v fzf >/dev/null 2>&1; then
+  echo-err "fzf is required to pick a branch interactively (or pass a branch name)"
+  exit 1
+fi
+
 echo-run git fetch
 
 # Make sure we're in a git branch

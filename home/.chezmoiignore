@@ -1,6 +1,5 @@
 *.swp
 .cache/fast-syntax-highlighting/secondary_theme.zsh
-.config/nvim/venv*
 .config/sh/*_local
 .gitpod.*
 .nvm/.cache/**

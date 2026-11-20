@@ -5,107 +5,23 @@
 " NOTE: 'encoding' defaults to "latin1" or $LANG
 scriptencoding utf-8
 
-if has('nvim')
-  if ! executable($HOME.'/.config/nvim/venv3/bin/python') && executable('python3')
-    execute '!python3 -m venv '.$HOME.'/.config/nvim/venv3'
-    execute '!'.$HOME.'/.config/nvim/venv3/bin/python -m pip install -r '.$HOME.'/.config/nvim/requirements.txt'
-  endif
+" Plugins are copied as-is into ~/.vim/pack/vendor (`:help packages`). Plugins
+" in start/ load automatically; ones in opt/ are loaded below.
 
-  if executable($HOME.'/.config/nvim/venv3/bin/python')
-    let g:python3_host_prog = $HOME.'/.config/nvim/venv3/bin/python'
-  endif
-endif
+" Highlighting for chezmoi source files. Must load before filetype detection,
+" which defaults.vim turns on.
+packadd chezmoi.vim
 
 " See `:h defaults.vim`: If you create your own .vimrc, it is
 " recommended to add these lines somewhere near the top
 unlet! skip_defaults_vim
 source $VIMRUNTIME/defaults.vim
 
-call plug#begin()
-" The default plugin directory will be as follows:
-"   - Vim (Linux/macOS): '~/.vim/plugged'
-"   - Vim (Windows): '~/vimfiles/plugged'
-"   - Neovim (Linux/macOS/Windows): stdpath('data') . '/plugged'
-" You can specify a custom plugin directory by passing it as the argument
-"   - e.g. `call plug#begin('~/.vim/plugged')`
-"   - Avoid using standard Vim directory names like 'plugin'
-
-" Enables useful syntax highlighting for .tmpl and other chezmoi files
-" Temporarily pinning the version to resolve
-" https://github.com/georgewitteman/dotfiles/actions/runs/3437841248/jobs/5733133559
-Plug 'alker0/chezmoi.vim', { 'commit': 'c4a6024ffb999c798ce1698c615bf228e6333c52' }
-
-" Add git plugins if git is installed
-if executable('git')
-  Plug 'tpope/vim-fugitive'
-  Plug 'tpope/vim-rhubarb'
-endif
-
-" Add fzf plugins if fzf is installed
-if executable('fzf')
-  Plug 'junegunn/fzf'
-  Plug 'junegunn/fzf.vim'
-endif
-
-" "Yaml files in vim 7.4 are really slow, due to core yaml syntax. This syntax
-" is simpler/faster." - stephpy/vim-yaml/README.md
-Plug 'stephpy/vim-yaml'
-
-" Adds better python syntax highlighting (e.g. indent errors, exception
-" classes, builtins, etc.)
-Plug 'hdima/python-syntax'
-
-" Use proper indentation formatting for python
-Plug 'Vimjas/vim-python-pep8-indent'
-
-" Adds support for justfile syntax
-Plug 'NoahTheDuke/vim-just'
-
-" Better text
-Plug 'reedes/vim-pencil'
-
-" Improved incremental search
-Plug 'haya14busa/is.vim'
-
-" A better (and faster) file manager than netrw
-Plug 'justinmk/vim-dirvish'
-
-" Strips whitespace when closing files
-Plug 'ntpeters/vim-better-whitespace'
-
-" Adds capslock shortcut
-Plug 'tpope/vim-capslock'
-
-" Shortcuts for commenting out lines/blocks of lines
-Plug 'tpope/vim-commentary'
-
-" Adds `:Make` for asynchronous makes
-Plug 'tpope/vim-dispatch'
-
-" Allows repeating non-default shortcuts
-Plug 'tpope/vim-repeat'
-
-" Adds shortcuts for surrounding items with things
-Plug 'tpope/vim-surround'
-
-" Support for the Prisma ORM
-Plug 'pantharshit00/vim-prisma'
-
-" Support for clipboard over SSH via ANSI OSC52 sequence
-Plug 'ojroques/vim-oscyank'
-
-" TOML syntax support
-Plug 'cespare/vim-toml'
-
-" Support for terraform files
-Plug 'hashivim/vim-terraform'
-
-" Initialize plugin system
-" - Automatically executes `filetype plugin indent on` and `syntax enable`.
-call plug#end()
-" You can revert the settings after the call like so:
-"   filetype indent off   " Disable file-type-specific indentation
-"   syntax off            " Disable syntax highlighting
+" Optional packages that ship with vim (not available in neovim):
+" - comment: `gc` to toggle comments
+" - nohlsearch: clear search highlighting after moving the cursor
+silent! packadd comment
+silent! packadd nohlsearch
 
 " Leader to <Space>
 let mapleader = "\<Space>"
@@ -351,29 +267,6 @@ let g:strip_whitespace_on_save = 1
 let g:strip_whitespace_confirm = 0 " Don't ask for confirmation
 let g:strip_whitelines_at_eof = 1 " Strip white lines at end of file
 
-command! -bang -nargs=* Rg
-      \ call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case --hidden --glob '!.git' -- ".shellescape(<q-args>),
-      \ 1,
-      \ fzf#vim#with_preview(),
-      \ <bang>0)
-
-" Run in every buffer
-let g:hardtime_default_on = 1
-
-let g:list_of_normal_keys = ['h', 'j', 'k', 'l', '+', '<UP>', '<DOWN>', '<LEFT>', '<RIGHT>']
-let g:list_of_visual_keys = ['h', 'j', 'k', 'l', '+', '<UP>', '<DOWN>', '<LEFT>', '<RIGHT>']
-let g:list_of_insert_keys = ['<UP>', '<DOWN>', '<LEFT>', '<RIGHT>']
-let g:list_of_disabled_keys = []
-
-" The quickfix window cannot be added to the ignore buffers array
-let g:hardtime_ignore_quickfix = 1
-
-" Ignore certain buffer patterns
-let g:hardtime_ignore_buffer_patterns = [ "dirvish" ]
-
-" Maximum number of repetative key preses
-let g:hardtime_maxcount = 2
-
 augroup pencil
   autocmd!
   autocmd FileType markdown,mkd call pencil#init({'wrap': 'soft'})
@@ -382,23 +275,5 @@ augroup pencil
   autocmd FileType html call pencil#init({'wrap': 'soft'})
 augroup END
 
-" Allow vim-terraform to automatically format *.tf and *.tfvars files with
-" terraform fmt.
-let g:terraform_fmt_on_save=1
-
-" Allow vim-terraform to align settings automatically with Tabularize.
-" Requires the 'godlygeek/tabular' plugin
-let g:terraform_align=1
-
-" Config for the hdima/python-syntax plugin
-"
-" Highlight syntax of str.format syntax
-let g:python_highlight_string_format = 1
-" Highlight standard exceptions
-let g:python_highlight_exceptions = 1
-" Highlight indentation errors
-let g:python_highlight_indent_errors = 1
-" Highlight all operators
-" let g:python_highlight_operators = 1
-" Highlight builtin objects, types, and functions
-let g:python_highlight_builtins = 1
+" Extra Python highlighting (builtins, exceptions, string formatting, ...)
+let g:python_highlight_all = 1

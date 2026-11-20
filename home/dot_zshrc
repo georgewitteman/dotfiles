@@ -1,15 +1,13 @@
 # vim: ft=zsh
 source "${HOME}/.shinit"
 
-if command -v starship >/dev/null 2>/dev/null; then
-  eval "$(starship init zsh)"
-else
-  PS1="%F{14}%B%~%f%b %# "
-fi
+# Prompt: directory, time, and exit status if it failed, then background jobs
+# and a ❯ on the next line.
+PROMPT='%B%F{cyan}%~%f%b at %B%F{yellow}%D{%I:%M %p}%f%b %(?..%K{red}%B%F{white} %? %f%b%k )
+%(1j.%B%F{red}+%j%f%b .)%B%(?.%F{green}.%F{red})❯%f%b '
 
 fpath=(
   "${HOME}/.local/share/zsh/functions"
-  "${HOME}/.local/share/zsh/zsh-completions/src"
   "${fpath[@]}"
 )
 
@@ -374,6 +372,3 @@ HISTSIZE="${SAVEHIST:-100000}"
 if [ "$CODESPACES" = "true" ] && [ -d "/workspaces/.codespaces/.persistedshare" ]; then
   HISTFILE="/workspaces/.codespaces/.persistedshare/.zsh_history"
 fi
-
-# Generated for envman. Do not edit.
-[ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
