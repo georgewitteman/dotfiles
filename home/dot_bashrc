@@ -31,15 +31,6 @@ elif [[ -d "${HOMEBREW_PREFIX}/etc/bash_completion.d" ]]; then
   unset COMPLETION
 fi
 
-# https://github.com/nvm-sh/nvm#manual-install
-# Skip if the system config already loaded it, like devcontainer images do.
-# shellcheck disable=SC1091,SC2292
-if ! command -v nvm &>/dev/null && [ -s "$NVM_DIR/nvm.sh" ]; then
-  \. "$NVM_DIR/nvm.sh"
-fi
-# shellcheck disable=SC1091,SC2292
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-
 # https://github.com/posener/complete/blob/v1/cmd/install/bash.go
 # https://github.com/posener/complete/blob/9a4745ac49b29530e07dc2581745a218b646b7a3/cmd/install/install.go#L86-L89
 if command -v "terraform" &>/dev/null; then
