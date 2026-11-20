@@ -47,6 +47,10 @@ zstyle ':completion:*' completer _expand_alias _complete
 # zstyle ':completion:*' completer _expand _complete _ignored _correct _approximate
 # Use menu for autocompletion when number of items >= 2.
 zstyle ':completion:*' menu select=2
+# In the menu (the second Tab), ^R searches the matches from the top. It needs
+# its own binding, since ^R in the main keymap searches history.
+zmodload zsh/complist
+bindkey -M menuselect '^R' history-incremental-search-forward
 # If set, as it is by default, the completion listing is more verbose. In
 # particular many commands show descriptions for options if this style is
 # ‘true’.
