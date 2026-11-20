@@ -2,8 +2,10 @@
 
 . "tests/setup.sh"
 
+# stdin from /dev/null: bash reads ~/.bashrc even when it isn't interactive if
+# its stdin is a network socket (it assumes sshd started it).
 run() {
-  env -i PATH="/usr/bin:/bin" HOME="$HOME" "$@"
+  env -i PATH="/usr/bin:/bin" HOME="$HOME" "$@" </dev/null
 }
 
 for sh in bash zsh; do
@@ -23,5 +25,7 @@ for sh in bash zsh; do
   fi
 
   # -i flag passed
-  run "$sh" -ic "echo-run true >/dev/null 2>&1"
+  if ! run "$sh" -ic "echo-run true >/dev/null 2>&1"; then
+    fail "${sh} -i couldn't run echo-run"
+  fi
 done
