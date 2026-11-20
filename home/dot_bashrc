@@ -3,25 +3,26 @@
 # shellcheck source=.shinit
 source "${HOME}/.shinit"
 
-if command -v "gh" &>/dev/null; then
-  eval "$(gh completion --shell bash || true)"
-fi
-
 # https://docs.brew.sh/Shell-Completion
 # Some of these need bash 4 or later, and macOS comes with bash 3.2.
-if ((BASH_VERSINFO[0] < 4)); then
-  :
-elif [[ -r "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh" ]]; then
-  # shellcheck source=/dev/null
-  source "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
-elif [[ -d "${HOMEBREW_PREFIX}/etc/bash_completion.d" ]]; then
-  for COMPLETION in "${HOMEBREW_PREFIX}/etc/bash_completion.d/"*; do
-    if [[ -r ${COMPLETION} ]]; then
-      # shellcheck source=/dev/null
-      source "${COMPLETION}"
-    fi
-  done
-  unset COMPLETION
+if ((BASH_VERSINFO[0] >= 4)); then
+  if [[ -r "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh" ]]; then
+    # shellcheck source=/dev/null
+    source "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
+  elif [[ -d "${HOMEBREW_PREFIX}/etc/bash_completion.d" ]]; then
+    for COMPLETION in "${HOMEBREW_PREFIX}/etc/bash_completion.d/"*; do
+      if [[ -r ${COMPLETION} ]]; then
+        # shellcheck source=/dev/null
+        source "${COMPLETION}"
+      fi
+    done
+    unset COMPLETION
+  fi
+fi
+
+# Homebrew's completions above include gh's when gh is installed with Homebrew.
+if ! complete -p gh &>/dev/null && command -v gh &>/dev/null; then
+  eval "$(gh completion --shell bash || true)"
 fi
 
 # https://github.com/posener/complete/blob/v1/cmd/install/bash.go
