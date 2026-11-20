@@ -40,18 +40,30 @@ join_by() {
 
 git_url="$(git-get-url --with-commit "$commit_id" 2>/dev/null)"
 
-abbrev_ref="$(git rev-parse --abbrev-ref HEAD 2>/dev/null)"
-git_compare_url=
-if git show-ref --verify refs/heads/"${abbrev_ref}" >/dev/null 2>&1; then
-  git_compare_url="$(git-get-url --branch "${abbrev_ref}" 2>/dev/null)"
+# The compare URL and PRs are for the branch being shown: the current branch
+# when no revision is given, or the local or origin branch when it's the only
+# revision.
+revs="$(git rev-parse --revs-only "$@" 2>/dev/null || true)"
+shown_ref=
+if [[ -z $revs ]]; then
+  shown_ref="$(git rev-parse --symbolic-full-name HEAD 2>/dev/null || true)"
+elif [[ $revs != *$'\n'* ]]; then
+  shown_ref="$(git rev-parse --revs-only --symbolic-full-name "$@" 2>/dev/null || true)"
 fi
+branch=
+case "$shown_ref" in
+  refs/heads/*) branch="${shown_ref#refs/heads/}" ;;
+  refs/remotes/origin/*) branch="${shown_ref#refs/remotes/origin/}" ;;
+esac
 
-# Fetch PR URLs for the current branch. Bail fast if gh is missing or unauthed.
+git_compare_url=
 pr_urls=()
-if command -v gh &>/dev/null && gh auth status &>/dev/null; then
-  if git show-ref --verify refs/heads/"${abbrev_ref}" >/dev/null 2>&1; then
+if [[ -n $branch ]]; then
+  git_compare_url="$(git-get-url --branch "${branch}" 2>/dev/null)"
+  # gh fails fast without network access when it isn't logged in.
+  if command -v gh &>/dev/null; then
     # shellcheck disable=SC2312
-    IFS=$'\n' read -r -d '' -a pr_urls < <(gh pr list --head "${abbrev_ref}" --json url --jq '.[].url' 2>/dev/null) || true
+    IFS=$'\n' read -r -d '' -a pr_urls < <(gh pr list --head "${branch}" --json url --jq '.[].url' 2>/dev/null) || true
   fi
 fi
 
