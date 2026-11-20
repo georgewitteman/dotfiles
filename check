@@ -13,7 +13,9 @@ done
 cd "$HOME"
 if command -v shellcheck >/dev/null 2>&1; then
   echo "RUNNING: shellcheck"
-  "${HOME}/.scripts/get-files-to-lint" | sed "s#${HOME}/##" | xargs shellcheck
+  # -x: follow sourced files, like .profile, which isn't linted on its own when
+  # Docker Desktop's block is above its shebang.
+  "${HOME}/.scripts/get-files-to-lint" | sed "s#${HOME}/##" | xargs shellcheck -x
 fi
 if command -v shfmt >/dev/null 2>&1; then
   echo "RUNNING: shfmt"
