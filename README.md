@@ -1,6 +1,6 @@
 # My Dotfiles
 
-[![CI](https://github.com/georgewitteman/dotfiles/actions/workflows/ci.yml/badge.svg)](https://github.com/georgewitteman/dotfiles/actions/workflows/ci.yml)
+[![Quick Install](https://github.com/georgewitteman/dotfiles/actions/workflows/one_line_install.yml/badge.svg)](https://github.com/georgewitteman/dotfiles/actions/workflows/one_line_install.yml) [![CI](https://github.com/georgewitteman/dotfiles/actions/workflows/ci.yml/badge.svg)](https://github.com/georgewitteman/dotfiles/actions/workflows/ci.yml)
 
 I use [`chezmoi`](https://www.chezmoi.io/) to manage my dotfiles.
 

@@ -57,10 +57,7 @@ jobs:
           git checkout --quiet FETCH_HEAD
       - name: Install dotfiles
         run: ./install.sh -t "v$(cat .chezmoiversion)"
-      # Skipped for the universal image: it has nvs installed, which runs
-      # `[ -n "${BASH_SOURCE}" ]` and fails when the `nounset` option is on.
       - name: Run tests
-        if: ${{ ! contains(matrix.image, 'universal') }}
         run: |
           for test_file in tests/test_*; do
             echo "RUNNING: ${test_file}"
