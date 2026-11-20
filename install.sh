@@ -43,19 +43,20 @@ script_dir="$(cd -P -- "$(dirname -- "$(command -v -- "$0")")" && pwd -P)"
 # about 0.25s. chezmoi fsyncs every file it writes and every update to its
 # state database, which added up to 80s. So write files in place
 # (--safe=false), and keep the state database in memory until the end.
-state="${HOME}/.config/chezmoi/chezmoistate.boltdb"
-tmp_state="$state"
+tmp_dir=""
 if [ -d /dev/shm ] && [ -w /dev/shm ]; then
   tmp_dir="$(mktemp -d /dev/shm/chezmoi.XXXXXX)"
-  tmp_state="${tmp_dir}/chezmoistate.boltdb"
+  set -- "--persistent-state=${tmp_dir}/chezmoistate.boltdb"
 fi
 
 # Print out the following commands before executing
 set -o xtrace
 
-"$chezmoi" init --apply --safe=false "--persistent-state=${tmp_state}" "--source=${script_dir}"
+"$chezmoi" init --apply --safe=false "$@" "--source=${script_dir}"
 
-if [ "$tmp_state" != "$state" ]; then
-  mv "$tmp_state" "$state"
+if [ -n "$tmp_dir" ]; then
+  # chezmoi keeps its state database next to its config file.
+  config_file="$("$chezmoi" execute-template "$@" '{{ .chezmoi.configFile }}')"
+  mv "${tmp_dir}/chezmoistate.boltdb" "$(dirname "$config_file")/"
   rmdir "$tmp_dir"
 fi
