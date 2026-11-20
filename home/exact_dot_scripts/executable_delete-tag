@@ -7,11 +7,6 @@ if [ -z "$tag" ]; then
   exit 1
 fi
 
-if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-  echo-err "Not in git repository."
-  exit 128
-fi
-
 echo-run git fetch --tags --force --prune --quiet || exit "$?"
 
 echo-run git tag -d "$tag" || exit "$?"

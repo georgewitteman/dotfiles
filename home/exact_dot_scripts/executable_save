@@ -2,11 +2,6 @@
 
 set -o errexit
 
-if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-  echo-err "Not in a git repository."
-  exit 128
-fi
-
 USAGE="usage: $(basename "$0") [<options>] [--] [<commit message>...]
 
     -C=PATH               run git from this directory
