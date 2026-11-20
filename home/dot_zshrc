@@ -6,6 +6,10 @@ source "${HOME}/.shinit"
 PROMPT='%B%F{cyan}%~%f%b at %B%F{yellow}%D{%I:%M %p}%f%b %(?..%K{red}%B%F{white} %? %f%b%k )
 %(1j.%B%F{red}+%j%f%b .)%B%(?.%F{green}.%F{red})❯%f%b '
 
+# Keep only the first copy of each entry. Nested shells inherit PATH and FPATH
+# and add to them again, and a changed fpath makes compinit rebuild its dump.
+typeset -U path fpath
+
 fpath=(
   "${HOME}/.local/share/zsh/functions"
   "${fpath[@]}"
@@ -109,7 +113,10 @@ autoload -Uz compinit
 # security check is skipped entirely when the -C option is given, provided the
 # dumpfile exists.
 # https://zsh.sourceforge.io/Doc/Release/Completion-System.html#Use-of-compinit
-compinit -u
+#
+# -C: skip that check and use the existing dump. resh deletes the dump, so run
+# it to pick up new completions.
+compinit -C -u
 
 # https://github.com/zsh-users/zsh/blob/master/Completion/bashcompinit
 autoload -U +X bashcompinit
