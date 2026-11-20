@@ -323,6 +323,18 @@ setopt share_history
 # https://zsh.sourceforge.io/Doc/Release/Options.html#index-HISTIGNOREALLDUPS
 setopt hist_ignore_all_dups
 
+# When searching for history entries in the line editor, do not display
+# duplicates of a line previously found, even if the duplicates are not
+# contiguous. hist_ignore_all_dups doesn't remove duplicates that are already in
+# the history file when it's loaded.
+# https://zsh.sourceforge.io/Doc/Release/Options.html#index-HISTFINDNODUPS
+setopt hist_find_no_dups
+
+# When writing out the history file, older commands that duplicate newer ones
+# are omitted.
+# https://zsh.sourceforge.io/Doc/Release/Options.html#index-HISTSAVENODUPS
+setopt hist_save_no_dups
+
 # Remove command lines from the history list when the first character on the
 # line is a space, or when one of the expanded aliases contains a leading
 # space. Only normal aliases (not global or suffix aliases) have this
