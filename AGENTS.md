@@ -18,8 +18,9 @@ hard rules: break one when the value is clearly worth it, and say why.
 - **Works everywhere I use it.** The same files apply on my Mac and in fresh
   Linux codespaces and containers. Don't assume one OS, shell, or package
   manager.
-- **Applying can delete files.** Preview with `chezmoi diff` and ask before
-  applying to my real home directory.
+- **Apply right after making changes.** Check `chezmoi diff` first, since
+  applying can delete files, and ask only if it would delete or change
+  something unexpected.
 - **Keep it minimal.** Small diffs, few files, no features nobody asked for.
   Delete anything that's no longer used.
 
