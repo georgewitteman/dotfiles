@@ -342,9 +342,10 @@ zshaddhistory() {
   local line="${1%$'\n'}"
   # Long pastes, like "Copy as cURL" from browser devtools
   (( ${#line} < 2000 )) || return 2
-  # A literal value in a secret-named variable, like FOO_TOKEN=abc or
-  # PGPASSWORD="abc", but not TOKEN="$(op read ...)" or TOKEN=$OTHER
-  [[ $line == (#i)*(token|secret|passw(or|)d|api[-_]#key)[[:alnum:]_]#=[\"\']#[^\$\"\'[:space:]]* ]] && return 2
+  # A literal value in a secret-named variable, like FOO_TOKEN=abc,
+  # PGPASSWORD="abc", DD_APP_KEY=abc or AWS_ACCESS_KEY_ID=abc, but not
+  # TOKEN="$(op read ...)" or TOKEN=$OTHER
+  [[ $line == (#i)*(token|secret|passw(or|)d|(api|app|access)[-_]#key)[[:alnum:]_]#=[\"\']#[^\$\"\'[:space:]]* ]] && return 2
   # Secret flags, like --password=abc or --api-key abc
   [[ $line == (#i)*--(password|passwd|token|secret|client-secret|access-token|auth-token|api[-_]#key)[=\ ]* ]] && return 2
   # Auth headers and cookies, like curl -H 'Authorization: ...' or -b 'a=b'
