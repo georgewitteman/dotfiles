@@ -155,7 +155,7 @@ if ! command -v sudoedit >/dev/null; then
   alias sudoedit='sudo --edit'
 fi
 
-alias gs='echo_run git status'
+alias gs='git status'
 alias gb='switch-branch'
 
 alias tf="terraform"
