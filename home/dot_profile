@@ -63,6 +63,12 @@ PATH="${HOME}/.scripts:${PATH}"
 PATH="${HOME}/.cargo/bin:${PATH}"
 PATH="/opt/homebrew/opt/libpq/bin:${PATH}"
 
+# Docker Desktop checks for its zsh completions with a login shell, which
+# doesn't read .zshrc. If they aren't there, it prompts to add its own block.
+if [ -n "$ZSH_VERSION" ]; then
+  FPATH="${HOME}/.docker/completions:${FPATH}"
+fi
+
 if [ -z "$NVM_DIR" ]; then
   export NVM_DIR="${HOME}/.nvm"
 fi
