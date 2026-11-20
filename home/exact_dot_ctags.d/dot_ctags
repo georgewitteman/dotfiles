@@ -1,6 +1,0 @@
---recurse=yes
-
---exclude=dist
---exclude=.git
---exclude=test
-

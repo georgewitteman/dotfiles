@@ -1,17 +1,4 @@
 *.swp
-.cache/fast-syntax-highlighting/secondary_theme.zsh
-.config/sh/*_local
-.gitpod.*
-.nvm/.cache/**
-.nvm/alias/**
-.nvm/versions
-.pyenv/shims/**
-.pyenv/version
-.pyenv/versions/**
 .vim/.netrwhist
-Dockerfile
-README.md
-install.sh
-justfile
 tags
 tags.lock
