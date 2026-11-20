@@ -29,8 +29,11 @@ elif [[ -d "${HOMEBREW_PREFIX}/etc/bash_completion.d" ]]; then
 fi
 
 # https://github.com/nvm-sh/nvm#manual-install
+# Skip if the system config already loaded it, like devcontainer images do.
 # shellcheck disable=SC1091,SC2292
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+if ! command -v nvm &>/dev/null && [ -s "$NVM_DIR/nvm.sh" ]; then
+  \. "$NVM_DIR/nvm.sh"
+fi
 # shellcheck disable=SC1091,SC2292
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
