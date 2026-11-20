@@ -45,7 +45,7 @@ if [ -n "$branch" ]; then
   exit $?
 fi
 
-echo-run git fetch
+echo-run git fetch --quiet
 
 # Make sure we're in a git branch
 git branch >/dev/null
