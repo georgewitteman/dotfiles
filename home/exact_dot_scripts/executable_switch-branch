@@ -50,11 +50,14 @@ echo-run git fetch
 # Make sure we're in a git branch
 git branch >/dev/null
 
-# Pick from the most recently committed-to branches by number
+# Pick from the most recently committed-to branches by number. The list is
+# printed in reverse so number 1, the most recent, sits right above the prompt.
 list_branches() {
   git for-each-ref --sort=-committerdate --count=20 refs/heads/ "$@"
 }
-list_branches --color=always --format='%(HEAD) %(color:green)%(refname:short)%(color:reset) - %(contents:subject) - %(color:yellow)%(committerdate:relative)%(color:reset)' | nl -w 2 -s ') '
+list_branches --color=always --format='%(HEAD) %(color:green)%(refname:short)%(color:reset) - %(contents:subject) - %(color:yellow)%(committerdate:relative)%(color:reset)' |
+  nl -w 2 -s ') ' |
+  awk '{ lines[NR] = $0 } END { for (i = NR; i > 0; i--) print lines[i] }'
 printf 'Branch number: '
 read -r choice
 case "$choice" in
