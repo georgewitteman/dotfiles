@@ -24,12 +24,9 @@ jobs:
       image: mcr.microsoft.com/devcontainers/universal:linux
       env:
         CODESPACES: true
-      # Start as root (some images default to their regular user) so `su` below
-      # can switch to that user without a password.
-      options: "--user root"
     steps:
-      # Codespaces apply dotfiles as the image's regular user (uid 1000), not
-      # root, so do the same here.
+      # The container starts as root, but codespaces apply dotfiles as the
+      # image's regular user (uid 1000), so do the same here.
       - run: |
           user="$(awk -F: '$3 == 1000 { print $1 }' /etc/passwd)"
           su "$user" -c 'curl -fsSL "https://get.chezmoi.io" | sh -s -- -b ~/.local/bin -d init -a georgewitteman'

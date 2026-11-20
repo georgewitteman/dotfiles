@@ -48,12 +48,9 @@ jobs:
       image: ${{ matrix.image }}
       env:
         CODESPACES: true
-      # Start as root (some images default to their regular user) so `su` below
-      # can switch to that user without a password.
-      options: "--user root"
     steps:
-      # Codespaces clone and apply dotfiles as the image's regular user (uid
-      # 1000), not root, so do the same here.
+      # The container starts as root, but codespaces clone and apply dotfiles as
+      # the image's regular user (uid 1000), so do the same here.
       - name: Install dotfiles and run tests
         run: |
           user="$(awk -F: '$3 == 1000 { print $1 }' /etc/passwd)"
