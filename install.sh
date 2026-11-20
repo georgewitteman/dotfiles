@@ -12,6 +12,7 @@ while getopts "t:" arg; do
     *) exit 1 ;;
   esac
 done
+shift "$((OPTIND - 1))"
 
 if command -v chezmoi >/dev/null 2>&1; then
   chezmoi=chezmoi
