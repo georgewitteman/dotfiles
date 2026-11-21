@@ -40,10 +40,10 @@ fi
 # POSIX way to get script's dir: https://stackoverflow.com/a/29834779/12156188
 script_dir="$(cd -P -- "$(dirname -- "$(command -v -- "$0")")" && pwd -P)"
 
-# While a codespace is being created its disk is busy, and each fsync takes
-# about 0.25s. chezmoi fsyncs every file it writes and every update to its
-# state database, which added up to 80s. So write files in place
-# (--safe=false), and keep the state database in memory until the end.
+# While a codespace is being created its disk is busy, so each fsync is slow,
+# and chezmoi fsyncs every file it writes and every update to its state
+# database. So write files in place (--safe=false), and keep the state
+# database in memory until the end.
 tmp_dir=""
 set --
 if [ -d /dev/shm ] && [ -w /dev/shm ]; then
