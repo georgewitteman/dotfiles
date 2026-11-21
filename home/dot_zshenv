@@ -1,4 +1,5 @@
 skip_global_compinit=1 # Ubuntu's /etc/zsh/zshrc runs compinit unless this is set, and .zshrc runs its own
+SHELL_SESSIONS_DISABLE=1 # Skip Terminal.app's per-tab history save/restore in /etc/zshrc_Apple_Terminal; it slows every start and exit
 
 # Keep only the first copy of each entry. Nested shells inherit PATH and FPATH
 # and add to them again, and a changed fpath makes compinit rebuild its dump.
