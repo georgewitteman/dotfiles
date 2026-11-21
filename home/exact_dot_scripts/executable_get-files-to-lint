@@ -10,7 +10,7 @@ for arg in "$@"; do
     -q | --quiet) verbose=false ;;
     -d | --debug) debug=true ;;
     -h | --help)
-      echo "usage: $(basename "$0") [-v|--verbose] [-d|--debug]" >&2
+      echo "usage: $(basename "$0") [-q|--quiet] [-d|--debug]" >&2
       exit
       ;;
     *)
@@ -24,11 +24,8 @@ done
 
 files() {
   path="$1"
-  # -L: Cause the file information and file type (see stat(2)) returned for
-  # each symbolic link to be those of the file referenced by the link, not the
-  # link itself. If the referenced file does not exist, the file information
-  # and type will be for the link itself.
-  find -L "$path" -type f -not -name '*.swp' -not -path '*/\.git/*' -not -name 'tags'
+  # -L: follow symlinks
+  find -L "$path" -type f ! -name '*.swp' ! -path '*/\.git/*' ! -name 'tags'
 }
 
 lint_file() {

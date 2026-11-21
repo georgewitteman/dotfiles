@@ -4,7 +4,7 @@ set -o errexit
 
 USAGE="usage: $(basename "$0") [<options>] [--] [<commit message>...]
 
-    -C=PATH               run git from this directory
+    -C PATH               run git from this directory
     -a, --add             add all changes
     -p, --push            push branch to remote
     -s, --pull            pull (sync) remote changes using \`git pull --rebase\`
