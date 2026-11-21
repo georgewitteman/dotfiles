@@ -1,10 +1,7 @@
 function s:Executable()
-  let cmd = 'chmod +x ' . expand('%:p')
-  if exists(':Dispatch')
-    execute 'Dispatch! ' . cmd
-  else
-    execute '!' . cmd
-    redraw!
+  call system('chmod +x ' . shellescape(expand('%:p')))
+  if v:shell_error
+    echo 'chmod failed'
   endif
 endfunction
 

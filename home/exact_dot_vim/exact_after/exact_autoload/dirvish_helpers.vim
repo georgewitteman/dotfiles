@@ -55,14 +55,14 @@ function! dirvish_helpers#make_file()
    return
   endif
 
-  let fullfilename = expand('%') . fnameescape(newfilename)
+  let fullfilename = expand('%') . newfilename
   if filereadable(fullfilename)
     redraw " Clear the input line
     echo fullfilename .' already exists'
     return
   endif
 
-  execute 'e '.fullfilename
+  execute 'e '.fnameescape(fullfilename)
 endfunction
 
 function! dirvish_helpers#move()
@@ -76,7 +76,12 @@ function! dirvish_helpers#move()
   let newpath = input('Enter new path: ', path)
   call inputrestore()
 
-  call system('mv ' . path . ' ' . newpath)
+  if newpath ==# '' || newpath ==# path
+    return
+  endif
+  if rename(path, newpath) !=# 0
+    echo 'Rename failed!'
+  endif
 
   execute 'Dirvish %'
 endfunction
