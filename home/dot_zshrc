@@ -104,6 +104,19 @@ autoload -Uz compinit
 # dump when the completion files change, so it gets rebuilt then.
 compinit -C -u
 
+# The dump can still be missing the dotfiles' completions, like when something
+# else writes it. resh deletes it so the next shell rebuilds it.
+() {
+  local f
+  for f in "${HOME}"/.local/share/zsh/functions/_*(N:t); do
+    # The dump autoloads every completion function it knows about
+    if (( ! ${+functions[$f]} )); then
+      print -u2 "zsh completions are out of date. Run resh to rebuild them."
+      return
+    fi
+  done
+}
+
 # https://github.com/zsh-users/zsh/blob/master/Completion/bashcompinit
 autoload -U +X bashcompinit
 bashcompinit
