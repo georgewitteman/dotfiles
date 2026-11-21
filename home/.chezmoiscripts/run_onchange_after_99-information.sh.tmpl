@@ -2,7 +2,8 @@
 
 set -o errexit
 
-if ! git -C {{ .chezmoi.sourceDir }} remote -v | grep -q "git@github.com:"; then
+# Codespaces clone over HTTPS with their own credentials.
+if [ -z "${CODESPACES-}" ] && ! git -C {{ .chezmoi.sourceDir | quote }} remote -v | grep -q "git@github.com:"; then
   echo "Use ssh repo URL for dotfiles repo:"
   echo '  $ {{ .chezmoi.executable }} git -- remote set-url origin git@github.com:georgewitteman/dotfiles.git'
   echo
