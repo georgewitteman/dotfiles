@@ -6,15 +6,6 @@ source "${HOME}/.shinit"
 PROMPT='%B%F{cyan}%~%f%b at %B%F{yellow}%D{%I:%M %p}%f%b %(?..%K{red}%B%F{white} %? %f%b%k )
 %B%(?.%F{green}.%F{red})❯%f%b '
 
-# Keep only the first copy of each entry. Nested shells inherit PATH and FPATH
-# and add to them again, and a changed fpath makes compinit rebuild its dump.
-typeset -U path fpath
-
-fpath=(
-  "${HOME}/.local/share/zsh/functions"
-  "${fpath[@]}"
-)
-
 # -O: True if file exists and its owner matches the effective user id of this
 # process. This is used to avoid the error "zsh compinit: insecure directories
 # and files, run compaudit for list."
