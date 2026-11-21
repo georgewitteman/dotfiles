@@ -2,6 +2,7 @@
 
 _save() {
   _arguments \
+    '-C[run git from this directory]:directory:_directories' \
     {-a,--add}'[add all changes]' \
     {-p,--push}'[push branch to remote]' \
     {-s,--pull}'[pull (sync) remote changes using git pull --rebase]' \

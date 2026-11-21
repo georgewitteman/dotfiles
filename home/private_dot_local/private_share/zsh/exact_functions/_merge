@@ -5,5 +5,6 @@ _merge() {
     {-c,--continue}'[finish merge]' \
     '--abort[abort a current merge]' \
     '--no-verify[bypass pre-commit and commit-msg hooks]' \
-    '--remote[which remote to merge from (defaults to "origin")]'
+    '--theirs[prefer the main branch in conflicts]' \
+    '--remote=[which remote to merge from (defaults to "origin")]:remote:{compadd -- $(git remote 2>/dev/null)}'
 }
