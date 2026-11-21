@@ -5,7 +5,7 @@ set -o errexit
 if [ $# -eq 0 ]; then
   codespaces="$(gh codespace list --json name --jq '.[].name')"
   cs_count="$(echo "$codespaces" | wc -l)"
-  if [ "$cs_count" -eq 1 ]; then
+  if [ -n "$codespaces" ] && [ "$cs_count" -eq 1 ]; then
     exec echo-run gh codespace ssh --codespace "$codespaces"
   fi
   exec echo-run gh codespace ssh
@@ -16,12 +16,13 @@ case "$1" in
     if git config --get remote.origin.url >/dev/null 2>&1; then
       url="$(git config --get remote.origin.url)"
       url="${url##git@github.com:}"
+      url="${url#https://github.com/}"
       url="${url%.git}"
       case "$url" in
         :*) : ;;
         */*) set -- "$@" --repo "$url" ;;
       esac
-      echo-run gh codespace "$@" --status
+      set -- "$@" --status
     fi
     ;;
 esac
