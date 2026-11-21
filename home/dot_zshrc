@@ -46,6 +46,10 @@ fi
 zstyle ':completion:*' completer _expand_alias _complete
 # Use menu for autocompletion when number of items >= 2.
 zstyle ':completion:*' menu select=2
+# Complete using the text on both sides of the cursor, instead of as if the
+# cursor were at the end of the word, then move the cursor to the end.
+# https://zsh.sourceforge.io/Doc/Release/Options.html#index-COMPLETEINWORD
+setopt complete_in_word always_to_end
 # In the menu (the second Tab), ^R searches the matches from the top. It needs
 # its own binding, since ^R in the main keymap searches history.
 zmodload zsh/complist
