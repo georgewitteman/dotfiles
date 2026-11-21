@@ -1,0 +1,1 @@
+skip_global_compinit=1 # Ubuntu's /etc/zsh/zshrc runs compinit unless this is set, and .zshrc runs its own
