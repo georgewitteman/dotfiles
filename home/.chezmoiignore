@@ -2,3 +2,7 @@
 .vim/.netrwhist
 tags
 tags.lock
+{{ if ne .chezmoi.os "darwin" }}
+# Only Terminal.app on macOS reads this
+.bash_sessions_disable
+{{ end }}
