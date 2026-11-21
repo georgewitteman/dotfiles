@@ -1,10 +1,10 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 set -o errexit
 
 head="$(git rev-parse --abbrev-ref HEAD)"
 
-if [[ $head == "HEAD" ]]; then
+if [ "$head" = "HEAD" ]; then
   echo-err "You are not on the HEAD of a branch."
   exit 1
 fi
@@ -13,14 +13,14 @@ if ! git rev-parse --abbrev-ref --symbolic-full-name '@{upstream}' >/dev/null 2>
   set -- "$@" --set-upstream origin "$head"
 fi
 
-args=()
-while [[ $# -gt 0 ]]; do
-  case "$1" in
-    -f | --force) args+=(--force-with-lease) ;;
-    *) args+=("$1") ;;
-  esac
+# Rebuild the arguments in place, replacing --force with --force-with-lease
+for arg in "$@"; do
   shift
+  case "$arg" in
+    -f | --force) set -- "$@" --force-with-lease ;;
+    *) set -- "$@" "$arg" ;;
+  esac
 done
 
-echo-run git push "${args[@]}"
+echo-run git push "$@"
 git-show --quiet

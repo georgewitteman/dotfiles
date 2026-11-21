@@ -1,6 +1,6 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
-if [[ $OSTYPE =~ "darwin" ]]; then
+if [ "$(uname || true)" = "Darwin" ]; then
   echo-run sudo killall -HUP mDNSResponder
 else
   echo "Can't flush DNS cache on this operating system"

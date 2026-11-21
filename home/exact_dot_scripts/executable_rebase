@@ -1,27 +1,27 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 set -o errexit
 
 main_branch="$(get-main-branch)"
 
-if [[ $1 == "" ]]; then
+if [ $# -eq 0 ] || [ "$1" = "" ]; then
   echo-run git fetch --quiet --prune &&
     echo-run git rebase --autostash origin/"$main_branch"
   exit $?
 fi
 
-if [[ ($1 == "-i" || $1 == "--interactive") && $# -le 1 ]]; then
+if { [ "$1" = "-i" ] || [ "$1" = "--interactive" ]; } && [ $# -le 1 ]; then
   echo-run git fetch --quiet --prune &&
     echo-run git rebase --interactive --autostash origin/"$main_branch"
   exit $?
 fi
 
-if [[ $1 == "--continue" && $# -le 1 ]]; then
+if [ "$1" = "--continue" ] && [ $# -le 1 ]; then
   echo-run git rebase --continue
   exit $?
 fi
 
-if [[ $1 == "-h" ]] || [[ $1 == "--help" ]]; then
+if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
   echo "Usage: $0 [<git rebase args>]"
   exit
 fi
