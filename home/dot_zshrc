@@ -6,14 +6,6 @@ source "${HOME}/.shinit"
 PROMPT='%B%F{cyan}%~%f%b at %B%F{yellow}%D{%I:%M %p}%f%b %(?..%K{red}%B%F{white} %? %f%b%k )
 %B%(?.%F{green}.%F{red})❯%f%b '
 
-# -O: True if file exists and its owner matches the effective user id of this
-# process. This is used to avoid the error "zsh compinit: insecure directories
-# and files, run compaudit for list."
-if [ -n "$HOMEBREW_PREFIX" ] && [ -O "$HOMEBREW_PREFIX" ]; then
-  # https://docs.brew.sh/Shell-Completion
-  fpath=("${HOMEBREW_PREFIX}/share/zsh/site-functions" "${fpath[@]}")
-fi
-
 # Resources:
 # https://github.com/finnurtorfa/zsh/blob/master/completion.zsh
 # https://zsh.sourceforge.io/Doc/Release/Completion-System.html
