@@ -38,4 +38,26 @@ if command -v "aws_completer" &>/dev/null; then
   complete -C "$(command -v aws_completer)" aws
 fi
 
-PS1='\[\033[01;34m\]\w\[\033[00m\] \$ '
+# Prompt. It only uses bash's built-in prompt escapes, so drawing it costs
+# nothing. See PROMPTING in `man bash`.
+#
+#   \u@\h in   user@host, only over SSH. Checked once at startup.
+#   \w         current directory, with $HOME shown as ~
+#   at \@      time the prompt was drawn, e.g. 08:28 PM, which is also
+#              roughly when the previous command finished
+#   newline, then \$, which is # as root and $ otherwise
+#
+# \e[1;35m and friends are ANSI colors: 1 is bold, 35 magenta, 36 cyan, 33
+# yellow, and 0 resets. Each is wrapped in \[ \] so bash knows it takes up no
+# space on screen; otherwise line editing gets confused about the cursor.
+#
+# Bash has no escape that shows something only sometimes, so showing the exit
+# status only after a failure, or the job count only when there are jobs,
+# would need a PROMPT_COMMAND function. That isn't worth the extra code.
+if [[ -n ${SSH_CONNECTION} ]]; then
+  PS1='\[\e[1;35m\]\u@\h\[\e[0m\] in '
+else
+  PS1=''
+fi
+PS1+='\[\e[1;36m\]\w\[\e[0m\] at \[\e[1;33m\]\@\[\e[0m\]
+\[\e[1m\]\$\[\e[0m\] '
