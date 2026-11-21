@@ -1,16 +1,29 @@
 # vim: ft=zsh
 source "${HOME}/.shinit"
 
-# Prompt: user@host over SSH, directory, time, background job count, and exit
-# status if it failed, then a ❯ (or a red # as root) on the next line. Only
-# built-in escapes, so drawing it costs nothing.
+# Prompt. It only uses zsh's built-in prompt escapes (no hooks, no commands,
+# no prompt_subst), so drawing it costs nothing. See "Prompt Expansion" in
+# `man zshmisc`.
+#
+#   %n@%m in       user@host, only over SSH. Checked once at startup.
+#   %~             current directory, with $HOME shown as ~
+#   at %D{...}     time the prompt was drawn, e.g. 08:28 PM, which is also
+#                  roughly when the previous command finished
+#   %(1j.….)       if there's at least 1 background job: "%j job", plus an
+#                  "s" when there are 2 or more (%(2j.s.))
+#   %(?..…)        if the last command failed: its exit code, white on red
+#   newline, then  red # if root (%(!.…)), otherwise $, green if the last
+#                  command succeeded and red if it failed (%(?.…))
+#
+# %B/%b turn bold on/off, %F{color}/%f set/reset the text color, and
+# %K{color}/%k set/reset the background color.
 if [[ -n $SSH_CONNECTION ]]; then
   PROMPT='%B%F{magenta}%n@%m%f%b in '
 else
   PROMPT=''
 fi
 PROMPT+='%B%F{cyan}%~%f%b at %B%F{yellow}%D{%I:%M %p}%f%b %(1j.%B%F{magenta}%j job%(2j.s.)%f%b .)%(?..%K{red}%B%F{white} %? %f%b%k )
-%B%(!.%F{red}#.%(?.%F{green}.%F{red})❯)%f%b '
+%B%(!.%F{red}#.%(?.%F{green}.%F{red})$)%f%b '
 
 # Resources:
 # https://github.com/finnurtorfa/zsh/blob/master/completion.zsh
