@@ -1,10 +1,10 @@
 # vim: ft=zsh
 source "${HOME}/.shinit"
 
-# Prompt: directory, time, and exit status if it failed, then background jobs
-# and a ❯ on the next line.
+# Prompt: directory, time, and exit status if it failed, then a ❯ on the next
+# line.
 PROMPT='%B%F{cyan}%~%f%b at %B%F{yellow}%D{%I:%M %p}%f%b %(?..%K{red}%B%F{white} %? %f%b%k )
-%(1j.%B%F{red}+%j%f%b .)%B%(?.%F{green}.%F{red})❯%f%b '
+%B%(?.%F{green}.%F{red})❯%f%b '
 
 # Keep only the first copy of each entry. Nested shells inherit PATH and FPATH
 # and add to them again, and a changed fpath makes compinit rebuild its dump.
