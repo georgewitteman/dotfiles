@@ -164,7 +164,7 @@ set splitright
 set foldmethod=indent
 set foldlevel=99
 
-" Time out when waiting for mappings and key codes (requires timeout == off)
+" Time out when waiting for the rest of a key code, so Esc is quick
 set ttimeout
 " The time in ms that is waited for a key code or mapped key sequence to complete
 set ttimeoutlen=50
@@ -204,10 +204,6 @@ set fillchars+=vert:│
 set winwidth=70
 " Minimal number of rows for the current window (default 1)
 set winheight=10
-" The minimal height of a window, when it's not the current window. This is a
-" hard minimum, windows will never become smaller (default 1, 0-3 reasonable)
-" FIXME: Commented out to fix issue on raspberry pi under neovim
-" set winminheight=3
 " The minimal width of a window, when it's not the current window. This is a
 " hard minimum, windows will never become smaller (default 1, 0-12 reasonable)
 set winminwidth=10
@@ -240,19 +236,16 @@ endif
 " shell)
 let g:is_posix = 1
 
-" Dockerfiles load vim-json which sets conceallevel. We don't want that
-let g:vim_json_syntax_conceal = 0
+" Don't hide quotes in JSON
+let g:vim_json_conceal = 0
 
 " Disable netrw
 let loaded_netrwPlugin = 1
 
 " Sort directories at the top of dirvish
-" let g:dirvish_mode = ':sort ,^.*[\/],'
-" If you use |g:dirvish_relative_paths|, try this
 let g:dirvish_mode = ':sort ,^\v(.*[\/])|\ze,'
 
-" List paths relative to the |current-directory|. (Recommended for Vim 7.3
-" because it lacks |conceal|).
+" List paths relative to the |current-directory|.
 let g:dirvish_relative_paths = 1
 
 let g:better_whitespace_enabled = 0 " Disable highlighting
