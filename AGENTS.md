@@ -11,6 +11,8 @@ hard rules: break one when the value is clearly worth it, and say why.
   that tool is missing.
 - **Prefer built-ins.** Reach for what the shell, editor, or OS already
   provides before adding a plugin or tool.
+- **Keep shells fast.** A new terminal should be ready in under 100 ms, and a
+  new prompt should draw in under 30 ms.
 - **Prefer things that don't need updating.** A copy committed as-is beats
   something fetched or kept current. Third-party GitHub Actions count too.
 - **Simple over complete.** A close-enough built-in beats custom code that
