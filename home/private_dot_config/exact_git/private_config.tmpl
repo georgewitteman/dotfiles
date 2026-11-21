@@ -53,8 +53,13 @@
 	format = ssh
 {{- end }}
 
+{{- /* Codespaces sign with their own gpg.program in /etc/gitconfig. Anywhere
+       else without the key, signing would make every commit fail. */}}
+{{- if or $ssh_sign (env "CODESPACES") }}
+
 [commit]
 	gpgSign = true
+{{- end }}
 
 {{- $credential_helper := output "git" "config" "--default" "" "--global" "credential.helper" | trim }}
 {{- if (not (empty $credential_helper)) }}
