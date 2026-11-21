@@ -51,5 +51,5 @@ if $log_newline; then
   echo "$@"
 else
   unset log_color log_level log_newline
-  printf "%s" "$@"
+  printf "%s" "$*"
 fi
