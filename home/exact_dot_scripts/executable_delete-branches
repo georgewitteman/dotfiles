@@ -2,7 +2,7 @@
 
 set -o errexit
 
-USAGE="usage: $(basename "$0") [-y|--yes] [--mine] [--remote] [--older-than=<days>]"
+USAGE="usage: $(basename "$0") [-y|--yes] [--mine|--not-mine] [--remote] [--older-than=<days>]"
 
 die() {
   if [ "$#" -ge 2 ]; then
@@ -46,10 +46,9 @@ while [ "$#" -gt 0 ]; do
       ;;
     --older-than)
       [ "$#" -ge 2 ] || die 1 '--older-than requires a value'
-      # Check $2 is a number
-      if [ "$2" -ne "$2" ]; then
-        die 1 "--older-than value must be a number of days"
-      fi
+      case "$2" in
+        '' | *[!0-9]*) die 1 "--older-than value must be a number of days" ;;
+      esac
       older_than_days="$2"
       shift
       ;;
