@@ -29,6 +29,7 @@ hard rules: break one when the value is clearly worth it, and say why.
   (shebangs, `# vim:` modelines, `#compdef`) are fine.
 - **Keep completions in sync with scripts.** When a script in `~/.scripts`
   gains, loses, or changes an option or argument, update its zsh completion in
-  `~/.local/share/zsh/functions` in the same change, if it has one.
+  `~/.local/share/zsh/functions`, or its `compdef` line in `.zshrc`, in the
+  same change, if it has one.
 
 Update this file when a preference changes. Keep it short.
