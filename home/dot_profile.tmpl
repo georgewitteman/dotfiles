@@ -40,18 +40,9 @@ if [ -z "$PATH" ]; then
   export PATH="/sbin:/bin:/usr/sbin:/usr/bin"
 fi
 
-# From installer: ==> Next steps:
-# - Run these two commands in your terminal to add Homebrew to your PATH:
-#     echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/<user>/.zprofile
-#     eval "$(/opt/homebrew/bin/brew shellenv)"
 if [ -x "/opt/homebrew/bin/brew" ]; then
   eval "$(/opt/homebrew/bin/brew shellenv || true)"
 fi
-
-# Parallel downloads in homebrew
-# https://brew.sh/2025/08/05/homebrew-4.6.0/
-# https://github.com/Homebrew/brew/pull/20342
-export HOMEBREW_DOWNLOAD_CONCURRENCY=auto
 
 # Always add things to PATH so that I can use them directly after installing
 # without needing to restart my terminal.
