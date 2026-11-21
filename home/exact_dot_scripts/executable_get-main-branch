@@ -21,16 +21,18 @@ if [ -z "$main_branch_candidate" ]; then
   main_branch_candidate="$(basename "$symbolic_ref")"
 fi
 
-# If there's only one branch, that's the main branch.
-if [ -z "$main_branch_candidate" ] && git rev-parse --abbrev-ref --branches | wc -l | grep -E -q '^\s*1$'; then
-  main_branch_candidate="$(git rev-parse --abbrev-ref --branches)"
-fi
-
-# If there are no actual branches, then the symbolic-ref for HEAD is the main
-# branch. This seems like it can only happen on a brand new repository, when
-# there aren't any actual commits yet.
-if [ -z "$main_branch_candidate" ] && git rev-parse --abbrev-ref --branches | wc -l | grep -E -q '^\s*0$'; then
-  main_branch_candidate="$(git symbolic-ref --short --quiet HEAD)"
+if [ -z "$main_branch_candidate" ]; then
+  branches="$(git rev-parse --abbrev-ref --branches)"
+  branch_count="$(echo "$branches" | grep -c .)"
+  if [ "$branch_count" -eq 1 ]; then
+    # If there's only one branch, that's the main branch.
+    main_branch_candidate="$branches"
+  elif [ "$branch_count" -eq 0 ]; then
+    # If there are no actual branches, then the symbolic-ref for HEAD is the
+    # main branch. This seems like it can only happen on a brand new
+    # repository, when there aren't any actual commits yet.
+    main_branch_candidate="$(git symbolic-ref --short --quiet HEAD)"
+  fi
 fi
 
 # Use the configured defaultBranch.
