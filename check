@@ -12,6 +12,7 @@ case "${1:-}" in
     ;;
 esac
 
+cd -- "$(dirname -- "$0")"
 for test_file in tests/test_*; do
   echo "RUNNING: ${test_file}"
   sh -eux "$test_file"
