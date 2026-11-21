@@ -137,6 +137,8 @@ fi
 
 # These scripts pass their arguments to a git command
 compdef _git rebase=git-rebase git-show=git-show git-lg=git-log diff-main=git-diff pull=git-pull push=git-push
+# dotfiles passes most commands to chezmoi
+compdef dotfiles=chezmoi
 
 alias echo_fpath="echo_array fpath"
 
