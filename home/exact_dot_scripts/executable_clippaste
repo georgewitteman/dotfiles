@@ -1,0 +1,57 @@
+#!/bin/sh
+
+case "${1-}" in
+  -h | --help)
+    echo "usage: $(basename "$0")"
+    echo
+    echo "Prints the clipboard. Uses pbpaste where it exists. Elsewhere it"
+    echo "asks the terminal for it with OSC 52, which VS Code's terminal supports,"
+    echo "including in codespaces. VS Code may ask for permission the first time."
+    exit
+    ;;
+esac
+
+if command -v pbpaste >/dev/null 2>&1; then
+  exec pbpaste "$@"
+fi
+
+esc="$(printf '\033')"
+bel="$(printf '\007')"
+
+exec 3<>/dev/tty
+saved_tty="$(stty -g <&3)"
+trap 'stty "$saved_tty" <&3' EXIT
+trap 'exit 130' INT TERM
+# Each read returns after at most a second, so a terminal that doesn't answer
+# can't hang this.
+stty raw -echo min 0 time 10 <&3
+
+# The terminal answers with ESC ] 52 ; c ; <base64>, ended by BEL or ESC \.
+# Allow a few empty reads, in case it's asking for permission first.
+printf '\033]52;c;?\a' >&3
+reply=
+tries=0
+while [ "$tries" -lt 10 ]; do
+  chunk="$(dd bs=4096 count=1 <&3 2>/dev/null)"
+  if [ -z "$chunk" ]; then
+    tries=$((tries + 1))
+    continue
+  fi
+  reply="${reply}${chunk}"
+  case "$reply" in
+    *"$bel"* | *"$esc\\"*) break ;;
+  esac
+done
+
+case "$reply" in
+  *"]52;"*) ;;
+  *)
+    echo "The terminal didn't return the clipboard." >&2
+    exit 1
+    ;;
+esac
+
+data="${reply#*]52;*;}"
+data="${data%%"$bel"*}"
+data="${data%%"$esc"*}"
+printf '%s' "$data" | base64 -d

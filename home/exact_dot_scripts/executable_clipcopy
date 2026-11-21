@@ -1,0 +1,21 @@
+#!/bin/sh
+
+case "${1-}" in
+  -h | --help)
+    echo "usage: $(basename "$0") < input"
+    echo
+    echo "Copies standard input to the clipboard. Uses pbcopy where it"
+    echo "exists. Elsewhere it asks the terminal to do it with OSC 52, which VS"
+    echo "Code's terminal supports, including in codespaces."
+    exit
+    ;;
+esac
+
+if command -v pbcopy >/dev/null 2>&1; then
+  exec pbcopy "$@"
+fi
+
+# OSC 52: ESC ] 52 ; c ; <base64> BEL. Write to the terminal itself, since
+# stdout may be redirected.
+data="$(base64 | tr -d '\n')"
+printf '\033]52;c;%s\a' "$data" >/dev/tty
