@@ -32,13 +32,15 @@ hard rules: break one when the value is clearly worth it, and say why.
   applying can delete files, and ask only if it would delete or change
   something unexpected.
 - **Keep it minimal.** Small diffs, few files, no features nobody asked for.
-  Delete anything that's no longer used.
+  Delete anything that's no longer used. Restating a default is fine: it holds
+  up against older versions and system-level overrides.
 - **No doc comments at the top of files.** Comments go next to the code they
   explain. A script's description goes in its help message; why any other
   file exists goes in the commit that adds it. Lines a tool needs at the top
   (shebangs, `# vim:` modelines, `#compdef`) are fine. Avoid comments that go
   stale when something else changes, like references to other files, how
   other code works, current behavior or versions, history, or measurements.
+  Comments that explain what something does are fine, even if long.
 - **Keep completions in sync with scripts.** When a script in `~/.scripts`
   gains, loses, or changes an option or argument, update its zsh completion in
   `~/.local/share/zsh/functions`, or its `compdef` line in `.zshrc`, in the
