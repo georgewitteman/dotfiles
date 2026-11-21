@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# Runs again whenever a zsh completion file changes, so the next shell rebuilds
+# the dump that compinit -C would otherwise keep using.
+{{- range (glob (joinPath .chezmoi.sourceDir "private_dot_local/private_share/zsh/exact_functions/*")) }}
+# {{ base . }} {{ include . | sha256sum }}
+{{- end }}
+
+rm -f "${ZDOTDIR:-$HOME}/.zcompdump"
