@@ -5,7 +5,6 @@ set -o errexit
 branch=
 
 while [ "$#" -gt 0 ]; do
-  unset _arg _value
   case "$1" in
     -h | --help)
       echo "usage: $(basename "$0") [<branch>]"
