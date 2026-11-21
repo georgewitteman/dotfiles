@@ -1,7 +1,6 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 set -o errexit
-set -o pipefail
 
 commit_id="$(git show "$@" --quiet --format="%H")"
 
@@ -10,44 +9,35 @@ if ! git rev-parse "$commit_id" >/dev/null 2>&1; then
   exit 1
 fi
 
-# This is around 2.27x faster than git for-each-ref --points-at.
+# Ref names can't contain spaces or glob characters, so splitting on
+# whitespace is safe here.
+tags=
+heads=
 # shellcheck disable=SC2312
-IFS=$'\n' read -r -d '' -a refs < <(git show-ref --dereference | grep "^$commit_id " | cut -d' ' -f2) || true
-
-tags=() heads=()
-for ref in "${refs[@]}"; do
-  tag="${ref#refs/tags/}"
-  tag="${tag%'^{}'}"
-  head="${ref#refs/heads/}"
-  head="${head#refs/remotes/}"
-  if [[ $ref != "$tag" ]]; then
-    tags+=("$tag")
-  elif [[ $ref != "$head" ]]; then
-    heads+=("$head")
-  fi
+for ref in $(git show-ref --dereference | grep "^$commit_id " | cut -d' ' -f2); do
+  case "$ref" in
+    refs/tags/*)
+      tag="${ref#refs/tags/}"
+      tags="${tags:+$tags, }${tag%'^{}'}"
+      ;;
+    refs/heads/*) heads="${heads:+$heads, }${ref#refs/heads/}" ;;
+    refs/remotes/*) heads="${heads:+$heads, }${ref#refs/remotes/}" ;;
+  esac
 done
 
 header="======== git show --format=\"…\" $* ========"
-# shellcheck disable=SC2312
-footer="$(printf '=%.0s' $(seq 1 "${#header}"))"
+footer="$(printf '%s' "$header" | sed 's/./=/g')"
 
-join_by() {
-  local d="${1-}" f="${2-}"
-  if shift 2; then
-    printf %s "$f" "${@/#/$d}"
-  fi
-}
-
-git_url="$(git-get-url --with-commit "$commit_id" 2>/dev/null)"
+git_url="$(git-get-url --with-commit "$commit_id" 2>/dev/null || true)"
 
 # The compare URL and PRs are for the branch being shown: the current branch
 # when no revision is given, or the local or origin branch when it's the only
 # revision.
 revs="$(git rev-parse --revs-only "$@" 2>/dev/null || true)"
 shown_ref=
-if [[ -z $revs ]]; then
+if [ -z "$revs" ]; then
   shown_ref="$(git rev-parse --symbolic-full-name HEAD 2>/dev/null || true)"
-elif [[ $revs != *$'\n'* ]]; then
+elif [ "$(echo "$revs" | wc -l || true)" -eq 1 ]; then
   shown_ref="$(git rev-parse --revs-only --symbolic-full-name "$@" 2>/dev/null || true)"
 fi
 branch=
@@ -57,48 +47,32 @@ case "$shown_ref" in
 esac
 
 git_compare_url=
-pr_urls=()
-if [[ -n $branch ]]; then
-  git_compare_url="$(git-get-url --branch "${branch}" 2>/dev/null)"
+pr_urls=
+if [ -n "$branch" ]; then
+  git_compare_url="$(git-get-url --branch "${branch}" 2>/dev/null || true)"
   # gh fails fast without network access when it isn't logged in.
-  if command -v gh &>/dev/null; then
-    # shellcheck disable=SC2312
-    IFS=$'\n' read -r -d '' -a pr_urls < <(gh pr list --head "${branch}" --json url --jq '.[].url' 2>/dev/null) || true
+  if command -v gh >/dev/null 2>&1; then
+    pr_urls="$(gh pr list --head "${branch}" --json url --jq '.[].url' 2>/dev/null | paste -s -d , - | sed 's/,/, /g' || true)"
   fi
 fi
 
-commit_fmt=()
-commit_fmt+=("$header")
-commit_fmt+=("     Hash: %h")
-# Don't use this! It's actually slower than what we do manually above
-# commit_fmt+=("   %C(red)Refs:%Creset %D")
-# shellcheck disable=SC2312
-commit_fmt+=("     %C(cyan)Tags:%Creset %C(bold)$(
-  set -e
-  join_by ', ' "${tags[@]}"
-)%Creset")
-# shellcheck disable=SC2312
-commit_fmt+=("    %C(red)Heads:%Creset $(
-  set -e
-  join_by ', ' "${heads[@]}"
-)")
-[[ -n $git_url ]] && commit_fmt+=("      %C(yellow)URL:%Creset ${git_url}")
-[[ -n $git_compare_url ]] && commit_fmt+=("  %C(yellow)Compare:%Creset ${git_compare_url}")
-# shellcheck disable=SC2312
-[[ ${#pr_urls[@]} -gt 0 ]] && commit_fmt+=("       %C(yellow)PR:%Creset $(
-  set -e
-  join_by ', ' "${pr_urls[@]}"
-)")
-commit_fmt+=("   %C(green)Author:%Creset %an <%ae>")
-commit_fmt+=("%C(green)Committer:%Creset %cn <%ce>")
-commit_fmt+=("   %C(blue)A Date:%Creset %ad (%ar)")
-commit_fmt+=("   %C(blue)C Date:%Creset %cd (%cr)")
-commit_fmt+=("  %C(magenta)Subject:%Creset %C(bold)%s%Creset")
-commit_fmt+=("$footer")
+fmt=
+add() {
+  fmt="${fmt:+$fmt%Creset%n}$1"
+}
+add "$header"
+add "     Hash: %h"
+add "     %C(cyan)Tags:%Creset %C(bold)${tags}%Creset"
+add "    %C(red)Heads:%Creset ${heads}"
+[ -z "$git_url" ] || add "      %C(yellow)URL:%Creset ${git_url}"
+[ -z "$git_compare_url" ] || add "  %C(yellow)Compare:%Creset ${git_compare_url}"
+[ -z "$pr_urls" ] || add "       %C(yellow)PR:%Creset ${pr_urls}"
+add "   %C(green)Author:%Creset %an <%ae>"
+add "%C(green)Committer:%Creset %cn <%ce>"
+add "   %C(blue)A Date:%Creset %ad (%ar)"
+add "   %C(blue)C Date:%Creset %cd (%cr)"
+add "  %C(magenta)Subject:%Creset %C(bold)%s%Creset"
+add "$footer"
 
-# For some reason piping makes git show run way faster (~500ms -> ~20ms)
-# shellcheck disable=SC2312
-git show --color=always --format="$(
-  set -e
-  join_by "%Creset%n" "${commit_fmt[@]}"
-)" "$@" | cat
+# Piping through cat keeps git show from starting a pager.
+git show --color=always --format="$fmt" "$@" | cat
