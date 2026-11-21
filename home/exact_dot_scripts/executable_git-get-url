@@ -79,10 +79,13 @@ fi
 
 case "$giturl" in
   https://*)
-    project_url="$(echo "$giturl" | sed "s~\.git~~")"
+    project_url="$(echo "$giturl" | sed "s~\.git$~~")"
+    ;;
+  ssh://*)
+    project_url="$(echo "$giturl" | sed "s~^ssh://[^@]*@~https://~" | sed "s~\.git$~~")"
     ;;
   *)
-    project_url="$(echo "$giturl" | sed "s~:~/~" | sed "s~git@~https://~" | sed "s~\.git~~")"
+    project_url="$(echo "$giturl" | sed "s~:~/~" | sed "s~git@~https://~" | sed "s~\.git$~~")"
     ;;
 esac
 
