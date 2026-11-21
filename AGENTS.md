@@ -15,9 +15,16 @@ hard rules: break one when the value is clearly worth it, and say why.
   something fetched or kept current. Third-party GitHub Actions count too.
 - **Simple over complete.** A close-enough built-in beats custom code that
   recreates what another tool did.
-- **Works everywhere I use it.** The same files apply on my Mac and in fresh
-  Linux codespaces and containers. Don't assume one OS, shell, or package
-  manager.
+- **Works everywhere I use it.** The same files apply on:
+  - my Mac, with Homebrew
+  - GitHub Codespaces and devcontainers on several base images (Debian,
+    Ubuntu, Alpine, and the large `universal` image)
+  - Linux servers running various distributions, often without my usual tools
+
+  Don't assume one OS, shell, package manager, or installed tool. System
+  startup files differ too: Ubuntu's `/etc/zsh/zshrc` runs `compinit`, and the
+  `universal` image's runs another for nvm. CI covers macOS and the codespaces
+  images.
 - **Apply right after making changes.** Check `chezmoi diff` first, since
   applying can delete files, and ask only if it would delete or change
   something unexpected.
