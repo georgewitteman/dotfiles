@@ -9,7 +9,7 @@ name: Quick Install
     branches:
       - main
   schedule:
-    # 5am PT daily
+    # 12:30 UTC daily
     - cron: "30 12 * * *"
 
 jobs:

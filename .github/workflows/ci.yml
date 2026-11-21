@@ -32,7 +32,7 @@ jobs:
           else
             ./install.sh
           fi
-      # Lints too where shellcheck is installed (e.g. the Ubuntu runner)
+      # Lints too where shellcheck is installed
       - name: Run tests
         run: ./check
 
