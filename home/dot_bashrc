@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# Interactive shells only. bash also reads this for some non-interactive
+# shells, like commands run over ssh.
+case $- in *i*) ;; *) return ;; esac
+
 # shellcheck source=.shinit
 source "${HOME}/.shinit"
 
