@@ -116,10 +116,7 @@ autoload -Uz compinit
 # security check is skipped entirely when the -C option is given, provided the
 # dumpfile exists.
 # https://zsh.sourceforge.io/Doc/Release/Completion-System.html#Use-of-compinit
-#
-# -C: skip that check and use the existing dump. resh deletes the dump, so run
-# it to pick up new completions.
-compinit -C -u
+compinit -u
 
 # https://github.com/zsh-users/zsh/blob/master/Completion/bashcompinit
 autoload -U +X bashcompinit
