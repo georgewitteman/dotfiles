@@ -13,9 +13,12 @@ scriptencoding utf-8
 packadd chezmoi.vim
 
 " See `:h defaults.vim`: If you create your own .vimrc, it is
-" recommended to add these lines somewhere near the top
-unlet! skip_defaults_vim
-source $VIMRUNTIME/defaults.vim
+" recommended to add these lines somewhere near the top. Neovim has no
+" defaults.vim; its defaults are built in.
+if !has('nvim')
+  unlet! skip_defaults_vim
+  source $VIMRUNTIME/defaults.vim
+endif
 
 " Optional packages that ship with vim (not available in neovim):
 " - comment: `gc` to toggle comments
