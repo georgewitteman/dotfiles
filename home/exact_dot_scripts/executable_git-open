@@ -13,10 +13,11 @@ if [ -z "$url" ]; then
   die 1 "No URL found."
 fi
 
-if command -v open >/dev/null 2>&1; then
-  echo-run open "$url"
-elif [ -n "${BROWSER-}" ]; then
+# Some Linux systems have an unrelated `open` (like xdg-open or openvt).
+if [ -n "${BROWSER-}" ]; then
   echo-run "$BROWSER" "$url"
+elif [ "$(uname || true)" = "Darwin" ]; then
+  echo-run open "$url"
 else
   echo "$url"
 fi
