@@ -1,10 +1,16 @@
 # vim: ft=zsh
 source "${HOME}/.shinit"
 
-# Prompt: directory, time, and exit status if it failed, then a ❯ on the next
-# line.
-PROMPT='%B%F{cyan}%~%f%b at %B%F{yellow}%D{%I:%M %p}%f%b %(?..%K{red}%B%F{white} %? %f%b%k )
-%B%(?.%F{green}.%F{red})❯%f%b '
+# Prompt: user@host over SSH, directory, time, background job count, and exit
+# status if it failed, then a ❯ (or a red # as root) on the next line. Only
+# built-in escapes, so drawing it costs nothing.
+if [[ -n $SSH_CONNECTION ]]; then
+  PROMPT='%B%F{magenta}%n@%m%f%b in '
+else
+  PROMPT=''
+fi
+PROMPT+='%B%F{cyan}%~%f%b at %B%F{yellow}%D{%I:%M %p}%f%b %(1j.%B%F{magenta}%j job%(2j.s.)%f%b .)%(?..%K{red}%B%F{white} %? %f%b%k )
+%B%(!.%F{red}#.%(?.%F{green}.%F{red})❯)%f%b '
 
 # Resources:
 # https://github.com/finnurtorfa/zsh/blob/master/completion.zsh
