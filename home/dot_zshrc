@@ -99,7 +99,10 @@ autoload -Uz compinit
 # security check is skipped entirely when the -C option is given, provided the
 # dumpfile exists.
 # https://zsh.sourceforge.io/Doc/Release/Completion-System.html#Use-of-compinit
-compinit -u
+#
+# -C: skip that check and use the existing dump. A chezmoi script deletes the
+# dump when the completion files change, so it gets rebuilt then.
+compinit -C -u
 
 # https://github.com/zsh-users/zsh/blob/master/Completion/bashcompinit
 autoload -U +X bashcompinit
