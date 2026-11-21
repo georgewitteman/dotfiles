@@ -135,8 +135,8 @@ if command -v terraform &>/dev/null; then
   complete -o nospace -C "$(command -v terraform)" terraform
 fi
 
-# The rebase script passes its arguments to git rebase
-compdef _git rebase=git-rebase
+# These scripts pass their arguments to a git command
+compdef _git rebase=git-rebase git-show=git-show git-lg=git-log diff-main=git-diff pull=git-pull push=git-push
 
 alias echo_fpath="echo_array fpath"
 
