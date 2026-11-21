@@ -23,6 +23,7 @@ same.
     -n, --num-tags <num>  the number of previous tags to return
     -g, --egrep-pattern <pattern>
                           an egrep pattern to avoid
+    --remote              fetch tags first
 "
 
 remote=false
@@ -77,7 +78,7 @@ done
 
 egrep_cmd=(cat)
 if [[ -n $egrep_pattern ]]; then
-  egrep_cmd=(egrep -v "$egrep_pattern")
+  egrep_cmd=(grep -E -v "$egrep_pattern")
 fi
 
 if [[ -z $pattern ]]; then
@@ -90,8 +91,6 @@ if $remote; then
     echo-err "Failed to fetch tags" >&2
     exit 1
   fi
-  # IFS=$'\n' read -r -d '' -a latest_tags_by_date < <(git ls-remote --tags --refs --sort=creatordate origin "$pattern" | cut -d '/' -f 3 | "${egrep_cmd[@]}" | tail -"$num_tags")
-  # IFS=$'\n' read -r -d '' -a latest_tags_by_version < <(git ls-remote --tags --refs --sort=version:refname origin "$pattern" | cut -d '/' -f 3 | "${egrep_cmd[@]}" | tail -"$num_tags")
 fi
 
 # NOTE: Ideally we'd sort by "taggerdate", but lightweight tags don't have one
@@ -106,9 +105,6 @@ fi
 # encountered." (https://stackoverflow.com/a/40547123)
 IFS=$'\n' read -r -d '' -a latest_tags_by_date < <(git tag --sort=creatordate --list "$pattern" | "${egrep_cmd[@]}" | tail -"$num_tags") || true
 IFS=$'\n' read -r -d '' -a latest_tags_by_version < <(git tag --sort=version:refname --list "$pattern" | "${egrep_cmd[@]}" | tail -"$num_tags") || true
-
-# echo "${latest_tags_by_date[@]}"
-# echo "${latest_tags_by_version[@]}"
 
 if [[ "$by_version$by_date" == "1" ]]; then
   if ((by_version)); then
