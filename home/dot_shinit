@@ -130,19 +130,6 @@ if [ -z "$GPG_TTY" ]; then
 fi
 export GPG_TTY
 
-# Without this, fzf ignores hidden files.
-if [ -z "$FZF_DEFAULT_COMMAND" ]; then
-  # --hidden: include hidden files
-  # --exclude '.git': .git is usually not in .gitignore, and we're showing
-  #   hidden files, so it needs to be explicitly ignored here
-  # --strip-cwd-prefix: don't display ./ at the beginning of each file
-  if command -v fd >/dev/null 2>&1; then
-    export FZF_DEFAULT_COMMAND="fd --hidden --exclude .git --strip-cwd-prefix"
-  elif command -v fdfind >/dev/null 2>&1; then
-    export FZF_DEFAULT_COMMAND="fdfind --hidden --exclude .git"
-  fi
-fi
-
 # `man ls`: auto will make ls output escape sequences based on termcap(5), but
 # only if stdout is a tty and either the -G flag is specified or the COLORTERM
 # environment variable is set and not empty.

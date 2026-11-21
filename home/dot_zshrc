@@ -217,73 +217,8 @@ zle_expand_alias() {
 zle -N zle_expand_alias
 bindkey -M main ' ' zle_expand_alias
 
-if command -v fzf &>/dev/null; then
-  fzf-file-widget() {
-    # Need extended_glob for trimming $current_word
-    setopt localoptions extended_glob
-    local -A matched_words
-    local current_word lbuffer rbuffer
-    autoload -U match-words-by-style && match-words-by-style
-
-    if [[ -n "${matched_words[ws-before-cursor]}" && -n "${matched_words[ws-after-cursor]}" ]] || \
-      [[ -n "${matched_words[ws-before-cursor]}" && "${#RBUFFER}" = 0 ]] || \
-      [[ -n "${matched_words[ws-after-cursor]}" && "${#LBUFFER}" = 0 ]]; then
-      # Whitespace on both sides or at beginning or end
-      lbuffer="$LBUFFER"
-      rbuffer="$RBUFFER"
-    elif [[ -n "${matched_words[ws-before-cursor]}" || ( "$CURSOR" = 0 && -z "${matched_words[ws-after-cursor]}" ) ]]; then
-      # Beginning of a word
-      current_word="${matched_words[word-after-cursor]}"
-      lbuffer="$LBUFFER"
-      rbuffer="${BUFFER[$(( CURSOR + ${#matched_words[word-after-cursor]} + 1 )),-1]}"
-    elif [[ -n "${matched_words[ws-after-cursor]}" || "$CURSOR" = "${#BUFFER}" ]]; then
-      # At end of word
-      current_word="${matched_words[word-before-cursor]}"
-      lbuffer="${BUFFER[1,$(( CURSOR - ${#matched_words[word-before-cursor]} ))]}"
-      rbuffer="$RBUFFER"
-    else
-      # Inside word
-      current_word="${matched_words[word-before-cursor]}${matched_words[word-after-cursor]}"
-      lbuffer="${matched_words[start]}${matched_words[ws-before-word]}"
-      rbuffer="${matched_words[ws-after-word]}${matched_words[end]}"
-    fi
-    # Trim leading and trailing whitespace
-    current_word="${${current_word##[[:space:]]##}%%[[:space:]]##}"
-
-    # .shinit sets FZF_DEFAULT_COMMAND when fd is installed
-    local path="$(eval "${FZF_DEFAULT_COMMAND:-find . -not -name . -not -name '*.swp' -not -path '*/.git/*' -not -name tags}" | fzf --query "$current_word")"
-    if [[ "$?" != 0 || -z "$path" ]]; then
-      zle reset-prompt
-      return
-    fi
-
-    LBUFFER="${lbuffer}${path}"
-    RBUFFER="$rbuffer"
-    zle reset-prompt
-  }
-  zle -N fzf-file-widget
-  bindkey '^T' fzf-file-widget
-
-  fzf-select-history() {
-    # fc:
-    #   -n 1: suppress event (i.e. history entry) numbers when listing
-    #   -l: list commands instead of invoking an editor on them
-    # fzf:
-    #   --tac: reverse the order of input
-    local command="$(fc -l -n 1 | fzf --tiebreak index --tac --query "$LBUFFER")"
-    if [[ $? -ne 0 || -z "$command" ]]; then
-      return
-    fi
-    BUFFER="$command"
-    CURSOR=$#BUFFER
-    zle reset-prompt
-  }
-  zle -N fzf-select-history
-  bindkey '^R' fzf-select-history
-else
-  # Like the default ^R, but the search can be a pattern, like git*main
-  bindkey '^R' history-incremental-pattern-search-backward
-fi
+# Like the default ^R, but the search can be a pattern, like git*main
+bindkey '^R' history-incremental-pattern-search-backward
 
 # Perform textual history expansion, csh-style, treating the character '!'
 # specially.
