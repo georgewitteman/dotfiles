@@ -8,7 +8,8 @@ usage: $(basename "$0") [-i|--interactive] [<base>]
        $(basename "$0") --continue | --abort
 
 Fetches, then rebases the current branch onto origin's copy of <base> (the
-main branch by default), stashing and restoring uncommitted changes. A <base>
+main branch by default), stashing and restoring uncommitted changes. If the
+fetch fails, it rebases onto what was last fetched. A <base>
 that isn't a branch on origin is used as given, like origin/foo or a commit.
 For anything else, use git rebase.
 EOF
@@ -66,7 +67,10 @@ fi
 
 base="${1:-$(get-main-branch)}"
 
-echo-run git fetch --quiet --prune
+# Offline, like on a plane, rebasing onto what was last fetched still helps
+if ! echo-run git fetch --quiet --prune; then
+  echo-warn "fetch failed, so rebasing onto what was last fetched"
+fi
 
 if git show-ref --verify --quiet "refs/remotes/origin/${base}"; then
   base="origin/${base}"
