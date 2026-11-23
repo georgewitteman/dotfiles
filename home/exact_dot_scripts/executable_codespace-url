@@ -1,0 +1,38 @@
+#!/bin/sh
+
+set -o errexit
+
+usage() {
+  cat <<USAGE
+usage: $(basename "$0") <port>
+
+Prints the public URL for a port forwarded from this codespace. Only works
+inside a codespace.
+USAGE
+}
+
+case "${1-}" in
+  -h | --help)
+    usage
+    exit
+    ;;
+esac
+
+if [ "$#" -ne 1 ]; then
+  usage >&2
+  exit 1
+fi
+
+case "$1" in
+  "" | *[!0-9]*)
+    echo-err "not a port number: ${1}"
+    exit 1
+    ;;
+esac
+
+if [ -z "${CODESPACE_NAME-}" ] || [ -z "${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN-}" ]; then
+  echo-err "not in a codespace (CODESPACE_NAME or GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN is empty)"
+  exit 1
+fi
+
+echo "https://${CODESPACE_NAME}-${1}.${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}"
