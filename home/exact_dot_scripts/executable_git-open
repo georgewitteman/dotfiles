@@ -2,16 +2,19 @@
 
 set -o errexit
 
-die() {
-  [ "$#" -ge 2 ] && echo-err "$2" >&2
-  exit "$1"
-}
+case "${1-}" in
+  -h | --help)
+    echo "usage: $(basename "$0") [git-get-url options]"
+    echo
+    echo "Opens the repository's web page, or the commit, file, or pull request"
+    echo "search that git-get-url builds from the options (see git-get-url -h)."
+    echo "Uses \$BROWSER if it's set, and open on macOS. Elsewhere it prints the"
+    echo "URL."
+    exit
+    ;;
+esac
 
 url="$(git-get-url "$@")"
-
-if [ -z "$url" ]; then
-  die 1 "No URL found."
-fi
 
 # Some Linux systems have an unrelated `open` (like xdg-open or openvt).
 if [ -n "${BROWSER-}" ]; then
