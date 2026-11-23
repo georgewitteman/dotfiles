@@ -1,2 +1,5 @@
 # vim swapfiles
-*.swp
+.*.sw?
+
+# macOS Finder metadata
+.DS_Store
