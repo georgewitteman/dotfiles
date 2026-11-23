@@ -1,0 +1,21 @@
+#compdef dotfiles
+
+_dotfiles() {
+  # Offer the files chezmoi manages as ~ paths, so they work from any directory.
+  # Other paths complete as plain files.
+  if (( CURRENT > 2 )) && [[ ${words[2]} == edit && ${PREFIX} != -* ]]; then
+    local -a files
+    files=(${(f)"$(chezmoi managed --include=files 2>/dev/null)"})
+    if compset -P '\~/'; then
+      _multi_parts / files
+    elif [[ -z ${PREFIX} ]]; then
+      _multi_parts -P '~/' / files
+    else
+      _files
+    fi
+    return
+  fi
+
+  # dotfiles passes most commands to chezmoi
+  _chezmoi "$@"
+}
