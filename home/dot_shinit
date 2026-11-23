@@ -158,6 +158,19 @@ tmp() {
   echo_run cd "$1"
 }
 
+# Unsets AWS credentials and prints each one that was set. Leaves AWS_PROFILE
+# and AWS_REGION, which aren't secret.
+unset_aws_credentials() {
+  for _aws_var in AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN \
+    AWS_SECURITY_TOKEN AWS_CREDENTIAL_EXPIRATION AWS_SESSION_EXPIRATION; do
+    if eval "[ -n \"\${${_aws_var}+x}\" ]"; then
+      echo "unset ${_aws_var}"
+      unset "$_aws_var"
+    fi
+  done
+  unset _aws_var
+}
+
 dotfiles() {
   if [ $# -eq 0 ]; then
     command dotfiles
