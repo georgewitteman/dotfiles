@@ -1,0 +1,10 @@
+#compdef git-get-url git-open
+
+local -a branches
+branches=(${(f)"$(git for-each-ref --format='%(refname:short)' refs/heads 2>/dev/null)"})
+_arguments \
+  {-c,--commit}"[link to HEAD's commit]" \
+  '--with-commit[link to this commit, or the file at this commit]:commit: ' \
+  '--pull-request[search pull requests for the commit]' \
+  '--branch[compare this branch with the default branch]:branch:{compadd -a branches}' \
+  '1:commit or file:_files'

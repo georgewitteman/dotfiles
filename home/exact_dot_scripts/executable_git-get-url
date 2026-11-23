@@ -3,11 +3,27 @@
 set -o errexit
 
 die() {
-  [ "$#" -ge 2 ] && echo-err "$2" >&2
+  [ "$#" -ge 2 ] && echo-err "$2"
   exit "$1"
 }
 
-git_toplevel="$(git rev-parse --show-toplevel)"
+usage() {
+  cat <<EOF
+usage: $(basename "$0") [<options>] [<commit> | <file>]
+
+Prints the GitHub URL for the origin remote's repository, or for a commit or a
+file in it. A file links to its contents at HEAD, or at --with-commit's commit.
+
+    -c, --commit            link to HEAD's commit
+    --with-commit <commit>  link to this commit, or the file at this commit
+    --pull-request          search pull requests for the commit
+    --branch <branch>       compare this branch with the default branch
+EOF
+}
+
+# Outside a repo, git ls-remote --get-url just prints the remote's name back,
+# so check for a repo first.
+git rev-parse --git-dir >/dev/null
 pull_request=false
 commit=false
 commit_id=
@@ -27,7 +43,7 @@ while [ "$#" -gt 0 ]; do
   unset _arg _value
   case "$1" in
     -h | --help)
-      echo "usage: $(basename "$0") [-c|--commit] [--with-commit <commit>] [--pull-request] [--branch <branch>]"
+      usage
       exit
       ;;
     -c | --commit)
@@ -59,11 +75,17 @@ while [ "$#" -gt 0 ]; do
         commit=true
         commit_id="$(git rev-parse --short "$1")"
       elif [ -f "$1" ]; then
+        # The path from the repository's root, from wherever it's given
+        path="$(git ls-files --full-name -- "$1")"
+        if [ -z "$path" ]; then
+          die 1 "not tracked by git: ${1}"
+        fi
         commit=true
         if [ -z "$commit_id" ]; then
           commit_id="$(git rev-parse --short HEAD)"
         fi
-        path="${1##"${git_toplevel}/"}"
+      else
+        die 1 "not a commit or file: ${1}"
       fi
       ;;
   esac
