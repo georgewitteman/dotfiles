@@ -1,4 +1,4 @@
-# vim: ft=zsh
+#!/usr/bin/env zsh
 source "${HOME}/.shinit"
 
 # Prompt. It only uses zsh's built-in prompt escapes (no hooks, no commands,
