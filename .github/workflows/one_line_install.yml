@@ -16,7 +16,7 @@ jobs:
   macos:
     runs-on: macos-latest
     steps:
-      - run: curl -fsSL "https://get.chezmoi.io" | sh -s -- -b ~/.local/bin -d init -a georgewitteman
+      - run: curl -fsSL "https://get.chezmoi.io" | sh -s -- -b ~/.local/bin init -a georgewitteman
 
   codespaces:
     runs-on: ubuntu-latest
@@ -29,4 +29,4 @@ jobs:
       # image's regular user (uid 1000), so do the same here.
       - run: |
           user="$(awk -F: '$3 == 1000 { print $1 }' /etc/passwd)"
-          su "$user" -c 'curl -fsSL "https://get.chezmoi.io" | sh -s -- -b ~/.local/bin -d init -a georgewitteman'
+          su "$user" -c 'curl -fsSL "https://get.chezmoi.io" | sh -s -- -b ~/.local/bin init -a georgewitteman'

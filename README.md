@@ -7,19 +7,13 @@ I use [`chezmoi`](https://www.chezmoi.io/) to manage my dotfiles.
 ## Installation
 
 ```bash
-curl --fail --silent --show-error --location "https://get.chezmoi.io" | sh -s -- -b "${HOME}/.local/bin" -d init --apply georgewitteman
+curl -fsSL "https://get.chezmoi.io" | sh -s -- -b ~/.local/bin init -a georgewitteman
 ```
 
-### OR (curl short)
+Or, where there's no curl:
 
 ```bash
-curl -fsSL "https://get.chezmoi.io" | sh -s -- -b ~/.local/bin -d init -a georgewitteman
-```
-
-### OR (wget)
-
-```bash
-wget -qO- "https://get.chezmoi.io" | sh -s -- -b ~/.local/bin -d init -a georgewitteman
+wget -qO- "https://get.chezmoi.io" | sh -s -- -b ~/.local/bin init -a georgewitteman
 ```
 
 ## Updating a vim plugin
@@ -41,7 +35,3 @@ the vimrc. To update one:
    `executable_`, or ends in `.tmpl`. chezmoi would treat those specially.
 5. Check the result with `chezmoi diff`, then commit with the upstream commit
    hash in the message.
-
-## Colors
-
-- [iTerm2](https://github.com/tallpants/vscode-theme-iterm2)
