@@ -1,46 +1,62 @@
 #!/bin/sh
 
-USAGE="Change the author of a commit.
+set -o errexit
 
-Usage:
-  $(basename "$0") -h | --help
-  $(basename "$0") -n <name> -e <email>
-  $(basename "$0") --name <name> --email <email>
-"
+usage() {
+  cat <<EOF
+usage: $(basename "$0") [--edit]
+       $(basename "$0") [--edit] -n <name> -e <email>
 
-die() {
-  [ "$#" -ge 2 ] && echo-err "$2"
-  exit "$1"
+Changes the author of the last commit, after asking. With no name and email it
+makes you the author, using your git config (and sets the author date to now),
+like after fixing the repository's user.email or to take over a commit.
+
+    -n, --name <name>     author name
+    -e, --email <email>   author email
+    --edit                also edit the commit message
+EOF
 }
+
+new_name=
+new_email=
+edit=--no-edit
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
     -h | --help)
-      echo "$USAGE"
+      usage
       exit
       ;;
-    -n | --name)
-      new_name="$2"
+    -n | --name | -e | --email)
+      if [ "$#" -lt 2 ]; then
+        echo-err "${1} requires a value"
+        exit 1
+      fi
+      case "$1" in
+        -n | --name) new_name="$2" ;;
+        *) new_email="$2" ;;
+      esac
       shift
       ;;
-    -e | --email)
-      new_email="$2"
-      shift
+    --edit) edit=--edit ;;
+    *)
+      usage >&2
+      exit 1
       ;;
-    --)
-      shift
-      break
-      ;;
-    -?*) die 1 "unknown option: ${1}" ;;
-    *) break ;;
   esac
   shift
 done
 
-if [ -z "$new_name" ] || [ -z "$new_email" ]; then
-  echo-err 'A name and email are required.'
-  echo "$USAGE"
+if [ -n "${new_name}${new_email}" ] && { [ -z "$new_name" ] || [ -z "$new_email" ]; }; then
+  echo-err "give both a name and an email, or neither to make you the author"
   exit 1
 fi
 
-safe-run git commit --amend --author="${new_name} <${new_email}>"
+current="$(git log -1 --format='%an <%ae>')"
+echo "Current author: ${current}"
+
+if [ -n "$new_name" ]; then
+  safe-run git commit --amend --allow-empty "$edit" --author="${new_name} <${new_email}>"
+else
+  safe-run git commit --amend --allow-empty "$edit" --reset-author
+fi
