@@ -2,25 +2,66 @@
 
 set -o errexit
 
+case "${1-}" in
+  -h | --help)
+    cat <<EOF
+usage: $(basename "$0") [<git push options>] [<remote> [<refspec>...]]
+
+Pushes with git push, then shows the latest commit. -f and --force become
+--force-with-lease, so it won't overwrite commits it hasn't seen. A branch
+without an upstream gets one, on origin unless a remote is given.
+EOF
+    exit
+    ;;
+esac
+
 head="$(git rev-parse --abbrev-ref HEAD)"
 
 if [ "$head" = "HEAD" ]; then
-  echo-err "You are not on the HEAD of a branch."
+  echo-err "Not on a branch (detached HEAD)."
   exit 1
 fi
 
-if ! git rev-parse --abbrev-ref --symbolic-full-name '@{upstream}' >/dev/null 2>&1; then
-  set -- "$@" --set-upstream origin "$head"
-fi
-
-# Rebuild the arguments in place, replacing --force with --force-with-lease
+# Rebuild the arguments in place, replacing --force with --force-with-lease,
+# and note whether a remote or refspec was given.
+positional=false
+takes_value=false
 for arg in "$@"; do
   shift
+  if $takes_value; then
+    takes_value=false
+    set -- "$@" "$arg"
+    continue
+  fi
   case "$arg" in
     -f | --force) set -- "$@" --force-with-lease ;;
-    *) set -- "$@" "$arg" ;;
+    -o | --push-option | --repo | --receive-pack | --exec)
+      takes_value=true
+      set -- "$@" "$arg"
+      ;;
+    --*) set -- "$@" "$arg" ;;
+    # -o with its value joined on, like -ofoo, where the f isn't a flag
+    -o?*) set -- "$@" "$arg" ;;
+    # Joined short flags that include f, like -fu, would be a plain --force
+    -*f*)
+      echo-err "use -f on its own, so it becomes --force-with-lease: ${arg}"
+      exit 1
+      ;;
+    -*) set -- "$@" "$arg" ;;
+    *)
+      positional=true
+      set -- "$@" "$arg"
+      ;;
   esac
 done
+
+if ! git rev-parse --abbrev-ref --symbolic-full-name '@{upstream}' >/dev/null 2>&1; then
+  if $positional; then
+    set -- --set-upstream "$@"
+  else
+    set -- "$@" --set-upstream origin "$head"
+  fi
+fi
 
 echo-run git push "$@"
 git-show --quiet
