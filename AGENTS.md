@@ -40,7 +40,11 @@ hard rules: break one when the value is clearly worth it, and say why.
   (shebangs, `# vim:` modelines, `#compdef`) are fine. Avoid comments that go
   stale when something else changes, like references to other files, how
   other code works, current behavior or versions, history, or measurements.
-  Comments that explain what something does are fine, even if long.
+  Comments that explain what something does are fine, even if long. So is the
+  intent behind a value, even when it names something else, like "match the
+  macOS `ls` colors". For values in a dense notation, explain the notation
+  instead of restating each value, since the notation stays true when the
+  values change.
 - **Keep completions in sync with scripts.** When a script in `~/.scripts`
   gains, loses, or changes an option or argument, update its zsh completion in
   `~/.local/share/zsh/functions`, or its `compdef` line in `.zshrc`, in the
