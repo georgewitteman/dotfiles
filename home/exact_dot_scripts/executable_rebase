@@ -2,29 +2,59 @@
 
 set -o errexit
 
-main_branch="$(get-main-branch)"
+usage() {
+  cat <<EOF
+usage: $(basename "$0") [-i|--interactive] [<base>]
+       $(basename "$0") --continue | --abort
 
-if [ $# -eq 0 ] || [ "$1" = "" ]; then
-  echo-run git fetch --quiet --prune &&
-    echo-run git rebase --autostash origin/"$main_branch"
-  exit $?
+Fetches, then rebases the current branch onto origin's copy of <base> (the
+main branch by default), stashing and restoring uncommitted changes. A <base>
+that isn't a branch on origin is used as given, like origin/foo or a commit.
+For anything else, use git rebase.
+EOF
+}
+
+interactive=false
+case "${1-}" in
+  -h | --help)
+    usage
+    exit
+    ;;
+  --continue | --abort)
+    if [ "$#" -ne 1 ]; then
+      usage >&2
+      exit 1
+    fi
+    exec echo-run git rebase "$1"
+    ;;
+  -i | --interactive)
+    interactive=true
+    shift
+    ;;
+esac
+
+case "${1-}" in
+  -*)
+    usage >&2
+    exit 1
+    ;;
+esac
+
+if [ "$#" -gt 1 ]; then
+  usage >&2
+  exit 1
 fi
 
-if { [ "$1" = "-i" ] || [ "$1" = "--interactive" ]; } && [ $# -le 1 ]; then
-  echo-run git fetch --quiet --prune &&
-    echo-run git rebase --interactive --autostash origin/"$main_branch"
-  exit $?
+base="${1:-$(get-main-branch)}"
+
+echo-run git fetch --quiet --prune
+
+if git show-ref --verify --quiet "refs/remotes/origin/${base}"; then
+  base="origin/${base}"
 fi
 
-if [ "$1" = "--continue" ] && [ $# -le 1 ]; then
-  echo-run git rebase --continue
-  exit $?
+if $interactive; then
+  echo-run git rebase --interactive --autostash "$base"
+else
+  echo-run git rebase --autostash "$base"
 fi
-
-if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
-  echo "Usage: $0 [<git rebase args>]"
-  exit
-fi
-
-echo-run git fetch --prune --quiet &&
-  echo-run git rebase "$@"
