@@ -64,3 +64,8 @@ if [ -n "$tmp_dir" ]; then
   mv "${tmp_dir}/chezmoistate.boltdb" "$(dirname "$config_file")/"
   rmdir "$tmp_dir"
 fi
+
+# Make zsh the login shell in codespaces, so SSH sessions and $SHELL use it too
+if [ -n "${CODESPACES-}" ] && command -v zsh >/dev/null 2>&1 && command -v chsh >/dev/null 2>&1; then
+  sudo -n chsh "$(id -un)" --shell "$(command -v zsh)" || true
+fi
