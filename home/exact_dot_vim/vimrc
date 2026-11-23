@@ -31,7 +31,7 @@ let mapleader = "\<Space>"
 
 " How many whitespace characters a literal \t is worth
 set tabstop=8
-" How many columnsof whitespace a level of indentation is worth (>, <, ...).
+" How many columns of whitespace a level of indentation is worth (>, <, ...).
 set shiftwidth=2
 " How many columns of whitespace a keypress is worth (<Tab>). If negative, use
 " the value of shiftwidth
@@ -49,7 +49,7 @@ set nosmartindent
 " not been changed inside of Vim, automatically read it again
 set autoread
 
-" If this many miliseconds nothing is typed the swap file will be written
+" If this many milliseconds nothing is typed the swap file will be written
 " to disk. Also used for the CursorHold autocommand event
 set updatetime=200
 
@@ -60,8 +60,7 @@ set ignorecase
 set smartcase
 
 " When opening diffs with `git difftool` git passes the -R flag, making the
-" files readonly. This changes the behavior of that so the files always open
-" as readable
+" files readonly. This makes them always open as writable
 if &diff
   set noreadonly
 endif
@@ -77,7 +76,7 @@ set incsearch
 
 " When there is a previous search pattern, highlight all its matches.
 "
-" When you get bored of looking at the highlightedmatches, you can turn it off
+" When you get bored of looking at the highlighted matches, you can turn it off
 " with :nohlsearch
 set hlsearch
 
@@ -97,20 +96,10 @@ set linebreak
 
 " - c: Auto-wrap comments using textwidth, inserting the current comment
 "   leader automatically
-" - q: Allow formatting of comments with "gq". Note that formatting will not
-"   change blank lines or lines containing only the comment leader. A new
-"   paragraph starts after such a line, or when the comment leader changes
-" - r: Automatically insert the current comment leader after hitting <Enter>
-"   in Insert mode.
-" - o: Automatically insert the current comment leader after hitting 'o' or
-"   'O' in Normal mode.
+" - q: Allow formatting of comments with "gq"
 " - j: Where it makes sense, remove a comment leader when joining lines
-" - a: Automatic formatting of paragraphs. Every time text is inserted or
-"   deleted the paragraph will be reformatted. See auto-format. When the 'c'
-"   flag is present this only happens for recognized comments
-" - n: When formatting text, recognize numbered lists. This actually uses the
-"   'formatlistpat' option, this any kind of list can be used. The indent of
-"   the text after the number is used for the next line
+" - n: When formatting text, recognize numbered lists, using
+"   'formatlistpat'
 "
 " See https://stackoverflow.com/a/8748154 for the autocommand explanation
 augroup FormatOptions
@@ -152,7 +141,8 @@ endif
 vnoremap < <gv
 vnoremap > >gv
 
-" Turn off bells
+" No bell for error messages. Bells without a message, like Esc in normal
+" mode, still ring.
 set novisualbell
 set noerrorbells
 
@@ -169,21 +159,12 @@ set ttimeout
 " The time in ms that is waited for a key code or mapped key sequence to complete
 set ttimeoutlen=50
 
-" .  scan the current buffer ('wrapscan' is ignored)
-" w  scan buffers from other windows
-" b  scan other loaded buffers that are in the buffer list
-" u  scan the unloaded buffers that are in the buffer list
-" U  scan the buffers that are not in the buffer list
-" k  scan the files given with the 'dictionary' option
-" kspell  use the currently active spell checking |spell|
-" k{dict} scan the file {dict}.  Several "k" flags can be given, patterns are valid too.  For example: >
-"                 :set cpt=k/usr/dict/*,k~/spanish
-" s  scan the files given with the 'thesaurus' option
-" s{tsr}  scan the file {tsr}.  Several "s" flags can be given, patterns are valid too.
-" i  scan current and included files
-" d  scan current and included files for defined name or macro
-" ]  tag completion
-" t  same as "]"
+" Where insert mode completion (CTRL-N, CTRL-P) looks for matches:
+" .  the current buffer
+" w  buffers in other windows
+" b  other loaded buffers in the buffer list
+" u  unloaded buffers in the buffer list
+" t  tags
 set complete=.,w,b,u,t
 
 " Allow backspacing over everything in insert mode
@@ -220,7 +201,6 @@ set statusline+=%=\ %(%l,%c%V%)\ %P
 
 " Quickly echo the full file path
 nnoremap <leader>% :let @c=expand('%:~:.')<CR>:OSCYankReg c<CR>:echo @c<CR>
-
 
 " Add new lines without entering insert mode
 nnoremap [<Space> :call append(line('.')-1, '')<CR>k
