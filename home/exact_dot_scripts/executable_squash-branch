@@ -41,12 +41,6 @@ else
   BASE_BRANCH="origin/$(get-main-branch)"
 fi
 
-# Ensure we're in a git repo
-if ! git rev-parse --git-dir >/dev/null 2>&1; then
-  echo "Error: not a git repository." >&2
-  exit 1
-fi
-
 # Ensure clean working tree
 if ! git diff-index --quiet HEAD --; then
   echo "Error: working tree is not clean. Commit or stash your changes first." >&2
@@ -83,13 +77,22 @@ fi
 # us oldest -> newest.
 COMMIT_MSG=$(git log --reverse --format='%B%n' "$FORK_POINT"..HEAD)
 
+OLD_HEAD=$(git rev-parse --short HEAD)
+
 # Soft reset to fork point: keeps changes staged, rewinds commits
 echo-run git reset --soft "$FORK_POINT"
 
-# Create the single squashed commit
-echo-run git commit -m "$COMMIT_MSG"
+# Create the single squashed commit. If that fails (like when signing is
+# cancelled), put the branch back. The index still has the original tree, so
+# this restores it exactly.
+if ! echo-run git commit -m "$COMMIT_MSG"; then
+  echo "Error: commit failed. Putting the branch back the way it was." >&2
+  echo-run git reset --soft "$OLD_HEAD"
+  exit 1
+fi
 
 echo "✅ Done."
 echo "Squashed $COMMIT_COUNT commits since '$BASE_BRANCH' into one."
+echo "Undo with 'git reset --soft ${OLD_HEAD}'"
 echo "If this branch is pushed to a remote, run:"
 echo "    git push --force-with-lease"
