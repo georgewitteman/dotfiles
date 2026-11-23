@@ -2,9 +2,29 @@
 
 set -o errexit
 
-if test ! -t 0; then
-  jq --color-output --unbuffered --raw-input --raw-output '. as $raw | try fromjson catch $raw'
-else
-  printf "jq --color-output --unbuffered --raw-input --raw-output '. as \$raw | try fromjson catch \$raw'" | pbcopy
+# Each line as pretty JSON if it parses, or as-is if it doesn't
+# shellcheck disable=SC2016 # $raw is a jq variable
+filter='. as $raw | try fromjson catch $raw'
+
+case "${1-}" in
+  -h | --help)
+    cat <<EOF
+usage: <command> | $(basename "$0") [<jq options>...]
+       $(basename "$0")
+
+Pretty-prints the lines of its input that are JSON, and passes the rest
+through unchanged. Colors only on a terminal. To keep colors in a pipe, add
+jq's -C, like: <command> | $(basename "$0") -C | less -R
+
+With nothing piped in, copies the jq command it runs to the clipboard.
+EOF
+    exit
+    ;;
+esac
+
+if [ -t 0 ]; then
+  printf "jq --unbuffered --raw-input --raw-output '%s'" "$filter" | ccopy
   echo "ok: copied jq command to clipboard"
+else
+  exec jq --unbuffered --raw-input --raw-output "$@" "$filter"
 fi
