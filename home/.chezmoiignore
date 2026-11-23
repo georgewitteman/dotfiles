@@ -1,7 +1,6 @@
-*.swp
-.vim/.netrwhist
-tags
-tags.lock
+# Vim swap files, which vim keeps next to the file being edited. Without this,
+# applying deletes them from exact directories.
+**/.*.sw?
 {{ if ne .chezmoi.os "darwin" }}
 # Only Terminal.app on macOS reads this
 .bash_sessions_disable
