@@ -39,12 +39,23 @@ case "$log_level" in
     ;;
 esac
 
+# Warnings and errors go to stderr, so they don't mix into output that's piped
+# or captured.
+case "$log_level" in
+  WARN | ERROR) exec 1>&2 ;;
+esac
+
 if [ -n "${LOG_DATE-}" ]; then
   # shellcheck disable=SC2312
-  printf '%s' "$(date "+%Y-%m-%dT%H:%M:%S")"
+  printf '%s ' "$(date "+%Y-%m-%dT%H:%M:%S")"
 fi
 
-printf "%b\033[97m %s \033[0m " "$log_color" "$log_level"
+# Color only on a terminal
+if [ -t 1 ] || [ -n "${FORCE_COLOR-}" ]; then
+  printf "%b\033[97m %s \033[0m " "$log_color" "$log_level"
+else
+  printf '%s: ' "$log_level"
+fi
 
 if $log_newline; then
   unset log_color log_level log_newline
