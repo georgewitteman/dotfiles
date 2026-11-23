@@ -9,6 +9,8 @@ source "${HOME}/.shinit"
 
 # https://docs.brew.sh/Shell-Completion
 # Some of these need bash 4 or later, and macOS comes with bash 3.2.
+# Without Homebrew, HOMEBREW_PREFIX is empty, so this loads the system's
+# bash-completion from /etc instead.
 if ((BASH_VERSINFO[0] >= 4)); then
   if [[ -r "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh" ]]; then
     # shellcheck source=/dev/null
