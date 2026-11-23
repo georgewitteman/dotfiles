@@ -1,13 +1,16 @@
 name: Quick Install
 
 # Runs the one-line install from the README, the way a new machine would. It
-# runs daily too, to catch breakage from outside this repo (a new chezmoi
-# release, new runner images, ...).
+# runs daily to catch breakage from outside this repo (a new chezmoi release,
+# new runner images, ...), and on pushes that change this workflow.
 
 "on":
   push:
     branches:
       - main
+    paths:
+      - .github/workflows/one_line_install.yml
+  workflow_dispatch:
   schedule:
     # 12:30 UTC daily
     - cron: "30 12 * * *"
