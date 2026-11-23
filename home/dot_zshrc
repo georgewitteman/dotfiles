@@ -63,7 +63,9 @@ zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'l:|=* r:|=*'
 # Colors for files
 # - https://zsh.sourceforge.io/Doc/Release/Zsh-Modules.html#The-zsh_002fcomplist-Module
 # - https://zsh.sourceforge.io/Doc/Release/Completion-System.html
-# - The same colors as macOS `ls` uses by default
+# - Directories blue, symlinks magenta, sockets green, pipes yellow,
+#   executables red, and devices, setuid and setgid files, and writable
+#   directories on a colored background
 zstyle ':completion:*' list-colors "di=34" "ln=35" "so=32" "pi=33" "ex=31" "bd=34;46" "cd=34;43" "su=30;41" "sg=30;46" "tw=30;42" "ow=30;43"
 # If set, this style’s value will be used as the description for options that
 # are not described by the completion functions, but that have exactly one
