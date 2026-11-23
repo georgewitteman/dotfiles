@@ -200,7 +200,7 @@ set statusline+=%{exists('*CapsLockStatusline')?CapsLockStatusline():''}
 set statusline+=%=\ %(%l,%c%V%)\ %P
 
 " Quickly echo the full file path
-nnoremap <leader>% :let @c=expand('%:~:.')<CR>:OSCYankReg c<CR>:echo @c<CR>
+nnoremap <leader>% :let @c=expand('%:~:.')<CR>:CopyReg c<CR>:echo @c<CR>
 
 " Add new lines without entering insert mode
 nnoremap [<Space> :call append(line('.')-1, '')<CR>k
