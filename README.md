@@ -31,9 +31,10 @@ the vimrc. To update one:
 
 1. Clone the plugin's repo into a temporary folder.
 2. Delete the plugin's folder here and copy in the new version's runtime
-   folders (`plugin/`, `autoload/`, `doc/`, `syntax/`, and so on) and its
-   license, wherever the plugin states it (a LICENSE file, its README, or its
-   doc). Leave out tests, CI config, and dotfiles. Don't edit the files.
+   folders (`plugin/`, `autoload/`, `doc/`, `syntax/`, and so on), any other
+   files those source (like chezmoi.vim's `vendor/`), and its license,
+   wherever the plugin states it (a LICENSE file, its README, or its doc).
+   Leave out tests, CI config, and dotfiles. Don't edit the files.
 3. Rebuild the help tags:
    `vim -u NONE -es -c 'helptags <plugin folder>/doc' -c q`
 4. Make sure no file name starts with a chezmoi prefix like `dot_` or
