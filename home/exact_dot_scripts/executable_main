@@ -7,6 +7,21 @@ die() {
   exit "$1"
 }
 
+usage() {
+  cat <<EOF
+usage: $(basename "$0") [-q|--quiet] [-p|--pull] [--rebase]
+
+Switches to the main branch, creating it from origin if there's no local one,
+and shows its latest commit. In a linked worktree, where the main branch can't
+be checked out because another worktree may have it, it uses a
+<worktree directory>-main branch that tracks the same upstream instead.
+
+    -p, --pull      pull after switching, pruning deleted remote branches
+    -q, --quiet     pass --quiet to git pull
+    --rebase        pull with --rebase (implies --pull)
+EOF
+}
+
 pull=false
 rebase=false
 quiet=false
@@ -25,12 +40,15 @@ while [ "$#" -gt 0 ]; do
   unset _arg _value
   case "$1" in
     -h | --help)
-      echo "usage: $(basename "$0") [-q|--quiet] [-p|--pull] [--rebase]"
+      usage
       exit
       ;;
     -p | --pull) pull=true ;;
     -q | --quiet) quiet=true ;;
-    --rebase) rebase=true ;;
+    --rebase)
+      rebase=true
+      pull=true
+      ;;
     --)
       shift
       break
@@ -49,16 +67,20 @@ if ! git show-ref --quiet --verify "refs/heads/${main_branch}"; then
   echo-run git branch "$main_branch" "origin/${main_branch}"
 fi
 
-# Check if we're in a "worktree" work tree (i.e. not root repository).
-if [ -f "${toplevel}/.git" ]; then
+# A linked worktree has its own git directory, separate from the repository's
+# shared one. A submodule's .git is a file too, but its directories match.
+git_dir="$(git rev-parse --git-dir)"
+git_dir="$(cd "$git_dir" && pwd -P)"
+common_dir="$(git rev-parse --git-common-dir)"
+common_dir="$(cd "$common_dir" && pwd -P)"
+if [ "$git_dir" != "$common_dir" ]; then
   start_point="$(git rev-parse --abbrev-ref --symbolic-full-name "${main_branch}@{upstream}")"
 
-  # The main branch name is the wortree directory name + '-main'.
+  # The main branch name is the worktree directory name + '-main'.
   main_branch="$(basename "${toplevel}")-${main_branch}"
   # Check if the branch exists, creating it if it doesn't.
   if ! git show-ref --quiet --verify "refs/heads/${main_branch}"; then
-    # --track=inherit means to copy the upstream configuration of the start-point branch
-    # --track=direct means to use the start-point branch itself as the upstream
+    # --track=direct: use the start point itself as the upstream
     echo-run git branch "$main_branch" --track=direct "$start_point"
   fi
 fi
