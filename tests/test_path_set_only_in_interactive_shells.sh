@@ -26,6 +26,8 @@ for sh in bash zsh; do
 
   # -i flag passed
   if ! run "$sh" -ic "echo-run true >/dev/null 2>&1"; then
-    fail "${sh} -i couldn't run echo-run"
+    # shellcheck disable=SC2016 # $PATH should expand in the inner shell
+    found="$(run "$sh" -ic 'echo "PATH=$PATH"' 2>/dev/null)"
+    fail "${sh} -i couldn't run echo-run: ${found}"
   fi
 done
