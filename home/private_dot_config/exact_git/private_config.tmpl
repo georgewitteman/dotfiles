@@ -1,7 +1,7 @@
 # vim: ft=gitconfig
 [user]
 	# NOTE: user.email is not configured to force configuration
-	# of each repoisitory.
+	# of each repository.
 	name = {{ .name | quote }}
 	# Instruct Git to avoid trying to guess defaults for
 	# user.email and user.name, and instead retrieve the values
@@ -11,27 +11,24 @@
 	defaultBranch = main
 [pull]
 	ff = "only"
+# https://blog.gitbutler.com/how-git-core-devs-configure-git/
 [diff]
 	# Better diffing algorithm
-	# https://blog.gitbutler.com/how-git-core-devs-configure-git/
 	algorithm = histogram
 	# Shows moved text in a different color
-	# https://blog.gitbutler.com/how-git-core-devs-configure-git/
 	colorMoved = plain
 	# diff.mnemonicPrefix will replace the a/ and b/ in your diff
 	# header output with where the diff is coming from, so i/
 	# (index), w/ (working directory) or c/ commit
-	# https://blog.gitbutler.com/how-git-core-devs-configure-git/
 	mnemonicPrefix = true
 	# Detects if a file has been renamed
-	# https://blog.gitbutler.com/how-git-core-devs-configure-git/
 	renames = true
 [merge]
 	# https://blog.nilbus.com/take-the-pain-out-of-git-conflict-resolution-use-diff3/
 	# https://stackoverflow.com/q/27417656
 	conflictStyle = diff3
 [alias]
-	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)%an%Creset' --abbrev-commit
+	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)%an%Creset' --abbrev-commit
 
 # NOTE: To resign use either (https://superuser.com/a/1123928)
 # - git commit --amend --no-edit -n -S
@@ -61,6 +58,9 @@
 	gpgSign = true
 {{- end }}
 
+{{- /* VS Code dev containers set this with `git config --global`, which
+       writes to this file when there's no ~/.gitconfig. Keep it so applying
+       doesn't remove it. */}}
 {{- $credential_helper := output "git" "config" "--default" "" "--global" "credential.helper" | trim }}
 {{- if (not (empty $credential_helper)) }}
 [credential]
