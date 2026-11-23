@@ -3,6 +3,7 @@
 # https://github.com/chezmoi/dotfiles/blob/master/install.sh
 
 set -o errexit
+set -o nounset
 
 TAGARG=latest
 
@@ -20,25 +21,26 @@ else
   bin_dir="${HOME}/.local/bin"
   chezmoi="${bin_dir}/chezmoi"
 
-  # sh -s will read from stdin
+  # Download the installer before running it, so a failed download stops here
+  # instead of running an empty script.
   if command -v curl >/dev/null 2>&1; then
-    curl --fail --silent --tlsv1.2 --show-error --location "https://get.chezmoi.io" | sh -s -- -b "$bin_dir" -t "$TAGARG"
+    installer="$(curl --fail --silent --tlsv1.2 --show-error --location "https://get.chezmoi.io")"
   elif command -v wget >/dev/null 2>&1; then
-    wget --quiet --output-document=- "https://get.chezmoi.io" | sh -s -- -b "$bin_dir" -t "$TAGARG"
+    installer="$(wget --quiet --output-document=- "https://get.chezmoi.io")"
   else
     echo "To install chezmoi, you must have curl or wget installed." >&2
     exit 1
   fi
+  sh -c "$installer" -- -b "$bin_dir" -t "$TAGARG"
 fi
 
 source_path="$("$chezmoi" source-path)"
 if [ -d "$source_path" ]; then
-  echo "warning: chezmoi already set up" >&2
+  echo "error: chezmoi already set up" >&2
   exit 1
 fi
 
-# POSIX way to get script's dir: https://stackoverflow.com/a/29834779/12156188
-script_dir="$(cd -P -- "$(dirname -- "$(command -v -- "$0")")" && pwd -P)"
+script_dir="$(cd -P -- "$(dirname -- "$0")" && pwd -P)"
 
 # While a codespace is being created its disk is busy, so each fsync is slow,
 # and chezmoi fsyncs every file it writes and every update to its state
