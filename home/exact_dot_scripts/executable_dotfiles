@@ -2,61 +2,68 @@
 
 set -o errexit
 
-usage="Wrapper for chezmoi.
+usage() {
+  cat <<EOF
+usage: $(basename "$0") apply [-y|--yes] [<chezmoi apply options>...]
+       $(basename "$0") update [-y|--yes] [<chezmoi apply options>...]
+       $(basename "$0") save [<save options>...]
+       $(basename "$0") cd
+       $(basename "$0") <chezmoi command>...
 
-Usage:
-  $(basename "$0") -h | --help            Show usage and exit.
-  $(basename "$0") apply [-y|--yes|--noconfirm]  Show a diff and apply changes.
-  $(basename "$0") <any chezmoi command>  Passthrough to chezmoi.
-"
+A wrapper around chezmoi.
 
-command="$1"
-if [ -z "$command" ]; then
-  echo "$usage"
+    apply    show what would change, then ask before applying (-y doesn't ask)
+    update   pull the dotfiles repo, then apply the same way
+    save     commit changes in the dotfiles repo with save
+    cd       go to the dotfiles repo (in an interactive shell)
+
+Anything else goes to chezmoi.
+EOF
+}
+
+apply() {
+  confirm=safe-run
+  # Rebuild the arguments in place, without -y and its aliases
+  for arg; do
+    shift
+    case $arg in
+      --noconfirm | --yes | -y) confirm=echo-run ;;
+      *) set -- "$@" "$arg" ;;
+    esac
+  done
+
+  if echo-run chezmoi verify "$@"; then
+    echo-info "Nothing to apply."
+    return
+  fi
+  if ! echo-run chezmoi diff --no-pager "$@"; then
+    echo-err "Couldn't show the diff. See the error above."
+    exit 1
+  fi
+  if ! "$confirm" chezmoi apply "$@"; then
+    echo-info "You can run 'dotfiles add <file>...' to update the source."
+    exit 1
+  fi
+}
+
+if [ "$#" -eq 0 ]; then
+  usage >&2
   exit 1
 fi
 
+command="$1"
 shift
 
 case "$command" in
-  -h | --help)
-    echo "$usage"
-    exit
-    ;;
-  apply)
-    cmd="safe-run"
-
-    # POSIX sh way to remove arguments from the list
-    for arg; do
-      shift
-      case $arg in
-        --noconfirm | --yes | -y)
-          cmd="echo-run"
-          ;;
-        *) set -- "$@" "$arg" ;;
-      esac
-    done
-
-    if [ "$cmd" = "safe-run" ] && echo-run chezmoi verify "$@"; then
-      echo-info "Nothing to apply."
-      # Always run scripts
-      echo-run chezmoi apply --include=scripts
-      exit $?
-    fi
-    if ! echo-run chezmoi diff --no-pager "$@"; then
-      echo-warn "Error showing diff. Are you signed in to 1Password?"
-      exit 1
-    fi
-    if ! "$cmd" chezmoi apply "$@"; then
-      echo-info "You can run 'dotfiles add <file>...' to update the source."
-      exit 1
-    fi
+  -h | --help) usage ;;
+  apply) apply "$@" ;;
+  update)
+    echo-run chezmoi git -- pull --autostash --rebase
+    apply "$@"
     ;;
   save)
     source_path="$(chezmoi source-path)"
     save -C "${source_path}" "$@"
     ;;
-  *)
-    echo-run chezmoi "$command" "$@"
-    ;;
+  *) echo-run chezmoi "$command" "$@" ;;
 esac
