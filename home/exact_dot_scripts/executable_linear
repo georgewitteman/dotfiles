@@ -24,10 +24,10 @@ while [ "$#" -gt 0 ]; do
 done
 
 # Read the clipboard once, since in VS Code each read may ask for permission.
-url="$(clippaste | grep -E -o 'https://linear\.app/[[:alnum:]_]+/issue/[A-Z]+-[0-9]+' | head -n 1 || true)"
+url="$(cpaste | grep -E -o 'https://linear\.app/[[:alnum:]_]+/issue/[A-Z]+-[0-9]+' | head -n 1 || true)"
 if [ -z "$url" ]; then
   echo "not a valid linear url in the clipboard" >&2
   exit 1
 fi
 echo "$url" >&2
-printf '%s' "$url" | clipcopy
+printf '%s' "$url" | ccopy
