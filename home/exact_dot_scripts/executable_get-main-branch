@@ -1,24 +1,38 @@
 #!/bin/sh
 
+case "${1-}" in
+  -h | --help)
+    cat <<EOF
+usage: $(basename "$0")
+
+Prints the repository's main branch name. It uses the first of these that
+works: origin's HEAD, origin's HEAD after asking origin for it, the only
+local branch, HEAD in a repository with no commits yet, init.defaultBranch,
+and finally "main".
+EOF
+    exit
+    ;;
+esac
+
 if ! git rev-parse --is-inside-work-tree >/dev/null; then
   exit 128
 fi
 
 # Try and get origin's HEAD first.
 symbolic_ref="$(git symbolic-ref --short --quiet refs/remotes/origin/HEAD)"
-main_branch_candidate="$(basename "$symbolic_ref")"
+main_branch_candidate="${symbolic_ref#origin/}"
 
 # If we failed to get the symbolic ref for refs/remotes/origin/HEAD...
 if [ -z "$main_branch_candidate" ]; then
-  # ... and there's an origin, we may just need to set-head first. I've seen
-  # this happen in Codespaces
+  # ... and there's an origin, ask it for its HEAD. Some clones don't record
+  # it.
   if git remote get-url origin >/dev/null 2>&1; then
     git remote set-head --auto origin >/dev/null 2>&1
   fi
 
   # Then try and get the symbolic ref for origin/HEAD again.
   symbolic_ref="$(git symbolic-ref --short --quiet refs/remotes/origin/HEAD)"
-  main_branch_candidate="$(basename "$symbolic_ref")"
+  main_branch_candidate="${symbolic_ref#origin/}"
 fi
 
 if [ -z "$main_branch_candidate" ]; then
@@ -28,9 +42,8 @@ if [ -z "$main_branch_candidate" ]; then
     # If there's only one branch, that's the main branch.
     main_branch_candidate="$branches"
   elif [ "$branch_count" -eq 0 ]; then
-    # If there are no actual branches, then the symbolic-ref for HEAD is the
-    # main branch. This seems like it can only happen on a brand new
-    # repository, when there aren't any actual commits yet.
+    # With no commits yet there are no branches, so use the name HEAD points
+    # to.
     main_branch_candidate="$(git symbolic-ref --short --quiet HEAD)"
   fi
 fi
