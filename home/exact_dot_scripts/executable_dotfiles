@@ -40,10 +40,7 @@ apply() {
     echo-err "Couldn't show the diff. See the error above."
     exit 1
   fi
-  if ! "$confirm" chezmoi apply "$@"; then
-    echo-info "You can run 'dotfiles add <file>...' to update the source."
-    exit 1
-  fi
+  "$confirm" chezmoi apply "$@"
 }
 
 if [ "$#" -eq 0 ]; then
