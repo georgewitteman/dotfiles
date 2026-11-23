@@ -6,9 +6,18 @@ if ! command -v vim >/dev/null 2>&1; then
   exit
 fi
 
+# Load chezmoi.vim's template syntax and every filetype with its own settings,
+# so errors in those show up too. -es skips syntax highlighting, so turn it on.
+# Vim takes at most 10 -c options, so chain the commands into one.
+cmd="syntax on | set filetype=chezmoitmpl"
+for f in "${HOME}"/.vim/after/ftplugin/*.vim; do
+  cmd="${cmd} | set filetype=$(basename "$f" .vim)"
+done
+
 # -es: run without a terminal. Vim exits with 1 if anything reported an error,
-# including the vendored plugins. -es skips syntax highlighting, so turn it on
-# and load chezmoi.vim's template syntax, which sources files of its own.
-if ! error="$(vim -es -N -u "${HOME}/.vim/vimrc" -c 'syntax on' -c 'set filetype=chezmoitmpl' -c 'call writefile([v:errmsg], "/dev/stdout")' -c 'qa!')"; then
-  fail "vim reported an error. The last one was: ${error}"
+# including the vendored plugins. :messages has the errors with where they
+# happened, unlike v:errmsg, which also holds errors a plugin silenced.
+if ! messages="$(vim -es -N -u "${HOME}/.vim/vimrc" -c "$cmd" -c 'call writefile(split(execute("messages"), "\n"), "/dev/stdout")' -c 'qa!')"; then
+  fail "vim reported an error:
+${messages}"
 fi
