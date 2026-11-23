@@ -2,16 +2,28 @@
 
 set -o errexit
 
+if [ "$#" -gt 1 ]; then
+  echo-err "push only takes -f or --force. Use git push for anything else."
+  exit 1
+fi
+
 case "${1-}" in
   -h | --help)
     cat <<EOF
-usage: $(basename "$0") [<git push options>] [<remote> [<refspec>...]]
+usage: $(basename "$0") [-f|--force]
 
-Pushes with git push, then shows the latest commit. -f and --force become
---force-with-lease, so it won't overwrite commits it hasn't seen. A branch
-without an upstream gets one, on origin unless a remote is given.
+Pushes the current branch, then shows the latest commit. A branch without an
+upstream gets one on origin. -f and --force push with --force-with-lease, so
+they won't overwrite commits that haven't been fetched. For anything else, use
+git push.
 EOF
     exit
+    ;;
+  -f | --force) set -- --force-with-lease ;;
+  "") ;;
+  *)
+    echo-err "push only takes -f or --force. Use git push for anything else."
+    exit 1
     ;;
 esac
 
@@ -22,45 +34,8 @@ if [ "$head" = "HEAD" ]; then
   exit 1
 fi
 
-# Rebuild the arguments in place, replacing --force with --force-with-lease,
-# and note whether a remote or refspec was given.
-positional=false
-takes_value=false
-for arg in "$@"; do
-  shift
-  if $takes_value; then
-    takes_value=false
-    set -- "$@" "$arg"
-    continue
-  fi
-  case "$arg" in
-    -f | --force) set -- "$@" --force-with-lease ;;
-    -o | --push-option | --repo | --receive-pack | --exec)
-      takes_value=true
-      set -- "$@" "$arg"
-      ;;
-    --*) set -- "$@" "$arg" ;;
-    # -o with its value joined on, like -ofoo, where the f isn't a flag
-    -o?*) set -- "$@" "$arg" ;;
-    # Joined short flags that include f, like -fu, would be a plain --force
-    -*f*)
-      echo-err "use -f on its own, so it becomes --force-with-lease: ${arg}"
-      exit 1
-      ;;
-    -*) set -- "$@" "$arg" ;;
-    *)
-      positional=true
-      set -- "$@" "$arg"
-      ;;
-  esac
-done
-
 if ! git rev-parse --abbrev-ref --symbolic-full-name '@{upstream}' >/dev/null 2>&1; then
-  if $positional; then
-    set -- --set-upstream "$@"
-  else
-    set -- "$@" --set-upstream origin "$head"
-  fi
+  set -- "$@" --set-upstream origin "$head"
 fi
 
 echo-run git push "$@"

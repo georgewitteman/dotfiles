@@ -148,7 +148,7 @@ if command -v terraform &>/dev/null; then
 fi
 
 # These scripts pass their arguments to a git command
-compdef _git rebase=git-rebase git-show=git-show diff-main=git-diff pull=git-pull push=git-push
+compdef _git rebase=git-rebase git-show=git-show diff-main=git-diff pull=git-pull
 
 alias echo_fpath="echo_array fpath"
 
