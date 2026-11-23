@@ -8,7 +8,18 @@ push=false
 no_edit=true
 no_verify=false
 
-USAGE="usage: $(basename "$0") [-a|--add] [-e|--edit] [-p|--push]"
+usage() {
+  cat <<EOF
+usage: $(basename "$0") [<options>] [-- <git commit options>...]
+
+Amends the last commit, keeping its message.
+
+    -a, --add         stage all changes first
+    -e, --edit        edit the commit message
+    -p, --push        push afterwards, with --force-with-lease
+    -n, --no-verify   bypass pre-commit and commit-msg hooks
+EOF
+}
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
@@ -16,11 +27,6 @@ while [ "$#" -gt 0 ]; do
       # Joined short args (e.g. -abc)
       _value="-${1##-?}"
       _arg="${1%%"${1##-?}"}"
-      ;;
-    --[[:alnum:]]*=*)
-      # Args with values separated by an '=' character
-      _value="${1#--[[:alnum:]]*=}"
-      _arg="${1%%="${_value}"}"
       ;;
   esac
   if [ -n "${_arg-}${_value-}" ]; then
@@ -30,7 +36,7 @@ while [ "$#" -gt 0 ]; do
   unset _arg _value
   case "$1" in
     -h | --help)
-      echo "$USAGE"
+      usage
       exit
       ;;
     -a | --add)
@@ -42,7 +48,7 @@ while [ "$#" -gt 0 ]; do
     -e | --edit)
       no_edit=false
       ;;
-    --no-verify)
+    -n | --no-verify)
       no_verify=true
       ;;
     --)
