@@ -3,7 +3,5 @@ if exists("did_load_filetypes")
 endif
 
 augroup filetypedetect
-  autocmd!
-
-  autocmd! BufNewFile,BufRead devcontainer.json set filetype=jsonc
+  autocmd! BufNewFile,BufRead devcontainer.json setfiletype jsonc
 augroup END
