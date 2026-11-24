@@ -1,3 +1,28 @@
 #!/bin/sh
 
+set -o errexit
+
+case "${1-}" in
+  -h | --help)
+    echo "usage: $(basename "$0") [<path>...]"
+    echo
+    echo "Shows disk usage with df -Ph, for every disk or for the disks that hold"
+    echo "the given paths."
+    exit
+    ;;
+esac
+
+for path in "$@"; do
+  case "$path" in
+    -*)
+      echo-err "unknown option: ${path}"
+      exit 1
+      ;;
+  esac
+  if [ ! -e "$path" ]; then
+    echo-err "no such file or directory: ${path}"
+    exit 1
+  fi
+done
+
 exec echo-run df -Ph "$@"
