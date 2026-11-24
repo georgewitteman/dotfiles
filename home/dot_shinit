@@ -126,12 +126,14 @@ tmp() {
   echo_run cd "$1"
 }
 
-# Unsets AWS credentials and Terraform variables that are set. Leaves
-# AWS_PROFILE and AWS_REGION, which aren't secret.
+# Unsets credentials and Terraform variables that are set. Leaves AWS_PROFILE
+# and AWS_REGION, which aren't secret.
 unset_secrets() {
   # shellcheck disable=SC2046,SC2312
   for _secret_var in AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN \
     AWS_SECURITY_TOKEN AWS_CREDENTIAL_EXPIRATION AWS_SESSION_EXPIRATION \
+    PGPASSWORD TAILSCALE_API_KEY TAILSCALE_OAUTH_CLIENT_SECRET \
+    DD_API_KEY DD_APP_KEY \
     $(env | sed -n 's/^\(TF_VAR_[A-Za-z0-9_]*\)=.*/\1/p'); do
     if eval "[ -n \"\${${_secret_var}+x}\" ]"; then
       echo_run unset "$_secret_var"
