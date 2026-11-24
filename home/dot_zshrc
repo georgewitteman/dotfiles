@@ -132,11 +132,6 @@ bindkey '^N' down-line-or-beginning-search
 bindkey "^[[A" up-line-or-beginning-search
 bindkey "^[[B" down-line-or-beginning-search
 
-# ^X^E opens the command line in $EDITOR.
-autoload -U edit-command-line
-zle -N edit-command-line
-bindkey '^x^e' edit-command-line
-
 # Alt-Right and Alt-Left move by word.
 bindkey '^[[1;3C' forward-word
 bindkey '^[[1;3D' backward-word
@@ -203,10 +198,6 @@ zshaddhistory() {
   [[ $line == *://[^/@[:space:]]##:[^/@[:space:]]##@* ]] && return 2
   return 0
 }
-
-# After history expansion, show the expanded line for editing instead of
-# running it right away.
-setopt hist_verify
 
 # zsh doesn't save history unless HISTFILE is set. Codespaces keep it in a
 # folder that survives rebuilds.
