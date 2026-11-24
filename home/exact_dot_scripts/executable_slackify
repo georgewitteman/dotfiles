@@ -35,6 +35,9 @@ def transform(text):
 
     # Links are left in Markdown form: [text](url) stays as-is.
 
+    # Bold italic: ***x*** -> *_x_*, before the bold pass can split it.
+    text = re.sub(r"\*\*\*(.+?)\*\*\*", BOLD + r"_\1_" + BOLD, text)
+
     # Bold: **x** and __x__ -> shielded sentinel (Slack bold is *x*).
     text = re.sub(r"\*\*(.+?)\*\*", BOLD + r"\1" + BOLD, text)
     text = re.sub(r"__(.+?)__", BOLD + r"\1" + BOLD, text)
@@ -63,14 +66,14 @@ def main():
         print("copies it back to the clipboard.")
         return
 
-    source = subprocess.run(["pbpaste"], capture_output=True, text=True).stdout
+    source = subprocess.run(["cpaste"], capture_output=True, text=True).stdout
     result = transform(source)
 
     sys.stdout.write(result)
     if not result.endswith("\n"):
         sys.stdout.write("\n")
 
-    subprocess.run(["pbcopy"], input=result, text=True)
+    subprocess.run(["ccopy"], input=result, text=True)
 
 
 if __name__ == "__main__":
