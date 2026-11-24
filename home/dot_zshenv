@@ -10,7 +10,8 @@ SHELL_SESSIONS_DISABLE=1
 
 # Keep only the first copy of each entry. Nested shells inherit PATH and FPATH
 # and add to them again, and a changed fpath makes compinit rebuild its dump.
-typeset -U path fpath
+# The scalars need it too, or assignments like PATH="dir:$PATH" keep duplicates.
+typeset -U PATH path FPATH fpath
 
 # Set here instead of .zshrc because some /etc/zsh/zshrc files run compinit
 # before .zshrc, like the nvm completion in the devcontainers universal image.
