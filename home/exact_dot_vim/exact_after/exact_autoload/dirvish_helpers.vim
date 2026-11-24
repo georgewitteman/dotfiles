@@ -1,6 +1,9 @@
 function! dirvish_helpers#delete(delflags, refresh)
-  let path = getline('.')
-  if !isdirectory(path) && !filereadable(path)
+  " Without the trailing slash directories get, so that a symlink to a directory
+  " is deleted itself. With it, delete() empties the directory it points to.
+  let path = substitute(getline('.'), '/$', '', '')
+  let type = getftype(path)
+  if type ==# ''
     echo 'Not a file or directory.'
     return
   endif
@@ -10,7 +13,7 @@ function! dirvish_helpers#delete(delflags, refresh)
     return
   endif
 
-  if isdirectory(path)
+  if type ==# 'dir'
     let result = delete(path, a:delflags)
   else
     let result = delete(path)
@@ -40,11 +43,11 @@ function! dirvish_helpers#make_directory()
     return
   endif
 
-  call mkdir(fullnewdir)
+  call mkdir(fullnewdir, 'p')
 
   execute 'Dirvish %'
 
-  call search(newdirname.'/', 'w')
+  call search('\V' . escape(newdirname, '\') . '/', 'w')
 endfunction
 
 function! dirvish_helpers#make_file()
@@ -66,8 +69,10 @@ function! dirvish_helpers#make_file()
 endfunction
 
 function! dirvish_helpers#move()
-  let path = getline('.')
-  if ! (isdirectory(path) || filereadable(path))
+  " Without the trailing slash, so that a symlink to a directory is renamed
+  " itself. With it, rename() moves the directory it points to.
+  let path = substitute(getline('.'), '/$', '', '')
+  if getftype(path) ==# ''
     echo 'Path does not exist.'
     return
   endif
