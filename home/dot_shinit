@@ -134,8 +134,8 @@ unset_secrets() {
     AWS_SECURITY_TOKEN AWS_CREDENTIAL_EXPIRATION AWS_SESSION_EXPIRATION \
     PGPASSWORD TAILSCALE_API_KEY TAILSCALE_OAUTH_CLIENT_SECRET \
     DD_API_KEY DD_APP_KEY \
-    $(env | sed -n 's/^\(TF_VAR_[A-Za-z0-9_]*\)=.*/\1/p'); do
-    if eval "[ -n \"\${${_secret_var}+x}\" ]"; then
+    $(set | sed -n 's/^\(TF_VAR_[A-Za-z0-9_]*\)=.*/\1/p'); do
+    if set | grep -q "^$_secret_var="; then
       echo_run unset "$_secret_var"
     fi
   done
