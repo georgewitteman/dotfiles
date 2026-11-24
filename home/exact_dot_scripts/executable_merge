@@ -99,13 +99,14 @@ if $continue_; then
   cd "$toplevel"
   conflicted="$(git diff --name-only --diff-filter=U)"
   if [ -n "$conflicted" ]; then
+    # git diff --check finds leftover conflict markers. It also checks
+    # whitespace, so turn those checks off.
+    no_ws=-blank-at-eol,-blank-at-eof,-space-before-tab,-indent-with-non-tab,-tab-in-indent,-cr-at-eol
     markers="$(echo "$conflicted" | while IFS= read -r file; do
-      if grep -q -E '^(<<<<<<<|>>>>>>>)( |$)' "$file"; then
-        echo "$file"
-      fi
+      git -c core.whitespace="$no_ws" diff --check -- "$file" || true
     done)"
     if [ -n "$markers" ]; then
-      echo-err "conflict markers left in:"
+      echo-err "conflict markers left:"
       echo "$markers" >&2
       exit 1
     fi
