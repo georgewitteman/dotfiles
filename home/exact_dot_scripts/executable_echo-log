@@ -2,40 +2,17 @@
 
 set -o errexit
 
-log_newline='true'
-if [ "$1" = "-n" ]; then
-  log_newline='false'
-  shift
-fi
-
 log_level="$1"
-log_color="\033[44m"
 shift
 
-if [ "${1-}" = "-n" ]; then
-  log_newline='false'
-  shift
-fi
-
 case "$log_level" in
-  DEBUG | TRACE)
-    log_level="DEBUG"
-    log_color="\033[46m"
-    ;;
-  OK | SUCCESS)
-    log_level="OK"
-    log_color="\033[42m"
-    ;;
-  WARN) log_color="\033[43m" ;;
-  ERROR | ERR | FATAL)
-    log_level="ERROR"
-    log_color="\033[41m"
-    ;;
   INFO) log_color="\033[44m" ;;
+  OK) log_color="\033[42m" ;;
+  WARN) log_color="\033[43m" ;;
+  ERROR) log_color="\033[41m" ;;
   *)
-    set -- "$log_level" "$@"
-    log_level="INFO"
-    log_color="\033[44m"
+    echo "echo-log: unknown level: ${log_level}" >&2
+    exit 1
     ;;
 esac
 
@@ -45,11 +22,6 @@ case "$log_level" in
   WARN | ERROR) exec 1>&2 ;;
 esac
 
-if [ -n "${LOG_DATE-}" ]; then
-  # shellcheck disable=SC2312
-  printf '%s ' "$(date "+%Y-%m-%dT%H:%M:%S")"
-fi
-
 # Color only on a terminal
 if [ -t 1 ] || [ -n "${FORCE_COLOR-}" ]; then
   printf "%b\033[97m %s \033[0m " "$log_color" "$log_level"
@@ -57,10 +29,4 @@ else
   printf '%s: ' "$log_level"
 fi
 
-if $log_newline; then
-  unset log_color log_level log_newline
-  echo "$@"
-else
-  unset log_color log_level log_newline
-  printf "%s" "$*"
-fi
+echo "$@"
