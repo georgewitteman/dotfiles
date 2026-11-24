@@ -44,7 +44,8 @@ hard rules: break one when the value is clearly worth it, and say why.
   intent behind a value, even when it names something else, like "match the
   macOS `ls` colors". For values in a dense notation, explain the notation
   instead of restating each value, since the notation stays true when the
-  values change.
+  values change. Put a comment on its own lines above the code it explains,
+  not at the end of a line, and leave a blank line between unrelated blocks.
 - **Keep completions in sync with scripts.** When a script in `~/.scripts`
   gains, loses, or changes an option or argument, update its zsh completion in
   `~/.local/share/zsh/functions`, or its `compdef` line in `.zshrc`, in the
