@@ -7,7 +7,8 @@ while [ "$#" -gt 0 ]; do
     -h | --help)
       echo "usage: $(basename "$0")"
       echo
-      echo "cleans up the url that's on the clipboard"
+      echo "Trims the Linear issue link on the clipboard to its short form, like"
+      echo "https://linear.app/<workspace>/issue/ENG-123, and copies that back."
       exit
       ;;
     --)
@@ -24,9 +25,9 @@ while [ "$#" -gt 0 ]; do
 done
 
 # Read the clipboard once, since in VS Code each read may ask for permission.
-url="$(cpaste | grep -E -o 'https://linear\.app/[[:alnum:]_]+/issue/[A-Z]+-[0-9]+' | head -n 1 || true)"
+url="$(cpaste | grep -E -o 'https://linear\.app/[[:alnum:]_-]+/issue/[A-Z0-9]+-[0-9]+' | head -n 1 || true)"
 if [ -z "$url" ]; then
-  echo "not a valid linear url in the clipboard" >&2
+  echo-err "no Linear issue link on the clipboard"
   exit 1
 fi
 echo "$url" >&2
