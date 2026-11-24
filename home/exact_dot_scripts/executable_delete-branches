@@ -2,11 +2,23 @@
 
 set -o errexit
 
-USAGE="usage: $(basename "$0") [-y|--yes] [--mine|--not-mine] [--remote] [--older-than=<days>]"
+usage() {
+  echo "usage: $(basename "$0") [-y|--yes] [--mine|--not-mine] [--remote] [--older-than=<days>]"
+  echo
+  echo "Deletes local branches, oldest first, showing each one with git-show and"
+  echo "asking before deleting it. The main branch and the current branch are"
+  echo "never deleted."
+  echo
+  echo "    -y, --yes             delete without asking"
+  echo "    --mine                only branches whose latest commit is mine"
+  echo "    --not-mine            only branches whose latest commit isn't mine"
+  echo "    --remote              delete my branches on origin instead, always asking"
+  echo "    --older-than=<days>   only branches whose latest commit is older than this"
+}
 
 die() {
   if [ "$#" -ge 2 ]; then
-    echo "$2"
+    echo-err "$2"
   fi
   exit "$1"
 }
@@ -38,7 +50,7 @@ while [ "$#" -gt 0 ]; do
   unset _arg _value
   case "$1" in
     -h | --help)
-      echo "$USAGE"
+      usage
       exit
       ;;
     -y | --yes)
@@ -62,18 +74,17 @@ while [ "$#" -gt 0 ]; do
       remote=true
       refs="refs/remotes/origin"
       ;;
-    --)
-      shift
-      break
-      ;;
     -?*) die 1 "unknown option: ${1}" ;;
-    *) break ;;
+    *) die 1 "unexpected argument: ${1}" ;;
   esac
   shift
 done
 
 if $mine_only && $others_only; then
-  die 1 "error: --mine and --not-mine are incompatible"
+  die 1 "--mine and --not-mine can't be used together"
+fi
+if $remote && $others_only; then
+  die 1 "--remote only deletes my branches, so it can't be used with --not-mine"
 fi
 
 set --
@@ -97,8 +108,8 @@ user_email="$(git config user.email)"
 current_branch="$(git rev-parse --abbrev-ref HEAD)"
 readonly current_ts threshold_ts TAB main_branch_name user_email current_branch
 
-git for-each-ref --sort=committerdate "$refs" --format="%(authoremail:trim)${TAB}%(committerdate:unix)${TAB}%(refname:short)" | while IFS="$TAB" read -r author committerdate short_refname; do
-  branch="${short_refname##origin/}"
+git for-each-ref --sort=committerdate "$refs" --format="%(authoremail:trim)${TAB}%(committerdate:unix)${TAB}%(refname)" | while IFS="$TAB" read -r author committerdate refname; do
+  branch="${refname#"$refs"/}"
 
   case "$branch" in
     "$main_branch_name" | "$current_branch" | HEAD)
