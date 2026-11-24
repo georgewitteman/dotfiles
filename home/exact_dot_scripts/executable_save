@@ -7,10 +7,9 @@ USAGE="usage: $(basename "$0") [<options>] [--] [<commit message>...]
     -C PATH               run git from this directory
     -a, --add             add all changes
     -p, --push            push branch to remote
-    -s, --pull            pull (sync) remote changes using \`git pull --rebase\`
     -f, --force           force updates
     -n, --no-verify       bypass pre-commit and commit-msg hooks
-    --amend               amend previous commit
+    --amend               amend previous commit, with the message if one is given
 "
 
 die() {
@@ -18,7 +17,6 @@ die() {
   exit "$1"
 }
 
-pull=false
 push=false
 message=''
 force=false
@@ -33,11 +31,6 @@ while [ "$#" -gt 0 ]; do
       _value="-${1##-?}"
       _arg="${1%%"${1##-?}"}"
       ;;
-    --[[:alnum:]]*=*)
-      # Args with values separated by an '=' character
-      _value="${1#--[[:alnum:]]*=}"
-      _arg="${1%%="${_value}"}"
-      ;;
   esac
   if [ -n "${_arg-}${_value-}" ]; then
     shift
@@ -50,10 +43,7 @@ while [ "$#" -gt 0 ]; do
       exit
       ;;
     -C)
-      if ! cd "$2"; then
-        echo "error: cannot change directory to $2" >&2
-        exit 1
-      fi
+      cd "$2"
       shift
       ;;
     -a | --add)
@@ -64,10 +54,6 @@ while [ "$#" -gt 0 ]; do
       ;;
     -p | --push)
       push=true
-      ;;
-    -s | --pull)
-      # s: sync
-      pull=true
       ;;
     --amend)
       amend=true
@@ -103,8 +89,6 @@ if [ $# -ne 0 ]; then
   message="$*"
 fi
 
-set --
-
 if $add; then
   echo-run git add --verbose --all
 fi
@@ -127,9 +111,6 @@ if [ -n "$status" ]; then
   if $amend; then
     current_commit_author="$(git show --no-patch --format='%ae')"
     repo_email="$(git config --get user.email)"
-    if [ -z "$repo_email" ]; then
-      repo_email="$(git config --global --get user.email)"
-    fi
 
     cmd="echo-run"
     if [ "$current_commit_author" != "$repo_email" ]; then
@@ -139,7 +120,13 @@ if [ -n "$status" ]; then
       cmd="safe-run"
     fi
 
-    "$cmd" git commit --amend --no-edit "$@" || die $? "Failed to amend commit. Fix any errors and retry"
+    if [ -n "$message" ]; then
+      set -- "$@" --message "$message"
+    else
+      set -- "$@" --no-edit
+    fi
+
+    "$cmd" git commit --amend "$@" || die $? "Failed to amend commit. Fix any errors and retry"
     unset cmd
   else
     if [ -n "$message" ]; then
@@ -153,10 +140,6 @@ else
 fi
 
 if $push; then
-  if git rev-parse --abbrev-ref --symbolic-full-name '@{upstream}' >/dev/null 2>&1 && $pull; then
-    echo-run git pull --rebase
-  fi
-
   set --
   if $force; then
     set -- "$@" --force
