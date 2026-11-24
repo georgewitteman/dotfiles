@@ -3,7 +3,23 @@
 set -o errexit
 set -o nounset
 
-USAGE="usage: $(basename "$0") [--remote=origin] [--theirs] [-c|--continue [--no-verify]] [--abort]"
+usage() {
+  cat <<EOF
+usage: $(basename "$0") [--remote=origin] [--theirs]
+       $(basename "$0") -c|--continue [--no-verify]
+       $(basename "$0") --abort
+
+Merges the latest main branch from the remote into the current branch. If
+yarn.lock is the only conflict, it reruns yarn install and finishes the merge.
+
+    --remote=<remote>   remote to merge from (default: origin)
+    --theirs            prefer the main branch's side in conflicts
+    -c, --continue      after resolving conflicts, stage the files that were
+                        in conflict and commit the merge
+    --no-verify         with --continue, bypass pre-commit and commit-msg hooks
+    --abort             abort the merge in progress
+EOF
+}
 
 remote="origin"
 continue_=false
@@ -31,7 +47,7 @@ while [ "$#" -gt 0 ]; do
   unset _arg _value
   case "$1" in
     -h | --help)
-      echo "$USAGE" >&2
+      usage
       exit
       ;;
     --abort)
@@ -48,7 +64,7 @@ while [ "$#" -gt 0 ]; do
       ;;
     --remote)
       if [ -z "${2-}" ]; then
-        echo "error: --remote requires a value" >&2
+        echo-err "--remote requires a value"
         exit 1
       fi
       remote="$2"
@@ -59,7 +75,7 @@ while [ "$#" -gt 0 ]; do
       break
       ;;
     -?*)
-      echo "unknown option: ${1}" >&2
+      echo-err "unknown option: ${1}"
       exit 1
       ;;
     *) break ;;
@@ -74,11 +90,29 @@ fi
 
 if $continue_; then
   if ! git rev-parse -q --verify MERGE_HEAD >/dev/null 2>&1; then
-    echo-err "Not in an active merge" >&2
+    echo-err "Not in an active merge"
     exit 1
   fi
+  # Stage only the files that were in conflict, so untracked files and
+  # unrelated edits stay out of the merge commit
   toplevel="$(git rev-parse --show-toplevel)"
-  echo-run git add "$toplevel"
+  cd "$toplevel"
+  conflicted="$(git diff --name-only --diff-filter=U)"
+  if [ -n "$conflicted" ]; then
+    markers="$(echo "$conflicted" | while IFS= read -r file; do
+      if grep -q -E '^(<<<<<<<|>>>>>>>)( |$)' "$file"; then
+        echo "$file"
+      fi
+    done)"
+    if [ -n "$markers" ]; then
+      echo-err "conflict markers left in:"
+      echo "$markers" >&2
+      exit 1
+    fi
+    echo "$conflicted" | while IFS= read -r file; do
+      echo-run git add -- "$file"
+    done
+  fi
   if $no_verify; then
     echo-run git commit --no-edit --no-verify
   else
