@@ -29,10 +29,6 @@ PROMPT+='%B%F{cyan}%~%f%b at %B%F{yellow}%D{%I:%M %p}%f%b %(1j.%B%F{magenta}%j j
 # Completion settings are documented in "Completion System" in
 # `man zshcompsys`: https://zsh.sourceforge.io/Doc/Release/Completion-System.html
 
-# Tab expands an alias if the cursor is on one, and completes normally
-# otherwise.
-zstyle ':completion:*' completer _expand_alias _complete
-
 # Pick from a menu when there are 2 or more matches.
 zstyle ':completion:*' menu select=2
 
@@ -64,10 +60,6 @@ zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'l:|=* r:|=*'
 #   40-47 the background, each in the order black, red, green, yellow, blue,
 #   magenta, cyan, white.
 zstyle ':completion:*' list-colors "di=34" "ln=35" "so=32" "pi=33" "ex=31" "bd=34;46" "cd=34;43" "su=30;41" "sg=30;46" "tw=30;42" "ow=30;43"
-
-# Describe options that take one argument but have no description of their
-# own, with %d as the argument's description.
-zstyle ':completion:*' auto-description 'specify: %d'
 
 # Headings in completion lists. %d is what's being completed, or for warnings
 # what was expected, or for messages the message itself.
@@ -131,23 +123,20 @@ setopt pushd_ignore_dups
 setopt pushd_minus
 # Don't print the new working directory after pushd-ing
 setopt pushd_silent
-# Don't print the new working directory after cd-ing
-setopt cd_silent
+# Don't print the new working directory after cd-ing. Older zsh doesn't
+# have this option.
+setopt cd_silent 2>/dev/null
 
-# Allow comments in the interactive shell
+# Allow comments in the interactive shell, like in pasted commands. Alt-# needs
+# it too, or the line it comments out would run.
 setopt interactive_comments
-
-# The time the shell waits, in hundredths of seconds, for another key to be
-# pressed when reading bound multi-character sequences, like Esc or Alt
-# combinations.
-KEYTIMEOUT=10
-
-# NOTE: If you want to see what a certain keypress makes do CTRL-V <KEYPRESS>
 
 # Remove the / character from the $WORDCHARS
 WORDCHARS="${WORDCHARS/\//}"
 
-# Use emacs keybindings. See all bindings with 'bindkey -L'
+# Use emacs keybindings, since zsh picks vi mode when EDITOR or VISUAL
+# contains "vi". See all bindings with `bindkey -L`, and what a key sends by
+# pressing ^V and then the key.
 bindkey -e
 
 # ^P, ^N, and the up and down arrows go through the history lines that start
@@ -160,13 +149,10 @@ bindkey '^N' down-line-or-beginning-search
 bindkey "^[[A" up-line-or-beginning-search
 bindkey "^[[B" down-line-or-beginning-search
 
-# ^X^E (or ^Xe) opens the command line in $EDITOR.
+# ^X^E opens the command line in $EDITOR.
 autoload -U edit-command-line
 zle -N edit-command-line
-bindkey '^xe' edit-command-line
 bindkey '^x^e' edit-command-line
-
-bindkey '^U' backward-kill-line
 
 # Alt-Right and Alt-Left move by word.
 bindkey '^[[1;3C' forward-word
