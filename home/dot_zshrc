@@ -118,15 +118,6 @@ fi
 # These scripts pass their arguments to a git command
 compdef _git git-show=git-show diff-main=git-diff pull=git-pull
 
-# Prints an associative array's keys and values, like
-# echo_assoc_array commands.
-echo_assoc_array() {
-  local key val var_name="$1"
-  for key val ("${(@Pkv)var_name}"); do
-    echo "$key -> $val"
-  done
-}
-
 # If a command is issued that can’t be executed as a normal command, and the
 # command is the name of a directory, perform the cd command to that directory
 setopt auto_cd
