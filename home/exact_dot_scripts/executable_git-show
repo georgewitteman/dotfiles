@@ -2,12 +2,17 @@
 
 set -o errexit
 
-commit_id="$(git show "$@" --quiet --format="%H")"
+case "${1-}" in
+  -h | --help)
+    echo "usage: $(basename "$0") [<git show options>] [<object>...]"
+    echo
+    echo "Runs git show with a header listing the commit's tags, branches, GitHub"
+    echo "URL, compare URL, and pull requests."
+    exit
+    ;;
+esac
 
-if ! git rev-parse "$commit_id" >/dev/null 2>&1; then
-  echo "Invalid ref: ${commit_id}"
-  exit 1
-fi
+commit_id="$(git show "$@" --quiet --format="%H")"
 
 # Ref names can't contain spaces or glob characters, so splitting on
 # whitespace is safe here.
@@ -74,5 +79,4 @@ add "   %C(blue)C Date:%Creset %cd (%cr)"
 add "  %C(magenta)Subject:%Creset %C(bold)%s%Creset"
 add "$footer"
 
-# Piping through cat keeps git show from starting a pager.
-git show --color=always --format="$fmt" "$@" | cat
+git --no-pager show --format="$fmt" "$@"
