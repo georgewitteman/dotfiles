@@ -11,20 +11,13 @@ function! s:CopyReg(reg) abort
 endfunction
 command! -nargs=1 CopyReg call s:CopyReg(<q-args>)
 
-" Vim before 8.0 has no TextYankPost. Without it, yanks would go to register c
-" but never reach the clipboard, so leave yanking alone there.
+" Vim before 8.0 has no TextYankPost, so yanks don't reach the clipboard there.
 if !exists('##TextYankPost')
   finish
 endif
 
-" Copy to clipboard for yank commands
-nnoremap <expr> y (v:register ==# '"' ? '"c' : '') . 'y'
-nnoremap <expr> yy (v:register ==# '"' ? '"c' : '') . 'yy'
-nnoremap <expr> Y (v:register ==# '"' ? '"c' : '') . 'Y'
-xnoremap <expr> y (v:register ==# '"' ? '"c' : '') . 'y'
-xnoremap <expr> Y (v:register ==# '"' ? '"c' : '') . 'Y'
-
+" Copy plain yanks, not deletes or yanks into a named register like "a
 augroup YankCmds
   autocmd!
-  autocmd TextYankPost * if v:event.operator is 'y' && v:event.regname is 'c' | CopyReg c | endif
+  autocmd TextYankPost * if v:event.operator ==# 'y' && v:event.regname ==# '' | CopyReg " | endif
 augroup END
