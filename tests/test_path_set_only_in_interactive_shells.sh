@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck disable=SC2310 # run only wraps env -i, so set -e being off in it doesn't matter
 
 . "tests/setup.sh"
 

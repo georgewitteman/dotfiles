@@ -6,13 +6,14 @@ case "${1:-}" in
   -h | --help)
     echo "usage: $(basename "$0")"
     echo
-    echo "Runs the tests, then lints the installed shell files with shellcheck and"
-    echo "shfmt if they're installed. Run it after \`chezmoi apply\`."
+    echo "Runs the tests, then lints this repo's scripts and the installed shell files"
+    echo "with shellcheck and shfmt if they're installed. Run it after \`chezmoi apply\`."
     exit
     ;;
 esac
 
 cd -- "$(dirname -- "$0")"
+repo_dir="$(pwd)"
 for test_file in tests/test_*; do
   echo "RUNNING: ${test_file}"
   sh -eux "$test_file"
@@ -25,8 +26,10 @@ if command -v shellcheck >/dev/null 2>&1; then
   # -x: follow sourced files, like .profile, which isn't linted on its own when
   # Docker Desktop's block is above its shebang.
   echo "$files" | xargs shellcheck -x
+  (cd "$repo_dir" && shellcheck -x install.sh check tests/*.sh)
 fi
 if command -v shfmt >/dev/null 2>&1; then
   echo "RUNNING: shfmt"
   echo "$files" | xargs shfmt --indent 2 --case-indent --diff --simplify
+  (cd "$repo_dir" && shfmt --indent 2 --case-indent --diff --simplify install.sh check tests/*.sh)
 fi

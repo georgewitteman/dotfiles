@@ -10,7 +10,10 @@ for arg in "$@"; do
     -q | --quiet) verbose=false ;;
     -d | --debug) debug=true ;;
     -h | --help)
-      echo "usage: $(basename "$0") [-q|--quiet] [-d|--debug]" >&2
+      echo "usage: $(basename "$0") [-q|--quiet] [-d|--debug] [<file>...]"
+      echo
+      echo "Prints the installed shell scripts and startup files to lint, or which of"
+      echo "the given files are shell scripts."
       exit
       ;;
     *)
@@ -25,7 +28,7 @@ done
 files() {
   path="$1"
   # -L: follow symlinks
-  find -L "$path" -type f ! -name '*.swp' ! -path '*/\.git/*' ! -name 'tags'
+  find -L "$path" -type f ! -name '*.swp' ! -path '*/\.git/*'
 }
 
 lint_file() {
@@ -66,7 +69,6 @@ if [ $# -gt 0 ]; then
 fi
 
 for file in $(files "${HOME}/.scripts") \
-  ~/.shinit ~/.profile ~/.bashrc ~/.bash_profile \
-  $(files ~/.config/git); do
+  ~/.shinit ~/.profile ~/.bashrc ~/.bash_profile; do
   lint_path "$file"
 done
