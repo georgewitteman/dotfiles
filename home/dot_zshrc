@@ -1,4 +1,5 @@
 #!/usr/bin/env zsh
+
 source "${HOME}/.shinit"
 
 # Prompt. It only uses zsh's built-in prompt escapes (no hooks, no commands,
@@ -25,44 +26,36 @@ fi
 PROMPT+='%B%F{cyan}%~%f%b at %B%F{yellow}%D{%I:%M %p}%f%b %(1j.%B%F{magenta}%j job%(2j.s.)%f%b .)%(?..%K{red}%B%F{white} %? %f%b%k )
 %B%(!.%F{red}#.%(?.%F{green}.%F{red})$)%f%b '
 
-# https://zsh.sourceforge.io/Doc/Release/Completion-System.html
-#
-# Note: Any of the strings ‘true’, ‘on’, ‘yes’, and ‘1’ can be used for the
-# value ‘true’ and any of the strings ‘false’, ‘off’, ‘no’, and ‘0’ for the
-# value ‘false’.
-#
-# https://zsh.sourceforge.io/Doc/Release/Completion-System.html#Control-Functions
-#
-# _expand_alias: If the word the cursor is on is an alias, it is expanded and
-# no other completers are called. The types of aliases which are to be expanded
-# can be controlled with the styles regular, global and disabled.
-#
-# _complete: This completer generates all possible completions in a
-# context-sensitive manner, i.e. using the settings defined with the compdef
-# function explained above and the current settings of all special parameters.
-# This gives the normal completion behavior.
+# Completion settings are documented in "Completion System" in
+# `man zshcompsys`: https://zsh.sourceforge.io/Doc/Release/Completion-System.html
+
+# Tab expands an alias if the cursor is on one, and completes normally
+# otherwise.
 zstyle ':completion:*' completer _expand_alias _complete
-# Use menu for autocompletion when number of items >= 2.
+
+# Pick from a menu when there are 2 or more matches.
 zstyle ':completion:*' menu select=2
+
 # Complete using the text on both sides of the cursor, instead of as if the
 # cursor were at the end of the word, then move the cursor to the end.
 # https://zsh.sourceforge.io/Doc/Release/Options.html#index-COMPLETEINWORD
 setopt complete_in_word always_to_end
+
 # In the menu (the second Tab), ^R searches the matches from the top. It needs
 # its own binding, since ^R in the main keymap searches history.
 zmodload zsh/complist
 bindkey -M menuselect '^R' history-incremental-search-forward
-# Keep directories and files separated.
+
+# List directories before files.
 zstyle ':completion:*' list-dirs-first true
+
+# Try each way of matching in turn until one finds something: exactly, then
+# ignoring case, then the typed text anywhere in the word.
 # https://zsh.sourceforge.io/Guide/zshguide06.html#l170
-# https://zsh.sourceforge.io/Doc/Release/Completion-System.html#index-matcher_002dlist_002c-completion-style
-# 1. Simple completion
-# 2. Case insensitive completion
-# 3. Partial word completion
 zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'l:|=* r:|=*'
+
 # Colors for files
 # - https://zsh.sourceforge.io/Doc/Release/Zsh-Modules.html#The-zsh_002fcomplist-Module
-# - https://zsh.sourceforge.io/Doc/Release/Completion-System.html
 # - Meant to match the default colors of macOS `ls`.
 # - Each entry is <type>=<codes>. Types: di directory, ln symlink, so socket,
 #   pi pipe, ex executable, bd block device, cd character device, su setuid,
@@ -71,53 +64,27 @@ zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'l:|=* r:|=*'
 #   40-47 the background, each in the order black, red, green, yellow, blue,
 #   magenta, cyan, white.
 zstyle ':completion:*' list-colors "di=34" "ln=35" "so=32" "pi=33" "ex=31" "bd=34;46" "cd=34;43" "su=30;41" "sg=30;46" "tw=30;42" "ow=30;43"
-# If set, this style’s value will be used as the description for options that
-# are not described by the completion functions, but that have exactly one
-# argument. The sequence ‘%d’ in the value will be replaced by the description
-# for this argument. Depending on personal preferences, it may be useful to set
-# this style to something like ‘specify: %d’. Note that this may not work for
-# some commands.
+
+# Describe options that take one argument but have no description of their
+# own, with %d as the argument's description.
 zstyle ':completion:*' auto-description 'specify: %d'
-# If this is set for the descriptions tag, its value is used as a string to
-# display above matches in completion lists. The sequence ‘%d’ in this string
-# will be replaced with a short description of what these matches are.
+
+# Headings in completion lists. %d is what's being completed, or for warnings
+# what was expected, or for messages the message itself.
 zstyle ':completion:*:descriptions' format 'Completing %d'
-# Finally, the format string is looked up with the warnings tag, for use when
-# no matches could be generated at all. In this case the ‘%d’ is replaced with
-# the descriptions for the matches that were expected separated by spaces. The
-# sequence ‘%D’ is replaced with the same descriptions separated by newlines.
 zstyle ':completion:*:warnings' format 'No matches for: %d'
-# Some completion functions display messages that may be customized by setting
-# this style for the messages tag. Here, the ‘%d’ is replaced with a message
-# given by the completion function.
 zstyle ':completion:*:messages' format '%d'
-# The completion system can group different types of matches, which appear in
-# separate lists. This style can be used to give the names of groups for
-# particular tags. For example, in command position the completion system
-# generates names of builtin and external commands, names of aliases, shell
-# functions and parameters and reserved words as possible completions. ... If
-# the name given is the empty string the name of the tag for the matches will
-# be used as the name of the group.
+
+# Group matches by type, like commands, aliases, and functions, each under its
+# own heading.
 zstyle ':completion:*' group-name ''
 
-# https://github.com/zsh-users/zsh/blob/master/Completion/compinit
-autoload -Uz compinit
-# Need -u to avoid "insecure directories and files" when running on a machine
-# with multiple users
-#
-# For security reasons compinit also checks if the completion system would use
-# files not owned by root or by the current user, or files in directories that
-# are world- or group-writable or that are not owned by root or by the current
-# user. If such files or directories are found, compinit will ask if the
-# completion system should really be used. To avoid these tests and make all
-# files found be used without asking, use the option -u, and to make compinit
-# silently ignore all insecure files and directories use the option -q. This
-# security check is skipped entirely when the -C option is given, provided the
-# dumpfile exists.
+# -C uses the existing dump without checking for changed completion files.
+# -u uses completion files owned by other users, or writable by them, instead
+# of asking, which matters on machines with several users. With -C, that check
+# only runs when there's no dump yet.
 # https://zsh.sourceforge.io/Doc/Release/Completion-System.html#Use-of-compinit
-#
-# -C: skip that check and use the existing dump, even if completion files have
-# changed.
+autoload -Uz compinit
 compinit -C -u
 
 # Warn when the dump is missing any of the dotfiles' completions, like when
@@ -133,6 +100,7 @@ compinit -C -u
   done
 }
 
+# Lets zsh use bash completions, like the ones aws and terraform provide.
 # https://github.com/zsh-users/zsh/blob/master/Completion/bashcompinit
 autoload -U +X bashcompinit
 bashcompinit
@@ -150,18 +118,8 @@ fi
 # These scripts pass their arguments to a git command
 compdef _git git-show=git-show diff-main=git-diff pull=git-pull
 
-alias echo_fpath="echo_array fpath"
-
-echo_array() {
-  local variable_name="${1:-path}"
-  local count="${#${(P)variable_name}}"
-  local width="${#count}"
-  local i
-  for i in {1..$count}; do
-    echo "${(l:$width:)i}: ${${(P)variable_name}[$i]}"
-  done
-}
-
+# Prints an associative array's keys and values, like
+# echo_assoc_array commands.
 echo_assoc_array() {
   local key val var_name="$1"
   for key val ("${(@Pkv)var_name}"); do
@@ -172,6 +130,7 @@ echo_assoc_array() {
 # If a command is issued that can’t be executed as a normal command, and the
 # command is the name of a directory, perform the cd command to that directory
 setopt auto_cd
+
 # Make cd push the old directory onto the directory stack
 setopt auto_pushd
 # Don’t push multiple copies of the same directory onto the directory stack
@@ -200,25 +159,36 @@ WORDCHARS="${WORDCHARS/\//}"
 # Use emacs keybindings. See all bindings with 'bindkey -L'
 bindkey -e
 
+# ^P, ^N, and the up and down arrows go through the history lines that start
+# with what's typed so far.
 autoload -U up-line-or-beginning-search down-line-or-beginning-search
 zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
 bindkey '^P' up-line-or-beginning-search
 bindkey '^N' down-line-or-beginning-search
-bindkey "^[[A" up-line-or-beginning-search # up
-bindkey "^[[B" down-line-or-beginning-search # down
+bindkey "^[[A" up-line-or-beginning-search
+bindkey "^[[B" down-line-or-beginning-search
 
+# ^X^E (or ^Xe) opens the command line in $EDITOR.
 autoload -U edit-command-line
 zle -N edit-command-line
 bindkey '^xe' edit-command-line
 bindkey '^x^e' edit-command-line
 
 bindkey '^U' backward-kill-line
-bindkey '^[[1;3C' forward-word # alt-right
-bindkey '^[[1;3D' backward-word # alt-left
-bindkey '^[#' pound-insert # alt-#
-bindkey '^[[Z' reverse-menu-complete # shift-tab
 
+# Alt-Right and Alt-Left move by word.
+bindkey '^[[1;3C' forward-word
+bindkey '^[[1;3D' backward-word
+
+# Alt-# comments out the line and accepts it, so it's saved in the history
+# without running.
+bindkey '^[#' pound-insert
+
+# Shift-Tab goes back through the completion menu.
+bindkey '^[[Z' reverse-menu-complete
+
+# Space expands an alias before inserting the space.
 zle_expand_alias() {
   zle _expand_alias
   zle self-insert
@@ -229,64 +199,33 @@ bindkey -M main ' ' zle_expand_alias
 # Like the default ^R, but the search can be a pattern, like git*main
 bindkey '^R' history-incremental-pattern-search-backward
 
-# Perform textual history expansion, csh-style, treating the character '!'
-# specially.
-# https://zsh.sourceforge.io/Doc/Release/Options.html#index-BANGHIST
+# History options are documented in "History" in `man zshoptions`:
+# https://zsh.sourceforge.io/Doc/Release/Options.html#History
+
+# Expand history references like !! and !$.
 setopt bang_hist
 
-# Save each command’s beginning timestamp (in seconds since the epoch) and the
-# duration (in seconds) to the history file. The format of this prefixed data
-# is:
-#
-# ': <beginning time>:<elapsed seconds>;<command>'.
-# https://zsh.sourceforge.io/Doc/Release/Options.html#index-EXTENDEDHISTORY
+# Save each command's start time and duration in the history file, as
+# ': <start time>:<seconds>;<command>'.
 setopt extended_history
 
-# This option both imports new commands from the history file, and also causes
-# your typed commands to be appended to the history file (the latter is like
-# specifying INC_APPEND_HISTORY, which should be turned off if this option is
-# in effect). The history lines are also output with timestamps ala
-# EXTENDED_HISTORY (which makes it easier to find the spot where we left off
-# reading the file after it gets re-written).
-#
-# By default, history movement commands visit the imported lines as well as the
-# local lines, but you can toggle this on and off with the set-local-history
-# zle binding. It is also possible to create a zle widget that will make some
-# commands ignore imported commands, and some include them.
-#
-# If you find that you want more control over when commands get imported, you
-# may wish to turn SHARE_HISTORY off, INC_APPEND_HISTORY or
-# INC_APPEND_HISTORY_TIME on, and then manually import commands whenever you
-# need them using ‘fc -RI’.
-# https://zsh.sourceforge.io/Doc/Release/Options.html#index-SHAREHISTORY
+# Write each command to the history file as soon as it's entered, and read in
+# the commands other shells write.
 setopt share_history
 
-# If a new command line being added to the history list duplicates an older
-# one, the older command is removed from the list (even if it is not the
-# previous event).
-# https://zsh.sourceforge.io/Doc/Release/Options.html#index-HISTIGNOREALLDUPS
+# When a command repeats an older one, remove the older one.
 setopt hist_ignore_all_dups
 
-# When searching for history entries in the line editor, do not display
-# duplicates of a line previously found, even if the duplicates are not
-# contiguous. hist_ignore_all_dups doesn't remove duplicates that are already in
-# the history file when it's loaded.
-# https://zsh.sourceforge.io/Doc/Release/Options.html#index-HISTFINDNODUPS
+# When searching the history in the line editor, skip lines already found.
+# hist_ignore_all_dups doesn't remove duplicates that are already in the
+# history file when it's loaded.
 setopt hist_find_no_dups
 
-# When writing out the history file, older commands that duplicate newer ones
-# are omitted.
-# https://zsh.sourceforge.io/Doc/Release/Options.html#index-HISTSAVENODUPS
+# When writing the history file, leave out older copies of newer commands.
 setopt hist_save_no_dups
 
-# Remove command lines from the history list when the first character on the
-# line is a space, or when one of the expanded aliases contains a leading
-# space. Only normal aliases (not global or suffix aliases) have this
-# behavior. Note that the command lingers in the internal history until the
-# next command is entered before it vanishes, allowing you to briefly reuse or
-# edit the line. If you want to make it vanish right away without entering
-# another command, type a space and press return.
-# https://zsh.sourceforge.io/Doc/Release/Options.html#index-HISTIGNORESPACE
+# Leave commands that start with a space out of the history. The last one
+# stays until the next command, so it can still be edited.
 setopt hist_ignore_space
 
 # Keep commands that look like they contain a secret out of the history file.
@@ -312,25 +251,20 @@ zshaddhistory() {
   return 0
 }
 
-# Remove superfluous blanks from each command line being added to the history
-# list.
-# https://zsh.sourceforge.io/Doc/Release/Options.html#index-HISTREDUCEBLANKS
+# Remove extra blanks from each command before saving it.
 setopt hist_reduce_blanks
 
-# Whenever the user enters a line with history expansion, don’t execute the
-# line directly; instead, perform history expansion and reload the line into
-# the editing buffer.
-# https://zsh.sourceforge.io/Doc/Release/Options.html#index-history_002c-verifying-substitution
+# After history expansion, show the expanded line for editing instead of
+# running it right away.
 setopt hist_verify
 
-# The maximum number of history events to save in the history file.
-# https://zsh.sourceforge.io/Doc/Release/Parameters.html#index-SAVEHIST
-SAVEHIST=100000
-
-# The maximum number of events stored in the internal history list
-# https://zsh.sourceforge.io/Doc/Release/Parameters.html#index-HISTSIZE
-HISTSIZE="${SAVEHIST:-100000}"
-
+# zsh doesn't save history unless HISTFILE is set. Codespaces keep it in a
+# folder that survives rebuilds.
+HISTFILE="${HISTFILE:-${ZDOTDIR:-$HOME}/.zsh_history}"
 if [ "$CODESPACES" = "true" ] && [ -d "/workspaces/.codespaces/.persistedshare" ]; then
   HISTFILE="/workspaces/.codespaces/.persistedshare/.zsh_history"
 fi
+
+# How many commands to keep in the history file, and in memory.
+SAVEHIST=100000
+HISTSIZE=100000

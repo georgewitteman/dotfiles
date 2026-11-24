@@ -8,17 +8,14 @@ export PATH="$PATH:{{ .chezmoi.homeDir }}/.docker/bin"
 
 {{ end -}}
 #!/bin/sh
-# `man dash`: If the environment variable ENV is set on entry to an interactive
-# shell, or is set in the .profile of a login shell, the shell next reads
-# commands from the file named in ENV.  Therefore, a user should place commands
-# that are to be executed only at login time in the .profile file, and commands
-# that are executed for every interactive shell inside the ENV file.
-#
-# WARNING: If for whatever reason this gets removed make sure to update the
-# check at the top of ~/.shinit.
+
+# Interactive sh shells read the file named in ENV, so they get the same
+# aliases and functions as bash and zsh. A set ENV also shows that this file
+# has run.
 export ENV="${HOME}/.shinit"
 
-# This variable configures all programs which use setlocale(3) to use the specified locale unless the LC_* variables are set.
+# The locale for programs that use setlocale(3), unless an LC_* variable
+# overrides it.
 export LANG="${LANG:-en_US.UTF-8}"
 
 # `man environ`: Default editor name.
