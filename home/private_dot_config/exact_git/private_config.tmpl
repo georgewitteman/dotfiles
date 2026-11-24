@@ -34,11 +34,18 @@
 # - git commit --amend --no-edit -n -S
 # - git rebase --exec 'git commit --amend --no-edit -n -S' -i main
 
-{{- /* Sign with my SSH key when it's in the agent (1Password). Skipped in
-       codespaces: the key is never there, and while a codespace is being
-       created its forwarded agent can hang ssh-add for minutes. */}}
+{{- /* Sign with my SSH key. With 1Password installed, through its signer,
+       which finds the agent without SSH_AUTH_SOCK, even while 1Password is
+       quit when applying. Elsewhere, when the key is in the agent, like one
+       forwarded over ssh. Skipped in codespaces: the key is never there, and
+       while a codespace is being created its forwarded agent can hang ssh-add
+       for minutes. */}}
+{{- $op_ssh_sign := "/Applications/1Password.app/Contents/MacOS/op-ssh-sign" }}
+{{- $has_op_ssh_sign := stat $op_ssh_sign }}
 {{- $ssh_sign := false }}
-{{- if not (env "CODESPACES") }}
+{{- if $has_op_ssh_sign }}
+{{-   $ssh_sign = true }}
+{{- else if not (env "CODESPACES") }}
 {{- /* `|| true` because output fails the template if ssh-add fails */}}
 {{-   $ssh_sign = contains .sshkey (output "sh" "-c" "ssh-add -L 2>/dev/null || true") }}
 {{- end }}
@@ -48,6 +55,10 @@
 	signingKey = {{ .sshkey | quote }}
 [gpg]
 	format = ssh
+{{- if $has_op_ssh_sign }}
+[gpg "ssh"]
+	program = {{ $op_ssh_sign | quote }}
+{{- end }}
 {{- end }}
 
 {{- /* Codespaces sign with their own gpg.program in /etc/gitconfig. Anywhere

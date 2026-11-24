@@ -30,7 +30,9 @@ if [ -z "$EDITOR" ]; then
   fi
 fi
 
-if [ -S "${HOME}/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock" ]; then
+# 1Password's app folder exists whenever 1Password is installed, so this holds
+# in a shell started before 1Password is running.
+if [ -d "${HOME}/Library/Group Containers/2BUA8C4S2C.com.1password" ]; then
   # `man ssh`: SSH_AUTH_SOCK Identifies the path of a UNIX-domain socket used
   # to communicate with the agent.
   export SSH_AUTH_SOCK="${HOME}/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
