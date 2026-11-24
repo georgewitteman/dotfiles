@@ -114,21 +114,7 @@ compdef _git git-show=git-show diff-main=git-diff pull=git-pull
 # command is the name of a directory, perform the cd command to that directory
 setopt auto_cd
 
-# Make cd push the old directory onto the directory stack
-setopt auto_pushd
-# Don’t push multiple copies of the same directory onto the directory stack
-setopt pushd_ignore_dups
-# Exchanges the meanings of ‘+’ and ‘-’ when used with a number to specify a
-# directory in the stack
-setopt pushd_minus
-# Don't print the new working directory after pushd-ing
-setopt pushd_silent
-# Don't print the new working directory after cd-ing. Older zsh doesn't
-# have this option.
-setopt cd_silent 2>/dev/null
-
-# Allow comments in the interactive shell, like in pasted commands. Alt-# needs
-# it too, or the line it comments out would run.
+# Allow comments in the interactive shell, like in pasted commands.
 setopt interactive_comments
 
 # Remove the / character from the $WORDCHARS
@@ -158,10 +144,6 @@ bindkey '^x^e' edit-command-line
 bindkey '^[[1;3C' forward-word
 bindkey '^[[1;3D' backward-word
 
-# Alt-# comments out the line and accepts it, so it's saved in the history
-# without running.
-bindkey '^[#' pound-insert
-
 # Shift-Tab goes back through the completion menu.
 bindkey '^[[Z' reverse-menu-complete
 
@@ -182,13 +164,13 @@ bindkey '^R' history-incremental-pattern-search-backward
 # Expand history references like !! and !$.
 setopt bang_hist
 
-# Save each command's start time and duration in the history file, as
-# ': <start time>:<seconds>;<command>'.
+# Save each command's start time in the history file.
 setopt extended_history
 
-# Write each command to the history file as soon as it's entered, and read in
-# the commands other shells write.
-setopt share_history
+# Write each command to the history file as soon as it's entered, so other
+# shells started later see it, without mixing other shells' commands into this
+# one's history.
+setopt inc_append_history
 
 # When a command repeats an older one, remove the older one.
 setopt hist_ignore_all_dups
