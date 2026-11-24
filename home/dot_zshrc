@@ -204,9 +204,6 @@ zshaddhistory() {
   return 0
 }
 
-# Remove extra blanks from each command before saving it.
-setopt hist_reduce_blanks
-
 # After history expansion, show the expanded line for editing instead of
 # running it right away.
 setopt hist_verify
