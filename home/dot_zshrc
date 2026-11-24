@@ -42,9 +42,6 @@ setopt complete_in_word always_to_end
 zmodload zsh/complist
 bindkey -M menuselect '^R' history-incremental-search-forward
 
-# List directories before files.
-zstyle ':completion:*' list-dirs-first true
-
 # Try each way of matching in turn until one finds something: exactly, then
 # ignoring case, then the typed text anywhere in the word.
 # https://zsh.sourceforge.io/Guide/zshguide06.html#l170
@@ -154,9 +151,6 @@ zle_expand_alias() {
 }
 zle -N zle_expand_alias
 bindkey -M main ' ' zle_expand_alias
-
-# Like the default ^R, but the search can be a pattern, like git*main
-bindkey '^R' history-incremental-pattern-search-backward
 
 # History options are documented in "History" in `man zshoptions`:
 # https://zsh.sourceforge.io/Doc/Release/Options.html#History
