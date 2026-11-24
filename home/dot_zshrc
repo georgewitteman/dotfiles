@@ -37,11 +37,6 @@ zstyle ':completion:*' menu select=2
 # https://zsh.sourceforge.io/Doc/Release/Options.html#index-COMPLETEINWORD
 setopt complete_in_word always_to_end
 
-# In the menu (the second Tab), ^R searches the matches from the top. It needs
-# its own binding, since ^R in the main keymap searches history.
-zmodload zsh/complist
-bindkey -M menuselect '^R' history-incremental-search-forward
-
 # Try each way of matching in turn until one finds something: exactly, then
 # ignoring case, then the typed text anywhere in the word.
 # https://zsh.sourceforge.io/Guide/zshguide06.html#l170
@@ -58,11 +53,10 @@ zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'l:|=* r:|=*'
 #   magenta, cyan, white.
 zstyle ':completion:*' list-colors "di=34" "ln=35" "so=32" "pi=33" "ex=31" "bd=34;46" "cd=34;43" "su=30;41" "sg=30;46" "tw=30;42" "ow=30;43"
 
-# Headings in completion lists. %d is what's being completed, or for warnings
-# what was expected, or for messages the message itself.
-zstyle ':completion:*:descriptions' format 'Completing %d'
+# Headings in completion lists, in bold. %d is what's being completed, or for
+# warnings what was expected.
+zstyle ':completion:*' format '%B%d%b'
 zstyle ':completion:*:warnings' format 'No matches for: %d'
-zstyle ':completion:*:messages' format '%d'
 
 # Group matches by type, like commands, aliases, and functions, each under its
 # own heading.
@@ -136,9 +130,6 @@ bindkey "^[[B" down-line-or-beginning-search
 bindkey '^[[1;3C' forward-word
 bindkey '^[[1;3D' backward-word
 
-# Shift-Tab goes back through the completion menu.
-bindkey '^[[Z' reverse-menu-complete
-
 # Space expands an alias before inserting the space.
 zle_expand_alias() {
   zle _expand_alias
@@ -161,16 +152,9 @@ setopt extended_history
 # one's history.
 setopt inc_append_history
 
-# When a command repeats an older one, remove the older one.
-setopt hist_ignore_all_dups
-
-# When searching the history in the line editor, skip lines already found.
-# hist_ignore_all_dups doesn't remove duplicates that are already in the
-# history file when it's loaded.
+# Keep every run of a command in the history, but skip lines already found
+# when going through it with the arrows or ^R.
 setopt hist_find_no_dups
-
-# When writing the history file, leave out older copies of newer commands.
-setopt hist_save_no_dups
 
 # Leave commands that start with a space out of the history. The last one
 # stays until the next command, so it can still be edited.
