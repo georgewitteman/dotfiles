@@ -56,10 +56,6 @@ if ! main_branch="$(git rev-parse --abbrev-ref origin/HEAD 2>/dev/null)"; then
 fi
 main_branch="${main_branch#origin/}"
 
-if ! git show-ref --quiet --verify "refs/heads/${main_branch}"; then
-  echo-run git branch "$main_branch" "origin/${main_branch}"
-fi
-
 echo-run git checkout "$main_branch"
 
 if $rebase; then
