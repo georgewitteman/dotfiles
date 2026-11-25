@@ -122,14 +122,6 @@ set ttimeout
 " The time in ms that is waited for a key code or mapped key sequence to complete
 set ttimeoutlen=50
 
-" Where insert mode completion (CTRL-N, CTRL-P) looks for matches:
-" .  the current buffer
-" w  buffers in other windows
-" b  other loaded buffers in the buffer list
-" u  unloaded buffers in the buffer list
-" t  tags
-set complete=.,w,b,u,t
-
 " Allow backspacing over everything in insert mode
 " indent: allow backspacing over autoindent
 " eol: allow backspacing over line breaks (join lines)
