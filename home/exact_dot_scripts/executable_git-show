@@ -76,7 +76,7 @@ pr_urls=
 if [ -n "$branch" ]; then
   git_compare_url="$(git-get-url --branch "${branch}" 2>/dev/null || true)"
   # gh fails fast without network access when it isn't logged in.
-  if command -v gh >/dev/null 2>&1; then
+  if command -v gh >/dev/null; then
     pr_urls="$(gh pr list --head "${branch}" --json url --jq '.[].url' 2>/dev/null | paste -s -d , - | sed 's/,/, /g')"
   fi
 fi

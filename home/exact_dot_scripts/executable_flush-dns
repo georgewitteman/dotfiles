@@ -15,7 +15,7 @@ esac
 if [ "$(uname || true)" = "Darwin" ]; then
   echo-run sudo dscacheutil -flushcache
   echo-run sudo killall -HUP mDNSResponder
-elif command -v resolvectl >/dev/null 2>&1; then
+elif command -v resolvectl >/dev/null; then
   echo-run sudo resolvectl flush-caches
 else
   echo "error: can't flush the DNS cache here: not macOS, and no resolvectl" >&2
