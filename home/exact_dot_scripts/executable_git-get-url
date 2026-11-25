@@ -54,15 +54,20 @@ if [ -z "$giturl" ]; then
   die 1 "origin isn't set"
 fi
 
+# Turn the remote into the repository's web page, dropping any user name or
+# token, like https://user:token@host/owner/repo.git or git@host:owner/repo.git
 case "$giturl" in
   https://*)
-    project_url="$(echo "$giturl" | sed "s~\.git$~~")"
+    project_url="$(echo "$giturl" | sed -e 's~^https://[^/@]*@~https://~' -e 's~\.git$~~')"
     ;;
   ssh://*)
-    project_url="$(echo "$giturl" | sed "s~^ssh://[^@]*@~https://~" | sed "s~\.git$~~")"
+    project_url="$(echo "$giturl" | sed -e 's~^ssh://[^@]*@~https://~' -e 's~\.git$~~')"
+    ;;
+  *@*:*)
+    project_url="$(echo "$giturl" | sed -e 's~^[^@]*@~https://~' -e 's~:~/~2' -e 's~\.git$~~')"
     ;;
   *)
-    project_url="$(echo "$giturl" | sed "s~:~/~" | sed "s~git@~https://~" | sed "s~\.git$~~")"
+    die 1 "origin isn't on a web host"
     ;;
 esac
 
