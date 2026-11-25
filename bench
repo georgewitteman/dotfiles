@@ -1,0 +1,41 @@
+#!/usr/bin/env zsh
+
+runs=11
+
+case "${1-}" in
+  -h | --help)
+    print "usage: ${0:t} [shell ...]"
+    print
+    print "Times how long each shell takes to start the way a terminal starts it and"
+    print "exit, and prints the median of $runs runs. Defaults to \$SHELL."
+    exit
+    ;;
+  -*)
+    print -u2 "error: unknown option: $1"
+    exit 1
+    ;;
+esac
+
+zmodload zsh/datetime zsh/mathfunc
+(( $# )) || set -- "$SHELL"
+cd
+
+for shell; do
+  if ! cmd="$(command -v "$shell")"; then
+    print -u2 "error: $shell not found"
+    exit 1
+  fi
+
+  durations=()
+  repeat $runs; do
+    start=$EPOCHREALTIME
+    # A leading - in argv[0] makes it a login shell, the way login and
+    # terminals start one.
+    ARGV0="-${shell:t}" "$cmd" -ic exit </dev/null >/dev/null 2>&1
+    # Whole microseconds, since (n) sorts the digits after a decimal point as
+    # a separate number.
+    durations+=$(( int((EPOCHREALTIME - start) * 1e6) ))
+  done
+  durations=(${(n)durations})
+  printf '%-6s %5.1f ms\n' "$shell" $(( durations[runs / 2 + 1] / 1000.0 ))
+done
