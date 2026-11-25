@@ -96,6 +96,9 @@ set ttimeoutlen=50
 " A solid line between side-by-side windows, instead of |
 set fillchars+=vert:│
 
+" Always show the status line, not only when the window is split
+set laststatus=2
+
 " Use ripgrep for :grep when it's installed
 if executable('rg')
   set grepprg=rg\ --vimgrep
