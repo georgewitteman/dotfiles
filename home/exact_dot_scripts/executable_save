@@ -6,11 +6,12 @@ USAGE="usage: $(basename "$0") [<options>] [--] [<message>]
 
 Commits the staged changes, with <message> as the commit message (quote it if
 it has spaces), or opens an editor without one. With nothing staged, it skips
-the commit. Use -- before a message that starts with -.
+the commit, unless amending. Use -- before a message that starts with -.
 
     -a, --add             add all changes
     -p, --push            push branch to remote
-    -f, --force           with --push, push with --force-with-lease
+    -f, --force           with --push, push with --force-with-lease, which
+                          --amend also does
     -n, --no-verify       bypass pre-commit and commit-msg hooks
     --amend               amend previous commit, with the message if one is given
 "
@@ -91,12 +92,12 @@ if git diff --cached --quiet; then
   staged=false
 fi
 
-if ! $staged && [ -n "$message" ]; then
+if ! $staged && ! $amend && [ -n "$message" ]; then
   echo "error: nothing is staged, so there's nothing to commit: ${message}" >&2
   exit 1
 fi
 
-if $staged; then
+if $staged || $amend; then
   # A new repository has no commit to go back to yet.
   if current_head="$(git rev-parse --quiet --verify --short HEAD)"; then
     echo "Undo these changes with 'git reset ${current_head}'"
@@ -133,7 +134,7 @@ fi
 
 if $push; then
   set --
-  if $force; then
+  if $force || $amend; then
     set -- --force-with-lease
   fi
   echo-run git push "$@"
