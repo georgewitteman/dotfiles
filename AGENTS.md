@@ -30,10 +30,11 @@ hard rules: break one when the value is clearly worth it, and say why.
   should work well in bash, zsh, and plain POSIX `sh`. Files read by more than
   one shell must stick to POSIX `sh` (zsh loads them with `emulate sh -c`).
   System startup files differ too: Ubuntu's `/etc/zsh/zshrc` runs `compinit`,
-  and the `universal` image's runs another for nvm. CI covers macOS and the
-  codespaces images, to catch anything important breaking. It doesn't need
-  to enforce style, so don't add linters to it: `./check` lints only where
-  shellcheck and shfmt are installed, which is mainly locally.
+  and the `universal` image's runs a second `compinit` for nvm. CI covers
+  macOS and the codespaces images, to catch anything important breaking. It
+  doesn't need to enforce style, so don't add linters to it. `./check` lints
+  wherever shellcheck and shfmt happen to be installed, which includes
+  shellcheck on CI's Ubuntu runners.
 - **Apply right after making changes.** Check `chezmoi diff` first, since
   applying can delete files, and ask only if it would delete or change
   something unexpected.
@@ -61,8 +62,9 @@ hard rules: break one when the value is clearly worth it, and say why.
   lines. The intent behind a value is fine to explain too, even when it names
   something else, like "match the macOS `ls` colors". For values in a dense
   notation, explain the notation instead of restating each value, since the
-  notation stays true when the values change. Put a comment on its own lines above the code it explains,
-  not at the end of a line, and leave a blank line between unrelated blocks.
+  notation stays true when the values change. Put a comment on its own lines
+  above the code it explains, not at the end of a line, and leave a blank line
+  between unrelated blocks.
 - **Shell style.** Use `[[ ]]` in bash and zsh, and `[ ]` in POSIX `sh`.
   shellcheck enforces this for bash and `sh`, but doesn't read zsh. Text that
   another tool checks for word for word, like 1Password's SSH config, stays
