@@ -84,8 +84,8 @@ if command -v terraform &>/dev/null; then
   complete -o nospace -C "$(command -v terraform)" terraform
 fi
 
-# These scripts pass their arguments to a git command
-compdef _git git-show=git-show diff-main=git-diff
+# git-show passes its arguments to git show
+compdef _git git-show=git-show
 
 # Typing a directory's name on its own goes there.
 setopt auto_cd

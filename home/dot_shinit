@@ -31,11 +31,10 @@ restart_shell() {
   echo_run exec "$@"
 }
 
-# Functions instead of the scripts themselves, so they run in this shell and
+# A function instead of the script itself, so it runs in this shell and
 # commands like `echo_run cd` affect it. Sourcing a file inside a function
 # passes the function's arguments along as $@.
 echo_run() { . "${HOME}/.scripts/echo-run"; }
-safe_eval() { . "${HOME}/.scripts/safe-eval"; }
 
 # When Homebrew belongs to another user on this machine, run brew as that user
 # with sudo, since only its owner can change it. stat -f is BSD's (macOS), and
