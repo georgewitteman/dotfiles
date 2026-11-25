@@ -4,7 +4,8 @@
 " terminal to do it with OSC 52.
 function! s:CopyReg(reg) abort
   if has('clipboard_working') && empty($SSH_CONNECTION)
-    call setreg('+', getreg(a:reg))
+    " Keep the register's type, so a block yank pastes as a block.
+    call setreg('+', getreg(a:reg, 1, 1), getregtype(a:reg))
   else
     call OSCYankRegister(a:reg)
   endif
