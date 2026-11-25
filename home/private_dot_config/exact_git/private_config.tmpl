@@ -63,7 +63,6 @@
        /etc/gitconfig only when GPG verification is on. Without a signer,
        signing would make every commit fail. */}}
 {{- if or $ssh_sign (and (env "CODESPACES") (output "git" "config" "--system" "--default" "" "gpg.program" | trim)) }}
-
 [commit]
 	gpgSign = true
 {{- end }}
