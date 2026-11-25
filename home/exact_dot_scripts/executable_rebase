@@ -12,6 +12,10 @@ onto origin's default branch without one, stashing and restoring uncommitted
 changes. If the fetch fails, it rebases onto what was last fetched. A <base>
 that isn't a branch on origin is used as given, like origin/foo or a commit.
 For anything else, use git rebase.
+
+    -i, --interactive   rebase interactively
+    --continue          continue the rebase in progress
+    --abort             abort the rebase in progress
 EOF
 }
 
