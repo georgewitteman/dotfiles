@@ -46,6 +46,13 @@ hard rules: break one when the value is clearly worth it, and say why.
   instead of restating each value, since the notation stays true when the
   values change. Put a comment on its own lines above the code it explains,
   not at the end of a line, and leave a blank line between unrelated blocks.
+- **Shell style.** Use `[[ ]]` in bash and zsh, and `[ ]` in POSIX `sh`.
+  shellcheck enforces this for bash and `sh`, but doesn't read zsh. Text that
+  another tool checks for word for word, like Docker Desktop's block, stays
+  exactly as that tool writes it.
+- **Scripts share a house style.** Scripts in `~/.scripts` look and behave
+  alike: `-h` and `--help` print a usage line, a description and the options
+  in the same format as the other scripts, and unknown options are errors.
 - **Keep completions in sync with scripts.** When a script in `~/.scripts`
   gains, loses, or changes an option or argument, update its zsh completion in
   `~/.local/share/zsh/functions`, or its `compdef` line in `.zshrc`, in the

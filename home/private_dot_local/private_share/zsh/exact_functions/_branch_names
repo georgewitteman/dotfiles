@@ -1,20 +1,15 @@
-#compdef switch-branch squash-branch branch rebase
+#compdef switch-branch branch rebase
 
 # switch-branch, branch's base branch and rebase take origin's branches
-# without the origin/ prefix. squash-branch takes any ref, like origin/main.
-local -a local_branches origin_branches refs
+# without the origin/ prefix.
+local -a local_branches origin_branches
 local_branches=(${(f)"$(git for-each-ref --format='%(refname:short)' refs/heads 2>/dev/null)"})
 origin_branches=(${(f)"$(git for-each-ref --format='%(refname:lstrip=3)' refs/remotes/origin 2>/dev/null)"})
 origin_branches=(${origin_branches:#HEAD})
-refs=(${${(f)"$(git for-each-ref --format='%(refname)' refs/remotes 2>/dev/null)"}#refs/remotes/})
-refs=($local_branches ${refs:#*/HEAD})
 
 case $service in
   switch-branch)
     _arguments '1:branch:{compadd -- ${(u)local_branches} $origin_branches}'
-    ;;
-  squash-branch)
-    _arguments '1:branch:{compadd -a refs}'
     ;;
   rebase)
     _arguments \

@@ -7,9 +7,7 @@ if [ -z "$ENV" ]; then
   . "${HOME}/.profile"
 fi
 
-# I'm putting this near the top because sometimes other stuff in this script
-# breaks while I'm testing it and then restart_shell isn't loaded and I have to
-# remember what this actually does.
+# Defined first, so it still works when something below it breaks.
 alias resh="restart_shell"
 restart_shell() {
   # shellcheck disable=SC2312
@@ -30,12 +28,6 @@ restart_shell() {
     fi
   fi
   set -- "${1#-}" -li
-
-  # https://github.com/zsh-users/zsh/blob/8e1c6ed6bf416e7716b4c6d5c6822ec752db7b36/Completion/compinit#L133
-  if [ -f "${ZDOTDIR:-$HOME}/.zcompdump" ]; then
-    echo_run rm "${ZDOTDIR:-$HOME}/.zcompdump"
-  fi
-
   echo_run exec "$@"
 }
 
@@ -66,12 +58,7 @@ if [ -d "$HOMEBREW_PREFIX" ] && [ ! -w "$HOMEBREW_PREFIX" ] && command -v sudo >
 fi
 
 alias ls='ls --color=auto'
-alias ll='ls -l'
 alias la='ls -la'
-
-if ! command -v sudoedit >/dev/null; then
-  alias sudoedit='sudo --edit'
-fi
 
 alias gs='git status'
 alias gb='switch-branch'

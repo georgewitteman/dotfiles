@@ -1,36 +1,32 @@
 # vim: ft=gitconfig
 [user]
-	# NOTE: user.email is not configured to force configuration
-	# of each repository.
 	name = {{ .name | quote }}
-	# Instruct Git to avoid trying to guess defaults for
-	# user.email and user.name, and instead retrieve the values
-	# only from the configuration.
+	# There's no user.email here, so each repository sets its own. This makes
+	# git refuse to commit without one, instead of guessing it from the
+	# username and hostname.
 	useConfigOnly = true
 [init]
 	defaultBranch = main
 [pull]
+	# Fail instead of making a merge commit when the branch has diverged
 	ff = "only"
 # https://blog.gitbutler.com/how-git-core-devs-configure-git/
 [diff]
-	# Better diffing algorithm
+	# Usually matches up changed lines more readably than the default algorithm
 	algorithm = histogram
-	# Shows moved text in a different color
+	# Color moved lines differently from added and removed ones
 	colorMoved = plain
-	# diff.mnemonicPrefix will replace the a/ and b/ in your diff
-	# header output with where the diff is coming from, so i/
-	# (index), w/ (working directory) or c/ commit
+	# Label the two sides by where they come from, like i/ (index), w/
+	# (working tree) and c/ (commit), instead of a/ and b/
 	mnemonicPrefix = true
-	# Detects if a file has been renamed
+	# Show renamed files as renames instead of a deletion and an addition
 	renames = true
 [merge]
-	# https://blog.nilbus.com/take-the-pain-out-of-git-conflict-resolution-use-diff3/
-	# https://stackoverflow.com/q/27417656
+	# Conflicts also show the common ancestor's version, between the two sides,
+	# which shows what each side changed
 	conflictStyle = diff3
-[alias]
-	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)%an%Creset' --abbrev-commit
 
-# NOTE: To resign use either (https://superuser.com/a/1123928)
+# To sign commits made without a signature, amend them with -S:
 # - git commit --amend --no-edit -n -S
 # - git rebase --exec 'git commit --amend --no-edit -n -S' -i main
 

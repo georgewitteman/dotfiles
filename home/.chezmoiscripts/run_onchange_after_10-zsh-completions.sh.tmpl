@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Runs again whenever a zsh completion file changes, so the next shell rebuilds
+# the dump. compinit rebuilds it on its own only when the number of completion
+# files changes, not when a file's #compdef line does.
+{{- range (glob (joinPath .chezmoi.sourceDir "private_dot_local/private_share/zsh/exact_functions/*")) }}
+# {{ base . }} {{ include . | sha256sum }}
+{{- end }}
+
+rm -f "${ZDOTDIR:-$HOME}/.zcompdump"

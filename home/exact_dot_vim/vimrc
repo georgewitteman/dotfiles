@@ -194,9 +194,7 @@ set laststatus=2
 
 " Set the contents of the status line
 set statusline=[%n]\ %<%.99f
-set statusline+=\ %{exists('*FugitiveStatusline')?FugitiveStatusline():''}
-set statusline+=%y%h%w%m%r
-set statusline+=%{exists('*CapsLockStatusline')?CapsLockStatusline():''}
+set statusline+=\ %y%h%w%m%r
 set statusline+=%=\ %(%l,%c%V%)\ %P
 
 " Quickly echo the full file path

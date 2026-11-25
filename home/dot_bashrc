@@ -7,43 +7,6 @@ case $- in *i*) ;; *) return ;; esac
 # shellcheck source=.shinit
 source "${HOME}/.shinit"
 
-# https://docs.brew.sh/Shell-Completion
-# Some of these need bash 4 or later, and macOS comes with bash 3.2.
-# Without Homebrew, HOMEBREW_PREFIX is empty, so this loads the system's
-# bash-completion from /etc instead.
-if ((BASH_VERSINFO[0] >= 4)); then
-  if [[ -r "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh" ]]; then
-    # shellcheck source=/dev/null
-    source "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
-  elif [[ -d "${HOMEBREW_PREFIX}/etc/bash_completion.d" ]]; then
-    for COMPLETION in "${HOMEBREW_PREFIX}/etc/bash_completion.d/"*; do
-      if [[ -r ${COMPLETION} ]]; then
-        # shellcheck source=/dev/null
-        source "${COMPLETION}"
-      fi
-    done
-    unset COMPLETION
-  fi
-fi
-
-# Homebrew's completions above include gh's when gh is installed with Homebrew.
-if ! complete -p gh &>/dev/null && command -v gh &>/dev/null; then
-  eval "$(gh completion --shell bash || true)"
-fi
-
-# https://github.com/posener/complete/blob/v1/cmd/install/bash.go
-# https://github.com/posener/complete/blob/9a4745ac49b29530e07dc2581745a218b646b7a3/cmd/install/install.go#L86-L89
-if command -v "terraform" &>/dev/null; then
-  # shellcheck disable=SC2312
-  complete -C "$(command -v terraform)" terraform
-fi
-
-# https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-completion.html
-if command -v "aws_completer" &>/dev/null; then
-  # shellcheck disable=SC2312
-  complete -C "$(command -v aws_completer)" aws
-fi
-
 # Prompt. It only uses bash's built-in prompt escapes, so drawing it costs
 # nothing. See PROMPTING in `man bash`.
 #
