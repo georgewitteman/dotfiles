@@ -1,7 +1,5 @@
 #!/bin/sh
 
-set -o errexit
-
 # Codespaces clone over HTTPS with their own credentials.
 if [ -z "${CODESPACES-}" ]; then
   url="$(git -C {{ .chezmoi.sourceDir | quote }} remote get-url origin 2>/dev/null || true)"
