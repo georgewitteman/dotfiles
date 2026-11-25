@@ -110,6 +110,17 @@ bindkey '^N' down-line-or-beginning-search
 bindkey "^[[A" up-line-or-beginning-search
 bindkey "^[[B" down-line-or-beginning-search
 
+# Keypad mode (smkx, which Debian's /etc/zsh/zshrc turns on) sends
+# ^[OA/^[OB for the arrows instead of ^[[A/^[[B.
+bindkey '^[OA' up-line-or-beginning-search
+bindkey '^[OB' down-line-or-beginning-search
+
+# Home, End and Delete. Terminals send different sequences for each.
+for key in '^[[H' '^[OH' '^[[1~'; do bindkey "$key" beginning-of-line; done
+for key in '^[[F' '^[OF' '^[[4~'; do bindkey "$key" end-of-line; done
+bindkey '^[[3~' delete-char
+unset key
+
 # Space expands an alias before inserting the space.
 zle_expand_alias() {
   zle _expand_alias
