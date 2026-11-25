@@ -3,7 +3,9 @@
 # Stop at the first command that fails.
 set -o errexit
 
-USAGE="usage: $(basename "$0") [<options>] [--] [<message>]
+usage() {
+  cat <<EOF
+usage: $(basename "$0") [<options>] [--] [<message>]
 
 Commits the staged changes, with <message> as the commit message (quote it if
 it has spaces), or opens an editor without one. With nothing staged, it skips
@@ -14,7 +16,9 @@ the commit, unless amending. Use -- before a message that starts with -.
     -f, --force           with --push, push with --force-with-lease, which
                           --amend also does
     -n, --no-verify       bypass pre-commit and commit-msg hooks
-    --amend               amend previous commit, with the message if one is given"
+    --amend               amend previous commit, with the message if one is given
+EOF
+}
 
 # The flags hold true or false, which are commands that succeed or fail, so
 # if $push runs one of them as the test.
@@ -43,7 +47,7 @@ while [ "$#" -gt 0 ]; do
   esac
   case "$1" in
     -h | --help)
-      echo "$USAGE"
+      usage
       exit
       ;;
     -a | --add)
