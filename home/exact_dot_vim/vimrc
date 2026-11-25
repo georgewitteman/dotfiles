@@ -7,11 +7,9 @@ scriptencoding utf-8
 packadd chezmoi.vim
 
 " Vim's recommended defaults, like syntax highlighting and filetype detection
-" (`:help defaults.vim`). Older Vims don't have it.
-if filereadable($VIMRUNTIME . '/defaults.vim')
-  unlet! skip_defaults_vim
-  source $VIMRUNTIME/defaults.vim
-endif
+" (`:help defaults.vim`).
+unlet! skip_defaults_vim
+source $VIMRUNTIME/defaults.vim
 
 " Optional packages that ship with newer versions of Vim:
 " - comment: `gc` to toggle comments

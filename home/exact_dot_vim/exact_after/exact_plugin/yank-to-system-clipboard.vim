@@ -11,11 +11,6 @@ function! s:CopyReg(reg) abort
 endfunction
 command! -nargs=1 CopyReg call s:CopyReg(<q-args>)
 
-" Older Vims have no TextYankPost, so yanks don't reach the clipboard there.
-if !exists('##TextYankPost')
-  finish
-endif
-
 " Copy plain yanks, not deletes or yanks into a named register like "a
 augroup YankCmds
   autocmd!
