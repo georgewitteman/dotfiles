@@ -24,7 +24,7 @@ else
   # Download the installer before running it, so a failed download stops here
   # instead of running an empty script.
   if command -v curl >/dev/null; then
-    installer="$(curl --fail --silent --tlsv1.2 --show-error --location "https://get.chezmoi.io")"
+    installer="$(curl --fail --silent --show-error --location "https://get.chezmoi.io")"
   elif command -v wget >/dev/null; then
     installer="$(wget --quiet --output-document=- "https://get.chezmoi.io")"
   else
