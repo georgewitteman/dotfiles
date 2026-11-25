@@ -98,7 +98,7 @@ if $abort; then
 fi
 
 if $continue_; then
-  if ! git rev-parse -q --verify MERGE_HEAD >/dev/null 2>&1; then
+  if ! git rev-parse -q --verify MERGE_HEAD >/dev/null; then
     echo "error: not in an active merge" >&2
     exit 1
   fi
