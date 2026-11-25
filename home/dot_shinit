@@ -46,11 +46,12 @@ tmp() {
 }
 
 # dotfiles cd has to change this shell's directory, so it's handled here.
+# With anything after cd, like -h, the script handles it instead.
 # chezmoi git -- runs git with the rest of the arguments in chezmoi's source
 # repo, and rev-parse --show-toplevel prints that repo's top directory.
 # command runs the dotfiles script instead of this function.
 dotfiles() {
-  if [ "$1" = cd ]; then
+  if [ "$1" = cd ] && [ "$#" -eq 1 ]; then
     echo_run cd "$(chezmoi git -- rev-parse --show-toplevel || true)"
   else
     command dotfiles "$@"
