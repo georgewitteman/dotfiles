@@ -1,5 +1,6 @@
 # Vim swap files, which vim keeps next to the file being edited. Without this,
-# applying deletes them from exact directories.
+# applying deletes them from exact directories. ** matches any directories,
+# and ? any one character, like .vimrc.swp or .vimrc.swo.
 **/.*.sw?
 **/.sw?
 
@@ -7,7 +8,8 @@
 .vim/.netrwhist
 
 # 1Password's app folder exists whenever 1Password is installed, even while
-# it isn't running. Without it, leave any existing ~/.ssh/config alone.
+# it isn't running. Without it, leave any existing ~/.ssh/config alone. stat
+# returns nothing when the path doesn't exist.
 {{ if not (stat (joinPath .chezmoi.homeDir "Library/Group Containers/2BUA8C4S2C.com.1password")) }}
 .ssh/config
 {{ end }}

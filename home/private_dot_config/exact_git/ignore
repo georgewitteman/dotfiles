@@ -1,4 +1,4 @@
-# vim swapfiles
+# vim swapfiles. ? matches any one character, like .vimrc.swp or .vimrc.swo.
 .*.sw?
 .sw?
 

@@ -1,5 +1,7 @@
 #compdef save
 
+# _arguments takes one spec per option: {-a,--add} is both spellings, and
+# [...] is the description.
 _save() {
   _arguments \
     {-a,--add}'[add all changes]' \

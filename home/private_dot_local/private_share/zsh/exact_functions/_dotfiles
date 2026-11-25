@@ -1,5 +1,8 @@
 #compdef dotfiles
 
+# $words holds the command line's words, and $CURRENT is the number of the one
+# being completed, where 1 is dotfiles itself. _describe offers the entries of
+# an array, each written as name:description, and -t names their group.
 _dotfiles() {
   if (( CURRENT == 2 )); then
     local -a commands=(
@@ -22,6 +25,12 @@ _dotfiles() {
     edit)
       # Offer the files chezmoi manages as ~ paths, so they work from any
       # directory. Other paths complete as plain files.
+      #
+      # chezmoi managed lists those files relative to ~, and ${(f)...} splits
+      # them into lines. compset -P '\~/' succeeds when the word starts with
+      # ~/, and moves that part out of the way so the rest is matched on its
+      # own. _multi_parts completes the paths a directory at a time, split at
+      # /, and -P '~/' puts ~/ in front of each. _files completes any file.
       local -a files
       files=(${(f)"$(chezmoi managed --include=files 2>/dev/null)"})
       if compset -P '\~/'; then

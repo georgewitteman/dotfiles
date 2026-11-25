@@ -3,7 +3,8 @@
 scriptencoding utf-8
 
 " Vim's recommended defaults, like syntax highlighting and filetype detection
-" (`:help defaults.vim`).
+" (`:help defaults.vim`). defaults.vim does nothing when skip_defaults_vim is
+" set, so unlet! removes it first (the ! skips the error when it isn't set).
 unlet! skip_defaults_vim
 source $VIMRUNTIME/defaults.vim
 
@@ -11,6 +12,8 @@ source $VIMRUNTIME/defaults.vim
 " - comment: `gc` to toggle comments
 " - nohlsearch: clear search highlighting when the cursor rests for a moment
 "   or Insert mode starts
+" packadd! loads a package, and silent! hides the error in older Vims that
+" don't have it.
 silent! packadd! comment
 silent! packadd! nohlsearch
 
@@ -66,7 +69,8 @@ set wildmode=longest:full,full
 " Enable mouse support for all modes
 set mouse=a
 
-" Reselect visual block after indent/outdent
+" Reselect visual block after indent/outdent. xnoremap maps a key in Visual
+" mode, and gv selects the last selection again.
 xnoremap < <gv
 xnoremap > >gv
 
@@ -80,7 +84,9 @@ set ttimeoutlen=50
 " Always show the status line, not only when the window is split
 set laststatus=2
 
-" Use ripgrep for :grep when it's installed
+" Use ripgrep for :grep when it's installed. rg --vimgrep prints each match as
+" file:line:column:text, which grepformat reads with %f, %l, %c and %m. The \
+" keeps the space in the option's value.
 if executable('rg')
   set grepprg=rg\ --vimgrep
   set grepformat=%f:%l:%c:%m
@@ -88,16 +94,24 @@ endif
 
 " - opens the current file's directory in netrw, with the cursor on the file.
 " In netrw, - goes up another level.
+"
+" expand('%:t') is the current file's name without its directory, and
+" :Explore opens netrw on that directory. nnoremap maps - in Normal mode,
+" <SID> calls this script's s: function, and <silent> keeps the command off
+" the command line.
 function! s:OpenDirectory() abort
   let file = expand('%:t')
   Explore
-  " netrw may mark executables with * and symlinks with @
+  " netrw may mark executables with * and symlinks with @. In the pattern, ^
+  " and \$ are the start and end of the line, \V matches the name literally,
+  " and \[*@]\= is an optional * or @.
   call search('^\V' . escape(file, '\') . '\[*@]\=\$')
 endfunction
 nnoremap <silent> - :call <SID>OpenDirectory()<CR>
 
 " Strip trailing whitespace and blank lines at the end of the file on save,
-" without asking, and without highlighting it while editing.
+" without asking, and without highlighting it while editing. These configure
+" the vim-better-whitespace plugin.
 let g:better_whitespace_enabled = 0
 let g:strip_whitespace_on_save = 1
 let g:strip_whitespace_confirm = 0

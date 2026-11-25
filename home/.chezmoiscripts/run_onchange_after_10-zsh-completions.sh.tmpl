@@ -3,6 +3,12 @@
 # Runs again whenever a zsh completion file changes, so the next shell rebuilds
 # the dump. compinit rebuilds it on its own only when the number of completion
 # files changes, not when a file's #compdef line does.
+#
+# chezmoi runs a run_onchange_ script again whenever its contents change, so
+# the template below writes a comment with each completion file's name and
+# hash. Its range block repeats for each file glob finds, and the - after the
+# opening braces drops the whitespace before them, so each comment gets one
+# line.
 {{- range (glob (joinPath .chezmoi.sourceDir "private_dot_local/private_share/zsh/exact_functions/*")) }}
 # {{ base . }} {{ include . | sha256sum }}
 {{- end }}
