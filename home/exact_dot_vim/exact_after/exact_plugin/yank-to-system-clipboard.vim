@@ -9,10 +9,9 @@ function! s:CopyReg(reg) abort
     call OSCYankRegister(a:reg)
   endif
 endfunction
-command! -nargs=1 CopyReg call s:CopyReg(<q-args>)
 
 " Copy plain yanks, not deletes or yanks into a named register like "a
 augroup YankCmds
   autocmd!
-  autocmd TextYankPost * if v:event.operator ==# 'y' && v:event.regname ==# '' | CopyReg " | endif
+  autocmd TextYankPost * if v:event.operator ==# 'y' && v:event.regname ==# '' | call <SID>CopyReg('"') | endif
 augroup END
