@@ -12,6 +12,8 @@ for arg; do
       print "runs. Defaults to whichever of zsh, bash, sh, dash, ksh, fish, tcsh and"
       print "csh are installed."
       print
+      print "Prints three columns:"
+      print
       print "  login      a login shell in a terminal, like a macOS terminal tab or an"
       print "             ssh session, until it runs its first command"
       print "  non-login  the same without login, like typing the shell's name in a shell"
@@ -52,13 +54,14 @@ done
 # Start the shells in the home directory, the way a terminal does.
 cd
 
-# How long the last run took, in whole microseconds.
+# How long the last run took, in whole microseconds, since (n) sorts only whole
+# numbers: it reads the digits after a decimal point as a separate number.
 integer elapsed
 
 # Reads the shell's output until the typed command's output appears. Fails if
 # that takes over $1 seconds, or the shell exits first.
 wait_for_marker() {
-  local deadline=$(( EPOCHREALTIME + $1 )) chunk
+  local deadline=$(( EPOCHREALTIME + $1 )) chunk output=""
   integer left
   until [[ $output == *BENCHMARK* ]]; do
     # zselect's timeout is in hundredths of a second.
@@ -83,7 +86,7 @@ wait_for_marker() {
 # HISTCONTROL=ignorespace keep out of the history file. Other shells get no
 # history file instead.
 in_terminal() {
-  local start=$EPOCHREALTIME fd output="" env="HISTCONTROL=ignorespace"
+  local start=$EPOCHREALTIME fd env="HISTCONTROL=ignorespace"
   if [[ ${1#-} != (zsh|bash|fish) ]]; then
     env+=" HISTFILE=/dev/null"
   fi
@@ -96,7 +99,7 @@ in_terminal() {
   zpty -w bench " echo BENCH''MARK"
   if ! wait_for_marker 10; then
     zpty -d bench
-    print -u2 "error: $2 didn't run a command within 10 seconds"
+    print -u2 "error: $2 exited or took over 10 seconds to run a command"
     return 1
   fi
   elapsed=$(( (EPOCHREALTIME - start) * 1e6 ))
@@ -104,7 +107,6 @@ in_terminal() {
   # Wait up to a second for it to exit, so it doesn't slow down the next run.
   # The marker won't appear again.
   zpty -w bench " exit"
-  output=""
   wait_for_marker 1
   zpty -d bench
 }
@@ -127,8 +129,6 @@ median() {
     fi
     durations+=$elapsed
   done
-  # (n) sorts numerically, but only whole numbers: it reads the digits after a
-  # decimal point as a separate number.
   durations=(${(n)durations})
   printf '%.1f' $(( durations[runs / 2 + 1] / 1000.0 ))
 }
