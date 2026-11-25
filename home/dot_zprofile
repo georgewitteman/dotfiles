@@ -1,0 +1,8 @@
+#!/usr/bin/env zsh
+
+# .profile is shared with bash and sh, so run it with sh's rules.
+emulate sh -c '. "${HOME}/.profile"'
+
+# Docker Desktop checks for its zsh completions with a login shell, which
+# doesn't read .zshrc. If they aren't there, it prompts to add its own block.
+FPATH="${HOME}/.docker/completions:${FPATH}"

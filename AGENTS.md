@@ -58,7 +58,7 @@ hard rules: break one when the value is clearly worth it, and say why.
   not at the end of a line, and leave a blank line between unrelated blocks.
 - **Shell style.** Use `[[ ]]` in bash and zsh, and `[ ]` in POSIX `sh`.
   shellcheck enforces this for bash and `sh`, but doesn't read zsh. Text that
-  another tool checks for word for word, like Docker Desktop's block, stays
+  another tool checks for word for word, like 1Password's SSH config, stays
   exactly as that tool writes it.
 - **Scripts share a house style.** Scripts in `~/.scripts` look and behave
   alike: `-h` and `--help` print a usage line, a description and the options
