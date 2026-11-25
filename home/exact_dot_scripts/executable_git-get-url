@@ -9,86 +9,38 @@ die() {
 
 usage() {
   cat <<EOF
-usage: $(basename "$0") [<options>] [<commit> | <file>]
+usage: $(basename "$0") [--with-commit <commit> | --branch <branch>]
 
-Prints the GitHub URL for the origin remote's repository, or for a commit or a
-file in it. A file links to its contents at HEAD, or at --with-commit's commit.
+Prints the GitHub URL for the origin remote's repository, one of its commits,
+or a comparison of a branch with the default branch.
 
-    -c, --commit            link to HEAD's commit
-    --with-commit <commit>  link to this commit, or the file at this commit
-    --pull-request          search pull requests for the commit
+    --with-commit <commit>  link to this commit
     --branch <branch>       compare this branch with the default branch
 EOF
 }
 
-pull_request=false
-commit=false
 commit_id=
 branch=
-path=
 
 while [ "$#" -gt 0 ]; do
-  case "$1" in
-    -[[:alnum:]][[:alnum:]]*)
-      _value="-${1##-?}"
-      _arg="${1%%"${1##-?}"}"
-      ;;
-  esac
-  if [ -n "${_arg-}${_value-}" ]; then
-    shift
-    set -- "$_arg" "$_value" "$@"
-  fi
-  unset _arg _value
   case "$1" in
     -h | --help)
       usage
       exit
       ;;
-    -c | --commit)
-      commit=true
-      ;;
-    --pull-request)
-      commit=true
-      pull_request=true
-      ;;
-    --branch)
+    --branch | --with-commit)
       if [ $# -lt 2 ]; then
         die 1 "${1} requires a value"
       fi
-      branch="$2"
-      shift
-      ;;
-    --with-commit)
-      if [ $# -lt 2 ]; then
-        die 1 "${1} requires a value"
+      if [ "$1" = --branch ]; then
+        branch="$2"
+      else
+        commit_id="$(git rev-parse --short "$2")"
       fi
-      commit=true
-      commit_id="$(git rev-parse --short "$2")"
       shift
-      ;;
-    --)
-      shift
-      break
       ;;
     -?*) die 1 "unknown option: ${1}" ;;
-    *)
-      if git rev-parse --short "$1" >/dev/null 2>&1; then
-        commit=true
-        commit_id="$(git rev-parse --short "$1")"
-      elif [ -f "$1" ]; then
-        # The path from the repository's root, from wherever it's given
-        path="$(git ls-files --full-name -- "$1")"
-        if [ -z "$path" ]; then
-          die 1 "not tracked by git: ${1}"
-        fi
-        commit=true
-        if [ -z "$commit_id" ]; then
-          commit_id="$(git rev-parse --short HEAD)"
-        fi
-      else
-        die 1 "not a commit or file: ${1}"
-      fi
-      ;;
+    *) die 1 "unexpected argument: ${1}" ;;
   esac
   shift
 done
@@ -97,11 +49,9 @@ done
 # so check for a repo first.
 git rev-parse --git-dir >/dev/null
 
-default_remote="origin"
-giturl="$(git ls-remote --get-url "$default_remote")"
-
+giturl="$(git ls-remote --get-url origin)"
 if [ -z "$giturl" ]; then
-  die 1 "Git remote is not set for ${default_remote}"
+  die 1 "origin isn't set"
 fi
 
 case "$giturl" in
@@ -116,34 +66,10 @@ case "$giturl" in
     ;;
 esac
 
-if $pull_request; then
-  case $project_url in
-    *github.com*) ;;
-    *)
-      die 1 "Can't generate pull request URLs for non-GitHub PRs"
-      ;;
-  esac
-fi
-
 if [ -n "$branch" ]; then
   echo "${project_url}/compare/${branch}"
-  exit
+elif [ -n "$commit_id" ]; then
+  echo "${project_url}/commit/${commit_id}"
+else
+  echo "$project_url"
 fi
-
-if $commit; then
-  if [ -z "$commit_id" ]; then
-    commit_id="$(git rev-parse --short HEAD)"
-  fi
-  if $pull_request; then
-    echo "${project_url}/pulls?q=${commit_id}"
-    exit
-  fi
-  if [ -z "$path" ]; then
-    echo "${project_url}/commit/${commit_id}"
-    exit
-  fi
-  echo "${project_url}/blob/${commit_id}/${path}"
-  exit
-fi
-
-echo "$project_url"

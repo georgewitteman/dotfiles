@@ -96,26 +96,19 @@ unset_secrets() {
   fi
 }
 
+# dotfiles cd has to change this shell's directory, so it's handled here.
 dotfiles() {
-  if [ $# -eq 0 ]; then
-    command dotfiles
-    return $?
+  if [ "${1-}" = cd ]; then
+    if command -v deactivate >/dev/null 2>&1; then
+      # When going from some directory where I have a venv activated to the
+      # dotfiles directory, I almost never want to actually stay in that
+      # virtual environment and have to run `deactivate` manually.
+      echo_run deactivate
+    fi
+    echo_run cd "$(chezmoi git -- rev-parse --show-toplevel || true)"
+  else
+    command dotfiles "$@"
   fi
-  case "$1" in
-    'cd')
-      shift
-      if command -v deactivate >/dev/null 2>&1; then
-        # When going from some directory where I have a venv activated to the
-        # dotfiles directory, I almost never want to actually stay in that
-        # virtual environment and have to run `deactivate` manually.
-        echo_run deactivate
-      fi
-      echo_run cd "$(chezmoi git -- rev-parse --show-toplevel || true)"
-      ;;
-    *)
-      command dotfiles "$@"
-      ;;
-  esac
 }
 
 if ! command -v tailscale >/dev/null 2>&1; then

@@ -11,13 +11,8 @@ if rmnm "${dir}/empty"; then
 fi
 
 rmnm "$dir"
-if [ -e "${dir}/node_modules" ] || [ ! -d "${dir}/pkg/node_modules" ]; then
-  fail "rmnm should remove only ${dir}/node_modules"
-fi
-
-rmnm -r "$dir"
-if [ -e "${dir}/pkg/node_modules" ]; then
-  fail "rmnm -r should remove ${dir}/pkg/node_modules"
+if [ -e "${dir}/node_modules" ] || [ -e "${dir}/pkg/node_modules" ]; then
+  fail "rmnm should remove ${dir}/node_modules and ${dir}/pkg/node_modules"
 fi
 
 # The trash is deleted in the background, so give it a few seconds.

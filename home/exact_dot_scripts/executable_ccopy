@@ -11,8 +11,13 @@ case "${1-}" in
     ;;
 esac
 
+if [ "$#" -gt 0 ]; then
+  echo "error: unexpected argument: ${1}" >&2
+  exit 1
+fi
+
 if command -v pbcopy >/dev/null 2>&1; then
-  exec pbcopy "$@"
+  exec pbcopy
 fi
 
 # OSC 52: ESC ] 52 ; c ; <base64> BEL. Write to the terminal itself, since

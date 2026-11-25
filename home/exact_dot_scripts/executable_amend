@@ -10,7 +10,7 @@ no_verify=false
 
 usage() {
   cat <<EOF
-usage: $(basename "$0") [<options>] [-- <git commit options>...]
+usage: $(basename "$0") [<options>]
 
 Amends the last commit, keeping its message.
 
@@ -50,10 +50,6 @@ while [ "$#" -gt 0 ]; do
       ;;
     -n | --no-verify)
       no_verify=true
-      ;;
-    --)
-      shift
-      break
       ;;
     *)
       echo "error: unknown option: ${1}" >&2

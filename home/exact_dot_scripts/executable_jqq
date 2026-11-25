@@ -6,25 +6,38 @@ set -o errexit
 # shellcheck disable=SC2016 # $raw is a jq variable
 filter='. as $raw | try fromjson catch $raw'
 
-case "${1-}" in
-  -h | --help)
-    cat <<EOF
-usage: <command> | $(basename "$0") [<jq options>...]
+color=
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    -h | --help)
+      cat <<EOF
+usage: <command> | $(basename "$0") [-C]
        $(basename "$0")
 
 Pretty-prints the lines of its input that are JSON, and passes the rest
-through unchanged. Colors only on a terminal. To keep colors in a pipe, add
-jq's -C, like: <command> | $(basename "$0") -C | less -R
+through unchanged. With nothing piped in, copies the jq command it runs to the
+clipboard.
 
-With nothing piped in, copies the jq command it runs to the clipboard.
+    -C   color even when not on a terminal, like: <command> | $(basename "$0") -C | less -R
 EOF
-    exit
-    ;;
-esac
+      exit
+      ;;
+    -C) color=-C ;;
+    -?*)
+      echo "error: unknown option: ${1}" >&2
+      exit 1
+      ;;
+    *)
+      echo "error: unexpected argument: ${1}" >&2
+      exit 1
+      ;;
+  esac
+  shift
+done
 
 if [ -t 0 ]; then
   printf "jq --unbuffered --raw-input --raw-output '%s'" "$filter" | ccopy
   echo "ok: copied jq command to clipboard"
 else
-  exec jq --unbuffered --raw-input --raw-output "$@" "$filter"
+  exec jq --unbuffered --raw-input --raw-output ${color:+"$color"} "$filter"
 fi

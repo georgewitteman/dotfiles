@@ -1,30 +1,36 @@
 #compdef dotfiles
 
 _dotfiles() {
-  # Offer the files chezmoi manages as ~ paths, so they work from any directory.
-  # Other paths complete as plain files.
-  if (( CURRENT > 2 )) && [[ ${words[2]} == edit && ${PREFIX} != -* ]]; then
-    local -a files
-    files=(${(f)"$(chezmoi managed --include=files 2>/dev/null)"})
-    if compset -P '\~/'; then
-      _multi_parts / files
-    elif [[ -z ${PREFIX} ]]; then
-      _multi_parts -P '~/' / files
-    else
-      _files
-    fi
+  if (( CURRENT == 2 )); then
+    local -a commands=(
+      'apply:show what would change, then ask before applying'
+      'update:pull the dotfiles repo, then apply the same way'
+      'edit:edit the source of these files'
+      'cd:go to the dotfiles repo'
+    )
+    _describe -t dotfiles-commands 'dotfiles command' commands
     return
   fi
 
-  # The wrapper's own command and options, alongside chezmoi's
-  if (( CURRENT == 2 )); then
-    local -a commands=('cd:go to the dotfiles repo')
-    _describe -t dotfiles-commands 'dotfiles command' commands
-  elif [[ ${words[2]} == (apply|update) && ${PREFIX} == -* ]]; then
-    local -a options=('-y:apply without asking' '--yes:apply without asking')
-    _describe -t dotfiles-options 'dotfiles option' options
-  fi
-
-  # dotfiles passes most commands to chezmoi
-  _chezmoi "$@"
+  case ${words[2]} in
+    apply | update)
+      if (( CURRENT == 3 )); then
+        local -a options=('-y:apply without asking' '--yes:apply without asking')
+        _describe -t dotfiles-options 'dotfiles option' options
+      fi
+      ;;
+    edit)
+      # Offer the files chezmoi manages as ~ paths, so they work from any
+      # directory. Other paths complete as plain files.
+      local -a files
+      files=(${(f)"$(chezmoi managed --include=files 2>/dev/null)"})
+      if compset -P '\~/'; then
+        _multi_parts / files
+      elif [[ -z ${PREFIX} ]]; then
+        _multi_parts -P '~/' / files
+      else
+        _files
+      fi
+      ;;
+  esac
 }

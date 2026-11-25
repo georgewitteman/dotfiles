@@ -2,45 +2,70 @@
 
 set -o errexit
 
-case "${1-}" in
-  -h | --help)
-    echo "usage: $(basename "$0") [<git show options>] [<object>...]"
-    echo
-    echo "Runs git show with a header listing the commit's tags, branches, GitHub"
-    echo "URL, compare URL, and pull requests."
-    exit
-    ;;
-esac
+quiet=false
+commit=
 
-commit_id="$(git show "$@" --quiet --format="%H")"
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    -h | --help)
+      echo "usage: $(basename "$0") [-q|--quiet] [<commit>]"
+      echo
+      echo "Runs git show on the commit (HEAD by default) with a header listing its tags,"
+      echo "branches, GitHub URL, compare URL, and pull requests."
+      echo
+      echo "    -q, --quiet   show only the header, without the diff"
+      exit
+      ;;
+    -q | --quiet) quiet=true ;;
+    -?*)
+      echo "error: unknown option: ${1}" >&2
+      exit 1
+      ;;
+    *)
+      if [ -n "$commit" ]; then
+        echo "error: unexpected argument: ${1}" >&2
+        exit 1
+      fi
+      commit="$1"
+      ;;
+  esac
+  shift
+done
+
+ref="${commit:-HEAD}"
+if ! commit_id="$(git rev-parse --verify --quiet "${ref}^{commit}")"; then
+  echo "error: not a commit: ${ref}" >&2
+  exit 1
+fi
 
 # Ref names can't contain spaces or glob characters, so splitting on
 # whitespace is safe here.
 tags=
 heads=
-for ref in $(git for-each-ref --points-at "$commit_id" --format='%(refname)' refs/tags refs/heads refs/remotes); do
-  case "$ref" in
-    refs/tags/*) tags="${tags:+$tags, }${ref#refs/tags/}" ;;
-    refs/heads/*) heads="${heads:+$heads, }${ref#refs/heads/}" ;;
-    refs/remotes/*) heads="${heads:+$heads, }${ref#refs/remotes/}" ;;
+for ref_name in $(git for-each-ref --points-at "$commit_id" --format='%(refname)' refs/tags refs/heads refs/remotes); do
+  case "$ref_name" in
+    refs/tags/*) tags="${tags:+$tags, }${ref_name#refs/tags/}" ;;
+    refs/heads/*) heads="${heads:+$heads, }${ref_name#refs/heads/}" ;;
+    refs/remotes/*) heads="${heads:+$heads, }${ref_name#refs/remotes/}" ;;
   esac
 done
+
+set --
+if $quiet; then
+  set -- --quiet
+fi
+if [ -n "$commit" ]; then
+  set -- "$@" "$commit"
+fi
 
 header="======== git show --format=\"…\" $* ========"
 footer="$(printf '%s' "$header" | sed 's/./=/g')"
 
 git_url="$(git-get-url --with-commit "$commit_id" 2>/dev/null || true)"
 
-# The compare URL and PRs are for the branch being shown: the current branch
-# when no revision is given, or the local or origin branch when it's the only
-# revision.
-revs="$(git rev-parse --revs-only "$@" 2>/dev/null || true)"
-shown_ref=
-if [ -z "$revs" ]; then
-  shown_ref="$(git rev-parse --symbolic-full-name HEAD 2>/dev/null || true)"
-elif [ "$(echo "$revs" | wc -l || true)" -eq 1 ]; then
-  shown_ref="$(git rev-parse --revs-only --symbolic-full-name "$@" 2>/dev/null || true)"
-fi
+# The compare URL and PRs are for the branch being shown: the current branch,
+# or the local or origin branch that was given.
+shown_ref="$(git rev-parse --symbolic-full-name "$ref" 2>/dev/null || true)"
 branch=
 case "$shown_ref" in
   refs/heads/*) branch="${shown_ref#refs/heads/}" ;;

@@ -11,8 +11,13 @@ case "${1-}" in
     ;;
 esac
 
+if [ "$#" -gt 0 ]; then
+  echo "error: unexpected argument: ${1}" >&2
+  exit 1
+fi
+
 if command -v pbpaste >/dev/null 2>&1; then
-  exec pbpaste "$@"
+  exec pbpaste
 fi
 
 esc="$(printf '\033')"
