@@ -36,6 +36,8 @@ parse_apply_args() {
       confirm=echo-run
       shift
       ;;
+    # -?* matches an option: a - and at least one more character.
+    -?*) die "unknown option: ${1}" ;;
   esac
   if [ "$#" -gt 0 ]; then
     die "unexpected argument: ${1}"
@@ -97,6 +99,7 @@ case "$command" in
         usage
         exit
         ;;
+      -?*) die "unknown option: ${1}" ;;
     esac
     if [ "$#" -gt 0 ]; then
       die "unexpected argument: ${1}"

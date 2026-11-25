@@ -9,6 +9,11 @@ case "$1" in
     echo "Code's terminal supports, including in codespaces."
     exit
     ;;
+  # -?* matches an option: a - and at least one more character.
+  -?*)
+    echo "error: unknown option: ${1}" >&2
+    exit 1
+    ;;
 esac
 
 if [ "$#" -gt 0 ]; then

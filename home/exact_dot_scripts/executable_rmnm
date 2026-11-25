@@ -23,7 +23,7 @@ while [ "$#" -gt 0 ]; do
       ;;
     *)
       if [ -n "$dir" ]; then
-        echo "error: only one directory allowed, got: ${dir} and ${1}" >&2
+        echo "error: unexpected argument: ${1}" >&2
         exit 1
       fi
       dir="$1"
