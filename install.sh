@@ -1,8 +1,5 @@
 #!/bin/sh
 
-# Based on chezmoi's own install script:
-# https://github.com/chezmoi/dotfiles/blob/master/install.sh
-
 # Stop at the first command that fails, or that uses a variable that isn't
 # set.
 set -o errexit

@@ -1,16 +1,17 @@
-# https://stackoverflow.com/a/49685360:
-# 1. Fetch public keys: ssh-keyscan <host> > public-keys
-# 2. Generate fingerprints: ssh-keygen -lf public-keys
-# 3. Compare with published fingerprints:
-#    https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/githubs-ssh-key-fingerprints
-#    https://docs.gitlab.com/user/gitlab_com/#ssh-host-keys-fingerprints
-#    https://support.atlassian.com/bitbucket-cloud/docs/configure-ssh-and-two-step-verification/
+# Each host's key, so the first connection doesn't have to trust whatever key
+# the host sends. The comment above each key is its fingerprint. To check one,
+# print the host's current fingerprint with `ssh-keyscan <host> > keys` and
+# `ssh-keygen -lf keys`, and compare it with the one the host publishes, linked
+# above it.
 
+# https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/githubs-ssh-key-fingerprints
 # 256 SHA256:+DiY3wvvV6TuJJhbpZisF/zLDA0zPMSvHdkr4UvCOqU github.com (ED25519)
 github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl
 
+# https://docs.gitlab.com/user/gitlab_com/#ssh-host-keys-fingerprints
 # 256 SHA256:eUXGGm1YGsMAS7vkcx6JOJdOGHPem5gQp4taiCfCLB8 gitlab.com (ED25519)
 gitlab.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAfuCHKVTjquxvt6CM6tdG4SLp1Btn/nOeHHE5UOzRdf
 
+# https://support.atlassian.com/bitbucket-cloud/docs/configure-ssh-and-two-step-verification/
 # 256 SHA256:ybgmFkzwOSotHTHLJgHO0QN8L0xErw6vd0VhFA9m3SM bitbucket.org (ED25519)
 bitbucket.org ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIazEu89wgQZ4bqs3d63QSMzYVa0MuJ2e2gKTKqu+UUO
