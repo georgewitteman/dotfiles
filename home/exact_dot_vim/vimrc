@@ -13,7 +13,8 @@ source $VIMRUNTIME/defaults.vim
 
 " Optional packages that ship with newer versions of Vim:
 " - comment: `gc` to toggle comments
-" - nohlsearch: clear search highlighting after moving the cursor
+" - nohlsearch: clear search highlighting when the cursor rests for a moment
+"   or Insert mode starts
 silent! packadd! comment
 silent! packadd! nohlsearch
 
@@ -44,9 +45,6 @@ if &diff
 endif
 
 " When there is a previous search pattern, highlight all its matches.
-"
-" When you get bored of looking at the highlighted matches, you can turn it off
-" with :nohlsearch
 set hlsearch
 
 " Every wrapped line will continue visually indented (same amount of space as
