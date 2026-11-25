@@ -1,4 +1,4 @@
-#compdef switch-branch branch rebase git-show
+#compdef switch-branch branch git-show
 
 if [[ $service == git-show ]]; then
   if [[ $PREFIX == -* ]]; then
@@ -10,7 +10,7 @@ if [[ $service == git-show ]]; then
   return
 fi
 
-# switch-branch, branch's base branch and rebase take origin's branches
+# switch-branch and branch's base branch take origin's branches
 # without the origin/ prefix.
 local -a local_branches origin_branches
 local_branches=(${(f)"$(git for-each-ref --format='%(refname:short)' refs/heads 2>/dev/null)"})
@@ -20,13 +20,6 @@ origin_branches=(${origin_branches:#HEAD})
 case $service in
   switch-branch)
     _arguments '1:branch:{compadd -- $local_branches $origin_branches}'
-    ;;
-  rebase)
-    _arguments \
-      '(--continue --abort)'{-i,--interactive}'[rebase interactively]' \
-      '(- 1)--continue[continue the rebase in progress]' \
-      '(- 1)--abort[abort the rebase in progress]' \
-      '1:base branch:{compadd -- $local_branches $origin_branches}'
     ;;
   branch)
     _arguments \
