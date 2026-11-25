@@ -7,7 +7,8 @@ case "${1-}" in
     print "usage: ${0:t} [shell ...]"
     print
     print "Times how long each shell takes to start, and prints the median of $runs"
-    print "runs. Defaults to whichever of zsh, bash and sh are installed."
+    print "runs. Defaults to whichever of zsh, bash, sh, dash, ksh, fish, tcsh and"
+    print "csh are installed."
     print
     print "  login      a terminal window or tab: a login shell in a terminal, until it"
     print "             runs its first command"
@@ -23,7 +24,7 @@ esac
 
 zmodload zsh/datetime zsh/mathfunc zsh/zpty zsh/zselect
 if (( ! $# )); then
-  for shell in zsh bash sh; do
+  for shell in zsh bash sh dash ksh fish tcsh csh; do
     command -v "$shell" >/dev/null && set -- "$@" "$shell"
   done
 fi
