@@ -78,10 +78,8 @@ set number
 " and the 'number' option are on, the current line has the real number
 set relativenumber
 
-" Show trailing whitespaces
+" Show tabs as »· and trailing spaces as ·
 set list
-
-" Trailing whitespace characters and tab characters
 set listchars=tab:»·,trail:·
 
 " Better command line autocompletion menu
