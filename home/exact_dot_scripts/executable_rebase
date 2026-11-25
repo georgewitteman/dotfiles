@@ -26,7 +26,7 @@ remind_force_push() {
   done
   upstream="$(git rev-parse --abbrev-ref --symbolic-full-name '@{upstream}' 2>/dev/null)" || return 0
   if ! git merge-base --is-ancestor "$upstream" HEAD; then
-    echo "This branch has diverged from ${upstream}. Push with: push -f"
+    echo "This branch has diverged from ${upstream}. Push with: git push --force-with-lease"
   fi
 }
 

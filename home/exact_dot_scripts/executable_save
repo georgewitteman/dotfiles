@@ -134,8 +134,7 @@ fi
 if $push; then
   set --
   if $force; then
-    set -- "$@" --force
+    set -- --force-with-lease
   fi
-
-  push "$@"
+  echo-run git push "$@"
 fi

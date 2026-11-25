@@ -74,5 +74,5 @@ fi
 echo-run git commit --amend "$@"
 
 if $push; then
-  push --force
+  echo-run git push --force-with-lease
 fi

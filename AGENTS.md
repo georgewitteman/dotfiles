@@ -61,7 +61,7 @@ hard rules: break one when the value is clearly worth it, and say why.
   `warning:`. Commands that change something run through `echo-run`, or
   `safe-run` to ask first. Otherwise, keep each script independent, so it can
   be copied on its own. Call another script only when it does real work, like
-  `push` or `ccopy`, not for something a few lines would do.
+  `git-show` or `ccopy`, not for something a few lines would do.
 - **Keep completions in sync with scripts.** When a script in `~/.scripts`
   gains, loses, or changes an option or argument, update its zsh completion in
   `~/.local/share/zsh/functions`, or its `compdef` line in `.zshrc`, in the
