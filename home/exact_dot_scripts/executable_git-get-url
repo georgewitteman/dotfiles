@@ -61,7 +61,7 @@ git rev-parse --git-dir >/dev/null
 giturl="$(git ls-remote --get-url origin)"
 
 # Turn the remote into the repository's web page, dropping any user name or
-# token, like https://user:token@host/owner/repo.git or git@host:owner/repo.git
+# token, like https://user:token@host/owner/repo.git or git@host:owner/repo.git.
 #
 # Each sed -e 's~old~new~' replaces old with new, using ~ to separate the parts
 # since URLs are full of /. [^/@]* matches up to the next / or @, and a number
