@@ -52,11 +52,6 @@ alias gb='switch-branch'
 
 alias tf="terraform"
 
-take() {
-  # shellcheck disable=SC2164
-  mkdir -p "$1" && cd "$1"
-}
-
 tmp() {
   # shellcheck disable=SC2312
   set -- "${TMPDIR:-$(mktemp -d)}"
