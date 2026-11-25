@@ -47,7 +47,7 @@ if [ -d "$HOMEBREW_PREFIX" ] && [ ! -w "$HOMEBREW_PREFIX" ] && command -v sudo >
 fi
 
 alias ls='ls --color=auto'
-alias la='ls -la'
+alias la='ls -lah'
 
 alias gs='git status'
 alias pull='git pull'
