@@ -29,7 +29,7 @@ alias la='ls -lah'
 
 # In VS Code's terminal, edit in VS Code. --wait, so the command that opened
 # the editor waits for the file to be closed.
-if [ "${TERM_PROGRAM-}" = vscode ] && command -v code >/dev/null; then
+if [ "$TERM_PROGRAM" = vscode ] && command -v code >/dev/null; then
   export EDITOR="code --wait"
 fi
 
@@ -59,7 +59,7 @@ tmp() {
 # repo, and rev-parse --show-toplevel prints that repo's top directory.
 # command runs the dotfiles script instead of this function.
 dotfiles() {
-  if [ "${1-}" = cd ]; then
+  if [ "$1" = cd ]; then
     echo_run cd "$(chezmoi git -- rev-parse --show-toplevel || true)"
   else
     command dotfiles "$@"

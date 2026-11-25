@@ -27,7 +27,7 @@ die() {
 # Sets confirm from apply's and update's arguments, before anything runs
 parse_apply_args() {
   confirm=safe-run
-  case "${1-}" in
+  case "$1" in
     -h | --help)
       usage
       exit
@@ -92,7 +92,7 @@ case "$command" in
     echo-run chezmoi edit "$@"
     ;;
   cd)
-    case "${1-}" in
+    case "$1" in
       -h | --help)
         usage
         exit

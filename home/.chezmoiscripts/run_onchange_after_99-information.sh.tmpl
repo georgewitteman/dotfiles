@@ -3,7 +3,7 @@
 # Codespaces clone over HTTPS with their own credentials. git -C runs git in
 # the given directory, here the dotfiles repo (| quote wraps its path in quotes
 # for the shell), and remote get-url prints origin's URL.
-if [ -z "${CODESPACES-}" ]; then
+if [ -z "$CODESPACES" ]; then
   url="$(git -C {{ .chezmoi.sourceDir | quote }} remote get-url origin 2>/dev/null || true)"
   case "$url" in
     git@github.com:* | ssh://git@github.com/*) ;;

@@ -6,7 +6,7 @@ usage() {
   echo "Prints the command and asks before running it, then runs it with echo-run."
 }
 
-case "${1-}" in
+case "$1" in
   -h | --help)
     usage
     exit
