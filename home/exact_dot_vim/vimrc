@@ -38,12 +38,6 @@ set ignorecase
 " characters
 set smartcase
 
-" When opening diffs with `git difftool` git passes the -R flag, making the
-" files readonly. This makes them always open as writable
-if &diff
-  set noreadonly
-endif
-
 " When there is a previous search pattern, highlight all its matches.
 set hlsearch
 
