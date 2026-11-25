@@ -16,6 +16,8 @@ if [ -e "${dir}/node_modules" ] || [ -e "${dir}/pkg/node_modules" ]; then
 fi
 
 # The trash is deleted in the background, so give it a few seconds.
+# set -- puts the trash directories matching .rmnm.* in $1 onward. When none
+# match, the pattern stays as it is, so $1 doesn't exist.
 for _ in 1 2 3 4 5 6 7 8 9 10; do
   set -- "$dir"/.rmnm.*
   if [ ! -e "$1" ]; then

@@ -1,7 +1,10 @@
 #!/bin/sh
 
+# Stop at the first command that fails.
 set -o errexit
 
+# check takes no arguments. -?* matches an option: a - and at least one more
+# character.
 case "${1:-}" in
   "") ;;
   -h | --help)
@@ -21,15 +24,20 @@ case "${1:-}" in
     ;;
 esac
 
+# Go to the repo, the directory this script is in. dirname drops the file
+# name from $0, the path it was run as, and -- stops a path that starts with
+# - from being read as an option.
 cd -- "$(dirname -- "$0")"
 repo_dir="$(pwd)"
+# sh -eux runs each test so it stops at the first failure (-e) or unset
+# variable (-u), and prints each command as it runs (-x).
 for test_file in tests/test_*; do
   echo "RUNNING: ${test_file}"
   sh -eux "$test_file"
 done
 
 # The scripts that start with a bash or sh shebang, and the startup files for
-# bash and sh.
+# bash and sh. head -1 prints a file's first line, its shebang.
 scripts() {
   for file in .scripts/*; do
     case "$(head -1 "$file")" in
@@ -43,13 +51,18 @@ files="$(scripts)
 .profile
 .bashrc
 .bash_profile"
+# xargs runs the linter with each line of $files as an argument. The
+# (cd ... && ...) runs in a subshell, so the cd doesn't last past it.
 if command -v shellcheck >/dev/null; then
   echo "RUNNING: shellcheck"
   # The installed files are outside this repo, so shellcheck doesn't find its
-  # config on its own.
+  # config on its own. -x follows files they source.
   echo "$files" | xargs shellcheck -x --rcfile="${repo_dir}/.shellcheckrc"
   (cd "$repo_dir" && shellcheck -x install.sh check tests/*.sh)
 fi
+# shfmt checks the formatting: two-space indents, with case branches indented
+# (--case-indent), and simpler syntax where it means the same (--simplify).
+# --diff prints what it would change instead of changing it.
 if command -v shfmt >/dev/null; then
   echo "RUNNING: shfmt"
   echo "$files" | xargs shfmt --indent 2 --case-indent --diff --simplify

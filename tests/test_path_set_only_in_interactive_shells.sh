@@ -3,8 +3,9 @@
 
 . "tests/setup.sh"
 
-# stdin from /dev/null: bash reads ~/.bashrc even when it isn't interactive if
-# its stdin is a network socket (it assumes sshd started it).
+# env -i starts the shell with an empty environment, apart from the variables
+# listed. stdin from /dev/null: bash reads ~/.bashrc even when it isn't
+# interactive if its stdin is a network socket (it assumes sshd started it).
 run() {
   env -i PATH="/usr/bin:/bin" HOME="$HOME" "$@" </dev/null
 }

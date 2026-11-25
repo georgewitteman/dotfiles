@@ -2,6 +2,9 @@
 
 runs=11
 
+# for arg; do goes through the arguments. -?* matches an option: a - and at
+# least one more character. ${0:t} is the script's name without its directory,
+# and print -u2 prints to stderr.
 shells=()
 for arg; do
   case "$arg" in
@@ -29,10 +32,14 @@ for arg; do
   esac
 done
 
+# zmodload loads zsh's optional modules: datetime for the clock
+# ($EPOCHREALTIME, the time in seconds with microseconds), zpty to run a
+# shell in a terminal of its own, and zselect to wait for its output.
 if ! zmodload zsh/datetime zsh/zpty zsh/zselect; then
   exit 1
 fi
 
+# $#shells is how many shells were given.
 if (( ! $#shells )); then
   for shell in zsh bash sh dash ksh fish tcsh csh; do
     if command -v "$shell" >/dev/null; then
@@ -41,7 +48,9 @@ if (( ! $#shells )); then
   done
 fi
 
-# Find each shell before the cd below, so relative paths still work.
+# Find each shell before the cd below, so relative paths still work. whence -p
+# finds a program in PATH, skipping builtins and functions like false, and
+# ${cmd:a} makes the path absolute.
 cmds=()
 for shell in $shells; do
   if ! cmd="$(whence -p -- "$shell")"; then
@@ -56,6 +65,7 @@ cd
 
 # How long the last run took, in whole microseconds, since (n) sorts only whole
 # numbers: it reads the digits after a decimal point as a separate number.
+# integer makes a variable that drops any fraction it's given.
 integer elapsed
 
 # Reads the shell's output until the typed command's output appears. Fails if
@@ -64,12 +74,14 @@ wait_for_marker() {
   local deadline=$(( EPOCHREALTIME + $1 )) chunk output=""
   integer left
   until [[ $output == *BENCHMARK* ]]; do
-    # zselect's timeout is in hundredths of a second.
+    # zselect -r waits until the terminal has output to read, and fails after
+    # its timeout (-t), which is in hundredths of a second.
     (( left = (deadline - EPOCHREALTIME) * 100 ))
     if (( left <= 0 )) || ! zselect -t $left -r $fd; then
       return 1
     fi
-    # 2 means the shell exited.
+    # zpty -r -t reads what output there is without waiting, and returns 2
+    # when the shell has exited.
     zpty -r -t bench chunk
     if (( $? == 2 )); then
       return 1
@@ -84,7 +96,13 @@ wait_for_marker() {
 #
 # The typed lines start with a space, which zsh, fish, and bash with
 # HISTCONTROL=ignorespace keep out of the history file. Other shells get no
-# history file instead.
+# history file instead. ${1#-} is the name without its -.
+#
+# zpty bench starts the command in a new terminal named bench, and puts the
+# file descriptor to read its output from in REPLY. ${(q)...} quotes a value
+# for that command line, and exec -a sets the argv[0] the shell sees.
+# zpty -w types a line into the terminal, and zpty -d closes it, which ends
+# the shell.
 in_terminal() {
   local start=$EPOCHREALTIME fd env="HISTCONTROL=ignorespace"
   if [[ ${1#-} != (zsh|bash|fish) ]]; then
@@ -121,6 +139,9 @@ with_command() {
 }
 
 # Prints the median time of $runs runs of the command in $@, in milliseconds.
+# repeat runs the loop that many times. ${(n)...} sorts the times as numbers,
+# and the middle one is at runs / 2 + 1, since zsh counts array entries from
+# 1.
 median() {
   local -a durations
   repeat $runs; do
@@ -133,6 +154,9 @@ median() {
   printf '%.1f' $(( durations[runs / 2 + 1] / 1000.0 ))
 }
 
+# In printf, %-10s pads a value to 10 characters, lined up on the left, and %9s
+# to 9, lined up on the right. ${shells:^cmds} takes the two arrays an entry
+# at a time from each, so the loop gets each shell's name and path together.
 printf '%-10s %9s %9s %9s\n' shell login non-login -c
 for shell cmd in ${shells:^cmds}; do
   if ! login="$(median in_terminal "-${shell:t}" "$cmd")" ||

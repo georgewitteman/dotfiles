@@ -3,11 +3,15 @@
 # Based on chezmoi's own install script:
 # https://github.com/chezmoi/dotfiles/blob/master/install.sh
 
+# Stop at the first command that fails, or that uses a variable that isn't
+# set.
 set -o errexit
 set -o nounset
 
 TAGARG=latest
 
+# getopts reads the short options one at a time. "t:" means -t is the only
+# one, and takes a value, which getopts puts in OPTARG.
 while getopts "t:" arg; do
   case "${arg}" in
     t) TAGARG="${OPTARG}" ;;
@@ -22,7 +26,10 @@ else
   chezmoi="${bin_dir}/chezmoi"
 
   # Download the installer before running it, so a failed download stops here
-  # instead of running an empty script.
+  # instead of running an empty script. curl --fail fails on an HTTP error,
+  # --silent hides the progress bar but --show-error still shows errors, and
+  # --location follows redirects. wget --output-document=- prints the file
+  # instead of saving it.
   if command -v curl >/dev/null; then
     installer="$(curl --fail --silent --show-error --location "https://get.chezmoi.io")"
   elif command -v wget >/dev/null; then
@@ -31,21 +38,31 @@ else
     echo "To install chezmoi, you must have curl or wget installed." >&2
     exit 1
   fi
+  # sh -c runs the installer. The word after it (--) becomes the installer's
+  # $0, and the rest its arguments: -b to install into bin_dir, and -t for
+  # the version.
   sh -c "$installer" -- -b "$bin_dir" -t "$TAGARG"
 fi
 
+# chezmoi source-path prints where chezmoi keeps its source, which exists once
+# it's set up.
 source_path="$("$chezmoi" source-path)"
 if [ -d "$source_path" ]; then
   echo "error: chezmoi already set up" >&2
   exit 1
 fi
 
+# The directory this script is in, as a full path. dirname drops the file
+# name from $0, the path the script was run as. -- stops cd and dirname from
+# reading a path that starts with - as an option.
 script_dir="$(cd -- "$(dirname -- "$0")" && pwd)"
 
 # While a codespace is being created its disk is busy, so each fsync is slow,
 # and chezmoi fsyncs every file it writes and every update to its state
 # database. So write files in place (--safe=false), and keep the state
-# database in memory until the end.
+# database in memory until the end. /dev/shm is a directory kept in memory on
+# Linux. set -- empties the script's arguments, and then holds the extra
+# chezmoi option when there is one, which "$@" passes along.
 tmp_dir=""
 set --
 if [ -d /dev/shm ] && [ -w /dev/shm ]; then
@@ -56,16 +73,21 @@ fi
 # Print out the following commands before executing
 set -o xtrace
 
+# chezmoi init sets chezmoi up with this repo as its source (--source), and
+# --apply writes the files.
 "$chezmoi" init --apply --safe=false "$@" "--source=${script_dir}"
 
 if [ -n "$tmp_dir" ]; then
-  # chezmoi keeps its state database next to its config file.
+  # chezmoi keeps its state database next to its config file. execute-template
+  # fills in a template, here the config file's path.
   config_file="$("$chezmoi" execute-template "$@" '{{ .chezmoi.configFile }}')"
   mv "${tmp_dir}/chezmoistate.boltdb" "$(dirname "$config_file")/"
   rmdir "$tmp_dir"
 fi
 
-# Make zsh the login shell in codespaces, so SSH sessions and $SHELL use it too
+# Make zsh the login shell in codespaces, so SSH sessions and $SHELL use it too.
+# chsh changes the login shell of the user id -un names. sudo -n fails instead
+# of asking for a password.
 if [ -n "${CODESPACES-}" ] && command -v zsh >/dev/null && command -v chsh >/dev/null; then
   sudo -n chsh "$(id -un)" --shell "$(command -v zsh)" || true
 fi
@@ -73,6 +95,8 @@ fi
 # Stop the codespace image's system zshrc and bashrc from loading nvm, which
 # slows down every new shell. They only load nvm.sh when it exists, so rename
 # it. Leave it when nvm has installed a Node version, since then it's in use.
+# -f checks that nvm.sh is a file, and ls -A lists everything in versions
+# except . and .., so it prints nothing when there are no versions.
 nvm_dir=/usr/local/share/nvm
 if [ -n "${CODESPACES-}" ] && [ -f "${nvm_dir}/nvm.sh" ] && [ -z "$(ls -A "${nvm_dir}/versions" 2>/dev/null || true)" ]; then
   mv "${nvm_dir}/nvm.sh" "${nvm_dir}/nvm.sh.disabled" || true
