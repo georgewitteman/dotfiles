@@ -34,8 +34,10 @@ hard rules: break one when the value is clearly worth it, and say why.
   applying can delete files, and ask only if it would delete or change
   something unexpected.
 - **Keep it minimal.** Small diffs, few files, no features nobody asked for.
-  Delete anything that's no longer used. Restating a default is fine: it holds
-  up against older versions and system-level overrides.
+  Delete anything that's no longer used. Every line, option and setting should
+  solve a problem you can name; if nobody can say what it's for, remove it or
+  ask. Restating a default is fine: it holds up against older versions and
+  system-level overrides.
 - **No doc comments at the top of files.** Comments go next to the code they
   explain. A script's description goes in its help message; why any other
   file exists goes in the commit that adds it. Lines a tool needs at the top
