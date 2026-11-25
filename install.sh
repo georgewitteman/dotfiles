@@ -5,13 +5,13 @@
 set -o errexit
 set -o nounset
 
-TAGARG=latest
+tag=latest
 
 # getopts reads the short options one at a time. "t:" means -t is the only
 # one, and takes a value, which getopts puts in OPTARG.
 while getopts "t:" arg; do
   case "${arg}" in
-    t) TAGARG="${OPTARG}" ;;
+    t) tag="${OPTARG}" ;;
     *) exit 1 ;;
   esac
 done
@@ -38,7 +38,7 @@ else
   # sh -c runs the installer. The word after it (--) becomes the installer's
   # $0, and the rest its arguments: -b to install into bin_dir, and -t for
   # the version.
-  sh -c "$installer" -- -b "$bin_dir" -t "$TAGARG"
+  sh -c "$installer" -- -b "$bin_dir" -t "$tag"
 fi
 
 # chezmoi source-path prints where chezmoi keeps its source, which exists once
@@ -61,7 +61,7 @@ script_dir="$(cd -- "$(dirname -- "$0")" && pwd)"
 # option when there is one, which "$@" passes along.
 tmp_dir=""
 set --
-if [ -d /dev/shm ] && [ -w /dev/shm ]; then
+if [ -w /dev/shm ]; then
   tmp_dir="$(mktemp -d /dev/shm/chezmoi.XXXXXX)"
   set -- "--persistent-state=${tmp_dir}/chezmoistate.boltdb"
 fi
