@@ -14,7 +14,7 @@ Manages these dotfiles with chezmoi.
 
     apply    show what would change, then ask before applying (-y doesn't ask)
     update   pull the dotfiles repo, then apply the same way
-    edit     edit the source of these files, or open the repo without any
+    edit     edit the source of these files, or the repo when no file is given
     cd       go to the dotfiles repo (in an interactive shell)
 EOF
 }
