@@ -60,11 +60,7 @@ if ! git show-ref --quiet --verify "refs/heads/${main_branch}"; then
   echo-run git branch "$main_branch" "origin/${main_branch}"
 fi
 
-current_branch="$(git branch --show-current)"
-
-if [ "$current_branch" != "$main_branch" ]; then
-  echo-run git checkout "$main_branch"
-fi
+echo-run git checkout "$main_branch"
 
 if $rebase; then
   set -- "$@" --rebase
