@@ -46,6 +46,7 @@ for ref_name in $(git for-each-ref --points-at "$commit_id" --format='%(refname)
   case "$ref_name" in
     refs/tags/*) tags="${tags:+$tags, }${ref_name#refs/tags/}" ;;
     refs/heads/*) heads="${heads:+$heads, }${ref_name#refs/heads/}" ;;
+    refs/remotes/*/HEAD) ;;
     refs/remotes/*) heads="${heads:+$heads, }${ref_name#refs/remotes/}" ;;
   esac
 done
