@@ -50,7 +50,6 @@ for ref_name in $(git for-each-ref --points-at "$commit_id" --format='%(refname)
   esac
 done
 
-set --
 if $quiet; then
   set -- --quiet
 fi

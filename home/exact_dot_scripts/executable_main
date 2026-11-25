@@ -88,8 +88,6 @@ if [ "$current_branch" != "$main_branch" ]; then
   echo-run git checkout "$main_branch"
 fi
 
-set --
-
 if $rebase; then
   set -- "$@" --rebase
 fi

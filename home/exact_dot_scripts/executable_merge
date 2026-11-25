@@ -140,7 +140,6 @@ main_branch="${main_branch#origin/}"
 
 echo-run git fetch "$remote" "$main_branch"
 
-set --
 if [ -n "$prefer" ]; then
   set -- "--strategy-option=${prefer}"
 fi
