@@ -34,7 +34,12 @@ if [ -n "$branch" ]; then
   if git ls-remote --exit-code --heads origin "refs/heads/${branch}" >/dev/null 2>&1; then
     current_branch="$(git branch --show-current)"
     if [ "$current_branch" = "$branch" ]; then
+      # git fetch can't update the branch that's checked out, so fast-forward
+      # it with a merge instead.
       echo-run git fetch origin "$branch"
+      if ! echo-run git merge --ff-only "origin/${branch}"; then
+        echo "warning: couldn't fast-forward ${branch} to origin's" >&2
+      fi
     elif ! echo-run git fetch origin "$branch":"$branch"; then
       # Only a fast-forward updates the branch, so local commits are kept
       echo "warning: ${branch} has commits origin doesn't, so it wasn't updated" >&2
