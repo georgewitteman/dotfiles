@@ -37,10 +37,8 @@ files="$(scripts)
 if command -v shellcheck >/dev/null; then
   echo "RUNNING: shellcheck"
   # The installed files are outside this repo, so shellcheck doesn't find its
-  # config. Pass its optional checks with --enable, which works in older
-  # versions than --rcfile does.
-  enable="$(sed -n 's/^enable=//p' "${repo_dir}/.shellcheckrc" | paste -sd , -)"
-  echo "$files" | xargs shellcheck -x --enable="$enable"
+  # config on its own.
+  echo "$files" | xargs shellcheck -x --rcfile="${repo_dir}/.shellcheckrc"
   (cd "$repo_dir" && shellcheck -x install.sh check tests/*.sh)
 fi
 if command -v shfmt >/dev/null; then
