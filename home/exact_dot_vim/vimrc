@@ -74,10 +74,6 @@ xnoremap > >gv
 set splitbelow
 set splitright
 
-" Enable folding based on indentation
-set foldmethod=indent
-set foldlevel=99
-
 " Wait at most 50 ms for the rest of a key code, so Esc is quick
 set ttimeoutlen=50
 
