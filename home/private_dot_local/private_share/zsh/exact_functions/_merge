@@ -2,10 +2,10 @@
 
 _merge() {
   _arguments \
-    {-c,--continue}'[finish merge]' \
-    '--abort[abort a current merge]' \
-    '--no-verify[bypass pre-commit and commit-msg hooks]' \
-    '(--mine)--theirs[prefer the main branch in conflicts]' \
+    {-c,--continue}'[stage the files that were in conflict and commit the merge]' \
+    '--abort[abort the merge in progress]' \
+    '--no-verify[with --continue, bypass pre-commit and commit-msg hooks]' \
+    "(--mine)--theirs[prefer the main branch's side in conflicts]" \
     "(--theirs)--mine[prefer this branch's side in conflicts]" \
-    '--remote=[which remote to merge from (defaults to "origin")]:remote:{compadd -- $(git remote 2>/dev/null)}'
+    '--remote=[remote to merge from (default: origin)]:remote:{compadd -- $(git remote 2>/dev/null)}'
 }
