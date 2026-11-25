@@ -90,9 +90,15 @@ add "$header"
 add "     Hash: %h"
 add "     %C(cyan)Tags:%Creset %C(bold)${tags}%Creset"
 add "    %C(red)Heads:%Creset ${heads}"
-[ -z "$git_url" ] || add "      %C(yellow)URL:%Creset ${git_url}"
-[ -z "$git_compare_url" ] || add "  %C(yellow)Compare:%Creset ${git_compare_url}"
-[ -z "$pr_urls" ] || add "       %C(yellow)PR:%Creset ${pr_urls}"
+if [ -n "$git_url" ]; then
+  add "      %C(yellow)URL:%Creset ${git_url}"
+fi
+if [ -n "$git_compare_url" ]; then
+  add "  %C(yellow)Compare:%Creset ${git_compare_url}"
+fi
+if [ -n "$pr_urls" ]; then
+  add "       %C(yellow)PR:%Creset ${pr_urls}"
+fi
 add "   %C(green)Author:%Creset %an <%ae>"
 add "%C(green)Committer:%Creset %cn <%ce>"
 add "   %C(blue)A Date:%Creset %ad (%ar)"
