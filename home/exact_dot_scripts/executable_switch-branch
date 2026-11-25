@@ -14,10 +14,6 @@ while [ "$#" -gt 0 ]; do
       echo "most recently committed-to branches to pick from by number."
       exit
       ;;
-    --)
-      shift
-      break
-      ;;
     -?*)
       echo "error: unknown option: ${1}" >&2
       exit 1

@@ -46,10 +46,6 @@ while [ "$#" -gt 0 ]; do
       rebase=true
       pull=true
       ;;
-    --)
-      shift
-      break
-      ;;
     -?*) die 1 "unknown option: ${1}" ;;
     *) die 1 "unexpected argument: ${1}" ;;
   esac
