@@ -119,9 +119,6 @@ bindkey -M main ' ' zle_expand_alias
 # History options are documented in "History" in `man zshoptions`:
 # https://zsh.sourceforge.io/Doc/Release/Options.html#History
 
-# Expand history references like !! and !$.
-setopt bang_hist
-
 # Save each command's start time in the history file.
 setopt extended_history
 
