@@ -51,7 +51,7 @@ done
 case "$reply" in
   *"]52;"*) ;;
   *)
-    echo "The terminal didn't return the clipboard." >&2
+    echo "error: the terminal didn't return the clipboard" >&2
     exit 1
     ;;
 esac
