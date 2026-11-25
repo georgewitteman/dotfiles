@@ -7,9 +7,9 @@ usage() {
 usage: $(basename "$0") [-i|--interactive] [<base>]
        $(basename "$0") --continue | --abort
 
-Fetches, then rebases the current branch onto origin's copy of <base> (the
-main branch by default), stashing and restoring uncommitted changes. If the
-fetch fails, it rebases onto what was last fetched. A <base>
+Fetches, then rebases the current branch onto origin's copy of <base>, or
+onto origin's default branch without one, stashing and restoring uncommitted
+changes. If the fetch fails, it rebases onto what was last fetched. A <base>
 that isn't a branch on origin is used as given, like origin/foo or a commit.
 For anything else, use git rebase.
 EOF
@@ -65,15 +65,7 @@ if [ "$#" -gt 1 ]; then
   exit 1
 fi
 
-if [ "$#" -eq 1 ]; then
-  base="$1"
-else
-  if ! base="$(git rev-parse --abbrev-ref origin/HEAD 2>/dev/null)"; then
-    echo "error: origin's default branch isn't known. Run: git remote set-head origin --auto" >&2
-    exit 1
-  fi
-  base="${base#origin/}"
-fi
+base="${1:-origin/HEAD}"
 
 # Offline, like on a plane, rebasing onto what was last fetched still helps
 if ! echo-run git fetch --quiet --prune; then
