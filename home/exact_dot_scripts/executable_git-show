@@ -65,7 +65,7 @@ git_url="$(git-get-url --with-commit "$commit_id" 2>/dev/null || true)"
 
 # The compare URL and PRs are for the branch being shown: the current branch,
 # or the local or origin branch that was given.
-shown_ref="$(git rev-parse --symbolic-full-name "$ref" 2>/dev/null || true)"
+shown_ref="$(git rev-parse --symbolic-full-name "$ref")"
 branch=
 case "$shown_ref" in
   refs/heads/*) branch="${shown_ref#refs/heads/}" ;;
