@@ -58,11 +58,7 @@
 {{- /* Codespaces sign with their own gpg.program, which they set in
        /etc/gitconfig only when GPG verification is on. Without a signer,
        signing would make every commit fail. */}}
-{{- $codespaces_sign := false }}
-{{- if and (env "CODESPACES") (lookPath "git") }}
-{{-   $codespaces_sign = output "git" "config" "--system" "--default" "" "gpg.program" | trim | ne "" }}
-{{- end }}
-{{- if or $ssh_sign $codespaces_sign }}
+{{- if or $ssh_sign (and (env "CODESPACES") (output "git" "config" "--system" "--default" "" "gpg.program" | trim)) }}
 
 [commit]
 	gpgSign = true
