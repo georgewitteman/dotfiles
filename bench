@@ -6,8 +6,13 @@ case "${1-}" in
   -h | --help)
     print "usage: ${0:t} [shell ...]"
     print
-    print "Times how long each shell takes to start the way a terminal starts it and"
-    print "exit, and prints the median of $runs runs. Defaults to \$SHELL."
+    print "Times how long each shell takes to start, and prints the median of $runs"
+    print "runs. Defaults to whichever of zsh, bash and sh are installed."
+    print
+    print "  login      a terminal window or tab: a login shell in a terminal, until it"
+    print "             runs its first command"
+    print "  non-login  the same without login, like typing the shell's name in a shell"
+    print "  -c         running a command with -c, which reads what a script does"
     exit
     ;;
   -*)
@@ -16,26 +21,74 @@ case "${1-}" in
     ;;
 esac
 
-zmodload zsh/datetime zsh/mathfunc
-(( $# )) || set -- "$SHELL"
+zmodload zsh/datetime zsh/mathfunc zsh/zpty zsh/zselect
+if (( ! $# )); then
+  for shell in zsh bash sh; do
+    command -v "$shell" >/dev/null && set -- "$@" "$shell"
+  done
+fi
 cd
 
+# Each run sets elapsed to the time it took, in whole microseconds, since (n)
+# sorts the digits after a decimal point as a separate number.
+elapsed=0
+
+# Starts the shell in a terminal with $1 as argv[0], where a leading - makes it
+# a login shell, the way login and terminals start one. Types a command right
+# away, and stops when its output appears. The quotes keep the typed command,
+# which the terminal echoes, from matching.
+in_terminal() {
+  local start=$EPOCHREALTIME fd output="" chunk
+  zpty bench "ARGV0=${(q)1} ${(q)cmd}"
+  fd=$REPLY
+  zpty -w bench "echo BENCH''MARK"
+  until [[ $output == *BENCHMARK* ]]; do
+    zselect -r $fd
+    zpty -r -t bench chunk
+    # 2 means the shell exited.
+    if (( $? == 2 )); then
+      zpty -d bench
+      print -u2 "error: $shell exited before running a command"
+      return 1
+    fi
+    output+=$chunk
+  done
+  elapsed=$(( int((EPOCHREALTIME - start) * 1e6) ))
+
+  # Let it exit before the next run, so the two don't slow each other down.
+  zpty -w bench exit
+  while zselect -r $fd; do
+    zpty -r -t bench chunk
+    (( $? == 2 )) && break
+  done
+  zpty -d bench
+}
+
+with_command() {
+  local start=$EPOCHREALTIME
+  "$cmd" -c true </dev/null >/dev/null 2>&1
+  elapsed=$(( int((EPOCHREALTIME - start) * 1e6) ))
+}
+
+# Prints the median time of $runs runs of the command in $@, in milliseconds.
+median() {
+  local durations=()
+  repeat $runs; do
+    "$@" || return
+    durations+=$elapsed
+  done
+  durations=(${(n)durations})
+  printf '%.1f' $(( durations[runs / 2 + 1] / 1000.0 ))
+}
+
+printf '%-10s %9s %9s %9s\n' shell login non-login -c
 for shell; do
   if ! cmd="$(command -v "$shell")"; then
     print -u2 "error: $shell not found"
     exit 1
   fi
-
-  durations=()
-  repeat $runs; do
-    start=$EPOCHREALTIME
-    # A leading - in argv[0] makes it a login shell, the way login and
-    # terminals start one.
-    ARGV0="-${shell:t}" "$cmd" -ic exit </dev/null >/dev/null 2>&1
-    # Whole microseconds, since (n) sorts the digits after a decimal point as
-    # a separate number.
-    durations+=$(( int((EPOCHREALTIME - start) * 1e6) ))
-  done
-  durations=(${(n)durations})
-  printf '%-6s %5.1f ms\n' "$shell" $(( durations[runs / 2 + 1] / 1000.0 ))
+  login="$(median in_terminal "-${shell:t}")" || exit 1
+  non_login="$(median in_terminal "${shell:t}")" || exit 1
+  command="$(median with_command)" || exit 1
+  printf '%-10s %6s ms %6s ms %6s ms\n' "$shell" "$login" "$non_login" "$command"
 done
