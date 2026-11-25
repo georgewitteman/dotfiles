@@ -2,6 +2,10 @@
 " UTF-8 to read them right.
 scriptencoding utf-8
 
+" Vim builds without +eval, like Debian's vim.tiny, can't run most of what
+" follows, and skip everything between if and endif.
+if 1
+
 " Vim's recommended defaults, like syntax highlighting and filetype detection
 " (`:help defaults.vim`). defaults.vim does nothing when skip_defaults_vim is
 " set, so unlet! removes it first (the ! skips the error when it isn't set).
@@ -108,3 +112,4 @@ let g:better_whitespace_enabled = 0
 let g:strip_whitespace_on_save = 1
 let g:strip_whitespace_confirm = 0
 let g:strip_whitelines_at_eof = 1
+endif
