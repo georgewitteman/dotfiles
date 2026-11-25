@@ -32,7 +32,7 @@ else
   elif command -v wget >/dev/null; then
     installer="$(wget --quiet --output-document=- "https://get.chezmoi.io")"
   else
-    echo "To install chezmoi, you must have curl or wget installed." >&2
+    echo "error: curl or wget is needed to install chezmoi" >&2
     exit 1
   fi
   # sh -c runs the installer. The word after it (--) becomes the installer's
