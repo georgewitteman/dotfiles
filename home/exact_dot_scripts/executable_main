@@ -14,7 +14,7 @@ usage: $(basename "$0") [-p|--pull] [--rebase]
 Switches to the main branch, creating it from origin if there's no local one,
 and shows its latest commit. In a linked worktree, where the main branch can't
 be checked out because another worktree may have it, it uses a
-<worktree directory>-main branch that tracks the same upstream instead.
+<worktree directory>-<main branch> branch that tracks the same upstream instead.
 
     -p, --pull      pull after switching, pruning deleted remote branches
     --rebase        pull with --rebase (implies --pull)
@@ -73,9 +73,8 @@ common_dir="$(cd "$common_dir" && pwd -P)"
 if [ "$git_dir" != "$common_dir" ]; then
   start_point="$(git rev-parse --abbrev-ref --symbolic-full-name "${main_branch}@{upstream}")"
 
-  # The main branch name is the worktree directory name + '-main'.
+  # Named after the worktree directory, like myrepo-main
   main_branch="$(basename "${toplevel}")-${main_branch}"
-  # Check if the branch exists, creating it if it doesn't.
   if ! git show-ref --quiet --verify "refs/heads/${main_branch}"; then
     # --track=direct: use the start point itself as the upstream
     echo-run git branch "$main_branch" --track=direct "$start_point"
