@@ -14,6 +14,6 @@ SHELL_SESSIONS_DISABLE=1
 typeset -U PATH path FPATH fpath
 
 # Set here instead of .zshrc because some /etc/zsh/zshrc files run compinit
-# before .zshrc, like the nvm completion in the devcontainers universal image.
-# If those see a different fpath, each compinit rebuilds the dump on every start.
+# before .zshrc. If they see a different fpath, each compinit rebuilds the dump
+# on every start.
 fpath=("${HOME}/.local/share/zsh/functions" "${fpath[@]}")
