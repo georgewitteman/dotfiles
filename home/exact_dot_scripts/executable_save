@@ -15,11 +15,6 @@ the commit. Use -- before a message that starts with -.
     --amend               amend previous commit, with the message if one is given
 "
 
-die() {
-  echo "error: $2" >&2
-  exit "$1"
-}
-
 push=false
 message=''
 force=false
@@ -129,13 +124,13 @@ if $staged; then
       set -- "$@" --no-edit
     fi
 
-    "$cmd" git commit --amend "$@" || die $? "Failed to amend commit. Fix any errors and retry"
+    "$cmd" git commit --amend "$@"
   else
     if [ -n "$message" ]; then
       set -- "$@" --message "$message"
     fi
 
-    echo-run git commit "$@" || die $? "Failed to create a commit. Fix any errors and retry."
+    echo-run git commit "$@"
   fi
 else
   echo "Skipping commit since nothing is staged."
