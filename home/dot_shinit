@@ -53,8 +53,6 @@ alias gb='switch-branch'
 
 alias tf="terraform"
 
-alias yws="yarn workspace server"
-
 take() {
   # shellcheck disable=SC2164
   mkdir -p "$1" && cd "$1"
