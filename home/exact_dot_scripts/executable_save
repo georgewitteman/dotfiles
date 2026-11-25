@@ -104,8 +104,14 @@ if $staged; then
 
   set --
   if $no_verify; then
-    set -- "$@" --no-verify
+    set -- --no-verify
   fi
+  if [ -n "$message" ]; then
+    set -- "$@" --message "$message"
+  elif $amend; then
+    set -- "$@" --no-edit
+  fi
+
   if $amend; then
     current_commit_author="$(git show --no-patch --format='%ae')"
     repo_email="$(git config --get user.email || true)"
@@ -117,19 +123,8 @@ if $staged; then
       echo "Your email: $repo_email"
       cmd="safe-run"
     fi
-
-    if [ -n "$message" ]; then
-      set -- "$@" --message "$message"
-    else
-      set -- "$@" --no-edit
-    fi
-
     "$cmd" git commit --amend "$@"
   else
-    if [ -n "$message" ]; then
-      set -- "$@" --message "$message"
-    fi
-
     echo-run git commit "$@"
   fi
 else
