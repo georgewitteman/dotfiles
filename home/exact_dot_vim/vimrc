@@ -17,46 +17,39 @@ source $VIMRUNTIME/defaults.vim
 silent! packadd! comment
 silent! packadd! nohlsearch
 
-" How many columns of whitespace a level of indentation is worth (>, <, ...).
+" Indent by 2 columns, for >, < and automatic indents.
 set shiftwidth=2
-" How many columns of whitespace a keypress is worth (<Tab>). If negative, use
-" the value of shiftwidth
+" Tab and Backspace move by an indent level too (-1 means use shiftwidth).
 set softtabstop=-1
-" Always use spaces instead of tabs
+" Indent with spaces, not tabs.
 set expandtab
-" Copy indent from current line when starting a newline
+" A new line starts with the same indent as the one before it.
 set autoindent
 
-" When a file has been detected to have been changed outside of Vim and it has
-" not been changed inside of Vim, automatically read it again
+" Reload a file changed outside Vim, unless it has changes in Vim too.
 set autoread
 
-" Ignore case in search patterns. Also used when searching in the tags file
+" Searches ignore case, unless the pattern has a capital letter.
 set ignorecase
-" Overrides the 'ignorecase' option if the search pattern contains upper case
-" characters
 set smartcase
 
-" When there is a previous search pattern, highlight all its matches.
+" Highlight every match of the last search.
 set hlsearch
 
-" Every wrapped line will continue visually indented (same amount of space as
-" the beginning of that line), thus preserving horizontal blocks of text
+" Wrapped lines keep the indent of the line they belong to, starting with the
+" showbreak string (sbr) before the indent.
 set breakindent
-" sbr: Display the 'showbreak' value before applying the additional indent
 set breakindentopt=sbr
 " String to put at the start of lines that have been wrapped. let &showbreak
 " sets the option from a quoted string, so the trailing space survives
 " stripping whitespace on save.
 let &showbreak = '↪ '
-" If on, Vim will wrap long lines at a character in 'breakat' rather than at
-" the last character that fits on the screen
+" Wrap long lines between words, not in the middle of one.
 set linebreak
 
-" Turn on line numbers
+" Show line numbers, counted from the cursor's line, which shows its own
+" number.
 set number
-" Change the displayed number to be relative to the cursor. When this option
-" and the 'number' option are on, the current line has the real number
 set relativenumber
 
 " Show tabs as »· and trailing spaces as ·
@@ -67,7 +60,7 @@ set listchars=tab:»·,trail:·
 " the matches in a menu, and each further Tab picks the next match.
 set wildmode=longest:full,full
 
-" Enable mouse support for all modes
+" Use the mouse in every mode.
 set mouse=a
 
 " Reselect visual block after indent/outdent. xnoremap maps a key in Visual
@@ -75,7 +68,7 @@ set mouse=a
 xnoremap < <gv
 xnoremap > >gv
 
-" Split below and to the right
+" New splits open below and to the right.
 set splitbelow
 set splitright
 
