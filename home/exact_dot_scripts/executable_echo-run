@@ -4,7 +4,7 @@
 # when it can.
 if [ "$#" -eq 0 ]; then
   # shellcheck disable=SC2317
-  return 2>/dev/null || exit
+  return 0 2>/dev/null || exit 0
 fi
 case "$1" in
   -h | --help)
@@ -12,7 +12,7 @@ case "$1" in
     echo
     echo "Prints the command, quoted so it can be pasted back into a shell, then runs it."
     # shellcheck disable=SC2317
-    return 2>/dev/null || exit
+    return 0 2>/dev/null || exit 0
     ;;
 esac
 
