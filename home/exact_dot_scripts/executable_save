@@ -13,8 +13,7 @@ the commit, unless amending. Use -- before a message that starts with -.
     -f, --force           with --push, push with --force-with-lease, which
                           --amend also does
     -n, --no-verify       bypass pre-commit and commit-msg hooks
-    --amend               amend previous commit, with the message if one is given
-"
+    --amend               amend previous commit, with the message if one is given"
 
 push=false
 message=''
