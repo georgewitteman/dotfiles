@@ -100,4 +100,10 @@ add "   %C(blue)C Date:%Creset %cd (%cr)"
 add "  %C(magenta)Subject:%Creset %C(bold)%s%Creset"
 add "$footer"
 
-git --no-pager show --format="$fmt" "$@"
+# Page the diff, but not the header alone, which other scripts print after
+# running a command.
+if $quiet; then
+  git --no-pager show --format="$fmt" "$@"
+else
+  git show --format="$fmt" "$@"
+fi
