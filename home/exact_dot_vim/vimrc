@@ -105,8 +105,15 @@ if executable('rg')
   set grepformat=%f:%l:%c:%m
 endif
 
-" - opens the current file's directory in netrw, where - goes up another level
-nnoremap <silent> - :Explore<CR>
+" - opens the current file's directory in netrw, with the cursor on the file.
+" In netrw, - goes up another level.
+function! s:OpenDirectory() abort
+  let file = expand('%:t')
+  Explore
+  " netrw may mark executables with * and symlinks with @
+  call search('^\V' . escape(file, '\') . '\[*@]\=\$')
+endfunction
+nnoremap <silent> - :call <SID>OpenDirectory()<CR>
 
 " Strip trailing whitespace and blank lines at the end of the file on save,
 " without asking, and without highlighting it while editing.
