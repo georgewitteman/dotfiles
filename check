@@ -51,20 +51,20 @@ files="$(scripts)
 .profile
 .bashrc
 .bash_profile"
-# xargs runs the linter with each word of $files as an argument. The
-# (cd ... && ...) runs in a subshell, so the cd doesn't last past it.
+# Lint the installed files and this repo's own scripts in one run each. xargs
+# runs the linter with each word of $files as an argument, after the repo's
+# scripts, which are given as full paths.
 if command -v shellcheck >/dev/null; then
   echo "RUNNING: shellcheck"
   # The installed files are outside this repo, so shellcheck doesn't find its
-  # config on its own. -x follows files they source.
-  echo "$files" | xargs shellcheck -x --rcfile="${repo_dir}/.shellcheckrc"
-  (cd "$repo_dir" && shellcheck -x install.sh check tests/*.sh)
+  # config on its own. -x follows the files they source, and --source-path
+  # finds the tests' tests/setup.sh from here.
+  echo "$files" | xargs shellcheck -x --rcfile="${repo_dir}/.shellcheckrc" --source-path="$repo_dir" "${repo_dir}/install.sh" "${repo_dir}/check" "$repo_dir"/tests/*.sh
 fi
 # shfmt checks the formatting: two-space indents, with case branches indented
 # (--case-indent), and simpler syntax where it means the same (--simplify).
 # --diff prints what it would change instead of changing it.
 if command -v shfmt >/dev/null; then
   echo "RUNNING: shfmt"
-  echo "$files" | xargs shfmt --indent 2 --case-indent --diff --simplify
-  (cd "$repo_dir" && shfmt --indent 2 --case-indent --diff --simplify install.sh check tests/*.sh)
+  echo "$files" | xargs shfmt --indent 2 --case-indent --diff --simplify "${repo_dir}/install.sh" "${repo_dir}/check" "$repo_dir"/tests/*.sh
 fi
