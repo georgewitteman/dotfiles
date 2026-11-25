@@ -68,20 +68,30 @@ zstyle ':completion:*' group-name ''
 # uses completion files owned by other users, or writable by them, instead of
 # asking, which matters on machines with several users.
 # https://zsh.sourceforge.io/Doc/Release/Completion-System.html#Use-of-compinit
+#
+# autoload makes a function from a file in $fpath load the first time it's
+# called. -U ignores aliases inside it, and -z loads it the zsh way.
 autoload -Uz compinit
 compinit -u
 
 # Lets zsh use bash completions, like the ones aws and terraform provide.
 # https://github.com/zsh-users/zsh/blob/master/Completion/bashcompinit
+# +X loads the function right away instead of the first time it's called.
 autoload -U +X bashcompinit
 bashcompinit
 
+# Use aws's own completer, unless zsh already has one for aws (_aws). whence
+# looks up a command like command -v does, and &>/dev/null hides both its
+# output and its errors. complete -C runs that program to get completions, the
+# way bash does.
 # https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-completion.html
 if ! whence _aws &>/dev/null && command -v aws_completer &>/dev/null; then
   complete -C "$(command -v aws_completer)" aws
 fi
 
 if command -v terraform &>/dev/null; then
+  # terraform completes itself when run this way. -o nospace leaves out the
+  # space after a completion, since some, like -var=, need more typed after.
   # https://github.com/posener/complete/blob/v1/cmd/install/zsh.go
   complete -o nospace -C "$(command -v terraform)" terraform
 fi
@@ -92,7 +102,9 @@ setopt auto_cd
 # Allow comments in the interactive shell, like in pasted commands.
 setopt interactive_comments
 
-# ^W and Alt-B/Alt-F stop at each / in a path.
+# ^W and Alt-B/Alt-F stop at each / in a path. WORDCHARS lists the characters,
+# besides letters and digits, that count as part of a word, and
+# ${var/pattern/replacement} replaces the first match, here / with nothing.
 WORDCHARS="${WORDCHARS/\//}"
 
 # Use emacs keybindings, since zsh picks vi mode when EDITOR or VISUAL
