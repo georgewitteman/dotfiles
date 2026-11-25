@@ -137,8 +137,8 @@ set statusline=[%n]\ %<%.99f
 set statusline+=\ %y%h%w%m%r
 set statusline+=%=\ %(%l,%c%V%)\ %P
 
+" Use ripgrep for :grep when it's installed
 if executable('rg')
-  " Set grepprg for rg
   set grepprg=rg\ --vimgrep
   set grepformat=%f:%l:%c:%m
 endif
