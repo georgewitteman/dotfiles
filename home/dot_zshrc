@@ -179,19 +179,32 @@ zshaddhistory() {
   # $1 is the command line, ending in a newline ($'\n'), which ${1%...}
   # removes.
   local line="${1%$'\n'}"
-  # Long pastes, like "Copy as cURL" from browser devtools
-  (( ${#line} < 2000 )) || return 2
+  # Long pastes, like "Copy as cURL" from browser devtools. ${#line} is the
+  # line's length.
+  if (( ${#line} >= 2000 )); then
+    return 2
+  fi
   # A literal value in a secret-named variable, like FOO_TOKEN=abc,
   # PGPASSWORD="abc", DD_APP_KEY=abc or AWS_ACCESS_KEY_ID=abc, but not
   # TOKEN="$(op read ...)" or TOKEN=$OTHER
-  [[ $line == (#i)*(token|secret|passw(or|)d|(api|app|access)[-_]#key)[[:alnum:]_]#=[\"\']#[^\$\"\'[:space:]]* ]] && return 2
+  if [[ $line == (#i)*(token|secret|passw(or|)d|(api|app|access)[-_]#key)[[:alnum:]_]#=[\"\']#[^\$\"\'[:space:]]* ]]; then
+    return 2
+  fi
   # Secret flags, like --password=abc or --api-key abc
-  [[ $line == (#i)*--(password|passwd|token|secret|client-secret|access-token|auth-token|api[-_]#key)[=\ ]* ]] && return 2
+  if [[ $line == (#i)*--(password|passwd|token|secret|client-secret|access-token|auth-token|api[-_]#key)[=\ ]* ]]; then
+    return 2
+  fi
   # Auth headers and cookies, like curl -H 'Authorization: ...' or -b 'a=b'
-  [[ $line == (#i)*(-H|--header)[=\ ]#[\"\']#(authorization|cookie|[[:alnum:]-]#(token|key|secret)):* ]] && return 2
-  [[ $line == *curl*(\ -b|\ --cookie)[=\ ]* ]] && return 2
+  if [[ $line == (#i)*(-H|--header)[=\ ]#[\"\']#(authorization|cookie|[[:alnum:]-]#(token|key|secret)):* ]]; then
+    return 2
+  fi
+  if [[ $line == *curl*(\ -b|\ --cookie)[=\ ]* ]]; then
+    return 2
+  fi
   # Credentials in a URL, like postgres://user:password@host
-  [[ $line == *://[^/@[:space:]]##:[^/@[:space:]]##@* ]] && return 2
+  if [[ $line == *://[^/@[:space:]]##:[^/@[:space:]]##@* ]]; then
+    return 2
+  fi
   return 0
 }
 
