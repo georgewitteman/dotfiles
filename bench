@@ -51,20 +51,19 @@ cd
 # How long the last run took, in whole microseconds.
 integer elapsed
 
-# Reads the shell's output until the typed command's output appears, for up to
-# $1 seconds. Returns 1 if that times out, and 2 if the shell exits first.
+# Reads the shell's output until the typed command's output appears. Fails if
+# that takes over $1 seconds, or the shell exits first.
 wait_for_marker() {
   local deadline=$(( EPOCHREALTIME + $1 )) chunk
   integer left
   until [[ $output == *BENCHMARK* ]]; do
     # zselect's timeout is in hundredths of a second.
     (( left = (deadline - EPOCHREALTIME) * 100 ))
-    (( left > 0 )) && zselect -t $left -r $fd || return 1
+    (( left > 0 )) && zselect -t $left -r $fd || return
+    # 2 means the shell exited.
     zpty -r -t bench chunk
-    case $? in
-      0) output+=$chunk ;;
-      2) return 2 ;;
-    esac
+    (( $? == 2 )) && return 1
+    output+=$chunk
   done
 }
 
@@ -72,29 +71,25 @@ wait_for_marker() {
 # makes it a login shell, the way login and terminals start one. Types a
 # command right away, and stops when its output appears.
 #
-# The typed lines start with a space, which keeps them out of the history file
-# in zsh, fish, and bash with HISTCONTROL=ignorespace.
+# The typed lines start with a space, which zsh, fish, and bash with
+# HISTCONTROL=ignorespace keep out of the history file. Other shells get no
+# history file instead.
 in_terminal() {
-  local start=$EPOCHREALTIME fd output="" error=""
-  zpty bench "HISTCONTROL=ignorespace ARGV0=${(q)1} ${(q)2}" || return
+  local start=$EPOCHREALTIME fd output="" env="HISTCONTROL=ignorespace"
+  [[ ${1#-} == (zsh|bash|fish) ]] || env+=" HISTFILE=/dev/null"
+  zpty bench "$env exec -a ${(q)1} ${(q)2}" || return
   fd=$REPLY
   # The quotes keep the typed command, which line editors redraw, from matching.
   zpty -w bench " echo BENCH''MARK"
-  wait_for_marker 10
-  case $? in
-    1) error="didn't run a command within 10 seconds" ;;
-    2) error="exited before running a command" ;;
-  esac
-  if [[ -n $error ]]; then
+  if ! wait_for_marker 10; then
     zpty -d bench
-    print -u2 "error: $2 $error"
+    print -u2 "error: $2 didn't run a command within 10 seconds"
     return 1
   fi
   elapsed=$(( (EPOCHREALTIME - start) * 1e6 ))
 
-  # Let it exit before the next run, so the two don't slow each other down.
-  # The marker doesn't appear again, so this waits for the shell to exit, or
-  # gives up after a second, since a shell with running jobs won't exit.
+  # Wait up to a second for it to exit, so it doesn't slow down the next run.
+  # The marker won't appear again.
   zpty -w bench " exit"
   output=""
   wait_for_marker 1
