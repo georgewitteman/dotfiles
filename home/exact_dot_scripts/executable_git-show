@@ -57,7 +57,7 @@ if [ -n "$commit" ]; then
   set -- "$@" "$commit"
 fi
 
-header="======== git show --format=\"…\" $* ========"
+header="======== git show --format=\"...\" $* ========"
 footer="$(printf '%s' "$header" | sed 's/./=/g')"
 
 git_url="$(git-get-url --with-commit "$commit_id" 2>/dev/null || true)"
