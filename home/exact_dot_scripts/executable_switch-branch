@@ -50,8 +50,6 @@ if [ -n "$branch" ]; then
   exit
 fi
 
-echo-run git fetch --quiet
-
 # Pick from the most recently committed-to branches by number. The list is
 # printed in reverse so number 1, the most recent, sits right above the prompt.
 list_branches() {
