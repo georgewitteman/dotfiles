@@ -16,17 +16,9 @@ restart_shell() {
     return 1
   fi
 
-  # Note: You can't use $0 here since it will be the name of the function, not
-  # the shell.
-  if [ $# -eq 0 ]; then
-    if [ -f "/proc/$$/cmdline" ]; then
-      # shellcheck disable=SC2312
-      set -- "$(tr '\0' ' ' <"/proc/$$/cmdline" | cut -d ' ' -f 1)"
-    else
-      # shellcheck disable=SC2312
-      set -- "$(ps -p $$ -o comm | tail -1)"
-    fi
-  fi
+  # $0 is the shell, with a leading - for a login shell. zsh runs this file's
+  # functions with sh's rules, where $0 isn't the function's name.
+  set -- "${1:-$0}"
   set -- "${1#-}" -li
   echo_run exec "$@"
 }
