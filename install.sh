@@ -69,3 +69,11 @@ fi
 if [ -n "${CODESPACES-}" ] && command -v zsh >/dev/null && command -v chsh >/dev/null; then
   sudo -n chsh "$(id -un)" --shell "$(command -v zsh)" || true
 fi
+
+# Stop the codespace image's system zshrc and bashrc from loading nvm, which
+# slows down every new shell. They only load nvm.sh when it exists, so rename
+# it. Leave it when nvm has installed a Node version, since then it's in use.
+nvm_dir=/usr/local/share/nvm
+if [ -n "${CODESPACES-}" ] && [ -f "${nvm_dir}/nvm.sh" ] && [ -z "$(ls -A "${nvm_dir}/versions" 2>/dev/null || true)" ]; then
+  mv "${nvm_dir}/nvm.sh" "${nvm_dir}/nvm.sh.disabled" || true
+fi
