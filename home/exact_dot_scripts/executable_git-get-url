@@ -35,6 +35,8 @@ while [ "$#" -gt 0 ]; do
       if [ "$1" = --branch ]; then
         branch="$2"
       else
+        # git rev-parse turns a name for a commit, like HEAD~2 or a branch,
+        # into its hash, and --short shortens the hash, like abc1234.
         commit_id="$(git rev-parse --short "$2")"
       fi
       shift
@@ -46,13 +48,20 @@ while [ "$#" -gt 0 ]; do
 done
 
 # Outside a repo, git ls-remote --get-url just prints the remote's name back,
-# so check for a repo first.
+# so check for a repo first. git rev-parse --git-dir prints the repo's .git
+# directory, and fails outside a repo, which stops the script.
 git rev-parse --git-dir >/dev/null
 
+# Prints origin's URL, after any url.<base>.insteadOf rewrites in git config.
 giturl="$(git ls-remote --get-url origin)"
 
 # Turn the remote into the repository's web page, dropping any user name or
 # token, like https://user:token@host/owner/repo.git or git@host:owner/repo.git
+#
+# Each sed -e 's~old~new~' replaces old with new, using ~ to separate the parts
+# since URLs are full of /. [^/@]* matches up to the next / or @, and a number
+# at the end, like s~:~/~2, replaces only that match: here the second :, after
+# the host, since the first is in https://.
 case "$giturl" in
   https://*)
     project_url="$(echo "$giturl" | sed -e 's~^https://[^/@]*@~https://~' -e 's~\.git$~~')"
