@@ -1,5 +1,15 @@
 #compdef switch-branch branch rebase git-show
 
+if [[ $service == git-show ]]; then
+  if [[ $PREFIX == -* ]]; then
+    _arguments '(-q --quiet)'{-q,--quiet}'[show only the header, without the diff]'
+  else
+    # git show's own completion: heads, tags, recent commits, and the rest
+    _git
+  fi
+  return
+fi
+
 # switch-branch, branch's base branch and rebase take origin's branches
 # without the origin/ prefix.
 local -a local_branches origin_branches
@@ -8,14 +18,6 @@ origin_branches=(${(f)"$(git for-each-ref --format='%(refname:lstrip=3)' refs/re
 origin_branches=(${origin_branches:#HEAD})
 
 case $service in
-  git-show)
-    if [[ $PREFIX == -* ]]; then
-      _arguments '(-q --quiet)'{-q,--quiet}'[show only the header, without the diff]'
-    else
-      # git show's own completion: heads, tags, recent commits, and the rest
-      _git
-    fi
-    ;;
   switch-branch)
     _arguments '1:branch:{compadd -- ${(u)local_branches} $origin_branches}'
     ;;
