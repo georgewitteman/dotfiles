@@ -64,6 +64,8 @@ def main():
         print("Converts Markdown on the clipboard to Slack markup, prints the result, and")
         print("copies it back to the clipboard.")
         return
+    if len(sys.argv) > 1:
+        sys.exit("error: unexpected argument: {}".format(sys.argv[1]))
 
     # cpaste prints its own error. Stop there, so an empty result doesn't replace
     # the clipboard.
