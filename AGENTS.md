@@ -54,11 +54,15 @@ hard rules: break one when the value is clearly worth it, and say why.
   (shebangs, `# vim:` modelines, `#compdef`) are fine. Avoid comments that go
   stale when something else changes, like references to other files, how
   other code works, current behavior or versions, history, or measurements.
-  Comments that explain what something does are fine, even if long. So is the
-  intent behind a value, even when it names something else, like "match the
-  macOS `ls` colors". For values in a dense notation, explain the notation
-  instead of restating each value, since the notation stays true when the
-  values change. Put a comment on its own lines above the code it explains,
+  Explain commands, flags and syntax a reader might have to look up, like
+  `git rev-parse --short`, `complete -o nospace` or
+  `${var/pattern/replacement}`, and name the command or flag so it's clear
+  which line the comment is for. Skip what's obvious or already explained
+  nearby. Keep comments as short as clarity allows, even if that's several
+  lines. The intent behind a value is fine to explain too, even when it names
+  something else, like "match the macOS `ls` colors". For values in a dense
+  notation, explain the notation instead of restating each value, since the
+  notation stays true when the values change. Put a comment on its own lines above the code it explains,
   not at the end of a line, and leave a blank line between unrelated blocks.
 - **Shell style.** Use `[[ ]]` in bash and zsh, and `[ ]` in POSIX `sh`.
   shellcheck enforces this for bash and `sh`, but doesn't read zsh. Text that
