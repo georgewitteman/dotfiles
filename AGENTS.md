@@ -25,7 +25,8 @@ hard rules: break one when the value is clearly worth it, and say why.
 
   Don't assume one OS, shell, package manager, or installed tool. Shell setup
   should work well in bash, zsh, and plain POSIX `sh`, and files read by more
-  than one shell must stick to POSIX `sh`. System startup files differ too:
+  than one shell must stick to POSIX `sh`, and zsh loads them with
+  `emulate sh -c`. System startup files differ too:
   Ubuntu's `/etc/zsh/zshrc` runs `compinit`, and the `universal` image's runs
   another for nvm. CI covers macOS and the codespaces images, to catch
   anything important breaking. It doesn't need to enforce style: formatting
