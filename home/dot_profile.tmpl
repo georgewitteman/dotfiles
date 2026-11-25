@@ -14,10 +14,6 @@ export PATH="$PATH:{{ .chezmoi.homeDir }}/.docker/bin"
 # has run.
 export ENV="${HOME}/.shinit"
 
-# The locale for programs that use setlocale(3), unless an LC_* variable
-# overrides it.
-export LANG="${LANG:-en_US.UTF-8}"
-
 # `man environ`: Default editor name.
 if [ -z "$EDITOR" ]; then
   if [ -n "$REMOTE_CONTAINERS" ] && command -v code >/dev/null 2>&1; then
