@@ -6,10 +6,10 @@ if ! command -v vim >/dev/null; then
   exit
 fi
 
-# Load chezmoi.vim's template syntax and every filetype with its own settings,
-# so errors in those show up too. -es skips syntax highlighting, so turn it on.
-# Vim takes at most 10 -c options, so chain the commands into one.
-cmd="syntax on | set filetype=chezmoitmpl"
+# Load every filetype with its own settings, so errors in those show up too.
+# -es skips syntax highlighting, so turn it on. Vim takes at most 10 -c
+# options, so chain the commands into one.
+cmd="syntax on"
 for f in "${HOME}"/.vim/after/ftplugin/*.vim; do
   cmd="${cmd} | set filetype=$(basename "$f" .vim)"
 done

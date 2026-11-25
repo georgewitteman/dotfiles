@@ -5,12 +5,9 @@ endif
 augroup filetypedetect
   autocmd! BufNewFile,BufRead devcontainer.json setfiletype jsonc
 
-  " netrw runs `:filetype detect` after opening a file, which only runs this
-  " group, not chezmoi.vim's own, so Vim's *.tmpl rule would win. The source
-  " directory is checked when a file is read, since chezmoi.vim sets it up
-  " after this file runs.
-  autocmd BufRead *
-        \ if exists('g:chezmoi#source_dir_path') && stridx(expand('<amatch>:p'), g:chezmoi#source_dir_path . '/') == 0 |
-        \   call chezmoi#filetype#handle_chezmoi_filetype() |
-        \ endif
+  " chezmoi templates: detect the filetype from the name without .tmpl, like
+  " foo.sh.tmpl as sh, instead of Vim's HTML-based template filetype. The git
+  " config's name doesn't say what it is, so it gets its own rule.
+  autocmd BufNewFile,BufRead */exact_git/private_config.tmpl setfiletype gitconfig
+  autocmd BufNewFile,BufRead *.tmpl execute 'doautocmd filetypedetect BufRead' fnameescape(expand('<amatch>:r'))
 augroup END

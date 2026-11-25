@@ -2,10 +2,6 @@
 " UTF-8 to read them right.
 scriptencoding utf-8
 
-" Highlighting for chezmoi source files. Must load before filetype detection,
-" which defaults.vim turns on.
-packadd! chezmoi.vim
-
 " Vim's recommended defaults, like syntax highlighting and filetype detection
 " (`:help defaults.vim`).
 unlet! skip_defaults_vim
