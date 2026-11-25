@@ -2,7 +2,7 @@
 
 . "tests/setup.sh"
 
-if ! command -v vim >/dev/null 2>&1; then
+if ! command -v vim >/dev/null; then
   exit
 fi
 

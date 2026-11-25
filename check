@@ -30,14 +30,14 @@ scripts() {
 }
 cd "$HOME"
 files="$(scripts)"
-if command -v shellcheck >/dev/null 2>&1; then
+if command -v shellcheck >/dev/null; then
   echo "RUNNING: shellcheck"
   echo "$files" | xargs shellcheck -x
   shellcheck -x --shell=sh .shinit .profile
   shellcheck -x --shell=bash .bashrc .bash_profile
   (cd "$repo_dir" && shellcheck -x install.sh check tests/*.sh)
 fi
-if command -v shfmt >/dev/null 2>&1; then
+if command -v shfmt >/dev/null; then
   echo "RUNNING: shfmt"
   echo "$files" | xargs shfmt --indent 2 --case-indent --diff --simplify
   shfmt --indent 2 --case-indent --diff --simplify -ln posix .shinit .profile

@@ -15,7 +15,7 @@ while getopts "t:" arg; do
   esac
 done
 
-if command -v chezmoi >/dev/null 2>&1; then
+if command -v chezmoi >/dev/null; then
   chezmoi=chezmoi
 else
   bin_dir="${HOME}/.local/bin"
@@ -23,9 +23,9 @@ else
 
   # Download the installer before running it, so a failed download stops here
   # instead of running an empty script.
-  if command -v curl >/dev/null 2>&1; then
+  if command -v curl >/dev/null; then
     installer="$(curl --fail --silent --tlsv1.2 --show-error --location "https://get.chezmoi.io")"
-  elif command -v wget >/dev/null 2>&1; then
+  elif command -v wget >/dev/null; then
     installer="$(wget --quiet --output-document=- "https://get.chezmoi.io")"
   else
     echo "To install chezmoi, you must have curl or wget installed." >&2
@@ -66,6 +66,6 @@ if [ -n "$tmp_dir" ]; then
 fi
 
 # Make zsh the login shell in codespaces, so SSH sessions and $SHELL use it too
-if [ -n "${CODESPACES-}" ] && command -v zsh >/dev/null 2>&1 && command -v chsh >/dev/null 2>&1; then
+if [ -n "${CODESPACES-}" ] && command -v zsh >/dev/null && command -v chsh >/dev/null; then
   sudo -n chsh "$(id -un)" --shell "$(command -v zsh)" || true
 fi

@@ -10,7 +10,7 @@ run() {
 }
 
 for sh in bash zsh; do
-  if ! command -v "$sh" >/dev/null 2>&1; then
+  if ! command -v "$sh" >/dev/null; then
     continue
   fi
 

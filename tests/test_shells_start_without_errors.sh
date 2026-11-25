@@ -7,7 +7,7 @@
 for shell_and_flags in "bash -ic" "bash -lic" "zsh -ic" "zsh -lic" "sh -lic"; do
   sh="${shell_and_flags% *}"
   flags="${shell_and_flags#* }"
-  if ! command -v "$sh" >/dev/null 2>&1; then
+  if ! command -v "$sh" >/dev/null; then
     continue
   fi
 

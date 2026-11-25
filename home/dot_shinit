@@ -39,7 +39,7 @@ echo_run() { . "${HOME}/.scripts/echo-run"; }
 # When Homebrew belongs to another user on this machine, run brew as that user
 # with sudo, since only its owner can change it. stat -f is BSD's (macOS), and
 # stat -c is GNU's.
-if [ -d "$HOMEBREW_PREFIX" ] && [ ! -w "$HOMEBREW_PREFIX" ] && command -v sudo >/dev/null 2>&1; then
+if [ -d "$HOMEBREW_PREFIX" ] && [ ! -w "$HOMEBREW_PREFIX" ] && command -v sudo >/dev/null; then
   brew_owner="$(stat -f %Su "$HOMEBREW_PREFIX" 2>/dev/null || stat -c %U "$HOMEBREW_PREFIX")"
   # shellcheck disable=SC2139
   alias brew="echo-run sudo --set-home --user=${brew_owner} brew"
@@ -99,7 +99,7 @@ unset_secrets() {
 # dotfiles cd has to change this shell's directory, so it's handled here.
 dotfiles() {
   if [ "${1-}" = cd ]; then
-    if command -v deactivate >/dev/null 2>&1; then
+    if command -v deactivate >/dev/null; then
       # When going from some directory where I have a venv activated to the
       # dotfiles directory, I almost never want to actually stay in that
       # virtual environment and have to run `deactivate` manually.
@@ -111,7 +111,7 @@ dotfiles() {
   fi
 }
 
-if ! command -v tailscale >/dev/null 2>&1; then
+if ! command -v tailscale >/dev/null; then
   if [ -x "/Applications/Tailscale.app/Contents/MacOS/Tailscale" ]; then
     tailscale() {
       echo_run "/Applications/Tailscale.app/Contents/MacOS/Tailscale" "$@"

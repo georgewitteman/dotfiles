@@ -16,7 +16,7 @@ export ENV="${HOME}/.shinit"
 
 # `man environ`: Default editor name.
 if [ -z "$EDITOR" ]; then
-  if [ -n "$REMOTE_CONTAINERS" ] && command -v code >/dev/null 2>&1; then
+  if [ -n "$REMOTE_CONTAINERS" ] && command -v code >/dev/null; then
     export EDITOR="code"
   else
     export EDITOR="vim"
