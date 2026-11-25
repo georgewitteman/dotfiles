@@ -149,10 +149,6 @@ endif
 " - opens the current file's directory in netrw, where - goes up another level
 nnoremap <silent> - :Explore<CR>
 
-" Default to treating /bin/sh as POSIX shell (not the super duper old bourne
-" shell)
-let g:is_posix = 1
-
 " Strip trailing whitespace and blank lines at the end of the file on save,
 " without asking, and without highlighting it while editing.
 let g:better_whitespace_enabled = 0
