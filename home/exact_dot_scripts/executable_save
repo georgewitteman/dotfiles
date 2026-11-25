@@ -2,10 +2,11 @@
 
 set -o errexit
 
-USAGE="usage: $(basename "$0") [<options>] [--] [<commit message>...]
+USAGE="usage: $(basename "$0") [<options>] [--] [<message>]
 
-Commits the staged changes, using the rest of the arguments as the message, or
-opening an editor without one. With nothing to commit, it skips the commit.
+Commits the staged changes, with <message> as the commit message (quote it if
+it has spaces), or opens an editor without one. With nothing staged, it skips
+the commit. Use -- before a message that starts with -.
 
     -a, --add             add all changes
     -p, --push            push branch to remote
@@ -78,29 +79,33 @@ while [ "$#" -gt 0 ]; do
   shift
 done
 
-if [ $# -ne 0 ]; then
-  if [ -n "$message" ]; then
-    echo "error: failed to set commit message: $*" >&2
-    echo "error: message already set: ${message}" >&2
+if [ $# -gt 0 ]; then
+  if [ -n "$message" ] || [ $# -gt 1 ]; then
+    echo "error: unexpected argument: ${2:-$1}" >&2
     exit 1
   fi
-  message="$*"
+  message="$1"
 fi
 
 if $add; then
   echo-run git add --verbose --all
 fi
 
-status="$(git status --porcelain)"
+staged=true
+if git diff --cached --quiet; then
+  staged=false
+fi
 
-if [ -z "$status" ] && [ -n "$message" ]; then
-  echo "error: there are no changes so we can't create your commit: ${message}" >&2
+if ! $staged && [ -n "$message" ]; then
+  echo "error: nothing is staged, so there's nothing to commit: ${message}" >&2
   exit 1
 fi
 
-if [ -n "$status" ]; then
-  current_head="$(git rev-parse --short HEAD)"
-  echo "Undo these changes with 'git reset ${current_head}'"
+if $staged; then
+  # A new repository has no commit to go back to yet.
+  if current_head="$(git rev-parse --quiet --verify --short HEAD)"; then
+    echo "Undo these changes with 'git reset ${current_head}'"
+  fi
 
   set --
   if $no_verify; then
@@ -108,7 +113,7 @@ if [ -n "$status" ]; then
   fi
   if $amend; then
     current_commit_author="$(git show --no-patch --format='%ae')"
-    repo_email="$(git config --get user.email)"
+    repo_email="$(git config --get user.email || true)"
 
     cmd="echo-run"
     if [ "$current_commit_author" != "$repo_email" ]; then
@@ -133,7 +138,7 @@ if [ -n "$status" ]; then
     echo-run git commit "$@" || die $? "Failed to create a commit. Fix any errors and retry."
   fi
 else
-  echo "Skipping commit since there were no changes."
+  echo "Skipping commit since nothing is staged."
 fi
 
 if $push; then
