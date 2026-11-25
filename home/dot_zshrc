@@ -115,12 +115,6 @@ bindkey "^[[B" down-line-or-beginning-search
 bindkey '^[OA' up-line-or-beginning-search
 bindkey '^[OB' down-line-or-beginning-search
 
-# Home, End and Delete. Terminals send different sequences for each.
-for key in '^[[H' '^[OH' '^[[1~'; do bindkey "$key" beginning-of-line; done
-for key in '^[[F' '^[OF' '^[[4~'; do bindkey "$key" end-of-line; done
-bindkey '^[[3~' delete-char
-unset key
-
 # Space expands an alias before inserting the space.
 zle_expand_alias() {
   zle _expand_alias
