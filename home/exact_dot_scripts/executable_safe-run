@@ -22,7 +22,7 @@ esac
 command="$(FORCE_COLOR='' ECHO_RUN_ECHO_ONLY=1 echo-run "$@" 2>&1 >/dev/null)"
 printf "\033[33mRun \`%s\` (y/N)?\033[0m " "${command#??}" >&2
 
-read -r reply </dev/tty >&2
+read -r reply </dev/tty
 if [ "$reply" = "${reply#[Yy]}" ]; then
   exit 1
 fi
