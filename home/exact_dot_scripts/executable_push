@@ -2,12 +2,8 @@
 
 set -o errexit
 
-if [ "$#" -gt 1 ]; then
-  echo "error: push only takes -f or --force. Use git push for anything else." >&2
-  exit 1
-fi
-
-case "${1-}" in
+# All the arguments at once, so anything past the first is an error too
+case "$*" in
   -h | --help)
     cat <<EOF
 usage: $(basename "$0") [-f|--force]
