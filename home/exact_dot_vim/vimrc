@@ -17,8 +17,6 @@ source $VIMRUNTIME/defaults.vim
 silent! packadd comment
 silent! packadd nohlsearch
 
-" How many whitespace characters a literal \t is worth
-set tabstop=8
 " How many columns of whitespace a level of indentation is worth (>, <, ...).
 set shiftwidth=2
 " How many columns of whitespace a keypress is worth (<Tab>). If negative, use
@@ -28,8 +26,6 @@ set softtabstop=-1
 set expandtab
 " Copy indent from current line when starting a newline
 set autoindent
-" (Don't) do smart indenting by inserting an extra tab when necessary
-set nosmartindent
 
 " When a file has been detected to have been changed outside of Vim and it has
 " not been changed inside of Vim, automatically read it again
@@ -65,9 +61,6 @@ set breakindentopt=sbr
 " String to put at the start of lines that have been wrapped. Quoted, so the
 " trailing space survives stripping whitespace on save.
 let &showbreak = '↪ '
-" When on, lines longer than the width of the window will wrap and displaying
-" continues on the next line
-set wrap
 " If on, Vim will wrap long lines at a character in 'breakat' rather than at
 " the last character that fits on the screen
 set linebreak
@@ -93,11 +86,6 @@ set mouse=a
 " Reselect visual block after indent/outdent
 vnoremap < <gv
 vnoremap > >gv
-
-" No bell for error messages. Bells without a message, like Esc in normal
-" mode, still ring.
-set novisualbell
-set noerrorbells
 
 " Split below and to the right
 set splitbelow
