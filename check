@@ -10,8 +10,9 @@ case "$1" in
   -h | --help)
     echo "usage: $(basename "$0")"
     echo
-    echo "Runs the tests, then lints this repo's scripts and the installed shell files"
-    echo "with shellcheck and shfmt if they're installed. Run it after \`chezmoi apply\`."
+    echo "Runs the tests, then lints this repo's scripts and the installed"
+    echo "shell files with shellcheck and shfmt if they're installed. Run it"
+    echo "after chezmoi apply."
     exit
     ;;
   -?*)
@@ -36,8 +37,8 @@ for test_file in tests/test_*; do
   sh -eux "$test_file"
 done
 
-# The scripts that start with a bash or sh shebang, and the startup files for
-# bash and sh. head -1 prints a file's first line, its shebang.
+# The scripts that start with a bash or sh shebang. head -1 prints a file's
+# first line, its shebang.
 scripts() {
   for file in .scripts/*; do
     case "$(head -1 "$file")" in
@@ -45,6 +46,7 @@ scripts() {
     esac
   done
 }
+# Those scripts, and the startup files for bash and sh.
 cd "$HOME"
 files="$(scripts)
 .shinit
