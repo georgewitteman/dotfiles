@@ -60,9 +60,6 @@ set listchars=tab:»·,trail:·
 " the matches in a menu, and each further Tab picks the next match.
 set wildmode=longest:full,full
 
-" Use the mouse in every mode.
-set mouse=a
-
 " Reselect visual block after indent/outdent. xnoremap maps a key in Visual
 " mode, and gv selects the last selection again.
 xnoremap < <gv
