@@ -27,7 +27,9 @@ hard rules: break one when the value is clearly worth it, and say why.
   should work well in bash, zsh, and plain POSIX `sh`, and files read by more
   than one shell must stick to POSIX `sh`. System startup files differ too:
   Ubuntu's `/etc/zsh/zshrc` runs `compinit`, and the `universal` image's runs
-  another for nvm. CI covers macOS and the codespaces images.
+  another for nvm. CI covers macOS and the codespaces images, to catch
+  anything important breaking. It doesn't need to enforce style: formatting
+  and lint are checked locally with `./check`.
 - **Apply right after making changes.** Check `chezmoi diff` first, since
   applying can delete files, and ask only if it would delete or change
   something unexpected.
