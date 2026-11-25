@@ -74,12 +74,22 @@ case "$command" in
   edit)
     for arg; do
       case "$arg" in
+        -h | --help)
+          usage
+          exit
+          ;;
         -*) die "unknown option: ${arg}" ;;
       esac
     done
     echo-run chezmoi edit "$@"
     ;;
   cd)
+    case "${1-}" in
+      -h | --help)
+        usage
+        exit
+        ;;
+    esac
     if [ "$#" -gt 0 ]; then
       die "unexpected argument: ${1}"
     fi
