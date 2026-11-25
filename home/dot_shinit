@@ -25,8 +25,8 @@ fi
 alias ls='ls --color=auto'
 alias la='ls -lah'
 
-# In VS Code's terminal, edit in VS Code. --wait, so tools like git wait for
-# the file to be closed.
+# In VS Code's terminal, edit in VS Code. --wait, so the command that opened
+# the editor waits for the file to be closed.
 if [ "${TERM_PROGRAM-}" = vscode ] && command -v code >/dev/null; then
   export EDITOR="code --wait"
 fi
