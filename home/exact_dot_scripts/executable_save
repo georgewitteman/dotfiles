@@ -29,21 +29,18 @@ amend=false
 # drops the first.
 while [ "$#" -gt 0 ]; do
   # Split joined short options, like -ap, into the first one and the rest:
-  # -a, then -p. ${1##-?} is what's after the first option (p), so _value is
-  # the rest as an option (-p), and ${1%%...} drops it to leave the first
-  # (-a). Both go back in front of the remaining arguments, to be handled in
-  # turn.
+  # -a, then -p. ${1#-?} is what's after the first option (p), and ${1%...}
+  # drops that to leave the first (-a). Both go back in front of the
+  # remaining arguments, and continue starts the loop again to handle them.
   case "$1" in
     -[[:alnum:]][[:alnum:]]*)
-      _value="-${1##-?}"
-      _arg="${1%%"${1##-?}"}"
+      rest="${1#-?}"
+      first="${1%"$rest"}"
+      shift
+      set -- "$first" "-$rest" "$@"
+      continue
       ;;
   esac
-  if [ -n "$_arg$_value" ]; then
-    shift
-    set -- "$_arg" "$_value" "$@"
-  fi
-  unset _arg _value
   case "$1" in
     -h | --help)
       echo "$USAGE"
