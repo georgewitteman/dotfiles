@@ -23,9 +23,14 @@ die() {
   exit 1
 }
 
-apply() {
+# Sets confirm from apply's and update's arguments, before anything runs
+parse_apply_args() {
   confirm=safe-run
   case "${1-}" in
+    -h | --help)
+      usage
+      exit
+      ;;
     -y | --yes)
       confirm=echo-run
       shift
@@ -34,7 +39,9 @@ apply() {
   if [ "$#" -gt 0 ]; then
     die "unexpected argument: ${1}"
   fi
+}
 
+apply() {
   if echo-run chezmoi verify; then
     echo "Nothing to apply."
     return
@@ -55,10 +62,14 @@ shift
 
 case "$command" in
   -h | --help) usage ;;
-  apply) apply "$@" ;;
+  apply)
+    parse_apply_args "$@"
+    apply
+    ;;
   update)
+    parse_apply_args "$@"
     echo-run chezmoi git -- pull --autostash --rebase
-    apply "$@"
+    apply
     ;;
   edit)
     for arg; do
