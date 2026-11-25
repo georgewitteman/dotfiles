@@ -17,7 +17,7 @@ done
 # -es: run without a terminal. Vim exits with 1 if anything reported an error,
 # including the vendored plugins. :messages has the errors with where they
 # happened, unlike v:errmsg, which also holds errors a plugin silenced.
-if ! messages="$(vim -es -N -u "${HOME}/.vim/vimrc" -c "$cmd" -c 'call writefile(split(execute("messages"), "\n"), "/dev/stdout")' -c 'qa!')"; then
+if ! messages="$(vim -es -u "${HOME}/.vim/vimrc" -c "$cmd" -c 'call writefile(split(execute("messages"), "\n"), "/dev/stdout")' -c 'qa!')"; then
   fail "vim reported an error:
 ${messages}"
 fi
