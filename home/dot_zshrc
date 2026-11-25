@@ -1,6 +1,8 @@
 #!/usr/bin/env zsh
 
-source "${HOME}/.shinit"
+# .shinit is shared with bash and sh, so run it with sh's rules. Its functions
+# keep those rules when they run.
+emulate sh -c '. "${HOME}/.shinit"'
 
 # Prompt. It only uses zsh's built-in prompt escapes (no hooks, no commands,
 # no prompt_subst), so drawing it costs nothing. See "Prompt Expansion" in
