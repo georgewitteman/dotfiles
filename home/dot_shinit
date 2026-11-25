@@ -35,26 +35,16 @@ restart_shell() {
 # commands like `echo_run cd` affect it. Sourcing a file inside a function
 # passes the function's arguments along as $@.
 echo_run() { . "${HOME}/.scripts/echo-run"; }
-safe_run() { . "${HOME}/.scripts/safe-run"; }
 safe_eval() { . "${HOME}/.scripts/safe-eval"; }
 
-# If Homebrew prefix is not owned by the current user, use sudo to run brew as
-# the owner of the Homebrew prefix. The -w check skips the slower stat calls
-# below in the usual case where it's mine.
+# When Homebrew belongs to another user on this machine, run brew as that user
+# with sudo, since only its owner can change it. stat -f is BSD's (macOS), and
+# stat -c is GNU's.
 if [ -d "$HOMEBREW_PREFIX" ] && [ ! -w "$HOMEBREW_PREFIX" ] && command -v sudo >/dev/null 2>&1; then
-  # Get owner UID of HOMEBREW_PREFIX (GNU stat vs BSD stat)
-  if stat -c '%u' "$HOMEBREW_PREFIX" >/dev/null 2>&1; then
-    brew_owner_uid="$(stat -c '%u' "$HOMEBREW_PREFIX")"
-    brew_user="$(stat -c '%U' "$HOMEBREW_PREFIX")"
-  else
-    brew_owner_uid="$(stat -f '%u' "$HOMEBREW_PREFIX")"
-    brew_user="$(stat -f '%Su' "$HOMEBREW_PREFIX")"
-  fi
-  if [ -n "$brew_user" ] && [ "$brew_owner_uid" != "$(id -u || true)" ]; then
-    # shellcheck disable=SC2139
-    alias brew="echo-run sudo --set-home --user=${brew_user} brew"
-  fi
-  unset brew_owner_uid brew_user
+  brew_owner="$(stat -f %Su "$HOMEBREW_PREFIX" 2>/dev/null || stat -c %U "$HOMEBREW_PREFIX")"
+  # shellcheck disable=SC2139
+  alias brew="echo-run sudo --set-home --user=${brew_owner} brew"
+  unset brew_owner
 fi
 
 alias ls='ls --color=auto'

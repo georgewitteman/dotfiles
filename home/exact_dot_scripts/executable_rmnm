@@ -19,12 +19,12 @@ while [ "$#" -gt 0 ]; do
       recursive=true
       ;;
     -?*)
-      echo-err "unknown option: ${1}"
+      echo "error: unknown option: ${1}" >&2
       exit 1
       ;;
     *)
       if [ -n "$dir" ]; then
-        echo-err "only one directory allowed, got: ${dir} and ${1}"
+        echo "error: only one directory allowed, got: ${dir} and ${1}" >&2
         exit 1
       fi
       dir="$1"
@@ -42,13 +42,13 @@ if $recursive; then
   # trip over that trash vanishing mid-search, so ignore its errors.
   dirs="$(find . -name '.rmnm.*' -prune -o -name node_modules -type d -prune -print 2>/dev/null || true)"
   if [ -z "$dirs" ]; then
-    echo-info "no node_modules under ${PWD}"
+    echo "no node_modules under ${PWD}"
     exit
   fi
 elif [ -d node_modules ]; then
   dirs=./node_modules
 else
-  echo-err "no node_modules in ${PWD} (use -r to search subdirectories)"
+  echo "error: no node_modules in ${PWD} (use -r to search subdirectories)" >&2
   exit 1
 fi
 
@@ -57,7 +57,7 @@ fi
 # so .gitignore still hides it while it's being deleted.
 trash="$(mktemp -d ./.rmnm.XXXXXX)"
 count=0
-echo-info "removing in the background:"
+echo "removing in the background:"
 while IFS= read -r path; do
   count=$((count + 1))
   # Show the path relative to where rmnm was run, like the directory argument.

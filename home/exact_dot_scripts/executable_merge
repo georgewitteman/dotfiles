@@ -64,7 +64,7 @@ while [ "$#" -gt 0 ]; do
       ;;
     --remote)
       if [ -z "${2-}" ]; then
-        echo-err "--remote requires a value"
+        echo "error: --remote requires a value" >&2
         exit 1
       fi
       remote="$2"
@@ -75,7 +75,7 @@ while [ "$#" -gt 0 ]; do
       break
       ;;
     -?*)
-      echo-err "unknown option: ${1}"
+      echo "error: unknown option: ${1}" >&2
       exit 1
       ;;
     *) break ;;
@@ -90,7 +90,7 @@ fi
 
 if $continue_; then
   if ! git rev-parse -q --verify MERGE_HEAD >/dev/null 2>&1; then
-    echo-err "Not in an active merge"
+    echo "error: not in an active merge" >&2
     exit 1
   fi
   # Stage only the files that were in conflict, so untracked files and
@@ -106,7 +106,7 @@ if $continue_; then
       git -c core.whitespace="$no_ws" diff --check -- "$file" || true
     done)"
     if [ -n "$markers" ]; then
-      echo-err "conflict markers left:"
+      echo "error: conflict markers left:" >&2
       echo "$markers" >&2
       exit 1
     fi

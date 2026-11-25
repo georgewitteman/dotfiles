@@ -29,7 +29,7 @@ while [ "$#" -gt 0 ]; do
       ;;
     -n | --name | -e | --email)
       if [ "$#" -lt 2 ]; then
-        echo-err "${1} requires a value"
+        echo "error: ${1} requires a value" >&2
         exit 1
       fi
       case "$1" in
@@ -48,7 +48,7 @@ while [ "$#" -gt 0 ]; do
 done
 
 if [ -n "${new_name}${new_email}" ] && { [ -z "$new_name" ] || [ -z "$new_email" ]; }; then
-  echo-err "give both a name and an email, or neither to make you the author"
+  echo "error: give both a name and an email, or neither to make you the author" >&2
   exit 1
 fi
 

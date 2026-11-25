@@ -33,11 +33,11 @@ apply() {
   done
 
   if echo-run chezmoi verify "$@"; then
-    echo-info "Nothing to apply."
+    echo "Nothing to apply."
     return
   fi
   if ! echo-run chezmoi diff --no-pager "$@"; then
-    echo-err "Couldn't show the diff. See the error above."
+    echo "error: couldn't show the diff. See the error above." >&2
     exit 1
   fi
   "$confirm" chezmoi apply "$@"

@@ -18,6 +18,6 @@ if [ "$(uname || true)" = "Darwin" ]; then
 elif command -v resolvectl >/dev/null 2>&1; then
   echo-run sudo resolvectl flush-caches
 else
-  echo-err "Can't flush the DNS cache here: not macOS, and no resolvectl"
+  echo "error: can't flush the DNS cache here: not macOS, and no resolvectl" >&2
   exit 1
 fi

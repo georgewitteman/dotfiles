@@ -13,7 +13,7 @@ USAGE="usage: $(basename "$0") [<options>] [--] [<commit message>...]
 "
 
 die() {
-  [ "$#" -ge 2 ] && echo-err "$2"
+  [ "$#" -ge 2 ] && echo "error: $2" >&2
   exit "$1"
 }
 
@@ -66,12 +66,12 @@ while [ "$#" -gt 0 ]; do
       break
       ;;
     -*)
-      echo-err "unknown option: ${1}"
+      echo "error: unknown option: ${1}" >&2
       exit 1
       ;;
     *)
       if [ -n "$message" ]; then
-        echo-err "unexpected argument: ${1}"
+        echo "error: unexpected argument: ${1}" >&2
         exit 1
       fi
       message="$1"
@@ -82,8 +82,8 @@ done
 
 if [ $# -ne 0 ]; then
   if [ -n "$message" ]; then
-    echo-err "failed to set commit message: $*"
-    echo-err "message already set: ${message}"
+    echo "error: failed to set commit message: $*" >&2
+    echo "error: message already set: ${message}" >&2
     exit 1
   fi
   message="$*"
@@ -96,13 +96,13 @@ fi
 status="$(git status --porcelain)"
 
 if [ -z "$status" ] && [ -n "$message" ]; then
-  echo-err "There are no changes so we can't create your commit: ${message}"
+  echo "error: there are no changes so we can't create your commit: ${message}" >&2
   exit 1
 fi
 
 if [ -n "$status" ]; then
   current_head="$(git rev-parse --short HEAD)"
-  echo-info "Undo these changes with 'git reset ${current_head}'"
+  echo "Undo these changes with 'git reset ${current_head}'"
 
   set --
   if $no_verify; then
@@ -136,7 +136,7 @@ if [ -n "$status" ]; then
     echo-run git commit "$@" || die $? "Failed to create a commit. Fix any errors and retry."
   fi
 else
-  echo-info "Skipping commit since there were no changes."
+  echo "Skipping commit since there were no changes."
 fi
 
 if $push; then

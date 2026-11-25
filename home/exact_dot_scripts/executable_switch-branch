@@ -19,7 +19,7 @@ while [ "$#" -gt 0 ]; do
       break
       ;;
     -?*)
-      echo-err "unknown option: ${1}"
+      echo "error: unknown option: ${1}" >&2
       exit 1
       ;;
     *)
@@ -37,7 +37,7 @@ if [ -n "$branch" ]; then
       echo-run git fetch origin "$branch"
     elif ! echo-run git fetch origin "$branch":"$branch"; then
       # Only a fast-forward updates the branch, so local commits are kept
-      echo-warn "${branch} has commits origin doesn't, so it wasn't updated"
+      echo "warning: ${branch} has commits origin doesn't, so it wasn't updated" >&2
       echo-run git fetch origin "$branch"
     fi
     # Fetching into a local branch does not set its upstream, so set it here.
@@ -71,13 +71,13 @@ printf 'Branch number: '
 read -r choice
 case "$choice" in
   '' | *[!0-9]*)
-    echo-err "not a number: ${choice}"
+    echo "error: not a number: ${choice}" >&2
     exit 1
     ;;
 esac
 branch="$(list_branches --format='%(refname:short)' | sed -n "${choice}p")"
 if [ -z "$branch" ]; then
-  echo-err "no branch number ${choice}"
+  echo "error: no branch number ${choice}" >&2
   exit 1
 fi
 echo-run git switch "$branch" || exit $?

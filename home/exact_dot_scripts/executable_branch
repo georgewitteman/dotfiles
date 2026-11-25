@@ -36,7 +36,7 @@ while [ "$#" -gt 0 ]; do
       break
       ;;
     -?*)
-      echo-err "unknown option: ${1}"
+      echo "error: unknown option: ${1}" >&2
       exit 1
       ;;
     *)
@@ -45,7 +45,7 @@ while [ "$#" -gt 0 ]; do
       elif [ -z "$base_branch" ]; then
         base_branch="$1"
       else
-        echo-err "unexpected argument: ${1}"
+        echo "error: unexpected argument: ${1}" >&2
         exit 1
       fi
       ;;
@@ -54,7 +54,7 @@ while [ "$#" -gt 0 ]; do
 done
 
 if [ -z "$branch_name" ]; then
-  echo-err "missing branch name"
+  echo "error: missing branch name" >&2
   exit 1
 fi
 

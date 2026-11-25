@@ -18,7 +18,7 @@ usage() {
 
 die() {
   if [ "$#" -ge 2 ]; then
-    echo-err "$2"
+    echo "error: $2" >&2
   fi
   exit "$1"
 }
