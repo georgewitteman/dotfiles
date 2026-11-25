@@ -1,12 +1,3 @@
-{{- /* Docker Desktop, with its CLI tools installed for the user, rewrites
-       this block at the top of the file every time it starts. Keeping its
-       exact text here means it doesn't change anything. */ -}}
-{{ if stat (joinPath .chezmoi.homeDir ".docker/bin") -}}
-# The following lines were added by Docker Desktop to add commands to your PATH.
-export PATH="$PATH:{{ .chezmoi.homeDir }}/.docker/bin"
-# End of Docker Desktop section.
-
-{{ end -}}
 #!/bin/sh
 
 # Interactive sh shells read the file named in ENV, so they get the same
@@ -37,9 +28,3 @@ PATH="${HOME}/.local/bin:${PATH}"
 PATH="${HOME}/.scripts:${PATH}"
 PATH="${HOME}/.cargo/bin:${PATH}"
 PATH="/opt/homebrew/opt/libpq/bin:${PATH}"
-
-# Docker Desktop checks for its zsh completions with a login shell, which
-# doesn't read .zshrc. If they aren't there, it prompts to add its own block.
-if [ -n "$ZSH_VERSION" ]; then
-  FPATH="${HOME}/.docker/completions:${FPATH}"
-fi
