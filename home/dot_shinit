@@ -29,10 +29,11 @@ restart_shell() {
 echo_run() { . "${HOME}/.scripts/echo-run"; }
 
 # When Homebrew belongs to another user on this machine, run brew as that user
-# with sudo, since only its owner can change it. stat -f is BSD's (macOS), and
-# stat -c is GNU's.
+# with sudo, since only its owner can change it. The owner is the third field
+# of ls -ld, which every ls prints the same way, unlike stat's options.
 if [ -d "$HOMEBREW_PREFIX" ] && [ ! -w "$HOMEBREW_PREFIX" ] && command -v sudo >/dev/null; then
-  brew_owner="$(stat -f %Su "$HOMEBREW_PREFIX" 2>/dev/null || stat -c %U "$HOMEBREW_PREFIX")"
+  # shellcheck disable=SC2012
+  brew_owner="$(ls -ld "$HOMEBREW_PREFIX" | awk '{ print $3 }')"
   # shellcheck disable=SC2139
   alias brew="echo-run sudo --set-home --user=${brew_owner} brew"
   unset brew_owner
