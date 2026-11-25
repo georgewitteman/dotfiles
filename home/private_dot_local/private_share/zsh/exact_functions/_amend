@@ -1,9 +1,0 @@
-#compdef amend
-
-_amend() {
-  _arguments \
-    {-a,--add}'[stage all changes first]' \
-    {-e,--edit}'[edit the commit message]' \
-    {-p,--push}'[push afterwards, with --force-with-lease]' \
-    {-n,--no-verify}'[bypass pre-commit and commit-msg hooks]'
-}
