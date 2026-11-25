@@ -146,6 +146,9 @@ if executable('rg')
   set grepformat=%f:%l:%c:%m
 endif
 
+" - opens the current file's directory in netrw, where - goes up another level
+nnoremap <silent> - :Explore<CR>
+
 " Default to treating /bin/sh as POSIX shell (not the super duper old bourne
 " shell)
 let g:is_posix = 1
