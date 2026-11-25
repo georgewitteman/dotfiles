@@ -15,13 +15,8 @@ export PATH="$PATH:{{ .chezmoi.homeDir }}/.docker/bin"
 export ENV="${HOME}/.shinit"
 
 # `man environ`: Default editor name.
-if [ -z "$EDITOR" ]; then
-  if [ -n "$REMOTE_CONTAINERS" ] && command -v code >/dev/null; then
-    # --wait, so tools like git and chezmoi wait for the file to be closed
-    export EDITOR="code --wait"
-  else
-    export EDITOR="vim"
-  fi
+if [ -z "$EDITOR" ] && command -v vim >/dev/null; then
+  export EDITOR="vim"
 fi
 
 # 1Password's app folder exists whenever 1Password is installed, so this holds
