@@ -2,63 +2,88 @@
 
 runs=11
 
-case "${1-}" in
-  -h | --help)
-    print "usage: ${0:t} [shell ...]"
-    print
-    print "Times how long each shell takes to start, and prints the median of $runs"
-    print "runs. Defaults to whichever of zsh, bash, sh, dash, ksh, fish, tcsh and"
-    print "csh are installed."
-    print
-    print "  login      a terminal window or tab: a login shell in a terminal, until it"
-    print "             runs its first command"
-    print "  non-login  the same without login, like typing the shell's name in a shell"
-    print "  -c         running a command with -c, which reads what a script does"
-    exit
-    ;;
-  -*)
-    print -u2 "error: unknown option: $1"
-    exit 1
-    ;;
-esac
+shells=()
+for arg; do
+  case "$arg" in
+    -h | --help)
+      print "usage: ${0:t} [<shell> ...]"
+      print
+      print "Times how long each shell takes to start, and prints the median of $runs"
+      print "runs. Defaults to whichever of zsh, bash, sh, dash, ksh, fish, tcsh and"
+      print "csh are installed."
+      print
+      print "  login      a terminal window or tab: a login shell in a terminal, until it"
+      print "             runs its first command"
+      print "  non-login  the same without login, like typing the shell's name in a shell"
+      print "  -c         running a command with -c, which reads the same files as a"
+      print "             script"
+      exit
+      ;;
+    -?*)
+      print -u2 "error: unknown option: $arg"
+      exit 1
+      ;;
+    *) shells+=$arg ;;
+  esac
+done
 
-zmodload zsh/datetime zsh/mathfunc zsh/zpty zsh/zselect
-if (( ! $# )); then
+zmodload zsh/datetime zsh/zpty zsh/zselect || exit 1
+
+if (( ! $#shells )); then
   for shell in zsh bash sh dash ksh fish tcsh csh; do
-    command -v "$shell" >/dev/null && set -- "$@" "$shell"
+    command -v "$shell" >/dev/null && shells+=$shell
   done
 fi
+
+# Find each shell before the cd below, so relative paths still work.
+cmds=()
+for shell in $shells; do
+  if ! cmd="$(whence -p -- "$shell")"; then
+    print -u2 "error: $shell not found"
+    exit 1
+  fi
+  cmds+=${cmd:a}
+done
+
+# Start the shells in the home directory, the way a terminal does.
 cd
 
-# Each run sets elapsed to the time it took, in whole microseconds, since (n)
-# sorts the digits after a decimal point as a separate number.
-elapsed=0
+# How long the last run took, in whole microseconds.
+integer elapsed
 
-# Starts the shell in a terminal with $1 as argv[0], where a leading - makes it
-# a login shell, the way login and terminals start one. Types a command right
-# away, and stops when its output appears. The quotes keep the typed command,
-# which the terminal echoes, from matching.
+# Starts the shell at $2 in a terminal with $1 as argv[0], where a leading -
+# makes it a login shell, the way login and terminals start one. Types a
+# command right away, and stops when its output appears. The quotes keep the
+# typed command, which the terminal echoes, from matching.
 in_terminal() {
   local start=$EPOCHREALTIME fd output="" chunk
-  zpty bench "ARGV0=${(q)1} ${(q)cmd}"
+  zpty bench "ARGV0=${(q)1} ${(q)2}"
   fd=$REPLY
   zpty -w bench "echo BENCH''MARK"
   until [[ $output == *BENCHMARK* ]]; do
-    zselect -r $fd
-    zpty -r -t bench chunk
-    # 2 means the shell exited.
-    if (( $? == 2 )); then
+    # zselect's timeout is in hundredths of a second.
+    if ! zselect -t 1000 -r $fd; then
       zpty -d bench
-      print -u2 "error: $shell exited before running a command"
+      print -u2 "error: $2 didn't run a command within 10 seconds"
       return 1
     fi
-    output+=$chunk
+    # 1 means nothing was read, and 2 means the shell exited.
+    zpty -r -t bench chunk
+    case $? in
+      0) output+=$chunk ;;
+      2)
+        zpty -d bench
+        print -u2 "error: $2 exited before running a command"
+        return 1
+        ;;
+    esac
   done
-  elapsed=$(( int((EPOCHREALTIME - start) * 1e6) ))
+  elapsed=$(( (EPOCHREALTIME - start) * 1e6 ))
 
   # Let it exit before the next run, so the two don't slow each other down.
+  # Give up after a second, since a shell with running jobs won't exit.
   zpty -w bench exit
-  while zselect -r $fd; do
+  while zselect -t 100 -r $fd; do
     zpty -r -t bench chunk
     (( $? == 2 )) && break
   done
@@ -67,29 +92,27 @@ in_terminal() {
 
 with_command() {
   local start=$EPOCHREALTIME
-  "$cmd" -c true </dev/null >/dev/null 2>&1
-  elapsed=$(( int((EPOCHREALTIME - start) * 1e6) ))
+  "$1" -c true </dev/null >/dev/null 2>&1
+  elapsed=$(( (EPOCHREALTIME - start) * 1e6 ))
 }
 
 # Prints the median time of $runs runs of the command in $@, in milliseconds.
 median() {
-  local durations=()
+  local -a durations
   repeat $runs; do
     "$@" || return
     durations+=$elapsed
   done
+  # (n) sorts numerically, but only whole numbers: it reads the digits after a
+  # decimal point as a separate number.
   durations=(${(n)durations})
   printf '%.1f' $(( durations[runs / 2 + 1] / 1000.0 ))
 }
 
 printf '%-10s %9s %9s %9s\n' shell login non-login -c
-for shell; do
-  if ! cmd="$(command -v "$shell")"; then
-    print -u2 "error: $shell not found"
-    exit 1
-  fi
-  login="$(median in_terminal "-${shell:t}")" || exit 1
-  non_login="$(median in_terminal "${shell:t}")" || exit 1
-  command="$(median with_command)" || exit 1
+for shell cmd in ${shells:^cmds}; do
+  login="$(median in_terminal "-${shell:t}" "$cmd")" || exit 1
+  non_login="$(median in_terminal "${shell:t}" "$cmd")" || exit 1
+  command="$(median with_command "$cmd")" || exit 1
   printf '%-10s %6s ms %6s ms %6s ms\n' "$shell" "$login" "$non_login" "$command"
 done
