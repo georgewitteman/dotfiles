@@ -35,7 +35,7 @@ hard rules: break one when the value is clearly worth it, and say why.
   applying can delete files, and ask only if it would delete or change
   something unexpected.
 - **Commit in small steps.** One commit per change, not one large commit
-  bundling several. Push when the work is done, without asking.
+  bundling several.
 - **Test git scripts in a scratch repository.** Run scripts that use git in a
   throwaway repository with a local remote, never in this repo or another real
   one, even just to check their arguments.
