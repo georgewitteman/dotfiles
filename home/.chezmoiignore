@@ -9,3 +9,9 @@
 # Only Terminal.app on macOS reads this
 .bash_sessions_disable
 {{ end }}
+
+# 1Password's app folder exists whenever 1Password is installed, even while
+# it isn't running. Without it, leave any existing ~/.ssh/config alone.
+{{ if not (stat (joinPath .chezmoi.homeDir "Library/Group Containers/2BUA8C4S2C.com.1password")) }}
+.ssh/config
+{{ end }}

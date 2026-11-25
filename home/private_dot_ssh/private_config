@@ -1,8 +1,4 @@
-{{- /* 1Password's app folder, which exists whenever 1Password is installed,
-       even while it isn't running and its agent socket is gone */ -}}
-{{- if stat (joinPath .chezmoi.homeDir "Library/Group Containers/2BUA8C4S2C.com.1password") -}}
 # https://developer.1password.com/docs/ssh/get-started#step-4-configure-your-ssh-or-git-client
 # Don't change this since 1Password preferences looks for it exactly.
 Host *
   IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
-{{- end }}
