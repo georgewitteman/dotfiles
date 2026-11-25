@@ -6,7 +6,6 @@ usage() {
   cat <<EOF
 usage: $(basename "$0") apply [-y|--yes] [<chezmoi apply options>...]
        $(basename "$0") update [-y|--yes] [<chezmoi apply options>...]
-       $(basename "$0") save [<save options>...]
        $(basename "$0") cd
        $(basename "$0") <chezmoi command>...
 
@@ -14,7 +13,6 @@ A wrapper around chezmoi.
 
     apply    show what would change, then ask before applying (-y doesn't ask)
     update   pull the dotfiles repo, then apply the same way
-    save     commit changes in the dotfiles repo with save
     cd       go to the dotfiles repo (in an interactive shell)
 
 Anything else goes to chezmoi.
@@ -57,10 +55,6 @@ case "$command" in
   update)
     echo-run chezmoi git -- pull --autostash --rebase
     apply "$@"
-    ;;
-  save)
-    source_path="$(chezmoi source-path)"
-    save -C "${source_path}" "$@"
     ;;
   *) echo-run chezmoi "$command" "$@" ;;
 esac

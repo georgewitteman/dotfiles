@@ -18,7 +18,7 @@ _dotfiles() {
 
   # The wrapper's own command and options, alongside chezmoi's
   if (( CURRENT == 2 )); then
-    local -a commands=('save:commit changes in the dotfiles repo')
+    local -a commands=('cd:go to the dotfiles repo')
     _describe -t dotfiles-commands 'dotfiles command' commands
   elif [[ ${words[2]} == (apply|update) && ${PREFIX} == -* ]]; then
     local -a options=('-y:apply without asking' '--yes:apply without asking')

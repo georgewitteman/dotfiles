@@ -4,7 +4,6 @@ set -o errexit
 
 USAGE="usage: $(basename "$0") [<options>] [--] [<commit message>...]
 
-    -C PATH               run git from this directory
     -a, --add             add all changes
     -p, --push            push branch to remote
     -f, --force           force updates
@@ -41,10 +40,6 @@ while [ "$#" -gt 0 ]; do
     -h | --help)
       echo "$USAGE"
       exit
-      ;;
-    -C)
-      cd "$2"
-      shift
       ;;
     -a | --add)
       add=true

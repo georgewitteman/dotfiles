@@ -13,21 +13,18 @@ scriptencoding utf-8
 packadd chezmoi.vim
 
 " See `:h defaults.vim`: If you create your own .vimrc, it is
-" recommended to add these lines somewhere near the top. Neovim and Vim before
-" 8.0 don't have defaults.vim.
+" recommended to add these lines somewhere near the top. Vim before 8.0
+" doesn't have defaults.vim.
 if filereadable($VIMRUNTIME . '/defaults.vim')
   unlet! skip_defaults_vim
   source $VIMRUNTIME/defaults.vim
 endif
 
-" Optional packages that ship with vim (not available in neovim):
+" Optional packages that ship with newer versions of Vim:
 " - comment: `gc` to toggle comments
 " - nohlsearch: clear search highlighting after moving the cursor
 silent! packadd comment
 silent! packadd nohlsearch
-
-" Leader to <Space>
-let mapleader = "\<Space>"
 
 " How many whitespace characters a literal \t is worth
 set tabstop=8
@@ -174,14 +171,6 @@ set showcmd
 " Characters to fill the statuslines and vertical separators
 set fillchars+=vert:│
 
-" Minimal number of columns for the current window (default 20)
-set winwidth=70
-" Minimal number of rows for the current window (default 1)
-set winheight=10
-" The minimal width of a window, when it's not the current window. This is a
-" hard minimum, windows will never become smaller (default 1, 0-12 reasonable)
-set winminwidth=10
-
 " Always display the status line
 set laststatus=2
 
@@ -189,13 +178,6 @@ set laststatus=2
 set statusline=[%n]\ %<%.99f
 set statusline+=\ %y%h%w%m%r
 set statusline+=%=\ %(%l,%c%V%)\ %P
-
-" Quickly echo the full file path
-nnoremap <leader>% :let @c=expand('%:~:.')<CR>:CopyReg c<CR>:echo @c<CR>
-
-" Add new lines without entering insert mode
-nnoremap [<Space> :call append(line('.')-1, '')<CR>k
-nnoremap ]<Space> :call append(line('.'), '')<CR>j
 
 if executable('rg')
   " Set grepprg for rg
@@ -210,29 +192,12 @@ let g:is_posix = 1
 " Don't hide quotes in JSON
 let g:vim_json_conceal = 0
 
-" Disable netrw
-let loaded_netrwPlugin = 1
-
-" Sort directories at the top of dirvish
-let g:dirvish_mode = ':sort ,^\v(.*[\/])|\ze,'
-
-" List paths relative to the |current-directory|.
-let g:dirvish_relative_paths = 1
-
 " Strip trailing whitespace and blank lines at the end of the file on save,
 " without asking, and without highlighting it while editing.
 let g:better_whitespace_enabled = 0
 let g:strip_whitespace_on_save = 1
 let g:strip_whitespace_confirm = 0
 let g:strip_whitelines_at_eof = 1
-
-" Soft-wrap prose. pencil would hide characters, like markdown's formatting
-" marks, which is more annoying than it is pretty.
-let g:pencil#conceallevel = 0
-augroup pencil
-  autocmd!
-  autocmd FileType markdown,mkd,html,git,gitsendemail,*commit*,*COMMIT* call pencil#init({'wrap': 'soft'})
-augroup END
 
 " Extra Python highlighting (builtins, exceptions, string formatting, ...)
 let g:python_highlight_all = 1
