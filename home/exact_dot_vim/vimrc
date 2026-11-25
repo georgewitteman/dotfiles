@@ -28,8 +28,6 @@ set shiftwidth=2
 set softtabstop=-1
 " Always use spaces instead of tabs
 set expandtab
-" Insert and delete shiftwidth blanks
-set smarttab
 " Copy indent from current line when starting a newline
 set autoindent
 " (Don't) do smart indenting by inserting an extra tab when necessary
