@@ -5,10 +5,6 @@
 
 # netrw keeps its directory history here. Without this, applying deletes it.
 .vim/.netrwhist
-{{ if ne .chezmoi.os "darwin" }}
-# Only Terminal.app on macOS reads this
-.bash_sessions_disable
-{{ end }}
 
 # 1Password's app folder exists whenever 1Password is installed, even while
 # it isn't running. Without it, leave any existing ~/.ssh/config alone.
