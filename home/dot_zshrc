@@ -79,8 +79,7 @@ compinit -u
 
 # Lets zsh use bash completions, like the ones aws and terraform provide.
 # https://github.com/zsh-users/zsh/blob/master/Completion/bashcompinit
-# +X loads the function right away instead of the first time it's called.
-autoload -U +X bashcompinit
+autoload -Uz bashcompinit
 bashcompinit
 
 # Use aws's own completer, unless zsh already has one for aws (_aws). whence
@@ -121,7 +120,7 @@ bindkey -e
 # action that bindkey can bind a key to. In key sequences, ^ means Ctrl, and
 # ^[ is Escape, which starts what terminals send for special keys, like ^[[A
 # for the up arrow.
-autoload -U up-line-or-beginning-search down-line-or-beginning-search
+autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
 zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
 bindkey '^P' up-line-or-beginning-search
