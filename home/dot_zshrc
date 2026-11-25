@@ -163,7 +163,7 @@ zshaddhistory() {
 
 # zsh doesn't save history unless HISTFILE is set. Codespaces keep it in a
 # folder that survives rebuilds.
-HISTFILE="${HISTFILE:-${ZDOTDIR:-$HOME}/.zsh_history}"
+HISTFILE="${HISTFILE:-$HOME/.zsh_history}"
 if [[ $CODESPACES == "true" && -d /workspaces/.codespaces/.persistedshare ]]; then
   HISTFILE="/workspaces/.codespaces/.persistedshare/.zsh_history"
 fi
