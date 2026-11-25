@@ -79,8 +79,8 @@ set wildmode=longest:full,full
 set mouse=a
 
 " Reselect visual block after indent/outdent
-vnoremap < <gv
-vnoremap > >gv
+xnoremap < <gv
+xnoremap > >gv
 
 " Split below and to the right
 set splitbelow
