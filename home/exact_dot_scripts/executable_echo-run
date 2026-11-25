@@ -57,7 +57,7 @@ done
 if [ -t 1 ] || [ -n "${FORCE_COLOR-}" ]; then
   printf "\033[1;34m" >&2
 fi
-if [ "$USER" = "root" ]; then
+if [ "${USER-}" = "root" ]; then
   printf '# %s\n' "${_echo_run_current_value}" >&2
 else
   printf '$ %s\n' "${_echo_run_current_value}" >&2
