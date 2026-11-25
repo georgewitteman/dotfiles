@@ -63,7 +63,7 @@ fi
 echo-run git checkout "$main_branch"
 
 if $rebase; then
-  set -- "$@" --rebase
+  set -- --rebase
 fi
 
 if $pull; then
