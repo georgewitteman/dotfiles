@@ -48,7 +48,6 @@ if [ "${TERM_PROGRAM-}" = vscode ] && command -v code >/dev/null; then
 fi
 
 alias gs='git status'
-alias pull='git pull'
 alias gb='switch-branch'
 
 alias tf="terraform"
