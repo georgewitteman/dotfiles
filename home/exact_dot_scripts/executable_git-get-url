@@ -3,8 +3,8 @@
 set -o errexit
 
 die() {
-  echo "error: $2" >&2
-  exit "$1"
+  echo "error: $1" >&2
+  exit 1
 }
 
 usage() {
@@ -30,7 +30,7 @@ while [ "$#" -gt 0 ]; do
       ;;
     --branch | --with-commit)
       if [ $# -lt 2 ]; then
-        die 1 "${1} requires a value"
+        die "${1} requires a value"
       fi
       if [ "$1" = --branch ]; then
         branch="$2"
@@ -39,8 +39,8 @@ while [ "$#" -gt 0 ]; do
       fi
       shift
       ;;
-    -?*) die 1 "unknown option: ${1}" ;;
-    *) die 1 "unexpected argument: ${1}" ;;
+    -?*) die "unknown option: ${1}" ;;
+    *) die "unexpected argument: ${1}" ;;
   esac
   shift
 done
@@ -64,7 +64,7 @@ case "$giturl" in
     project_url="$(echo "$giturl" | sed -e 's~^[^@]*@~https://~' -e 's~:~/~2' -e 's~\.git$~~')"
     ;;
   *)
-    die 1 "origin isn't on a web host"
+    die "origin isn't on a web host"
     ;;
 esac
 

@@ -3,8 +3,8 @@
 set -o errexit
 
 die() {
-  echo "error: $2" >&2
-  exit "$1"
+  echo "error: $1" >&2
+  exit 1
 }
 
 usage() {
@@ -46,8 +46,8 @@ while [ "$#" -gt 0 ]; do
       rebase=true
       pull=true
       ;;
-    -?*) die 1 "unknown option: ${1}" ;;
-    *) die 1 "unexpected argument: ${1}" ;;
+    -?*) die "unknown option: ${1}" ;;
+    *) die "unexpected argument: ${1}" ;;
   esac
   shift
 done
