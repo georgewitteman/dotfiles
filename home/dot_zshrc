@@ -22,13 +22,11 @@ emulate sh -c '. "${HOME}/.shinit"'
 # %B/%b turn bold on/off, %F{color}/%f set/reset the text color, and
 # %K{color}/%k set/reset the background color. %(X.yes.no) shows yes when X
 # holds and no otherwise.
-if [[ -n $SSH_CONNECTION ]]; then
-  PROMPT='%B%F{magenta}%n@%m%f%b in '
-else
-  PROMPT=''
-fi
-PROMPT+='%B%F{cyan}%~%f%b at %B%F{yellow}%D{%I:%M %p}%f%b %(1j.%B%F{magenta}%j job%(2j.s.)%f%b .)%(?..%K{red}%B%F{white} %? %f%b%k )
+PROMPT='%B%F{cyan}%~%f%b at %B%F{yellow}%D{%I:%M %p}%f%b %(1j.%B%F{magenta}%j job%(2j.s.)%f%b .)%(?..%K{red}%B%F{white} %? %f%b%k )
 %B%(!.%F{red}#.%(?.%F{green}.%F{red})$)%f%b '
+if [[ -n $SSH_CONNECTION ]]; then
+  PROMPT="%B%F{magenta}%n@%m%f%b in $PROMPT"
+fi
 
 # Completion settings are documented in "Completion System" in
 # `man zshcompsys`: https://zsh.sourceforge.io/Doc/Release/Completion-System.html
