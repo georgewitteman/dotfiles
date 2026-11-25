@@ -65,8 +65,12 @@ def main():
         print("copies it back to the clipboard.")
         return
 
-    source = subprocess.run(["cpaste"], capture_output=True, text=True).stdout
-    result = transform(source)
+    # cpaste prints its own error. Stop there, so an empty result doesn't replace
+    # the clipboard.
+    paste = subprocess.run(["cpaste"], stdout=subprocess.PIPE, text=True)
+    if paste.returncode != 0:
+        sys.exit(paste.returncode)
+    result = transform(paste.stdout)
 
     sys.stdout.write(result)
     if not result.endswith("\n"):
