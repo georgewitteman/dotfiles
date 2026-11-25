@@ -88,7 +88,7 @@ case "$command" in
           usage
           exit
           ;;
-        -*) die "unknown option: ${arg}" ;;
+        -?*) die "unknown option: ${arg}" ;;
       esac
     done
     echo-run chezmoi edit "$@"
