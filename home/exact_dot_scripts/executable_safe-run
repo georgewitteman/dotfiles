@@ -1,14 +1,19 @@
 #!/bin/sh
 
-if [ "$#" -eq 0 ]; then
-  exit
-fi
-case "$1" in
+usage() {
+  echo "usage: $(basename "$0") <command> [<argument>...]"
+  echo
+  echo "Prints the command and asks before running it, then runs it with echo-run."
+}
+
+case "${1-}" in
   -h | --help)
-    echo "usage: $(basename "$0") <command> [<argument>...]"
-    echo
-    echo "Prints the command and asks before running it, then runs it with echo-run."
+    usage
     exit
+    ;;
+  "")
+    usage >&2
+    exit 1
     ;;
 esac
 
