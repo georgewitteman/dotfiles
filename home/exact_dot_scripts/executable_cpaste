@@ -16,6 +16,7 @@ if [ "$#" -gt 0 ]; then
   exit 1
 fi
 
+# exec replaces this script with pbpaste.
 if command -v pbpaste >/dev/null; then
   exec pbpaste
 fi
@@ -23,16 +24,27 @@ fi
 esc="$(printf '\033')"
 bel="$(printf '\007')"
 
+# exec 3<>/dev/tty opens the terminal as file descriptor 3, for both reading
+# and writing, so this works even when stdin and stdout are redirected. <&3
+# and >&3 read from and write to it.
 exec 3<>/dev/tty
+# stty changes the terminal's settings, and stty -g prints them in a form it
+# can restore. trap restores them when the script exits, and turns Ctrl-C
+# (INT) or TERM into an exit, so that restore still runs. 130 is the usual
+# exit status after Ctrl-C.
 saved_tty="$(stty -g <&3)"
 trap 'stty "$saved_tty" <&3' EXIT
 trap 'exit 130' INT TERM
-# Each read returns after at most a second, so a terminal that doesn't answer
-# can't hang this.
+# raw passes the reply through as it arrives, and -echo keeps it off the
+# screen. min 0 time 10 makes each read return after at most a second
+# (time is in tenths of a second), so a terminal that doesn't answer can't
+# hang this.
 stty raw -echo min 0 time 10 <&3
 
 # The terminal answers with ESC ] 52 ; c ; <base64>, ended by BEL or ESC \.
-# Allow a few empty reads, in case it's asking for permission first.
+# Allow a few empty reads, in case it's asking for permission first. ? asks
+# for the clipboard instead of setting it. dd bs=4096 count=1 does one read
+# of up to 4096 bytes.
 printf '\033]52;c;?\a' >&3
 reply=
 tries=0
@@ -56,6 +68,9 @@ case "$reply" in
     ;;
 esac
 
+# Keep only the base64 data: ${reply#*]52;*;} drops everything up to it, and
+# ${data%%"$bel"*} and ${data%%"$esc"*} drop the BEL or ESC \ that ends it.
+# base64 -d decodes it.
 data="${reply#*]52;*;}"
 data="${data%%"$bel"*}"
 data="${data%%"$esc"*}"

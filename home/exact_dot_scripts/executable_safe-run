@@ -18,12 +18,22 @@ case "${1-}" in
 esac
 
 # Show the command quoted the same way echo-run shows it, without the "$ ".
+# ECHO_RUN_ECHO_ONLY makes echo-run only print it. 2>&1 >/dev/null keeps just
+# what it prints to stderr: stderr goes where stdout was going, into
+# $command, and then stdout is thrown away. ${command#??} drops the first two
+# characters. \033[33m turns the text yellow, and \033[0m resets it.
 command="$(FORCE_COLOR='' ECHO_RUN_ECHO_ONLY=1 echo-run "$@" 2>&1 >/dev/null)"
 printf "\033[33mRun \`%s\` (y/N)?\033[0m " "${command#??}" >&2
 
+# Read the answer from the terminal, even if stdin is redirected. -r keeps
+# backslashes as typed.
 read -r reply </dev/tty
+# ${reply#[Yy]} drops a leading y or Y, so if that changes nothing, the answer
+# wasn't yes.
 if [ "$reply" = "${reply#[Yy]}" ]; then
   exit 1
 fi
 
+# exec replaces this script with echo-run, so its exit status is this
+# script's.
 exec echo-run "$@"

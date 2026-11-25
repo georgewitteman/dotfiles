@@ -1,7 +1,8 @@
 #!/bin/sh
 
 # Sourced by the echo_run shell function too, so it returns instead of exiting
-# when it can.
+# when it can. return only works in a sourced file or a function. In a script
+# it fails, with its error hidden by 2>/dev/null, so exit runs instead.
 if [ "$#" -eq 0 ]; then
   # shellcheck disable=SC2317
   return 0 2>/dev/null || exit 0
@@ -16,13 +17,19 @@ case "$1" in
     ;;
 esac
 
+# When sourced, these variables live in the calling shell, so their names
+# start with _echo_run_ to avoid clashing with its own, and they're unset at
+# the end.
 _echo_run_current_value=''
 
+# Build the command line to print, quoting each argument only if it needs it.
 for _echo_run_current_arg in "$@"; do
-  if [ -n "${_echo_run_current_value:++}" ]; then
+  if [ -n "$_echo_run_current_value" ]; then
     _echo_run_current_value="${_echo_run_current_value} "
   fi
 
+  # An empty argument (${...:-=} turns it into =) and one starting with = or
+  # ~, which zsh or the shell would expand, need quotes.
   _echo_run_arg_needs_quotes=
   case ${_echo_run_current_arg:-=} in
     [=~]*) _echo_run_arg_needs_quotes=1 ;;
@@ -30,9 +37,14 @@ for _echo_run_current_arg in "$@"; do
 
   _echo_run_current_arg_temp="$_echo_run_current_arg"
 
+  # A single quote can't go inside single quotes, so split the argument at
+  # each one, quote the parts between them as needed, and write each single
+  # quote as \'. ${...%%\'*} is the text before the first single quote, and
+  # ${...#*\'} the text after it.
   while _echo_run_part_before_single_quote=${_echo_run_current_arg_temp%%\'*}; do
     _echo_run_part_needs_quotes=
 
+    # A part with any character outside these safe ones needs quotes.
     case $_echo_run_part_before_single_quote in
       *[!-+=~@%/:.,_0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ]*)
         _echo_run_part_needs_quotes=1
@@ -54,6 +66,9 @@ for _echo_run_current_arg in "$@"; do
   done
 done
 
+# Print it to stderr, after $ or # for root like a prompt, in bold blue
+# (\033[1;34m, reset by \033[0m) when stdout is a terminal (-t 1) or
+# FORCE_COLOR is set.
 if [ -t 1 ] || [ -n "${FORCE_COLOR-}" ]; then
   printf "\033[1;34m" >&2
 fi

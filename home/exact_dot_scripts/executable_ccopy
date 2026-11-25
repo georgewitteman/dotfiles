@@ -16,11 +16,13 @@ if [ "$#" -gt 0 ]; then
   exit 1
 fi
 
+# exec replaces this script with pbcopy, which reads the same stdin.
 if command -v pbcopy >/dev/null; then
   exec pbcopy
 fi
 
-# OSC 52: ESC ] 52 ; c ; <base64> BEL. Write to the terminal itself, since
-# stdout may be redirected.
+# OSC 52: ESC ] 52 ; c ; <base64> BEL, where c means the clipboard. In printf,
+# \033 is ESC and \a is BEL. Write to the terminal itself, since stdout may be
+# redirected. tr -d '\n' removes the line breaks base64 adds.
 data="$(base64 | tr -d '\n')"
 printf '\033]52;c;%s\a' "$data" >/dev/tty
