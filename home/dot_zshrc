@@ -82,10 +82,10 @@ compinit -u
 autoload -Uz bashcompinit
 bashcompinit
 
-# Use aws's own completer, unless zsh already has one for aws (_aws). whence
-# looks up a command like command -v does, and &>/dev/null hides both its
-# output and its errors. complete -C runs that program to get completions, the
-# way bash does.
+# Use aws's own completer, unless a zsh completion for aws (_aws, which
+# Homebrew's awscli installs) is in fpath. whence looks up a command like
+# command -v does, and &>/dev/null hides both its output and its errors.
+# complete -C runs that program to get completions, the way bash does.
 # https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-completion.html
 if ! whence _aws &>/dev/null && command -v aws_completer &>/dev/null; then
   complete -C "$(command -v aws_completer)" aws
