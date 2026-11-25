@@ -26,5 +26,4 @@ fi
 # without needing to restart my terminal.
 PATH="${HOME}/.local/bin:${PATH}"
 PATH="${HOME}/.scripts:${PATH}"
-PATH="${HOME}/.cargo/bin:${PATH}"
 PATH="/opt/homebrew/opt/libpq/bin:${PATH}"
