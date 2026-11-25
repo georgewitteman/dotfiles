@@ -34,6 +34,11 @@ hard rules: break one when the value is clearly worth it, and say why.
 - **Apply right after making changes.** Check `chezmoi diff` first, since
   applying can delete files, and ask only if it would delete or change
   something unexpected.
+- **Commit in small steps.** One commit per change, not one large commit
+  bundling several.
+- **Test git scripts in a scratch repository.** Run scripts that use git in a
+  throwaway repository with a local remote, never in this repo or another real
+  one, even just to check their arguments.
 - **Keep it minimal.** Small diffs, few files, no features nobody asked for.
   Delete anything that's no longer used. Every line, option and setting should
   solve a problem you can name; if nobody can say what it's for, remove it or
