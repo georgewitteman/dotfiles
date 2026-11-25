@@ -62,26 +62,12 @@ zstyle ':completion:*:warnings' format 'No matches for: %d'
 # own heading.
 zstyle ':completion:*' group-name ''
 
-# -C uses the existing dump without checking for changed completion files.
-# -u uses completion files owned by other users, or writable by them, instead
-# of asking, which matters on machines with several users. With -C, that check
-# only runs when there's no dump yet.
+# compinit rebuilds its dump when completion files are added or removed. -u
+# uses completion files owned by other users, or writable by them, instead of
+# asking, which matters on machines with several users.
 # https://zsh.sourceforge.io/Doc/Release/Completion-System.html#Use-of-compinit
 autoload -Uz compinit
-compinit -C -u
-
-# Warn when the dump is missing any of the dotfiles' completions, like when
-# something else wrote it.
-() {
-  local f
-  for f in "${HOME}"/.local/share/zsh/functions/_*(N:t); do
-    # The dump autoloads every completion function it knows about
-    if (( ! ${+functions[$f]} )); then
-      print -u2 "zsh completions are out of date. Run resh to rebuild them."
-      return
-    fi
-  done
-}
+compinit -u
 
 # Lets zsh use bash completions, like the ones aws and terraform provide.
 # https://github.com/zsh-users/zsh/blob/master/Completion/bashcompinit
@@ -89,7 +75,7 @@ autoload -U +X bashcompinit
 bashcompinit
 
 # https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-completion.html
-if ! whence _aws >/dev/null 2>&1 && command -v aws_completer >/dev/null 2>&1; then
+if ! whence _aws &>/dev/null && command -v aws_completer &>/dev/null; then
   complete -C "$(command -v aws_completer)" aws
 fi
 
@@ -101,14 +87,13 @@ fi
 # These scripts pass their arguments to a git command
 compdef _git git-show=git-show diff-main=git-diff pull=git-pull
 
-# If a command is issued that can’t be executed as a normal command, and the
-# command is the name of a directory, perform the cd command to that directory
+# Typing a directory's name on its own goes there.
 setopt auto_cd
 
 # Allow comments in the interactive shell, like in pasted commands.
 setopt interactive_comments
 
-# Remove the / character from the $WORDCHARS
+# ^W and Alt-B/Alt-F stop at each / in a path.
 WORDCHARS="${WORDCHARS/\//}"
 
 # Use emacs keybindings, since zsh picks vi mode when EDITOR or VISUAL
@@ -125,10 +110,6 @@ bindkey '^P' up-line-or-beginning-search
 bindkey '^N' down-line-or-beginning-search
 bindkey "^[[A" up-line-or-beginning-search
 bindkey "^[[B" down-line-or-beginning-search
-
-# Alt-Right and Alt-Left move by word.
-bindkey '^[[1;3C' forward-word
-bindkey '^[[1;3D' backward-word
 
 # Space expands an alias before inserting the space.
 zle_expand_alias() {
@@ -186,7 +167,7 @@ zshaddhistory() {
 # zsh doesn't save history unless HISTFILE is set. Codespaces keep it in a
 # folder that survives rebuilds.
 HISTFILE="${HISTFILE:-${ZDOTDIR:-$HOME}/.zsh_history}"
-if [ "$CODESPACES" = "true" ] && [ -d "/workspaces/.codespaces/.persistedshare" ]; then
+if [[ $CODESPACES == "true" && -d /workspaces/.codespaces/.persistedshare ]]; then
   HISTFILE="/workspaces/.codespaces/.persistedshare/.zsh_history"
 fi
 
