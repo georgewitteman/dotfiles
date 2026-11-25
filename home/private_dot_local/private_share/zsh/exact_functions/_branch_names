@@ -31,7 +31,7 @@ case $service in
   branch)
     _arguments \
       {-l,--latest,-p,--pull}'[fetch the base branch first]' \
-      '--stash[stash changes and reapply them on the new branch]' \
+      '--stash[take uncommitted changes to the new branch]' \
       '1: :_guard "^-*" "new branch name"' \
       '2:base branch:{compadd -a origin_branches}'
     ;;
