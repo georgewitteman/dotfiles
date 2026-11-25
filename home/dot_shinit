@@ -1,8 +1,7 @@
 #!/bin/sh
 
-# Load .profile if this shell started without it, like a terminal opened
-# before the dotfiles were installed. .profile sets ENV, so it's empty here
-# until .profile has run.
+# Load .profile if no parent shell has, like in a non-login shell started by
+# `docker exec`. .profile sets ENV, so it's empty here until .profile has run.
 if [ -z "$ENV" ]; then
   . "${HOME}/.profile"
 fi
