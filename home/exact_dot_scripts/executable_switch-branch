@@ -49,7 +49,7 @@ if [ -n "$branch" ]; then
       fi
     # <remote branch>:<local branch> fetches straight into the local branch.
     elif ! echo-run git fetch origin "$branch":"$branch"; then
-      # Only a fast-forward updates the branch, so local commits are kept
+      # Only a fast-forward updates the branch, so local commits are kept.
       echo "warning: ${branch} has commits origin doesn't, so it wasn't updated" >&2
       echo-run git fetch origin "$branch"
     fi

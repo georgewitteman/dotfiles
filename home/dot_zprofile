@@ -5,6 +5,6 @@
 # command.
 emulate sh -c '. "${HOME}/.profile"'
 
-# Docker Desktop checks for its zsh completions with a login shell, which
-# doesn't read .zshrc. If they aren't there, it prompts to add its own block.
+# Docker Desktop checks for its zsh completions with a non-interactive login
+# shell (zsh -lc), which doesn't read .zshrc. If they aren't there, it prompts to add its own block.
 FPATH="${HOME}/.docker/completions:${FPATH}"

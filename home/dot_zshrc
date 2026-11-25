@@ -13,16 +13,15 @@ emulate sh -c '. "${HOME}/.shinit"'
 #   %~             current directory, with $HOME shown as ~
 #   at %D{...}     time the prompt was drawn, e.g. 08:28 PM, which is also
 #                  roughly when the previous command finished
-#   %(1j.….)       if there's at least 1 background job: "%j job", plus an
-#                  "s" when there are 2 or more (%(2j.s.))
+#   %(1j.….)       if there's at least 1 job, background or stopped: "%j job",
+#                  plus an "s" when there are 2 or more (%(2j.s.))
 #   %(?..…)        if the last command failed: its exit code, white on red
 #   newline, then  red # if root (%(!.…)), otherwise $, green if the last
 #                  command succeeded and red if it failed (%(?.…))
 #
 # %B/%b turn bold on/off, %F{color}/%f set/reset the text color, and
 # %K{color}/%k set/reset the background color. %(X.yes.no) shows yes when X
-# holds and no otherwise: 1j is at least 1 job, ? the last command succeeding,
-# and ! being root.
+# holds and no otherwise.
 if [[ -n $SSH_CONNECTION ]]; then
   PROMPT='%B%F{magenta}%n@%m%f%b in '
 else
@@ -51,7 +50,7 @@ setopt complete_in_word always_to_end
 # https://zsh.sourceforge.io/Guide/zshguide06.html#l170
 zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'l:|=* r:|=*'
 
-# Colors for files
+# Colors for files.
 # - https://zsh.sourceforge.io/Doc/Release/Zsh-Modules.html#The-zsh_002fcomplist-Module
 # - Meant to match the default colors of macOS `ls`.
 # - Each entry is <type>=<codes>. Types: di directory, ln symlink, so socket,
@@ -71,8 +70,8 @@ zstyle ':completion:*:warnings' format 'No matches for: %d'
 # own heading.
 zstyle ':completion:*' group-name ''
 
-# compinit -u uses completion files owned by other users, or writable by them, instead of
-# asking, which matters on machines with several users.
+# compinit -u uses completion files owned by other users, or writable by them,
+# instead of asking, which matters on machines with several users.
 # https://zsh.sourceforge.io/Doc/Release/Completion-System.html#Use-of-compinit
 #
 # autoload makes a function from a file in $fpath load the first time it's
@@ -189,22 +188,22 @@ zshaddhistory() {
   fi
   # A literal value in a secret-named variable, like FOO_TOKEN=abc,
   # PGPASSWORD="abc", DD_APP_KEY=abc or AWS_ACCESS_KEY_ID=abc, but not
-  # TOKEN="$(op read ...)" or TOKEN=$OTHER
+  # TOKEN="$(op read ...)" or TOKEN=$OTHER.
   if [[ $line == (#i)*(token|secret|passw(or|)d|(api|app|access)[-_]#key)[[:alnum:]_]#=[\"\']#[^\$\"\'[:space:]]* ]]; then
     return 2
   fi
-  # Secret flags, like --password=abc or --api-key abc
+  # Secret flags, like --password=abc or --api-key abc.
   if [[ $line == (#i)*--(password|passwd|token|secret|client-secret|access-token|auth-token|api[-_]#key)[=\ ]* ]]; then
     return 2
   fi
-  # Auth headers and cookies, like curl -H 'Authorization: ...' or -b 'a=b'
+  # Auth headers and cookies, like curl -H 'Authorization: ...' or -b 'a=b'.
   if [[ $line == (#i)*(-H|--header)[=\ ]#[\"\']#(authorization|cookie|[[:alnum:]-]#(token|key|secret)):* ]]; then
     return 2
   fi
   if [[ $line == *curl*(\ -b|\ --cookie)[=\ ]* ]]; then
     return 2
   fi
-  # Credentials in a URL, like postgres://user:password@host
+  # Credentials in a URL, like postgres://user:password@host.
   if [[ $line == *://[^/@[:space:]]##:[^/@[:space:]]##@* ]]; then
     return 2
   fi

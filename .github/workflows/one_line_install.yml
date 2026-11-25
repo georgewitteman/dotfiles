@@ -1,8 +1,5 @@
 name: Quick Install
 
-# Installs the way a new machine would. It runs daily to catch breakage from
-# outside this repo, like a new chezmoi release or runner image.
-
 # Quoted, since YAML 1.1 reads a bare on as true.
 "on":
   push:
@@ -11,8 +8,10 @@ name: Quick Install
     paths:
       - .github/workflows/one_line_install.yml
   workflow_dispatch:
+  # Install the way a new machine would every day, to catch breakage from
+  # outside this repo, like a new chezmoi release or runner image. The cron
+  # fields are minute, hour, day of month, month and weekday: 12:30 UTC daily.
   schedule:
-    # 12:30 UTC daily
     - cron: "30 12 * * *"
 
 jobs:

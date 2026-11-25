@@ -52,7 +52,7 @@ set linebreak
 set number
 set relativenumber
 
-" Show tabs as »· and trailing spaces as ·
+" Show tabs as »· and trailing spaces as ·.
 set list
 set listchars=tab:»·,trail:·
 
@@ -72,10 +72,10 @@ xnoremap > >gv
 set splitbelow
 set splitright
 
-" Wait at most 50 ms for the rest of a key code, so Esc is quick
+" Wait at most 50 ms for the rest of a key code, so Esc is quick.
 set ttimeoutlen=50
 
-" Always show the status line, not only when the window is split
+" Always show the status line, not only when the window is split.
 set laststatus=2
 
 " Use ripgrep for :grep when it's installed. rg --vimgrep prints each match as
@@ -90,7 +90,7 @@ endif
 " In netrw, - goes up another level.
 "
 " expand('%:t') is the current file's name without its directory, and
-" :Explore opens netrw on that directory. nnoremap maps - in Normal mode,
+" :Explore opens netrw on the current file's directory. nnoremap maps - in Normal mode,
 " <SID> calls this script's s: function, and <silent> keeps the command off
 " the command line.
 function! s:OpenDirectory() abort

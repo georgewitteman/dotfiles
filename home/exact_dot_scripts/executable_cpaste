@@ -31,13 +31,13 @@ exec 3<>/dev/tty
 # stty changes the terminal's settings, and stty -g prints them in a form it
 # can restore. trap restores them when the script exits, and turns an
 # interrupt (INT) or TERM into an exit, so that restore still runs. 130 is the
-# usual exit status after an interrupt. In raw mode, Ctrl-C is plain input,
-# not an interrupt.
+# usual exit status after an interrupt.
 saved_tty="$(stty -g <&3)"
 trap 'stty "$saved_tty" <&3' EXIT
 trap 'exit 130' INT TERM
 # raw passes the reply through as it arrives, and -echo keeps it off the
-# screen. min 0 time 10 makes each read return after at most a second
+# screen. raw also makes Ctrl-C plain input, so it can't interrupt the wait,
+# which the timeout below makes short. min 0 time 10 makes each read return after at most a second
 # (time is in tenths of a second), so a terminal that doesn't answer can't
 # hang this.
 stty raw -echo min 0 time 10 <&3

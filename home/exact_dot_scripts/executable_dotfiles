@@ -24,7 +24,7 @@ die() {
   exit 1
 }
 
-# Sets confirm from apply's and update's arguments, before anything runs
+# Sets confirm from apply's and update's arguments, before anything runs.
 parse_apply_args() {
   confirm=safe-run
   case "$1" in

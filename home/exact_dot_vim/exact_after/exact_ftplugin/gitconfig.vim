@@ -1,5 +1,6 @@
 " Indent git config files with tabs (noexpandtab), as git writes them.
-" setlocal changes the options only for this buffer.
+" setlocal changes the options only for this buffer, and shiftwidth=8 makes
+" each indent one tab, since tabs are 8 columns wide.
 setlocal noexpandtab
 setlocal shiftwidth=8
 

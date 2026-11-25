@@ -1,5 +1,4 @@
-# Note: Can't do enable=all with specific disables.
-# Run `shellcheck --list-optional` to view optional checks.
+# Optional checks, which `shellcheck --list-optional` lists.
 enable=avoid-negated-conditions
 enable=avoid-nullary-conditions
 enable=check-extra-masked-returns

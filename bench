@@ -94,8 +94,8 @@ wait_for_marker() {
 # makes it a login shell, the way login and terminals start one. Types a
 # command right away, and stops when its output appears.
 #
-# The typed lines start with a space, which zsh, fish, and bash with
-# HISTCONTROL=ignorespace keep out of the history file. Other shells get no
+# The typed lines start with a space, which fish, zsh with hist_ignore_space,
+# and bash with HISTCONTROL=ignorespace keep out of the history file. Other shells get no
 # history file instead. ${1#-} is the name without its -.
 #
 # zpty bench starts the command in a new terminal named bench, and puts the

@@ -25,12 +25,19 @@
 	# which shows what each side changed
 	conflictStyle = diff3
 
-{{- /* Sign with my SSH key. With 1Password installed, through its signer,
-       which finds the agent without SSH_AUTH_SOCK, even while 1Password is
-       quit when applying. Elsewhere, when the key is in the agent, like one
-       forwarded over ssh. Skipped in codespaces: the key is never there, and
-       while a codespace is being created its forwarded agent can hang ssh-add
-       for minutes. */}}
+{{- /* Sign with my SSH key. With 1Password installed, through its
+       op-ssh-sign, which finds 1Password's agent without SSH_AUTH_SOCK, so
+       it works even if 1Password isn't running when applying. Elsewhere, only
+       when the key is in the agent, like one forwarded over ssh. Skipped in
+       codespaces: the key is never there, and while a codespace is being
+       created its forwarded agent can hang ssh-add for minutes.
+
+       In these template lines, {{- drops the whitespace before them, so they
+       leave no blank lines. stat is empty when a path doesn't exist, output
+       runs a command and returns what it prints, and lookPath finds a program
+       in PATH. ssh-add -L prints the public keys the agent holds, and
+       git config --default "" prints nothing, instead of failing, when the
+       setting isn't there. */}}
 {{- $op_ssh_sign := "/Applications/1Password.app/Contents/MacOS/op-ssh-sign" }}
 {{- $has_op_ssh_sign := stat $op_ssh_sign }}
 {{- $ssh_sign := false }}

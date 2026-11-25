@@ -9,8 +9,8 @@
 .vim/.netrwhist
 
 # 1Password's app folder exists whenever 1Password is installed, even while
-# it isn't running. Without it, leave any existing ~/.ssh/config alone. stat
-# returns nothing when the path doesn't exist.
+# it isn't running. Without that folder, don't manage ~/.ssh/config, so any
+# existing one is left alone. stat returns nothing when the path doesn't exist.
 {{ if not (stat (joinPath .chezmoi.homeDir "Library/Group Containers/2BUA8C4S2C.com.1password")) }}
 .ssh/config
 {{ end }}

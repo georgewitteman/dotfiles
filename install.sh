@@ -66,7 +66,7 @@ if [ -d /dev/shm ] && [ -w /dev/shm ]; then
   set -- "--persistent-state=${tmp_dir}/chezmoistate.boltdb"
 fi
 
-# Print out the following commands before executing
+# Print out the following commands before executing.
 set -o xtrace
 
 # chezmoi init sets chezmoi up with this repo as its source (--source), and
@@ -84,8 +84,8 @@ if [ -n "$tmp_dir" ]; then
 fi
 
 # Make zsh the login shell in codespaces, so SSH sessions and $SHELL use it too.
-# chsh changes the login shell of the user id -un names. sudo -n fails instead
-# of asking for a password. ${CODESPACES-} is empty when CODESPACES isn't set,
+# chsh changes the login shell of the current user (id -un). sudo -n fails
+# instead of asking for a password. ${CODESPACES-} is empty when CODESPACES isn't set,
 # instead of an error under nounset.
 if [ -n "${CODESPACES-}" ] && command -v zsh >/dev/null && command -v chsh >/dev/null; then
   sudo -n chsh "$(id -un)" --shell "$(command -v zsh)" || true

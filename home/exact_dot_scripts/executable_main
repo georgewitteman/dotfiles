@@ -60,7 +60,8 @@ if $rebase; then
   set -- --rebase
 fi
 
-# --prune deletes local copies of branches that were deleted on origin.
+# --prune deletes origin/<branch> refs whose branch was deleted on origin.
+# Local branches are kept.
 if $pull; then
   echo-run git pull --prune "$@"
 fi

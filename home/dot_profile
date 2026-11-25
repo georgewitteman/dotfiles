@@ -26,8 +26,9 @@ if [ -x "/opt/homebrew/bin/brew" ]; then
   eval "$(/opt/homebrew/bin/brew shellenv || true)"
 fi
 
-# Always add things to PATH so that I can use them directly after installing
-# without needing to restart my terminal.
+# Add these even before they exist, so things installed there later work
+# without restarting the terminal. libpq is Homebrew's PostgreSQL client
+# tools, like psql, which Homebrew doesn't add to PATH itself.
 PATH="${HOME}/.local/bin:${PATH}"
 PATH="${HOME}/.scripts:${PATH}"
 PATH="/opt/homebrew/opt/libpq/bin:${PATH}"
