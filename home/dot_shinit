@@ -6,22 +6,6 @@ if [ -z "$ENV" ]; then
   . "${HOME}/.profile"
 fi
 
-# Defined first, so it still works when something below it breaks.
-alias resh="restart_shell"
-restart_shell() {
-  # shellcheck disable=SC2312
-  if [ -n "$(jobs)" ]; then
-    echo "Current shell has backgrounded jobs. Not restarting."
-    return 1
-  fi
-
-  # $0 is the shell, with a leading - for a login shell. zsh runs this file's
-  # functions with sh's rules, where $0 isn't the function's name.
-  set -- "${1:-$0}"
-  set -- "${1#-}" -li
-  echo_run exec "$@"
-}
-
 # A function instead of the script itself, so it runs in this shell and
 # commands like `echo_run cd` affect it. Sourcing a file inside a function
 # passes the function's arguments along as $@.
