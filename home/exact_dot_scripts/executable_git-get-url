@@ -21,9 +21,6 @@ file in it. A file links to its contents at HEAD, or at --with-commit's commit.
 EOF
 }
 
-# Outside a repo, git ls-remote --get-url just prints the remote's name back,
-# so check for a repo first.
-git rev-parse --git-dir >/dev/null
 pull_request=false
 commit=false
 commit_id=
@@ -95,6 +92,10 @@ while [ "$#" -gt 0 ]; do
   esac
   shift
 done
+
+# Outside a repo, git ls-remote --get-url just prints the remote's name back,
+# so check for a repo first.
+git rev-parse --git-dir >/dev/null
 
 default_remote="origin"
 giturl="$(git ls-remote --get-url "$default_remote")"

@@ -5,7 +5,7 @@ set -o nounset
 
 usage() {
   cat <<EOF
-usage: $(basename "$0") [--remote=origin] [--theirs]
+usage: $(basename "$0") [--remote=origin] [--theirs | --mine]
        $(basename "$0") -c|--continue [--no-verify]
        $(basename "$0") --abort
 
@@ -14,6 +14,7 @@ yarn.lock is the only conflict, it reruns yarn install and finishes the merge.
 
     --remote=<remote>   remote to merge from (default: origin)
     --theirs            prefer the main branch's side in conflicts
+    --mine              prefer this branch's side in conflicts
     -c, --continue      after resolving conflicts, stage the files that were
                         in conflict and commit the merge
     --no-verify         with --continue, bypass pre-commit and commit-msg hooks
@@ -25,7 +26,7 @@ remote="origin"
 continue_=false
 no_verify=false
 abort=false
-theirs=false
+prefer=
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
@@ -59,8 +60,17 @@ while [ "$#" -gt 0 ]; do
     --no-verify)
       no_verify=true
       ;;
-    --theirs)
-      theirs=true
+    --theirs | --mine)
+      if [ -n "$prefer" ]; then
+        echo "error: use only one of --theirs and --mine" >&2
+        exit 1
+      fi
+      # git calls the current branch's side "ours"
+      if [ "$1" = --theirs ]; then
+        prefer=theirs
+      else
+        prefer=ours
+      fi
       ;;
     --remote)
       if [ -z "${2-}" ]; then
@@ -133,12 +143,13 @@ main_branch="${main_branch#origin/}"
 
 echo-run git fetch "$remote" "$main_branch"
 
-merge_status=0
-if $theirs; then
-  echo-run git merge --no-edit --strategy-option=theirs "${remote}/${main_branch}" || merge_status=$?
-else
-  echo-run git merge --no-edit "${remote}/${main_branch}" || merge_status=$?
+set --
+if [ -n "$prefer" ]; then
+  set -- "--strategy-option=${prefer}"
 fi
+
+merge_status=0
+echo-run git merge --no-edit "$@" "${remote}/${main_branch}" || merge_status=$?
 
 if [ "$merge_status" -eq 0 ]; then
   exit 0

@@ -9,7 +9,7 @@ die() {
 
 usage() {
   cat <<EOF
-usage: $(basename "$0") [-q|--quiet] [-p|--pull] [--rebase]
+usage: $(basename "$0") [-p|--pull] [--rebase]
 
 Switches to the main branch, creating it from origin if there's no local one,
 and shows its latest commit. In a linked worktree, where the main branch can't
@@ -17,14 +17,12 @@ be checked out because another worktree may have it, it uses a
 <worktree directory>-main branch that tracks the same upstream instead.
 
     -p, --pull      pull after switching, pruning deleted remote branches
-    -q, --quiet     pass --quiet to git pull
     --rebase        pull with --rebase (implies --pull)
 EOF
 }
 
 pull=false
 rebase=false
-quiet=false
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
@@ -44,7 +42,6 @@ while [ "$#" -gt 0 ]; do
       exit
       ;;
     -p | --pull) pull=true ;;
-    -q | --quiet) quiet=true ;;
     --rebase)
       rebase=true
       pull=true
@@ -96,10 +93,6 @@ if [ "$current_branch" != "$main_branch" ]; then
 fi
 
 set --
-
-if $quiet; then
-  set -- "$@" --quiet
-fi
 
 if $rebase; then
   set -- "$@" --rebase

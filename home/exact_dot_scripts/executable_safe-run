@@ -1,27 +1,25 @@
 #!/bin/sh
 
 if [ "$#" -eq 0 ]; then
-  # shellcheck disable=SC2317
-  return 2>/dev/null || exit
+  exit
 fi
+case "$1" in
+  -h | --help)
+    echo "usage: $(basename "$0") <command> [<argument>...]"
+    echo
+    echo "Prints the command and asks before running it, then runs it with echo-run."
+    exit
+    ;;
+esac
 
 # Reuse echo-run's quoting, which prints "$ <command>" without color when stdout
 # isn't a terminal.
-_safe_run_command="$(FORCE_COLOR='' ECHO_RUN_ECHO_ONLY=1 echo-run "$@" 2>&1 >/dev/null)"
-printf "\033[33mRun \`%s\` (y/N)?\033[0m " "${_safe_run_command#??}" >&2
-unset _safe_run_command
+command="$(FORCE_COLOR='' ECHO_RUN_ECHO_ONLY=1 echo-run "$@" 2>&1 >/dev/null)"
+printf "\033[33mRun \`%s\` (y/N)?\033[0m " "${command#??}" >&2
 
 read -r reply </dev/tty >&2
 if [ "$reply" = "${reply#[Yy]}" ]; then
-  unset reply
-  # shellcheck disable=SC2317
-  return 1 2>/dev/null || exit 1
+  exit 1
 fi
 
-unset reply
-
-if command -v echo_run >/dev/null 2>&1; then
-  echo_run "$@"
-else
-  echo-run "$@"
-fi
+exec echo-run "$@"

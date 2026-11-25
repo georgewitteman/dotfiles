@@ -4,9 +4,12 @@ set -o errexit
 
 USAGE="usage: $(basename "$0") [<options>] [--] [<commit message>...]
 
+Commits the staged changes, using the rest of the arguments as the message, or
+opening an editor without one. With nothing to commit, it skips the commit.
+
     -a, --add             add all changes
     -p, --push            push branch to remote
-    -f, --force           force updates
+    -f, --force           with --push, push with --force-with-lease
     -n, --no-verify       bypass pre-commit and commit-msg hooks
     --amend               amend previous commit, with the message if one is given
 "

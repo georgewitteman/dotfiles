@@ -1,9 +1,20 @@
 #!/bin/sh
 
+# Sourced by the echo_run shell function too, so it returns instead of exiting
+# when it can.
 if [ "$#" -eq 0 ]; then
   # shellcheck disable=SC2317
   return 2>/dev/null || exit
 fi
+case "$1" in
+  -h | --help)
+    echo "usage: echo-run <command> [<argument>...]"
+    echo
+    echo "Prints the command, quoted so it can be pasted back into a shell, then runs it."
+    # shellcheck disable=SC2317
+    return 2>/dev/null || exit
+    ;;
+esac
 
 _echo_run_current_value=''
 
