@@ -81,19 +81,6 @@ set wrap
 " the last character that fits on the screen
 set linebreak
 
-" - c: Auto-wrap comments using textwidth, inserting the current comment
-"   leader automatically
-" - q: Allow formatting of comments with "gq"
-" - j: Where it makes sense, remove a comment leader when joining lines
-" - n: When formatting text, recognize numbered lists, using
-"   'formatlistpat'
-"
-" See https://stackoverflow.com/a/8748154 for the autocommand explanation
-augroup FormatOptions
-  autocmd!
-  autocmd BufNewFile,BufRead * setlocal formatoptions=cqjn
-augroup END
-
 " Turn on line numbers
 set number
 " Change the displayed number to be relative to the cursor. When this option
