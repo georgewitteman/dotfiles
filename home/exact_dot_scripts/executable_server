@@ -1,25 +1,37 @@
 #!/bin/sh
 
-case "${1-}" in
-  -h | --help)
-    echo "usage: $(basename "$0") [<port>]"
-    echo
-    echo "Serves the current directory on http://127.0.0.1:<port> (default 8000)"
-    echo "with python3, and opens it with \$BROWSER if it's set, or open on macOS."
-    exit
-    ;;
-  -?*)
-    echo "error: unknown option: ${1}" >&2
-    exit 1
-    ;;
-esac
+open=false
+port=
 
-if [ "$#" -gt 1 ]; then
-  echo "error: unexpected argument: ${2}" >&2
-  exit 1
-fi
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    -h | --help)
+      echo "usage: $(basename "$0") [-o|--open] [<port>]"
+      echo
+      echo "Serves the current directory on http://127.0.0.1:<port> (default 8000)"
+      echo "with python3."
+      echo
+      echo "    -o, --open   open it in the browser, with \$BROWSER if it's set, or open"
+      echo "                 on macOS"
+      exit
+      ;;
+    -o | --open) open=true ;;
+    -?*)
+      echo "error: unknown option: ${1}" >&2
+      exit 1
+      ;;
+    *)
+      if [ -n "$port" ]; then
+        echo "error: unexpected argument: ${1}" >&2
+        exit 1
+      fi
+      port="$1"
+      ;;
+  esac
+  shift
+done
 
-port="${1:-8000}"
+port="${port:-8000}"
 url="http://127.0.0.1:${port}"
 
 if ! command -v python3 >/dev/null; then
@@ -27,16 +39,17 @@ if ! command -v python3 >/dev/null; then
   exit 1
 fi
 
-# Some Linux systems have an unrelated `open` (like xdg-open or openvt).
-if [ -n "${BROWSER-}" ]; then
-  opener="$BROWSER"
-elif [ "$(uname || true)" = "Darwin" ]; then
-  opener=open
-else
-  opener=
-fi
-# Open after the server is up
-if [ -n "$opener" ]; then
+if $open; then
+  # Some Linux systems have an unrelated `open` (like xdg-open or openvt).
+  if [ -n "${BROWSER-}" ]; then
+    opener="$BROWSER"
+  elif [ "$(uname || true)" = "Darwin" ]; then
+    opener=open
+  else
+    echo "error: can't open a browser here. Set BROWSER, or open ${url} yourself." >&2
+    exit 1
+  fi
+  # Open after the server is up
   (sleep 1 && "$opener" "$url") &
 fi
 
