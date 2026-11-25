@@ -8,7 +8,16 @@ case "${1-}" in
     echo "with python3, and opens it with \$BROWSER if it's set, or open on macOS."
     exit
     ;;
+  -?*)
+    echo "error: unknown option: ${1}" >&2
+    exit 1
+    ;;
 esac
+
+if [ "$#" -gt 1 ]; then
+  echo "error: unexpected argument: ${2}" >&2
+  exit 1
+fi
 
 port="${1:-8000}"
 url="http://127.0.0.1:${port}"

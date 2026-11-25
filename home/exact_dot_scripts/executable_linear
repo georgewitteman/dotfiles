@@ -2,27 +2,20 @@
 
 set -o errexit
 
-while [ "$#" -gt 0 ]; do
-  case "$1" in
-    -h | --help)
-      echo "usage: $(basename "$0")"
-      echo
-      echo "Trims the Linear issue link on the clipboard to its short form, like"
-      echo "https://linear.app/<workspace>/issue/ENG-123, and copies that back."
-      exit
-      ;;
-    --)
-      shift
-      break
-      ;;
-    -?*)
-      echo "error: unknown option: ${1}" >&2
-      exit 1
-      ;;
-    *) break ;;
-  esac
-  shift
-done
+case "${1-}" in
+  -h | --help)
+    echo "usage: $(basename "$0")"
+    echo
+    echo "Trims the Linear issue link on the clipboard to its short form, like"
+    echo "https://linear.app/<workspace>/issue/ENG-123, and copies that back."
+    exit
+    ;;
+esac
+
+if [ "$#" -gt 0 ]; then
+  echo "error: unexpected argument: ${1}" >&2
+  exit 1
+fi
 
 # Read the clipboard once, since in VS Code each read may ask for permission.
 url="$(cpaste | grep -E -o 'https://linear\.app/[[:alnum:]_-]+/issue/[A-Z0-9]+-[0-9]+' | head -n 1 || true)"
