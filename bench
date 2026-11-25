@@ -12,8 +12,8 @@ for arg; do
       print "runs. Defaults to whichever of zsh, bash, sh, dash, ksh, fish, tcsh and"
       print "csh are installed."
       print
-      print "  login      a terminal window or tab: a login shell in a terminal, until it"
-      print "             runs its first command"
+      print "  login      a login shell in a terminal, like a macOS terminal tab or an"
+      print "             ssh session, until it runs its first command"
       print "  non-login  the same without login, like typing the shell's name in a shell"
       print "  -c         running a command with -c, which reads the same files as a"
       print "             script"
@@ -51,48 +51,62 @@ cd
 # How long the last run took, in whole microseconds.
 integer elapsed
 
-# Starts the shell at $2 in a terminal with $1 as argv[0], where a leading -
-# makes it a login shell, the way login and terminals start one. Types a
-# command right away, and stops when its output appears. The quotes keep the
-# typed command, which the terminal echoes, from matching.
-in_terminal() {
-  local start=$EPOCHREALTIME fd output="" chunk
-  zpty bench "ARGV0=${(q)1} ${(q)2}"
-  fd=$REPLY
-  zpty -w bench "echo BENCH''MARK"
+# Reads the shell's output until the typed command's output appears, for up to
+# $1 seconds. Returns 1 if that times out, and 2 if the shell exits first.
+wait_for_marker() {
+  local deadline=$(( EPOCHREALTIME + $1 )) chunk
+  integer left
   until [[ $output == *BENCHMARK* ]]; do
     # zselect's timeout is in hundredths of a second.
-    if ! zselect -t 1000 -r $fd; then
-      zpty -d bench
-      print -u2 "error: $2 didn't run a command within 10 seconds"
-      return 1
-    fi
-    # 1 means nothing was read, and 2 means the shell exited.
+    (( left = (deadline - EPOCHREALTIME) * 100 ))
+    (( left > 0 )) && zselect -t $left -r $fd || return 1
     zpty -r -t bench chunk
     case $? in
       0) output+=$chunk ;;
-      2)
-        zpty -d bench
-        print -u2 "error: $2 exited before running a command"
-        return 1
-        ;;
+      2) return 2 ;;
     esac
   done
+}
+
+# Starts the shell at $2 in a terminal with $1 as argv[0], where a leading -
+# makes it a login shell, the way login and terminals start one. Types a
+# command right away, and stops when its output appears.
+#
+# The typed lines start with a space, which keeps them out of the history file
+# in zsh, fish, and bash with HISTCONTROL=ignorespace.
+in_terminal() {
+  local start=$EPOCHREALTIME fd output="" error=""
+  zpty bench "HISTCONTROL=ignorespace ARGV0=${(q)1} ${(q)2}" || return
+  fd=$REPLY
+  # The quotes keep the typed command, which line editors redraw, from matching.
+  zpty -w bench " echo BENCH''MARK"
+  wait_for_marker 10
+  case $? in
+    1) error="didn't run a command within 10 seconds" ;;
+    2) error="exited before running a command" ;;
+  esac
+  if [[ -n $error ]]; then
+    zpty -d bench
+    print -u2 "error: $2 $error"
+    return 1
+  fi
   elapsed=$(( (EPOCHREALTIME - start) * 1e6 ))
 
   # Let it exit before the next run, so the two don't slow each other down.
-  # Give up after a second, since a shell with running jobs won't exit.
-  zpty -w bench exit
-  while zselect -t 100 -r $fd; do
-    zpty -r -t bench chunk
-    (( $? == 2 )) && break
-  done
+  # The marker doesn't appear again, so this waits for the shell to exit, or
+  # gives up after a second, since a shell with running jobs won't exit.
+  zpty -w bench " exit"
+  output=""
+  wait_for_marker 1
   zpty -d bench
 }
 
 with_command() {
   local start=$EPOCHREALTIME
-  "$1" -c true </dev/null >/dev/null 2>&1
+  if ! "$1" -c true </dev/null >/dev/null 2>&1; then
+    print -u2 "error: $1 -c true failed"
+    return 1
+  fi
   elapsed=$(( (EPOCHREALTIME - start) * 1e6 ))
 }
 
