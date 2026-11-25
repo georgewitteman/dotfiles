@@ -2,5 +2,10 @@
 
 set -o errexit
 
-main_branch="$(get-main-branch)"
+if ! main_branch="$(git rev-parse --abbrev-ref origin/HEAD 2>/dev/null)"; then
+  echo "error: origin's default branch isn't known. Run: git remote set-head origin --auto" >&2
+  exit 1
+fi
+main_branch="${main_branch#origin/}"
+
 echo-run git diff --merge-base "origin/${main_branch}" "$@"

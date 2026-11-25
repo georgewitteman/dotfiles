@@ -103,7 +103,11 @@ fi
 TAB="	"
 current_ts="$(date +%s)"
 threshold_ts="$((current_ts - (60 * 60 * 24 * older_than_days)))"
-main_branch_name="$(get-main-branch)"
+if ! main_branch_name="$(git rev-parse --abbrev-ref origin/HEAD 2>/dev/null)"; then
+  echo "error: origin's default branch isn't known. Run: git remote set-head origin --auto" >&2
+  exit 1
+fi
+main_branch_name="${main_branch_name#origin/}"
 user_email="$(git config user.email)"
 current_branch="$(git rev-parse --abbrev-ref HEAD)"
 readonly current_ts threshold_ts TAB main_branch_name user_email current_branch
