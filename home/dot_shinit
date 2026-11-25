@@ -132,8 +132,6 @@ if [ "${EUID:-$(id -u || true)}" -eq 0 ]; then
 else
   PS1='$PWD $ '
 fi
-PS2='> '
-PS4='+ '
 
 # Machine-local settings and secrets for interactive shells, kept out of the
 # dotfiles repo.
