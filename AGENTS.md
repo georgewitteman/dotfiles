@@ -28,13 +28,13 @@ hard rules: break one when the value is clearly worth it, and say why.
   - Linux servers running various distributions, often without my usual tools
 
   Don't assume one OS, shell, package manager, or installed tool. Shell setup
-  should work well in bash, zsh, and plain POSIX `sh`, and files read by more
-  than one shell must stick to POSIX `sh`, and zsh loads them with
-  `emulate sh -c`. System startup files differ too:
-  Ubuntu's `/etc/zsh/zshrc` runs `compinit`, and the `universal` image's runs
-  another for nvm. CI covers macOS and the codespaces images, to catch
-  anything important breaking. It doesn't need to enforce style: formatting
-  and lint are checked locally with `./check`.
+  should work well in bash, zsh, and plain POSIX `sh`. Files read by more than
+  one shell must stick to POSIX `sh` (zsh loads them with `emulate sh -c`).
+  System startup files differ too: Ubuntu's `/etc/zsh/zshrc` runs `compinit`,
+  and the `universal` image's runs another for nvm. CI covers macOS and the
+  codespaces images, to catch anything important breaking. It doesn't need
+  to enforce style, so don't add linters to it: `./check` lints only where
+  shellcheck and shfmt are installed, which is mainly locally.
 - **Apply right after making changes.** Check `chezmoi diff` first, since
   applying can delete files, and ask only if it would delete or change
   something unexpected.
