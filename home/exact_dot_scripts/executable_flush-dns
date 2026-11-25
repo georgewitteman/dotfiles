@@ -12,6 +12,11 @@ case "${1-}" in
     ;;
 esac
 
+if [ "$#" -gt 0 ]; then
+  echo "error: unexpected argument: ${1}" >&2
+  exit 1
+fi
+
 if [ "$(uname || true)" = "Darwin" ]; then
   echo-run sudo dscacheutil -flushcache
   echo-run sudo killall -HUP mDNSResponder
