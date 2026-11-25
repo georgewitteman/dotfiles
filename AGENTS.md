@@ -10,13 +10,12 @@ hard rules: break one when the value is clearly worth it, and say why.
 - **Degrade gracefully.** Config that relies on a tool should still work when
   that tool is missing.
 - **Prefer built-ins.** Reach for what the shell, editor, or OS already
-  provides before adding a plugin or tool.
+  provides, even when it's only close enough, before adding a plugin, a tool,
+  or custom code that recreates what another tool did.
 - **Keep shells fast.** A new terminal should show its first prompt in under
   50 ms, and a new prompt should draw in under 10 ms.
 - **Prefer things that don't need updating.** A copy committed as-is beats
   something fetched or kept current. Third-party GitHub Actions count too.
-- **Simple over complete.** A close-enough built-in beats custom code that
-  recreates what another tool did.
 - **Make the flow easy to follow.** A line should not make the reader stop
   and work out whether it runs. Use `if` for anything a condition controls,
   so `cmd || return` and `[ -n "$x" ] && cmd` become `if` blocks. Familiar
