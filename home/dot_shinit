@@ -38,22 +38,11 @@ alias gb='switch-branch'
 
 alias tf="terraform"
 
-# Makes a new directory under the temporary directory, named for the current
-# time, and goes there.
+# Makes a new temporary directory and goes there. mktemp -d creates a private
+# directory under TMPDIR, or /tmp when that isn't set.
 tmp() {
-  # set -- replaces the function's arguments, so $1 holds the path without
-  # leaving a variable behind in this shell. ${TMPDIR:-...} uses TMPDIR, or
-  # when it's empty, a new private directory from mktemp -d. That's instead of
-  # /tmp itself, where other users can write, so mkdir -p could quietly reuse
-  # a directory with the same name that someone else made.
   # shellcheck disable=SC2312
-  set -- "${TMPDIR:-$(mktemp -d)}"
-  # TMPDIR ends in / on macOS, but not always elsewhere. ${1%/} removes a /
-  # from the end of $1.
-  # shellcheck disable=SC2312
-  set -- "${1%/}/$(date +%Y-%m-%dT%H%M%S)"
-  echo_run mkdir -p "$1"
-  echo_run cd "$1"
+  echo_run cd "$(mktemp -d)"
 }
 
 # dotfiles cd has to change this shell's directory, so it's handled here.
