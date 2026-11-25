@@ -17,8 +17,7 @@ case "${1-}" in
     ;;
 esac
 
-# Reuse echo-run's quoting, which prints "$ <command>" without color when stdout
-# isn't a terminal.
+# Show the command quoted the same way echo-run shows it, without the "$ ".
 command="$(FORCE_COLOR='' ECHO_RUN_ECHO_ONLY=1 echo-run "$@" 2>&1 >/dev/null)"
 printf "\033[33mRun \`%s\` (y/N)?\033[0m " "${command#??}" >&2
 

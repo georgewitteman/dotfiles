@@ -67,8 +67,7 @@ def main():
     if len(sys.argv) > 1:
         sys.exit("error: unexpected argument: {}".format(sys.argv[1]))
 
-    # cpaste prints its own error. Stop there, so an empty result doesn't replace
-    # the clipboard.
+    # Stop if cpaste fails, so an empty result doesn't replace the clipboard.
     paste = subprocess.run(["cpaste"], stdout=subprocess.PIPE, text=True)
     if paste.returncode != 0:
         sys.exit(paste.returncode)
