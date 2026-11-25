@@ -37,7 +37,7 @@ case $service in
   # without offering any matches. compadd -a takes the matches from an array.
   branch)
     _arguments \
-      {-l,--latest,-p,--pull}'[fetch the base branch first]' \
+      {-p,--pull}'[fetch the base branch first]' \
       '--stash[take uncommitted changes to the new branch]' \
       '1: :_guard "^-*" "new branch name"' \
       '2:base branch:{compadd -a origin_branches}'

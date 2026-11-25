@@ -10,15 +10,15 @@ usage: $(basename "$0") [<options>] <branch name> [<base branch>]
 Creates a branch from origin's copy of the base branch (the main branch by
 default), without tracking it.
 
-    -l, --latest, -p, --pull   fetch the base branch first
-    --stash                    take uncommitted changes to the new branch
+    -p, --pull      fetch the base branch first
+    --stash         take uncommitted changes to the new branch
 EOF
 }
 
 # The flags hold true or false, which are commands that succeed or fail, so
-# if $latest runs one of them as the test.
+# if $pull runs one of them as the test.
 branch_name=
-latest=false
+pull=false
 stash=false
 base_branch=
 
@@ -31,8 +31,8 @@ while [ "$#" -gt 0 ]; do
       usage
       exit
       ;;
-    -l | --latest | -p | --pull)
-      latest=true
+    -p | --pull)
+      pull=true
       ;;
     --stash)
       stash=true
@@ -71,7 +71,7 @@ if [ -z "$base_branch" ]; then
   base_branch="${base_branch#origin/}"
 fi
 
-if $latest; then
+if $pull; then
   echo-run git fetch origin "$base_branch"
 fi
 
