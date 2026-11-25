@@ -40,7 +40,7 @@ if [ -d "$source_path" ]; then
   exit 1
 fi
 
-script_dir="$(cd -P -- "$(dirname -- "$0")" && pwd -P)"
+script_dir="$(cd -- "$(dirname -- "$0")" && pwd)"
 
 # While a codespace is being created its disk is busy, so each fsync is slow,
 # and chezmoi fsyncs every file it writes and every update to its state
