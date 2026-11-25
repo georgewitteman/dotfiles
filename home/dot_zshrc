@@ -1,7 +1,8 @@
 #!/usr/bin/env zsh
 
-# .shinit is shared with bash and sh, so run it with sh's rules. Its functions
-# keep those rules when they run.
+# .shinit is shared with bash and sh, so run it with sh's rules. emulate sh -c
+# runs the command with zsh's options set to act like sh, and functions it
+# defines keep those rules when they run.
 emulate sh -c '. "${HOME}/.shinit"'
 
 # Prompt. It only uses zsh's built-in prompt escapes (no hooks, no commands,
@@ -30,6 +31,8 @@ PROMPT+='%B%F{cyan}%~%f%b at %B%F{yellow}%D{%I:%M %p}%f%b %(1j.%B%F{magenta}%j j
 
 # Completion settings are documented in "Completion System" in
 # `man zshcompsys`: https://zsh.sourceforge.io/Doc/Release/Completion-System.html
+# zstyle sets one, and the context ':completion:*' makes it apply to every
+# completion. setopt turns on zsh options.
 
 # Pick from a menu when there are 2 or more matches.
 zstyle ':completion:*' menu select=2
@@ -39,8 +42,10 @@ zstyle ':completion:*' menu select=2
 # https://zsh.sourceforge.io/Doc/Release/Options.html#index-COMPLETEINWORD
 setopt complete_in_word always_to_end
 
-# Try each way of matching in turn until one finds something: exactly, then
-# ignoring case, then the typed text anywhere in the word.
+# Try each way of matching in turn until one finds something: exactly (''),
+# then ignoring case (m:{a-zA-Z}={A-Za-z}, any letter matches either case),
+# then the typed text anywhere in the word (l:|=* r:|=*, anything can come
+# before or after it).
 # https://zsh.sourceforge.io/Guide/zshguide06.html#l170
 zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'l:|=* r:|=*'
 
@@ -108,12 +113,15 @@ setopt interactive_comments
 WORDCHARS="${WORDCHARS/\//}"
 
 # Use emacs keybindings, since zsh picks vi mode when EDITOR or VISUAL
-# contains "vi". See all bindings with `bindkey -L`, and what a key sends by
-# pressing ^V and then the key.
+# contains "vi". bindkey -e switches to them. See all bindings with
+# `bindkey -L`, and what a key sends by pressing ^V and then the key.
 bindkey -e
 
 # ^P, ^N, and the up and down arrows go through the history lines that start
-# with what's typed so far.
+# with what's typed so far. zle -N makes a function into a widget, an editing
+# action that bindkey can bind a key to. In key sequences, ^ means Ctrl, and
+# ^[ is Escape, which starts what terminals send for special keys, like ^[[A
+# for the up arrow.
 autoload -U up-line-or-beginning-search down-line-or-beginning-search
 zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
@@ -127,7 +135,9 @@ bindkey "^[[B" down-line-or-beginning-search
 bindkey '^[OA' up-line-or-beginning-search
 bindkey '^[OB' down-line-or-beginning-search
 
-# Space expands an alias before inserting the space.
+# Space expands an alias before inserting the space. zle runs a widget:
+# _expand_alias expands the alias, and self-insert types the key that was
+# pressed. bindkey -M main binds it in the main keymap, the one in use.
 zle_expand_alias() {
   zle _expand_alias
   zle self-insert
@@ -157,9 +167,17 @@ setopt hist_ignore_space
 # Keep commands that look like they contain a secret out of the history file.
 # Returning 2 keeps them in this shell's history, so the up arrow still works.
 # https://zsh.sourceforge.io/Doc/Release/Functions.html#index-zshaddhistory
+#
+# The patterns use zsh's extended globbing: (#i) ignores case, (a|b) matches
+# either, # after something matches it zero or more times and ## one or more,
+# [[:alnum:]] is a letter or digit, and * is anything.
 zshaddhistory() {
+  # emulate -L zsh resets options to zsh's defaults, only inside this
+  # function, and extended_glob turns on the patterns above.
   emulate -L zsh
   setopt extended_glob
+  # $1 is the command line, ending in a newline ($'\n'), which ${1%...}
+  # removes.
   local line="${1%$'\n'}"
   # Long pastes, like "Copy as cURL" from browser devtools
   (( ${#line} < 2000 )) || return 2
@@ -177,8 +195,9 @@ zshaddhistory() {
   return 0
 }
 
-# zsh doesn't save history unless HISTFILE is set. Codespaces keep it in a
-# folder that survives rebuilds.
+# zsh doesn't save history unless HISTFILE is set. ${HISTFILE:-...} keeps it
+# when it's already set. Codespaces keep it in a folder that survives
+# rebuilds.
 HISTFILE="${HISTFILE:-$HOME/.zsh_history}"
 if [[ $CODESPACES == "true" && -d /workspaces/.codespaces/.persistedshare ]]; then
   HISTFILE="/workspaces/.codespaces/.persistedshare/.zsh_history"
