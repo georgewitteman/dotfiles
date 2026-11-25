@@ -96,14 +96,6 @@ set ttimeoutlen=50
 " Characters to fill the statuslines and vertical separators
 set fillchars+=vert:│
 
-" Always display the status line
-set laststatus=2
-
-" Set the contents of the status line
-set statusline=[%n]\ %<%.99f
-set statusline+=\ %y%h%w%m%r
-set statusline+=%=\ %(%l,%c%V%)\ %P
-
 " Use ripgrep for :grep when it's installed
 if executable('rg')
   set grepprg=rg\ --vimgrep
