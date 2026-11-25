@@ -78,10 +78,8 @@ if $stash; then
   fi
 fi
 
-set +o errexit
-echo-run git checkout -b "$branch_name" --no-track "origin/${base_branch}"
-exit_code=$?
-set -o errexit
+exit_code=0
+echo-run git checkout -b "$branch_name" --no-track "origin/${base_branch}" || exit_code=$?
 
 if $stashed; then
   echo-run git stash pop
