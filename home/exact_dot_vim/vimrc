@@ -43,10 +43,6 @@ if &diff
   set noreadonly
 endif
 
-" While typing a search command, show where the pattern, as it was typed so
-" far, matches. The matched string is highlighted
-set incsearch
-
 " When there is a previous search pattern, highlight all its matches.
 "
 " When you get bored of looking at the highlighted matches, you can turn it off
@@ -77,7 +73,6 @@ set listchars=tab:»·,trail:·
 
 " In the command line, the first Tab completes the longest common part and shows
 " the matches in a menu, and each further Tab picks the next match.
-set wildmenu
 set wildmode=longest:full,full
 
 " Enable mouse support for all modes
@@ -95,21 +90,8 @@ set splitright
 set foldmethod=indent
 set foldlevel=99
 
-" Time out when waiting for the rest of a key code, so Esc is quick
-set ttimeout
-" The time in ms that is waited for a key code or mapped key sequence to complete
+" Wait at most 50 ms for the rest of a key code, so Esc is quick
 set ttimeoutlen=50
-
-" Allow backspacing over everything in insert mode
-" indent: allow backspacing over autoindent
-" eol: allow backspacing over line breaks (join lines)
-" start: allow backspacing over the start of insert
-set backspace+=indent
-set backspace+=eol
-set backspace+=start
-
-" Show (partial) command in the last line of the screen
-set showcmd
 
 " Characters to fill the statuslines and vertical separators
 set fillchars+=vert:│
