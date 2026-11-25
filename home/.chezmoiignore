@@ -2,6 +2,9 @@
 # applying deletes them from exact directories.
 **/.*.sw?
 **/.sw?
+
+# netrw keeps its directory history here. Without this, applying deletes it.
+.vim/.netrwhist
 {{ if ne .chezmoi.os "darwin" }}
 # Only Terminal.app on macOS reads this
 .bash_sessions_disable
