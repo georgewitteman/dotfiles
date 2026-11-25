@@ -17,6 +17,10 @@ hard rules: break one when the value is clearly worth it, and say why.
   something fetched or kept current. Third-party GitHub Actions count too.
 - **Simple over complete.** A close-enough built-in beats custom code that
   recreates what another tool did.
+- **Make the flow easy to follow.** A line should not make the reader stop
+  and work out whether it runs. Use `if` for anything a condition controls,
+  so `cmd || return` and `[ -n "$x" ] && cmd` become `if` blocks. Familiar
+  one-word tricks like `cmd || true` stay.
 - **Works everywhere I use it.** The same files apply on:
   - my Mac, with Homebrew
   - GitHub Codespaces and devcontainers on several base images (Debian,
