@@ -2,26 +2,24 @@
 
 set -o errexit
 
-while [ "$#" -gt 0 ]; do
-  case "$1" in
-    -h | --help)
-      echo "usage: $(basename "$0")"
-      echo
-      echo "Runs the tests, then lints this repo's scripts and the installed shell files"
-      echo "with shellcheck and shfmt if they're installed. Run it after \`chezmoi apply\`."
-      exit
-      ;;
-    -?*)
-      echo "error: unknown option: ${1}" >&2
-      exit 1
-      ;;
-    *)
-      echo "error: unexpected argument: ${1}" >&2
-      exit 1
-      ;;
-  esac
-  shift
-done
+case "${1:-}" in
+  "") ;;
+  -h | --help)
+    echo "usage: $(basename "$0")"
+    echo
+    echo "Runs the tests, then lints this repo's scripts and the installed shell files"
+    echo "with shellcheck and shfmt if they're installed. Run it after \`chezmoi apply\`."
+    exit
+    ;;
+  -?*)
+    echo "error: unknown option: ${1}" >&2
+    exit 1
+    ;;
+  *)
+    echo "error: unexpected argument: ${1}" >&2
+    exit 1
+    ;;
+esac
 
 cd -- "$(dirname -- "$0")"
 repo_dir="$(pwd)"
