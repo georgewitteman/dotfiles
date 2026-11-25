@@ -31,10 +31,9 @@ hard rules: break one when the value is clearly worth it, and say why.
   one shell must stick to POSIX `sh` (zsh loads them with `emulate sh -c`).
   System startup files differ too: Ubuntu's `/etc/zsh/zshrc` runs `compinit`,
   and the `universal` image's runs a second `compinit` for nvm. CI covers
-  macOS and the codespaces images, to catch anything important breaking. It
-  doesn't need to enforce style, so don't add linters to it. `./check` lints
-  wherever shellcheck and shfmt happen to be installed, which includes
-  shellcheck on CI's Ubuntu runners.
+  macOS and the codespaces images, to catch anything important breaking.
+  Don't install linters in CI: `./check` lints with whatever is installed,
+  which on CI is shellcheck on the Ubuntu runners.
 - **Apply right after making changes.** Check `chezmoi diff` first, since
   applying can delete files, and ask only if it would delete or change
   something unexpected.
