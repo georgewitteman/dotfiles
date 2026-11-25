@@ -42,9 +42,8 @@ def transform(text):
     text = re.sub(r"\*\*(.+?)\*\*", BOLD + r"\1" + BOLD, text)
     text = re.sub(r"__(.+?)__", BOLD + r"\1" + BOLD, text)
 
-    # Italic: *x* and _x_ -> _x_ (Slack italic).
+    # Italic: *x* -> _x_ (Slack italic). Slack already reads _x_ as italic.
     text = re.sub(r"(?<![\*\w])\*(?!\s)([^*\n]+?)(?<!\s)\*(?![\*\w])", r"_\1_", text)
-    text = re.sub(r"(?<![_\w])_(?!\s)([^_\n]+?)(?<!\s)_(?![_\w])", r"_\1_", text)
 
     # Strikethrough: ~~x~~ -> ~x~
     text = re.sub(r"~~(.+?)~~", r"~\1~", text)
