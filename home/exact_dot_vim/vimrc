@@ -87,9 +87,6 @@ set listchars=tab:»·,trail:·
 set wildmenu
 set wildmode=longest:full,full
 
-" Don't expand certain files
-set wildignore=*.o,*.obj,*.bak,*.exe,*.pyc
-
 " Enable mouse support for all modes
 set mouse=a
 
