@@ -70,7 +70,7 @@ case "$choice" in
     exit 1
     ;;
 esac
-branch="$(list_branches --format='%(refname:short)' | sed -n "${choice}p")"
+branch="$(list_branches --format='%(refname:short)' | awk -v n="$choice" 'NR == n')"
 if [ -z "$branch" ]; then
   echo "error: no branch number ${choice}" >&2
   exit 1
