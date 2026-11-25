@@ -12,9 +12,7 @@ usage() {
 usage: $(basename "$0") [-p|--pull] [--rebase]
 
 Switches to the main branch, creating it from origin if there's no local one,
-and shows its latest commit. In a linked worktree, where the main branch can't
-be checked out because another worktree may have it, it uses a
-<worktree directory>-<main branch> branch that tracks the same upstream instead.
+and shows its latest commit.
 
     -p, --pull      pull after switching, pruning deleted remote branches
     --rebase        pull with --rebase (implies --pull)
@@ -52,8 +50,6 @@ while [ "$#" -gt 0 ]; do
   shift
 done
 
-toplevel="$(git rev-parse --show-toplevel)"
-
 if ! main_branch="$(git rev-parse --abbrev-ref origin/HEAD 2>/dev/null)"; then
   echo "error: origin's default branch isn't known. Run: git remote set-head origin --auto" >&2
   exit 1
@@ -62,23 +58,6 @@ main_branch="${main_branch#origin/}"
 
 if ! git show-ref --quiet --verify "refs/heads/${main_branch}"; then
   echo-run git branch "$main_branch" "origin/${main_branch}"
-fi
-
-# A linked worktree has its own git directory, separate from the repository's
-# shared one. A submodule's .git is a file too, but its directories match.
-git_dir="$(git rev-parse --git-dir)"
-git_dir="$(cd "$git_dir" && pwd -P)"
-common_dir="$(git rev-parse --git-common-dir)"
-common_dir="$(cd "$common_dir" && pwd -P)"
-if [ "$git_dir" != "$common_dir" ]; then
-  start_point="$(git rev-parse --abbrev-ref --symbolic-full-name "${main_branch}@{upstream}")"
-
-  # Named after the worktree directory, like myrepo-main
-  main_branch="$(basename "${toplevel}")-${main_branch}"
-  if ! git show-ref --quiet --verify "refs/heads/${main_branch}"; then
-    # --track=direct: use the start point itself as the upstream
-    echo-run git branch "$main_branch" --track=direct "$start_point"
-  fi
 fi
 
 current_branch="$(git branch --show-current)"
