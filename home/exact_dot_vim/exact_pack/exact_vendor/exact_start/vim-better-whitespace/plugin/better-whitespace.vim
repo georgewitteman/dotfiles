@@ -102,7 +102,7 @@ function! s:WhitespaceInit()
 endfunction
 
 " Diff command returning a space-separated list of ranges of new/modified lines (as first,last)
-let s:diff_cmd=g:diff_binary.' -a --unchanged-group-format="" --old-group-format="" --new-group-format="%dF,%dL " --changed-group-format="%dF,%dL " '
+let s:diff_cmd=g:diff_binary.' -a'
 
 " Section: Actual work functions
 
@@ -172,7 +172,8 @@ else
     function! s:HighlightEOLWhitespace()
         call <SID>ClearHighlighting()
         if <SID>ShouldHighlight()
-            let s:match_id = matchadd('ExtraWhitespace', s:eol_whitespace_pattern, 10, get(s:, 'match_id', -1))
+            let w:better_whitespace_match_id = matchadd('ExtraWhitespace',
+                        \  s:eol_whitespace_pattern, 10, get(w:, 'better_whitespace_match_id', -1))
         endif
     endfunction
 
@@ -180,15 +181,19 @@ else
     function! s:HighlightEOLWhitespaceExceptCurrentLine()
         call <SID>ClearHighlighting()
         if <SID>ShouldHighlight()
-            let s:match_id = matchadd('ExtraWhitespace',
+            let w:better_whitespace_match_id = matchadd('ExtraWhitespace',
                         \   '\%<' . line('.') .  'l' . s:eol_whitespace_pattern .
-                        \ '\|\%>' . line('.') .  'l' . s:eol_whitespace_pattern, 10, get(s:, 'match_id', -1))
+                        \ '\|\%>' . line('.') .  'l' . s:eol_whitespace_pattern, 10, get(w:, 'better_whitespace_match_id', -1))
         endif
     endfunction
 
     " Remove Whitespace matching
     function! s:ClearHighlighting()
-        silent! call matchdelete(get(s:, 'match_id', -1))
+        let match_id = get(w:, 'better_whitespace_match_id', -1)
+        let valid_ids = map(getmatches(), 'v:val["id"]')
+        if match_id >= 0 && index(valid_ids, match_id) >= 0
+            call matchdelete(match_id)
+        endif
     endfunction
 endif
 
@@ -261,7 +266,10 @@ function! s:ChangedLines()
         redir => l:better_whitespace_changes_list
             silent! echo system(s:diff_cmd.' '.shellescape(expand('%')).' -', join(getline(1, line('$')), "\n") . "\n")
         redir END
-        return map(split(s:Trim(l:better_whitespace_changes_list), ' '), 'split(v:val, ",")')
+        " Get relevant lines (added/changed group headers)
+        let lines=filter(split(l:better_whitespace_changes_list, '\n'), 'match(v:val, "^[0-9,]*[ac][0-9,]*$") > -1')
+        " Extract first,last line info (repeat first,first if there’s only first line)
+        return map(map(lines, 'split(split(v:val, "[ac]")[1], ",")'), 'len(v:val) == 1 ? v:val + v:val : v:val')
     endif
     return []
 endfunction
@@ -340,7 +348,7 @@ endfunction
 function! <SID>SetupAutoCommands()
     augroup better_whitespace
         " Reset all auto commands in group
-        autocmd!
+        autocmd! * <buffer>
 
         if <SID>ShouldHighlight()
             if s:better_whitespace_initialized == 0
@@ -349,19 +357,19 @@ function! <SID>SetupAutoCommands()
 
             " Highlight extraneous whitespace at the end of lines, but not the current line in insert mode.
             call <SID>HighlightEOLWhitespace()
-            autocmd CursorMovedI,InsertEnter * call <SID>HighlightEOLWhitespaceExceptCurrentLine()
-            autocmd InsertLeave,BufReadPost * call <SID>HighlightEOLWhitespace()
+            autocmd CursorMovedI,InsertEnter <buffer> call <SID>HighlightEOLWhitespaceExceptCurrentLine()
+            autocmd InsertLeave,BufReadPost <buffer> call <SID>HighlightEOLWhitespace()
 
             if g:current_line_whitespace_disabled_soft == 0
                 " Using syntax: clear whitespace highlighting when leaving buffer
-                autocmd BufWinLeave * if expand("<afile>") == expand("%") | call <SID>ClearHighlighting() | endif
+                autocmd BufWinLeave <buffer> if expand("<afile>") == expand("%") | call <SID>ClearHighlighting() | endif
 
                 " Do not highlight whitespace on current line in insert mode
-                autocmd CursorMovedI * call <SID>HighlightEOLWhitespaceExceptCurrentLine()
+                autocmd CursorMovedI <buffer> call <SID>HighlightEOLWhitespaceExceptCurrentLine()
 
                 " Do not highlight whitespace on current line in normal mode?
                 if g:current_line_whitespace_disabled_hard == 1
-                    autocmd CursorMoved * call <SID>HighlightEOLWhitespaceExceptCurrentLine()
+                    autocmd CursorMoved <buffer> call <SID>HighlightEOLWhitespaceExceptCurrentLine()
                 endif
             endif
 
@@ -372,7 +380,7 @@ function! <SID>SetupAutoCommands()
 
         " Strip whitespace on save if enabled.
         if <SID>ShouldStripWhitespaceOnSave()
-            autocmd BufWritePre * call <SID>StripWhitespaceOnSave(v:cmdbang)
+            autocmd BufWritePre <buffer> call <SID>StripWhitespaceOnSave(v:cmdbang)
         endif
 
     augroup END
@@ -381,6 +389,13 @@ endfunction
 " Check & setup auto commands upon enter & load, and again on filetype change.
 autocmd FileType,WinEnter,BufWinEnter * call <SID>SetupAutoCommands()
 autocmd ColorScheme * call <SID>WhitespaceInit()
+
+" Also check on specific buftype changes
+if has('nvim')
+    autocmd TermOpen * call <SID>SetupAutoCommands()
+elseif exists('##TerminalWinOpen')
+    autocmd TerminalWinOpen * call <SID>SetupAutoCommands()
+endif
 
 
 " Section: Setting of per-buffer higlighting/stripping
