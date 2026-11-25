@@ -20,8 +20,4 @@ typeset -U PATH path FPATH fpath
 # before .zshrc. If they see a different fpath, each compinit rebuilds the dump
 # on every start. fpath lists the directories zsh loads functions and
 # completions from, and "${fpath[@]}" is all of its current entries.
-#
-# Docker Desktop checks for its zsh completions with a non-interactive login
-# shell (zsh -lc), which doesn't read .zshrc. If they aren't there, it prompts
-# to add its own block.
-fpath=("${HOME}/.local/share/zsh/functions" "${HOME}/.docker/completions" "${fpath[@]}")
+fpath=("${HOME}/.local/share/zsh/functions" "${fpath[@]}")
