@@ -6,7 +6,7 @@ function! s:CopyReg(reg) abort
   if has('clipboard_working') && empty($SSH_CONNECTION)
     call setreg('+', getreg(a:reg))
   else
-    execute 'OSCYankReg' a:reg
+    call OSCYankRegister(a:reg)
   endif
 endfunction
 command! -nargs=1 CopyReg call s:CopyReg(<q-args>)
