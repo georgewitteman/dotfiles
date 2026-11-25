@@ -27,11 +27,15 @@ for arg; do
   esac
 done
 
-zmodload zsh/datetime zsh/zpty zsh/zselect || exit 1
+if ! zmodload zsh/datetime zsh/zpty zsh/zselect; then
+  exit 1
+fi
 
 if (( ! $#shells )); then
   for shell in zsh bash sh dash ksh fish tcsh csh; do
-    command -v "$shell" >/dev/null && shells+=$shell
+    if command -v "$shell" >/dev/null; then
+      shells+=$shell
+    fi
   done
 fi
 
@@ -59,10 +63,14 @@ wait_for_marker() {
   until [[ $output == *BENCHMARK* ]]; do
     # zselect's timeout is in hundredths of a second.
     (( left = (deadline - EPOCHREALTIME) * 100 ))
-    (( left > 0 )) && zselect -t $left -r $fd || return
+    if (( left <= 0 )) || ! zselect -t $left -r $fd; then
+      return 1
+    fi
     # 2 means the shell exited.
     zpty -r -t bench chunk
-    (( $? == 2 )) && return 1
+    if (( $? == 2 )); then
+      return 1
+    fi
     output+=$chunk
   done
 }
@@ -76,10 +84,15 @@ wait_for_marker() {
 # history file instead.
 in_terminal() {
   local start=$EPOCHREALTIME fd output="" env="HISTCONTROL=ignorespace"
-  [[ ${1#-} == (zsh|bash|fish) ]] || env+=" HISTFILE=/dev/null"
-  zpty bench "$env exec -a ${(q)1} ${(q)2}" || return
+  if [[ ${1#-} != (zsh|bash|fish) ]]; then
+    env+=" HISTFILE=/dev/null"
+  fi
+  if ! zpty bench "$env exec -a ${(q)1} ${(q)2}"; then
+    return 1
+  fi
   fd=$REPLY
-  # The quotes keep the typed command, which line editors redraw, from matching.
+  # The shell draws the typed line in the output too, so the quotes split the
+  # marker there: only the command's output reads BENCHMARK.
   zpty -w bench " echo BENCH''MARK"
   if ! wait_for_marker 10; then
     zpty -d bench
@@ -109,7 +122,9 @@ with_command() {
 median() {
   local -a durations
   repeat $runs; do
-    "$@" || return
+    if ! "$@"; then
+      return 1
+    fi
     durations+=$elapsed
   done
   # (n) sorts numerically, but only whole numbers: it reads the digits after a
@@ -120,8 +135,10 @@ median() {
 
 printf '%-10s %9s %9s %9s\n' shell login non-login -c
 for shell cmd in ${shells:^cmds}; do
-  login="$(median in_terminal "-${shell:t}" "$cmd")" || exit 1
-  non_login="$(median in_terminal "${shell:t}" "$cmd")" || exit 1
-  command="$(median with_command "$cmd")" || exit 1
+  if ! login="$(median in_terminal "-${shell:t}" "$cmd")" ||
+    ! non_login="$(median in_terminal "${shell:t}" "$cmd")" ||
+    ! command="$(median with_command "$cmd")"; then
+    exit 1
+  fi
   printf '%-10s %6s ms %6s ms %6s ms\n' "$shell" "$login" "$non_login" "$command"
 done
