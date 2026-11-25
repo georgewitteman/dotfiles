@@ -36,10 +36,10 @@ saved_tty="$(stty -g <&3)"
 trap 'stty "$saved_tty" <&3' EXIT
 trap 'exit 130' INT TERM
 # raw passes the reply through as it arrives, and -echo keeps it off the
-# screen. raw also makes Ctrl-C plain input, so it can't interrupt the wait,
-# which the timeout below makes short. min 0 time 10 makes each read return after at most a second
-# (time is in tenths of a second), so a terminal that doesn't answer can't
-# hang this.
+# screen. raw also makes Ctrl-C plain input, so it can't interrupt the wait.
+# Instead, min 0 time 10 makes each read return after at most a second (time
+# is in tenths of a second), so a terminal that doesn't answer can't hang
+# this.
 stty raw -echo min 0 time 10 <&3
 
 # The terminal answers with ESC ] 52 ; c ; <base64>, ended by BEL or ESC \.

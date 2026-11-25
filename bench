@@ -95,8 +95,8 @@ wait_for_marker() {
 # command right away, and stops when its output appears.
 #
 # The typed lines start with a space, which fish, zsh with hist_ignore_space,
-# and bash with HISTCONTROL=ignorespace keep out of the history file. Other shells get no
-# history file instead. ${1#-} is the name without its -.
+# and bash with HISTCONTROL=ignorespace keep out of the history file. Other
+# shells get no history file instead. ${1#-} is the name without its -.
 #
 # zpty bench starts the command in a new terminal named bench, and puts the
 # file descriptor to read its output from in REPLY. ${(q)...} quotes a value

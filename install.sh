@@ -85,8 +85,8 @@ fi
 
 # Make zsh the login shell in codespaces, so SSH sessions and $SHELL use it too.
 # chsh changes the login shell of the current user (id -un). sudo -n fails
-# instead of asking for a password. ${CODESPACES-} is empty when CODESPACES isn't set,
-# instead of an error under nounset.
+# instead of asking for a password. ${CODESPACES-} is empty when CODESPACES
+# isn't set, instead of an error under nounset.
 if [ -n "${CODESPACES-}" ] && command -v zsh >/dev/null && command -v chsh >/dev/null; then
   sudo -n chsh "$(id -un)" --shell "$(command -v zsh)" || true
 fi

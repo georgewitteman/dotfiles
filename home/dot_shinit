@@ -43,7 +43,9 @@ alias tf="terraform"
 tmp() {
   # set -- replaces the function's arguments, so $1 holds the path without
   # leaving a variable behind in this shell. ${TMPDIR:-...} uses TMPDIR, or
-  # when it's empty, a new directory from mktemp -d.
+  # when it's empty, a new private directory from mktemp -d. That's instead of
+  # /tmp itself, where other users can write, so mkdir -p could quietly reuse
+  # a directory with the same name that someone else made.
   # shellcheck disable=SC2312
   set -- "${TMPDIR:-$(mktemp -d)}"
   # TMPDIR ends in / on macOS, but not always elsewhere. ${1%/} removes a /

@@ -2,9 +2,9 @@
 
 # chezmoi runs a run_onchange_ script again whenever its contents change, so
 # the template below writes a comment with each zsh completion file's name and
-# hash, which makes this run again whenever one changes. Its range block repeats for each file glob finds, and the - after the
-# opening braces drops the whitespace before them, so each comment gets one
-# line.
+# hash, which makes this run again whenever one changes. Its range block
+# repeats for each file glob finds, and the - after the opening braces drops
+# the whitespace before them, so each comment gets one line.
 {{- range (glob (joinPath .chezmoi.sourceDir "private_dot_local/private_share/zsh/exact_functions/*")) }}
 # {{ base . }} {{ include . | sha256sum }}
 {{- end }}

@@ -89,8 +89,8 @@ fi
 unset _echo_run_arg_needs_quotes _echo_run_current_arg _echo_run_current_arg_temp
 unset _echo_run_part_before_single_quote _echo_run_part_needs_quotes _echo_run_current_value
 
-# Aliases aren't expanded, since this runs "$@" instead of eval, which would
-# need the variables above, so they couldn't all be unset first.
+# Runs "$@" directly rather than through eval, so aliases aren't expanded, and
+# the variables above can all be unset before it runs.
 if [ -z "$ECHO_RUN_ECHO_ONLY" ]; then
   "$@"
 fi

@@ -87,9 +87,9 @@ endif
 " In netrw, - goes up another level.
 "
 " expand('%:t') is the current file's name without its directory, and
-" :Explore opens netrw on the current file's directory. nnoremap maps - in Normal mode,
-" <SID> calls this script's s: function, and <silent> keeps the command off
-" the command line.
+" :Explore opens netrw on the current file's directory. nnoremap maps - in
+" Normal mode, <SID> calls this script's s: function, and <silent> keeps the
+" command off the command line.
 function! s:OpenDirectory() abort
   let file = expand('%:t')
   Explore
