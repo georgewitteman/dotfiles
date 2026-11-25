@@ -13,11 +13,13 @@ function! s:CopyReg(reg) abort
   endif
 endfunction
 
-" Copy plain yanks, not deletes or yanks into a named register like "a
+" Copy plain yanks, not deletes or yanks into a named register like "a.
+"
 " TextYankPost runs after any yank or delete, and v:event says which operator
 " (y for yank) and register ('' for the unnamed one) it used. ==# compares
-" with case. autocmd! first clears the group, so loading this again doesn't add
-" the command twice.
+" with case, '"' is the unnamed register's name, and <SID> calls this
+" script's s: function. autocmd! first clears the group, so loading this again
+" doesn't add the command twice.
 augroup YankCmds
   autocmd!
   autocmd TextYankPost * if v:event.operator ==# 'y' && v:event.regname ==# '' | call <SID>CopyReg('"') | endif

@@ -2,7 +2,8 @@
 
 # Interactive shells only. bash also reads this for some non-interactive
 # shells, like commands run over ssh. $- lists the shell's option letters,
-# and i means interactive.
+# and i means interactive. case does nothing when $- contains i (*i*), and
+# returns for anything else (*).
 case $- in *i*) ;; *) return ;; esac
 
 # shellcheck source=.shinit

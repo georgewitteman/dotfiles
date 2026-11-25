@@ -20,6 +20,8 @@ and shows its latest commit.
 EOF
 }
 
+# The flags hold true or false, which are commands that succeed or fail, so
+# if $pull runs one of them as the test.
 pull=false
 rebase=false
 
@@ -54,11 +56,11 @@ main_branch="${main_branch#origin/}"
 echo-run git checkout "$main_branch"
 
 # set -- makes --rebase the script's arguments, which "$@" passes to git pull.
-# --prune deletes local copies of branches that were deleted on origin.
 if $rebase; then
   set -- --rebase
 fi
 
+# --prune deletes local copies of branches that were deleted on origin.
 if $pull; then
   echo-run git pull --prune "$@"
 fi

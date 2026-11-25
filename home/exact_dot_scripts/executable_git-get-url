@@ -43,6 +43,7 @@ while [ "$#" -gt 0 ]; do
         # into its hash, and --short shortens the hash, like abc1234.
         commit_id="$(git rev-parse --short "$2")"
       fi
+      # Drop the value too, along with the option the shift below drops.
       shift
       ;;
     -?*) die "unknown option: ${1}" ;;
@@ -65,7 +66,8 @@ giturl="$(git ls-remote --get-url origin)"
 # Each sed -e 's~old~new~' replaces old with new, using ~ to separate the parts
 # since URLs are full of /. [^/@]* matches up to the next / or @, and a number
 # at the end, like s~:~/~2, replaces only that match: here the second :, after
-# the host, since the first is in https://.
+# the host, since the first is in https://. ^ and $ match the start and end,
+# and \. is a literal dot.
 case "$giturl" in
   https://*)
     project_url="$(echo "$giturl" | sed -e 's~^https://[^/@]*@~https://~' -e 's~\.git$~~')"

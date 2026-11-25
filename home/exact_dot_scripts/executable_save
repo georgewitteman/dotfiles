@@ -16,6 +16,8 @@ the commit, unless amending. Use -- before a message that starts with -.
     -n, --no-verify       bypass pre-commit and commit-msg hooks
     --amend               amend previous commit, with the message if one is given"
 
+# The flags hold true or false, which are commands that succeed or fail, so
+# if $push runs one of them as the test.
 push=false
 message=''
 force=false

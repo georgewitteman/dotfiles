@@ -3,6 +3,8 @@
 # Stop at the first command that fails.
 set -o errexit
 
+# quiet holds true or false, which are commands that succeed or fail, so
+# if $quiet runs one of them as the test.
 quiet=false
 commit=
 
@@ -55,11 +57,14 @@ for ref_name in $(git for-each-ref --points-at "$commit_id" --format='%(refname)
   case "$ref_name" in
     refs/tags/*) tags="${tags:+$tags, }${ref_name#refs/tags/}" ;;
     refs/heads/*) heads="${heads:+$heads, }${ref_name#refs/heads/}" ;;
+    # Skip origin/HEAD, which only points at the default branch.
     refs/remotes/*/HEAD) ;;
     refs/remotes/*) heads="${heads:+$heads, }${ref_name#refs/remotes/}" ;;
   esac
 done
 
+# Build git show's arguments in "$@": set -- replaces them, and
+# set -- "$@" ... adds to them.
 if $quiet; then
   set -- --quiet
 fi
@@ -72,6 +77,8 @@ fi
 header="======== git show --format=\"...\" $* ========"
 footer="$(printf '%s' "$header" | sed 's/./=/g')"
 
+# 2>/dev/null || true leaves the URL empty, instead of stopping the script,
+# when there's no GitHub remote. The same goes for the compare URL and PRs.
 git_url="$(git-get-url --with-commit "$commit_id" 2>/dev/null || true)"
 
 # The compare URL and PRs are for the branch being shown: the current branch,
@@ -89,8 +96,8 @@ git_compare_url=
 pr_urls=
 if [ -n "$branch" ]; then
   git_compare_url="$(git-get-url --branch "${branch}" 2>/dev/null || true)"
-  # gh fails fast without network access when it isn't logged in. --json url
-  # asks for each pull request's URL, and --jq joins them with commas.
+  # gh pr list --json url asks for each pull request's URL, and --jq joins
+  # them with commas.
   if command -v gh >/dev/null; then
     pr_urls="$(gh pr list --head "${branch}" --json url --jq 'map(.url) | join(", ")' 2>/dev/null || true)"
   fi
@@ -98,11 +105,10 @@ fi
 
 # Build git show's --format one line at a time. add puts a color reset and a
 # newline (%Creset%n) between lines, but not before the first. In the format,
-# %C(color) starts a color and %Creset ends it, and the other % codes are
-# fields of the commit, like %h for its short hash, %an and %ae for the
-# author's name and email, %ad for the author date and %ar for it relative to
-# now, %cn, %ce, %cd and %cr for the same about the committer, and %s for the
-# subject.
+# %C(color) starts a color and %Creset ends it. The other % codes are fields
+# of the commit (PRETTY FORMATS in `man git-show`): %h the short hash, %a...
+# the author and %c... the committer, with n for the name, e the email, d the
+# date and r the date relative to now, and %s the subject.
 fmt=
 add() {
   fmt="${fmt:+$fmt%Creset%n}$1"
@@ -127,8 +133,8 @@ add "   %C(blue)C Date:%Creset %cd (%cr)"
 add "  %C(magenta)Subject:%Creset %C(bold)%s%Creset"
 add "$footer"
 
-# Page the diff, but not the header alone, which other scripts print after
-# running a command. --no-pager prints straight to the terminal.
+# Page the diff, but not the header alone, so it stays on screen. --no-pager
+# prints straight to the terminal.
 if $quiet; then
   git --no-pager show --format="$fmt" "$@"
 else

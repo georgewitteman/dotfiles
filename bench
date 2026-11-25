@@ -80,7 +80,7 @@ wait_for_marker() {
     if (( left <= 0 )) || ! zselect -t $left -r $fd; then
       return 1
     fi
-    # zpty -r -t reads what output there is without waiting, and returns 2
+    # zpty -r -t reads up to a line of output without waiting, and returns 2
     # when the shell has exited.
     zpty -r -t bench chunk
     if (( $? == 2 )); then
@@ -102,7 +102,8 @@ wait_for_marker() {
 # file descriptor to read its output from in REPLY. ${(q)...} quotes a value
 # for that command line, and exec -a sets the argv[0] the shell sees.
 # zpty -w types a line into the terminal, and zpty -d closes it, which ends
-# the shell.
+# the shell. (zsh|bash|fish) matches any of the three. fd is local here, but
+# zsh lets the functions this one calls, like wait_for_marker, see it.
 in_terminal() {
   local start=$EPOCHREALTIME fd env="HISTCONTROL=ignorespace"
   if [[ ${1#-} != (zsh|bash|fish) ]]; then

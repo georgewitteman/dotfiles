@@ -15,6 +15,8 @@ default), without tracking it.
 EOF
 }
 
+# The flags hold true or false, which are commands that succeed or fail, so
+# if $latest runs one of them as the test.
 branch_name=
 latest=false
 stash=false

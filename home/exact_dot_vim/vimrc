@@ -12,8 +12,8 @@ source $VIMRUNTIME/defaults.vim
 " - comment: `gc` to toggle comments
 " - nohlsearch: clear search highlighting when the cursor rests for a moment
 "   or Insert mode starts
-" packadd! loads a package, and silent! hides the error in older Vims that
-" don't have it.
+" packadd! adds a package, whose plugins then load with the others at startup,
+" and silent! hides the error in older Vims that don't have it.
 silent! packadd! comment
 silent! packadd! nohlsearch
 
@@ -45,8 +45,9 @@ set hlsearch
 set breakindent
 " sbr: Display the 'showbreak' value before applying the additional indent
 set breakindentopt=sbr
-" String to put at the start of lines that have been wrapped. Quoted, so the
-" trailing space survives stripping whitespace on save.
+" String to put at the start of lines that have been wrapped. let &showbreak
+" sets the option from a quoted string, so the trailing space survives
+" stripping whitespace on save.
 let &showbreak = '↪ '
 " If on, Vim will wrap long lines at a character in 'breakat' rather than at
 " the last character that fits on the screen
@@ -104,7 +105,8 @@ function! s:OpenDirectory() abort
   Explore
   " netrw may mark executables with * and symlinks with @. In the pattern, ^
   " and \$ are the start and end of the line, \V matches the name literally,
-  " and \[*@]\= is an optional * or @.
+  " and \[*@]\= is an optional * or @. After \V only \ is special, so
+  " escape() doubles any \ in the name.
   call search('^\V' . escape(file, '\') . '\[*@]\=\$')
 endfunction
 nnoremap <silent> - :call <SID>OpenDirectory()<CR>

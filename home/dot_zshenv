@@ -9,8 +9,8 @@ skip_global_compinit=1
 SHELL_SESSIONS_DISABLE=1
 
 # typeset -U keeps only the first copy of each entry. Nested shells inherit
-# PATH and FPATH and add to them again, and a changed fpath makes compinit
-# rebuild its dump. path and fpath are zsh's array versions of PATH and FPATH,
+# PATH and FPATH and add to them again, and duplicate fpath entries change the
+# number of completion files compinit counts, which makes it rebuild its dump. path and fpath are zsh's array versions of PATH and FPATH,
 # kept in sync with them. The scalars need it too, or assignments like
 # PATH="dir:$PATH" keep duplicates.
 typeset -U PATH path FPATH fpath

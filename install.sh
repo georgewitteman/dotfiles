@@ -58,11 +58,10 @@ fi
 script_dir="$(cd -- "$(dirname -- "$0")" && pwd)"
 
 # While a codespace is being created its disk is busy, so each fsync is slow,
-# and chezmoi fsyncs every file it writes and every update to its state
-# database. So write files in place (--safe=false), and keep the state
-# database in memory until the end. /dev/shm is a directory kept in memory on
-# Linux. set -- empties the script's arguments, and then holds the extra
-# chezmoi option when there is one, which "$@" passes along.
+# and chezmoi fsyncs every update to its state database. So keep that database
+# in memory until the end. /dev/shm is a directory kept in memory on Linux.
+# set -- empties the script's arguments, and then holds the extra chezmoi
+# option when there is one, which "$@" passes along.
 tmp_dir=""
 set --
 if [ -d /dev/shm ] && [ -w /dev/shm ]; then
@@ -74,7 +73,9 @@ fi
 set -o xtrace
 
 # chezmoi init sets chezmoi up with this repo as its source (--source), and
-# --apply writes the files.
+# --apply writes the files. --safe=false writes each file in place, instead of
+# to a new file that replaces it, which saves an fsync per file while a
+# codespace's disk is busy.
 "$chezmoi" init --apply --safe=false "$@" "--source=${script_dir}"
 
 if [ -n "$tmp_dir" ]; then
@@ -87,7 +88,8 @@ fi
 
 # Make zsh the login shell in codespaces, so SSH sessions and $SHELL use it too.
 # chsh changes the login shell of the user id -un names. sudo -n fails instead
-# of asking for a password.
+# of asking for a password. ${CODESPACES-} is empty when CODESPACES isn't set,
+# instead of an error under nounset.
 if [ -n "${CODESPACES-}" ] && command -v zsh >/dev/null && command -v chsh >/dev/null; then
   sudo -n chsh "$(id -un)" --shell "$(command -v zsh)" || true
 fi

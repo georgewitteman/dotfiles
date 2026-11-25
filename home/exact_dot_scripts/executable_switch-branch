@@ -56,7 +56,7 @@ if [ -n "$branch" ]; then
     # Fetching into a local branch does not set its upstream, so set it here.
     # Without this, a plain "git pull" fails on the new branch. git rev-parse
     # of <branch>@{upstream} fails when the branch has no upstream.
-    if ! git rev-parse --abbrev-ref --symbolic-full-name "${branch}@{upstream}" >/dev/null 2>&1; then
+    if ! git rev-parse "${branch}@{upstream}" >/dev/null 2>&1; then
       echo-run git branch --set-upstream-to="origin/$branch" "$branch"
     fi
   fi
@@ -79,7 +79,8 @@ list_branches() {
 # In --format, each %(...) is a field of the branch, and %(HEAD) is * for the
 # current one. nl numbers the lines: -w 2 makes the numbers two characters wide
 # and -s ') ' puts ") " after them. awk keeps every line (lines[NR], where NR is
-# the line number) and prints them last to first.
+# the line number) and prints them last to first. --color=always keeps the
+# colors even though the output goes through nl and awk.
 printf '\033[?7l'
 list_branches --color=always --format='%(HEAD) %(color:green)%(refname:short)%(color:reset) - %(color:yellow)%(committerdate:relative)%(color:reset) - %(contents:subject)' |
   nl -w 2 -s ') ' |

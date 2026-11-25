@@ -1,5 +1,6 @@
 name: CI
 
+# Quoted, since YAML 1.1 reads a bare on as true.
 "on":
   push:
 
@@ -57,7 +58,9 @@ jobs:
         CODESPACES: true
     steps:
       # The container starts as root, but codespaces clone and apply dotfiles as
-      # the image's regular user (uid 1000), so do the same here.
+      # the image's regular user (uid 1000), so do the same here. awk -F:
+      # splits /etc/passwd at each :, and prints the name (field 1) of the user
+      # whose uid (field 3) is 1000.
       - name: Install dotfiles and run tests
         run: |
           user="$(awk -F: '$3 == 1000 { print $1 }' /etc/passwd)"

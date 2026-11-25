@@ -1,5 +1,6 @@
 #!/bin/sh
-# shellcheck disable=SC2310 # run only wraps env -i, so set -e being off in it doesn't matter
+# run only wraps env -i, so set -e being off in it doesn't matter.
+# shellcheck disable=SC2310
 
 . "tests/setup.sh"
 
@@ -17,14 +18,16 @@ for sh in bash zsh; do
 
   # -i flag not passed
   if run "$sh" -c "echo-run true >/dev/null 2>&1"; then
-    # shellcheck disable=SC2016 # $PATH should expand in the inner shell
+    # $PATH should expand in the inner shell.
+    # shellcheck disable=SC2016
     found="$(run "$sh" -c 'echo "echo-run=$(command -v echo-run) PATH=$PATH"')"
     fail "${sh} wasn't expecting to be able to run echo-run at this stage: ${found}"
   fi
 
   # -i flag passed
   if ! run "$sh" -ic "echo-run true >/dev/null 2>&1"; then
-    # shellcheck disable=SC2016 # $PATH should expand in the inner shell
+    # $PATH should expand in the inner shell.
+    # shellcheck disable=SC2016
     found="$(run "$sh" -ic 'echo "PATH=$PATH"' 2>/dev/null)"
     fail "${sh} -i couldn't run echo-run: ${found}"
   fi

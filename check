@@ -51,7 +51,7 @@ files="$(scripts)
 .profile
 .bashrc
 .bash_profile"
-# xargs runs the linter with each line of $files as an argument. The
+# xargs runs the linter with each word of $files as an argument. The
 # (cd ... && ...) runs in a subshell, so the cd doesn't last past it.
 if command -v shellcheck >/dev/null; then
   echo "RUNNING: shellcheck"

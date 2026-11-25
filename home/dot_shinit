@@ -13,7 +13,8 @@ fi
 echo_run() { . "${HOME}/.scripts/echo-run"; }
 
 # When Homebrew belongs to another user on this machine, run brew as that user,
-# since only its owner can change it. as-brew-user uses sudo to switch users.
+# since only its owner can change it. brew as-brew-user is Homebrew's own
+# command for that, and uses sudo to switch users.
 # -d checks that the prefix is a directory, and -w that this user can write
 # to it.
 if [ -d "$HOMEBREW_PREFIX" ] && [ ! -w "$HOMEBREW_PREFIX" ]; then
@@ -54,9 +55,9 @@ tmp() {
 }
 
 # dotfiles cd has to change this shell's directory, so it's handled here.
-# chezmoi git runs git in chezmoi's source repo, and rev-parse --show-toplevel
-# prints that repo's top directory. command runs the dotfiles script instead
-# of this function.
+# chezmoi git -- runs git with the rest of the arguments in chezmoi's source
+# repo, and rev-parse --show-toplevel prints that repo's top directory.
+# command runs the dotfiles script instead of this function.
 dotfiles() {
   if [ "${1-}" = cd ]; then
     echo_run cd "$(chezmoi git -- rev-parse --show-toplevel || true)"

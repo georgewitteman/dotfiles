@@ -1,8 +1,9 @@
 #!/bin/sh
 
 # Sourced by the echo_run shell function too, so it returns instead of exiting
-# when it can. return only works in a sourced file or a function. In a script
-# it fails, with its error hidden by 2>/dev/null, so exit runs instead.
+# when it can. In a script, some shells, like bash, reject return outside a
+# function or sourced file, so exit runs instead (2>/dev/null hides their
+# error). Others, like dash and zsh, treat it as exit.
 if [ "$#" -eq 0 ]; then
   # shellcheck disable=SC2317
   return 0 2>/dev/null || exit 0
@@ -40,7 +41,9 @@ for _echo_run_current_arg in "$@"; do
   # A single quote can't go inside single quotes, so split the argument at
   # each one, quote the parts between them as needed, and write each single
   # quote as \'. ${...%%\'*} is the text before the first single quote, and
-  # ${...#*\'} the text after it.
+  # ${...#*\'} the text after it. The assignment in the while always
+  # succeeds, so the loop ends only at the break, once no single quote is
+  # left.
   while _echo_run_part_before_single_quote=${_echo_run_current_arg_temp%%\'*}; do
     _echo_run_part_needs_quotes=
 

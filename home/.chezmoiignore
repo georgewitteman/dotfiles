@@ -1,6 +1,7 @@
 # Vim swap files, which vim keeps next to the file being edited. Without this,
 # applying deletes them from exact directories. ** matches any directories,
-# and ? any one character, like .vimrc.swp or .vimrc.swo.
+# and ? any one character, like .vimrc.swp or .vimrc.swo. Vim names the swap
+# file for a buffer with no file name just .swp.
 **/.*.sw?
 **/.sw?
 

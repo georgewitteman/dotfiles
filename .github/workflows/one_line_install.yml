@@ -3,6 +3,7 @@ name: Quick Install
 # Installs the way a new machine would. It runs daily to catch breakage from
 # outside this repo, like a new chezmoi release or runner image.
 
+# Quoted, since YAML 1.1 reads a bare on as true.
 "on":
   push:
     branches:
@@ -18,7 +19,11 @@ jobs:
   macos:
     runs-on: macos-latest
     steps:
-      # bash, so the step runs with pipefail and fails when the download does
+      # bash, so the step runs with pipefail and fails when the download does.
+      # curl -fsSL is --fail --silent --show-error --location. sh -s reads the
+      # installer from stdin, and passes it the arguments after --: -b to
+      # install into ~/.local/bin, then init -a (--apply) to set up and apply
+      # these dotfiles.
       - shell: bash
         run: curl -fsSL "https://get.chezmoi.io" | sh -s -- -b ~/.local/bin init -a georgewitteman
 

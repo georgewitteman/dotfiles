@@ -72,8 +72,9 @@ case "$command" in
   update)
     parse_apply_args "$@"
     # chezmoi git -- passes the rest to git, run in the dotfiles repo.
-    # --autostash sets aside uncommitted changes during the pull and puts them
-    # back after.
+    # --rebase puts local commits on top of the pulled ones instead of
+    # merging, and --autostash sets aside uncommitted changes during the pull
+    # and puts them back after.
     echo-run chezmoi git -- pull --autostash --rebase
     apply
     ;;

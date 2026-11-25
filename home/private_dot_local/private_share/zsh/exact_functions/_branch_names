@@ -17,17 +17,19 @@ if [[ $service == git-show ]]; then
   return
 fi
 
-# switch-branch and branch's base branch take origin's branches
-# without the origin/ prefix. ${(f)"$(...)"} splits the command's output into
-# lines, %(refname:lstrip=3) drops the first three parts of
-# refs/remotes/origin/<branch>, and ${origin_branches:#HEAD} removes the HEAD
-# entry.
+# switch-branch offers local and origin's branches, and branch's base branch
+# only origin's, without the origin/ prefix. ${(f)"$(...)"} splits the
+# command's output into lines, %(refname:lstrip=3) drops the first three parts
+# of refs/remotes/origin/<branch>, and ${origin_branches:#HEAD} removes the
+# HEAD entry.
 local -a local_branches origin_branches
 local_branches=(${(f)"$(git for-each-ref --format='%(refname:short)' refs/heads 2>/dev/null)"})
 origin_branches=(${(f)"$(git for-each-ref --format='%(refname:lstrip=3)' refs/remotes/origin 2>/dev/null)"})
 origin_branches=(${origin_branches:#HEAD})
 
 case $service in
+  # The -- after compadd marks the end of its options, in case a branch name
+  # starts with -.
   switch-branch)
     _arguments '1:branch:{compadd -- $local_branches $origin_branches}'
     ;;

@@ -18,7 +18,8 @@ case "${1-}" in
 esac
 
 # Show the command quoted the same way echo-run shows it, without the "$ ".
-# ECHO_RUN_ECHO_ONLY makes echo-run only print it. 2>&1 >/dev/null keeps just
+# ECHO_RUN_ECHO_ONLY makes echo-run only print it, and FORCE_COLOR='' turns
+# off its colors even when FORCE_COLOR is exported. 2>&1 >/dev/null keeps just
 # what it prints to stderr: stderr goes where stdout was going, into
 # $command, and then stdout is thrown away. ${command#??} drops the first two
 # characters. \033[33m turns the text yellow, and \033[0m resets it.

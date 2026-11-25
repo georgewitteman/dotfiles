@@ -70,5 +70,5 @@ $dirs
 EOF
 
 # nohup so the delete keeps going if the terminal closes, and & to run it in
-# the background.
+# the background. >/dev/null 2>&1 keeps nohup from writing a nohup.out file.
 nohup rm -rf "$trash" >/dev/null 2>&1 &

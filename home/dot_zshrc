@@ -20,7 +20,9 @@ emulate sh -c '. "${HOME}/.shinit"'
 #                  command succeeded and red if it failed (%(?.…))
 #
 # %B/%b turn bold on/off, %F{color}/%f set/reset the text color, and
-# %K{color}/%k set/reset the background color.
+# %K{color}/%k set/reset the background color. %(X.yes.no) shows yes when X
+# holds and no otherwise: 1j is at least 1 job, ? the last command succeeding,
+# and ! being root.
 if [[ -n $SSH_CONNECTION ]]; then
   PROMPT='%B%F{magenta}%n@%m%f%b in '
 else
@@ -69,8 +71,7 @@ zstyle ':completion:*:warnings' format 'No matches for: %d'
 # own heading.
 zstyle ':completion:*' group-name ''
 
-# compinit rebuilds its dump when completion files are added or removed. -u
-# uses completion files owned by other users, or writable by them, instead of
+# compinit -u uses completion files owned by other users, or writable by them, instead of
 # asking, which matters on machines with several users.
 # https://zsh.sourceforge.io/Doc/Release/Completion-System.html#Use-of-compinit
 #
@@ -110,6 +111,7 @@ setopt interactive_comments
 # ^W and Alt-B/Alt-F stop at each / in a path. WORDCHARS lists the characters,
 # besides letters and digits, that count as part of a word, and
 # ${var/pattern/replacement} replaces the first match, here / with nothing.
+# The / to remove is written \/ so it isn't read as the separator.
 WORDCHARS="${WORDCHARS/\//}"
 
 # Use emacs keybindings, since zsh picks vi mode when EDITOR or VISUAL
@@ -170,7 +172,8 @@ setopt hist_ignore_space
 #
 # The patterns use zsh's extended globbing: (#i) ignores case, (a|b) matches
 # either, # after something matches it zero or more times and ## one or more,
-# [[:alnum:]] is a letter or digit, and * is anything.
+# [[:alnum:]] is a letter or digit, [^...] any one character not listed, and *
+# is anything.
 zshaddhistory() {
   # emulate -L zsh resets options to zsh's defaults, only inside this
   # function, and extended_glob turns on the patterns above.
@@ -180,7 +183,7 @@ zshaddhistory() {
   # removes.
   local line="${1%$'\n'}"
   # Long pastes, like "Copy as cURL" from browser devtools. ${#line} is the
-  # line's length.
+  # line's length, and (( )) compares numbers.
   if (( ${#line} >= 2000 )); then
     return 2
   fi

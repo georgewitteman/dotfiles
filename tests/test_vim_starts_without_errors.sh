@@ -7,7 +7,8 @@ if ! command -v vim >/dev/null; then
 fi
 
 # Load every filetype with its own settings, so errors in those show up too.
-# -es skips syntax highlighting, so turn it on. Vim takes at most 10 -c
+# Vim's defaults only turn on syntax highlighting in a terminal with colors,
+# which -es doesn't have, so turn it on. Vim takes at most 10 -c
 # options, so chain the commands into one.
 cmd="syntax on"
 for f in "${HOME}"/.vim/after/ftplugin/*.vim; do
@@ -18,6 +19,7 @@ done
 # including the vendored plugins. :messages has the errors with where they
 # happened, unlike v:errmsg, which also holds errors a plugin silenced.
 # -u loads this vimrc, each -c runs a command after it, and qa! quits.
+# -es shows nothing, so writefile(..., "/dev/stdout") prints the messages.
 if ! messages="$(vim -es -u "${HOME}/.vim/vimrc" -c "$cmd" -c 'call writefile(split(execute("messages"), "\n"), "/dev/stdout")' -c 'qa!')"; then
   fail "vim reported an error:
 ${messages}"
