@@ -19,14 +19,14 @@ origin_branches=(${origin_branches:#HEAD})
 
 case $service in
   switch-branch)
-    _arguments '1:branch:{compadd -- ${(u)local_branches} $origin_branches}'
+    _arguments '1:branch:{compadd -- $local_branches $origin_branches}'
     ;;
   rebase)
     _arguments \
       '(--continue --abort)'{-i,--interactive}'[rebase interactively]' \
       '(- 1)--continue[continue the rebase in progress]' \
       '(- 1)--abort[abort the rebase in progress]' \
-      '1:base branch:{compadd -- ${(u)local_branches} $origin_branches}'
+      '1:base branch:{compadd -- $local_branches $origin_branches}'
     ;;
   branch)
     _arguments \
