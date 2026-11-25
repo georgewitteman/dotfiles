@@ -18,13 +18,9 @@ commit_id="$(git show "$@" --quiet --format="%H")"
 # whitespace is safe here.
 tags=
 heads=
-# shellcheck disable=SC2312
-for ref in $(git show-ref --dereference | grep "^$commit_id " | cut -d' ' -f2); do
+for ref in $(git for-each-ref --points-at "$commit_id" --format='%(refname)' refs/tags refs/heads refs/remotes); do
   case "$ref" in
-    refs/tags/*)
-      tag="${ref#refs/tags/}"
-      tags="${tags:+$tags, }${tag%'^{}'}"
-      ;;
+    refs/tags/*) tags="${tags:+$tags, }${ref#refs/tags/}" ;;
     refs/heads/*) heads="${heads:+$heads, }${ref#refs/heads/}" ;;
     refs/remotes/*) heads="${heads:+$heads, }${ref#refs/remotes/}" ;;
   esac

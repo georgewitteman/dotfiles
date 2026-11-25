@@ -12,7 +12,7 @@ alias resh="restart_shell"
 restart_shell() {
   # shellcheck disable=SC2312
   if [ -n "$(jobs)" ]; then
-    echo "Current shell has backgrounded jobs. Not restarting ${1}"
+    echo "Current shell has backgrounded jobs. Not restarting."
     return 1
   fi
 
@@ -51,13 +51,12 @@ alias ls='ls --color=auto'
 alias la='ls -la'
 
 alias gs='git status'
+alias pull='git pull'
 alias gb='switch-branch'
 
 alias tf="terraform"
 
-# work
 alias yws="yarn workspace server"
-# /work
 
 take() {
   # shellcheck disable=SC2164

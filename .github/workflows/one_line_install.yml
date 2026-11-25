@@ -1,8 +1,7 @@
 name: Quick Install
 
-# Runs the one-line install from the README, the way a new machine would. It
-# runs daily to catch breakage from outside this repo (a new chezmoi release,
-# new runner images, ...), and on pushes that change this workflow.
+# Installs the way a new machine would. It runs daily to catch breakage from
+# outside this repo, like a new chezmoi release or runner image.
 
 "on":
   push:

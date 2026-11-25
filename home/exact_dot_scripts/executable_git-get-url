@@ -28,6 +28,7 @@ pull_request=false
 commit=false
 commit_id=
 branch=
+path=
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
@@ -54,7 +55,10 @@ while [ "$#" -gt 0 ]; do
       pull_request=true
       ;;
     --branch)
-      branch="${2}"
+      if [ $# -lt 2 ]; then
+        die 1 "${1} requires a value"
+      fi
+      branch="$2"
       shift
       ;;
     --with-commit)

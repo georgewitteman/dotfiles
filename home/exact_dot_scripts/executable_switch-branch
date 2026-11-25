@@ -23,6 +23,10 @@ while [ "$#" -gt 0 ]; do
       exit 1
       ;;
     *)
+      if [ -n "$branch" ]; then
+        echo "error: unexpected argument: ${1}" >&2
+        exit 1
+      fi
       branch="$1"
       ;;
   esac
@@ -47,13 +51,10 @@ if [ -n "$branch" ]; then
     fi
   fi
   echo-run git switch "$branch"
-  exit $?
+  exit
 fi
 
 echo-run git fetch --quiet
-
-# Make sure we're in a git branch
-git branch >/dev/null
 
 # Pick from the most recently committed-to branches by number. The list is
 # printed in reverse so number 1, the most recent, sits right above the prompt.
@@ -80,5 +81,5 @@ if [ -z "$branch" ]; then
   echo "error: no branch number ${choice}" >&2
   exit 1
 fi
-echo-run git switch "$branch" || exit $?
+echo-run git switch "$branch"
 git-show --quiet

@@ -78,14 +78,17 @@ while [ "$#" -gt 0 ]; do
       echo "error: unknown option: ${1}" >&2
       exit 1
       ;;
-    *) break ;;
+    *)
+      echo "error: unexpected argument: ${1}" >&2
+      exit 1
+      ;;
   esac
   shift
 done
 
 if $abort; then
   echo-run git merge --abort
-  exit $?
+  exit
 fi
 
 if $continue_; then
@@ -119,7 +122,7 @@ if $continue_; then
   else
     echo-run git commit --no-edit
   fi
-  exit $?
+  exit
 fi
 
 if ! main_branch="$(git rev-parse --abbrev-ref origin/HEAD 2>/dev/null)"; then
@@ -141,8 +144,7 @@ if [ "$merge_status" -eq 0 ]; then
   exit 0
 fi
 
-# Merge had conflicts. Check whether yarn.lock is the *only* conflicted file;
-# if so, regenerate it with `yarn install` and finish the merge.
+# When yarn.lock is the only conflict, regenerate it and finish the merge.
 conflicted_files="$(git diff --name-only --diff-filter=U)"
 if [ "$conflicted_files" = "yarn.lock" ]; then
   toplevel="$(git rev-parse --show-toplevel)"
@@ -150,7 +152,7 @@ if [ "$conflicted_files" = "yarn.lock" ]; then
   echo-run yarn install
   echo-run git add yarn.lock
   echo-run git commit --no-edit
-  exit $?
+  exit
 fi
 
 exit "$merge_status"

@@ -38,7 +38,7 @@ case "${1-}" in
     ;;
   --continue | --abort)
     if [ "$#" -ne 1 ]; then
-      usage >&2
+      echo "error: ${1} takes no other arguments" >&2
       exit 1
     fi
     echo-run git rebase "$1"
@@ -55,13 +55,13 @@ esac
 
 case "${1-}" in
   -*)
-    usage >&2
+    echo "error: unknown option: ${1}" >&2
     exit 1
     ;;
 esac
 
 if [ "$#" -gt 1 ]; then
-  usage >&2
+  echo "error: unexpected argument: ${2}" >&2
   exit 1
 fi
 

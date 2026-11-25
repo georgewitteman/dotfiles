@@ -27,7 +27,7 @@ apply() {
   for arg; do
     shift
     case $arg in
-      --noconfirm | --yes | -y) confirm=echo-run ;;
+      --yes | -y) confirm=echo-run ;;
       *) set -- "$@" "$arg" ;;
     esac
   done

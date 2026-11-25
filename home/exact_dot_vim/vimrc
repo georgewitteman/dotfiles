@@ -49,10 +49,6 @@ set nosmartindent
 " not been changed inside of Vim, automatically read it again
 set autoread
 
-" If this many milliseconds nothing is typed the swap file will be written
-" to disk. Also used for the CursorHold autocommand event
-set updatetime=200
-
 " Ignore case in search patterns. Also used when searching in the tags file
 set ignorecase
 " Overrides the 'ignorecase' option if the search pattern contains upper case
@@ -85,8 +81,9 @@ set hlsearch
 set breakindent
 " sbr: Display the 'showbreak' value before applying the additional indent
 set breakindentopt=sbr
-" String to put at the start of lines that have been wrapped
-set showbreak=↪\  " A comment to keep the space
+" String to put at the start of lines that have been wrapped. Quoted, so the
+" trailing space survives stripping whitespace on save.
+let &showbreak = '↪ '
 " When on, lines longer than the width of the window will wrap and displaying
 " continues on the next line
 set wrap
@@ -118,10 +115,6 @@ set list
 
 " Trailing whitespace characters and tab characters
 set listchars=tab:»·,trail:·
-
-" Number of lines to scroll with CTRL-U and CTRL-D commands. Setting to 0
-" means scroll half the window height
-set scroll=0
 
 " Better command line autocompletion menu
 " When 'wildmenu' is on, command-line completion operates in an enhanced mode
@@ -226,16 +219,19 @@ let g:dirvish_mode = ':sort ,^\v(.*[\/])|\ze,'
 " List paths relative to the |current-directory|.
 let g:dirvish_relative_paths = 1
 
-let g:better_whitespace_enabled = 0 " Disable highlighting
+" Strip trailing whitespace and blank lines at the end of the file on save,
+" without asking, and without highlighting it while editing.
+let g:better_whitespace_enabled = 0
 let g:strip_whitespace_on_save = 1
-let g:strip_whitespace_confirm = 0 " Don't ask for confirmation
-let g:strip_whitelines_at_eof = 1 " Strip white lines at end of file
+let g:strip_whitespace_confirm = 0
+let g:strip_whitelines_at_eof = 1
 
+" Soft-wrap prose. pencil would hide characters, like markdown's formatting
+" marks, which is more annoying than it is pretty.
+let g:pencil#conceallevel = 0
 augroup pencil
   autocmd!
-  autocmd FileType markdown,mkd call pencil#init({'wrap': 'soft'})
-  autocmd Filetype git,gitsendemail,*commit*,*COMMIT* call pencil#init({'wrap': 'soft'})
-  autocmd FileType html call pencil#init({'wrap': 'soft'})
+  autocmd FileType markdown,mkd,html,git,gitsendemail,*commit*,*COMMIT* call pencil#init({'wrap': 'soft'})
 augroup END
 
 " Extra Python highlighting (builtins, exceptions, string formatting, ...)

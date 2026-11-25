@@ -127,7 +127,6 @@ if [ -n "$status" ]; then
     fi
 
     "$cmd" git commit --amend "$@" || die $? "Failed to amend commit. Fix any errors and retry"
-    unset cmd
   else
     if [ -n "$message" ]; then
       set -- "$@" --message "$message"

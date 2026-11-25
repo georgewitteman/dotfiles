@@ -3,12 +3,11 @@ name: CI
 "on":
   push:
 
-# Plain shell commands only (no third-party actions), so there's nothing here
-# that needs updating.
+# Plain shell commands only, with no third-party actions, so nothing here needs
+# updating.
 #
-# Every job runs with both the oldest supported chezmoi (.chezmoiversion) and
-# the latest one, except macOS, which only runs the latest. macOS runners are
-# often in short supply, and the oldest is still covered on Linux.
+# macOS only runs the latest chezmoi, since its runners are often in short
+# supply. Linux covers the oldest.
 
 jobs:
   runners:
@@ -36,7 +35,6 @@ jobs:
           else
             ./install.sh
           fi
-      # Lints too where shellcheck is installed
       - name: Run tests
         run: ./check
 

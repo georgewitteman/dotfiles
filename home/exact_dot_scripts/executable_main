@@ -54,7 +54,7 @@ while [ "$#" -gt 0 ]; do
       break
       ;;
     -?*) die 1 "unknown option: ${1}" ;;
-    *) break ;;
+    *) die 1 "unexpected argument: ${1}" ;;
   esac
   shift
 done
