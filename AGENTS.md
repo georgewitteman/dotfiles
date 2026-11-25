@@ -36,8 +36,8 @@ hard rules: break one when the value is clearly worth it, and say why.
 - **Keep it minimal.** Small diffs, few files, no features nobody asked for.
   Delete anything that's no longer used. Every line, option and setting should
   solve a problem you can name; if nobody can say what it's for, remove it or
-  ask. Restating a default is fine: it holds up against older versions and
-  system-level overrides.
+  ask. Restate a default only when something you use doesn't have it as the
+  default, like an older version or a system config that changes it.
 - **No doc comments at the top of files.** Comments go next to the code they
   explain. A script's description goes in its help message; why any other
   file exists goes in the commit that adds it. Lines a tool needs at the top
