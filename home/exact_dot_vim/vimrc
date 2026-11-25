@@ -94,9 +94,7 @@ set wildmode=longest:full,full
 set wildignore=*.o,*.obj,*.bak,*.exe,*.pyc
 
 " Enable mouse support for all modes
-if has('mouse')
-  set mouse=a
-endif
+set mouse=a
 
 " Reselect visual block after indent/outdent
 vnoremap < <gv
