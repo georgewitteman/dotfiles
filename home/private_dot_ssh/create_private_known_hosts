@@ -1,6 +1,5 @@
-# Each host's key, so the first connection doesn't have to trust whatever key
-# the host sends. The comment above each key is its fingerprint. To check one,
-# print the host's current fingerprint with `ssh-keyscan <host> > keys` and
+# The comment above each key is its fingerprint. To check one, print the
+# host's current fingerprint with `ssh-keyscan <host> > keys` and
 # `ssh-keygen -lf keys`, and compare it with the one the host publishes, linked
 # above it.
 
