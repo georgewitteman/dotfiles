@@ -63,7 +63,10 @@ take() {
 
 tmp() {
   # shellcheck disable=SC2312
-  set -- "${TMPDIR:-"$(mktemp -d)/"}$(date +%Y-%m-%dT%H%M%S)"
+  set -- "${TMPDIR:-$(mktemp -d)}"
+  # TMPDIR ends in / on macOS, but not always elsewhere.
+  # shellcheck disable=SC2312
+  set -- "${1%/}/$(date +%Y-%m-%dT%H%M%S)"
   echo_run mkdir -p "$1"
   echo_run cd "$1"
 }
