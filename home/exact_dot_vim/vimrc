@@ -4,7 +4,7 @@ scriptencoding utf-8
 
 " Highlighting for chezmoi source files. Must load before filetype detection,
 " which defaults.vim turns on.
-packadd chezmoi.vim
+packadd! chezmoi.vim
 
 " Vim's recommended defaults, like syntax highlighting and filetype detection
 " (`:help defaults.vim`).
@@ -14,8 +14,8 @@ source $VIMRUNTIME/defaults.vim
 " Optional packages that ship with newer versions of Vim:
 " - comment: `gc` to toggle comments
 " - nohlsearch: clear search highlighting after moving the cursor
-silent! packadd comment
-silent! packadd nohlsearch
+silent! packadd! comment
+silent! packadd! nohlsearch
 
 " How many columns of whitespace a level of indentation is worth (>, <, ...).
 set shiftwidth=2
