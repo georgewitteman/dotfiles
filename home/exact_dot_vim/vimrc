@@ -82,9 +82,8 @@ set relativenumber
 set list
 set listchars=tab:»·,trail:·
 
-" Better command line autocompletion menu
-" When 'wildmenu' is on, command-line completion operates in an enhanced mode
-" https://stackoverflow.com/a/13043196
+" In the command line, the first Tab completes the longest common part and shows
+" the matches in a menu, and each further Tab picks the next match.
 set wildmenu
 set wildmode=longest:full,full
 
