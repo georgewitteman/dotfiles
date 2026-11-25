@@ -11,7 +11,7 @@ function! s:CopyReg(reg) abort
 endfunction
 command! -nargs=1 CopyReg call s:CopyReg(<q-args>)
 
-" Vim before 8.0 has no TextYankPost, so yanks don't reach the clipboard there.
+" Older Vims have no TextYankPost, so yanks don't reach the clipboard there.
 if !exists('##TextYankPost')
   finish
 endif

@@ -1,20 +1,13 @@
-" Specify the character encoding used in the script. The following lines will
-" be converted from [encoding] to the value of the 'encoding' option, if they
-" are different.
-"
-" NOTE: 'encoding' defaults to "latin1" or $LANG
+" This file has non-ASCII characters, like ↪ and », so Vim needs to know it's
+" UTF-8 to read them right.
 scriptencoding utf-8
-
-" Plugins are copied as-is into ~/.vim/pack/vendor (`:help packages`). Plugins
-" in start/ load automatically; ones in opt/ are loaded below.
 
 " Highlighting for chezmoi source files. Must load before filetype detection,
 " which defaults.vim turns on.
 packadd chezmoi.vim
 
-" See `:h defaults.vim`: If you create your own .vimrc, it is
-" recommended to add these lines somewhere near the top. Vim before 8.0
-" doesn't have defaults.vim.
+" Vim's recommended defaults, like syntax highlighting and filetype detection
+" (`:help defaults.vim`). Older Vims don't have it.
 if filereadable($VIMRUNTIME . '/defaults.vim')
   unlet! skip_defaults_vim
   source $VIMRUNTIME/defaults.vim
