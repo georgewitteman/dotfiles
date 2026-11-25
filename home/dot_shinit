@@ -2,6 +2,7 @@
 
 # Load .profile if no parent shell has, like in a non-login shell started by
 # `docker exec`. .profile sets ENV, so it's empty here until .profile has run.
+# `.` runs a file in this shell, like bash's source.
 if [ -z "$ENV" ]; then
   . "${HOME}/.profile"
 fi
@@ -13,10 +14,15 @@ echo_run() { . "${HOME}/.scripts/echo-run"; }
 
 # When Homebrew belongs to another user on this machine, run brew as that user,
 # since only its owner can change it. as-brew-user uses sudo to switch users.
+# -d checks that the prefix is a directory, and -w that this user can write
+# to it.
 if [ -d "$HOMEBREW_PREFIX" ] && [ ! -w "$HOMEBREW_PREFIX" ]; then
   alias brew='echo-run brew as-brew-user'
 fi
 
+# --color=auto colors ls's output only when it goes to a terminal. la lists
+# one file per line with details (-l), including hidden files (-a), with
+# sizes like 4.0K (-h).
 alias ls='ls --color=auto'
 alias la='ls -lah'
 
@@ -31,10 +37,16 @@ alias gb='switch-branch'
 
 alias tf="terraform"
 
+# Makes a new directory under the temporary directory, named for the current
+# time, and goes there.
 tmp() {
+  # set -- replaces the function's arguments, so $1 holds the path without
+  # leaving a variable behind in this shell. ${TMPDIR:-...} uses TMPDIR, or
+  # when it's empty, a new directory from mktemp -d.
   # shellcheck disable=SC2312
   set -- "${TMPDIR:-$(mktemp -d)}"
-  # TMPDIR ends in / on macOS, but not always elsewhere.
+  # TMPDIR ends in / on macOS, but not always elsewhere. ${1%/} removes a /
+  # from the end of $1.
   # shellcheck disable=SC2312
   set -- "${1%/}/$(date +%Y-%m-%dT%H%M%S)"
   echo_run mkdir -p "$1"
@@ -42,6 +54,9 @@ tmp() {
 }
 
 # dotfiles cd has to change this shell's directory, so it's handled here.
+# chezmoi git runs git in chezmoi's source repo, and rev-parse --show-toplevel
+# prints that repo's top directory. command runs the dotfiles script instead
+# of this function.
 dotfiles() {
   if [ "${1-}" = cd ]; then
     echo_run cd "$(chezmoi git -- rev-parse --show-toplevel || true)"
@@ -50,7 +65,9 @@ dotfiles() {
   fi
 }
 
-# $EUID is set by bash and zsh, which saves running id.
+# The prompt is the current directory, then # for root (user ID 0) or $ for
+# anyone else. $EUID is the user ID, set by bash and zsh, which saves running
+# id -u. The prompt is in single quotes so $PWD is read each time it's drawn.
 # shellcheck disable=SC3028
 if [ "${EUID:-$(id -u || true)}" -eq 0 ]; then
   PS1='$PWD # '
@@ -59,7 +76,7 @@ else
 fi
 
 # Machine-local settings and secrets for interactive shells, kept out of the
-# dotfiles repo.
+# dotfiles repo. -r checks that the file exists and can be read.
 if [ -r "${HOME}/.shinit.local" ]; then
   # shellcheck disable=SC1091
   . "${HOME}/.shinit.local"

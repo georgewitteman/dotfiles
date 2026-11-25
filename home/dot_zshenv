@@ -8,12 +8,15 @@ skip_global_compinit=1
 # it slows every start and exit.
 SHELL_SESSIONS_DISABLE=1
 
-# Keep only the first copy of each entry. Nested shells inherit PATH and FPATH
-# and add to them again, and a changed fpath makes compinit rebuild its dump.
-# The scalars need it too, or assignments like PATH="dir:$PATH" keep duplicates.
+# typeset -U keeps only the first copy of each entry. Nested shells inherit
+# PATH and FPATH and add to them again, and a changed fpath makes compinit
+# rebuild its dump. path and fpath are zsh's array versions of PATH and FPATH,
+# kept in sync with them. The scalars need it too, or assignments like
+# PATH="dir:$PATH" keep duplicates.
 typeset -U PATH path FPATH fpath
 
 # Set here instead of .zshrc because some /etc/zsh/zshrc files run compinit
 # before .zshrc. If they see a different fpath, each compinit rebuilds the dump
-# on every start.
+# on every start. fpath lists the directories zsh loads functions and
+# completions from, and "${fpath[@]}" is all of its current entries.
 fpath=("${HOME}/.local/share/zsh/functions" "${fpath[@]}")

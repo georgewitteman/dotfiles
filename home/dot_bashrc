@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 # Interactive shells only. bash also reads this for some non-interactive
-# shells, like commands run over ssh.
+# shells, like commands run over ssh. $- lists the shell's option letters,
+# and i means interactive.
 case $- in *i*) ;; *) return ;; esac
 
 # shellcheck source=.shinit

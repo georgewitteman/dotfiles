@@ -5,7 +5,8 @@
 # has run.
 export ENV="${HOME}/.shinit"
 
-# `man environ`: Default editor name.
+# `man environ`: Default editor name. Only set when EDITOR is empty (-z) and
+# vim is installed (command -v finds it).
 if [ -z "$EDITOR" ] && command -v vim >/dev/null; then
   export EDITOR="vim"
 fi
@@ -18,6 +19,9 @@ if [ -d "${HOME}/Library/Group Containers/2BUA8C4S2C.com.1password" ]; then
   export SSH_AUTH_SOCK="${HOME}/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
 fi
 
+# brew shellenv prints the commands that add Homebrew to PATH and set its
+# other variables, and eval runs them in this shell. -x checks that brew
+# exists and can be run.
 if [ -x "/opt/homebrew/bin/brew" ]; then
   eval "$(/opt/homebrew/bin/brew shellenv || true)"
 fi

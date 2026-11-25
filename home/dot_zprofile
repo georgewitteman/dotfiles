@@ -1,6 +1,8 @@
 #!/usr/bin/env zsh
 
-# .profile is shared with bash and sh, so run it with sh's rules.
+# .profile is shared with bash and sh, so run it with sh's rules. emulate sh -c
+# runs the command with zsh's options set to act like sh, just for that
+# command.
 emulate sh -c '. "${HOME}/.profile"'
 
 # Docker Desktop checks for its zsh completions with a login shell, which
