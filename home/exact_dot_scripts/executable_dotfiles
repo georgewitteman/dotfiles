@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# Stop at the first command that fails.
 set -o errexit
 
 usage() {
@@ -41,6 +42,8 @@ parse_apply_args() {
   fi
 }
 
+# chezmoi verify succeeds when there's nothing to apply. $confirm is safe-run,
+# which asks first, or echo-run, which doesn't.
 apply() {
   if echo-run chezmoi verify; then
     echo "Nothing to apply."
@@ -68,10 +71,14 @@ case "$command" in
     ;;
   update)
     parse_apply_args "$@"
+    # chezmoi git -- passes the rest to git, run in the dotfiles repo.
+    # --autostash sets aside uncommitted changes during the pull and puts them
+    # back after.
     echo-run chezmoi git -- pull --autostash --rebase
     apply
     ;;
   edit)
+    # for arg; do goes through "$@".
     for arg; do
       case "$arg" in
         -h | --help)
@@ -93,6 +100,7 @@ case "$command" in
     if [ "$#" -gt 0 ]; then
       die "unexpected argument: ${1}"
     fi
+    # chezmoi cd starts a new shell in the dotfiles repo.
     echo-run chezmoi cd
     ;;
   *) die "unknown command: ${command}" ;;

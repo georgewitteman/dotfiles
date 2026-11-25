@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# Stop at the first command that fails.
 set -o errexit
 
 usage() {
@@ -19,6 +20,9 @@ latest=false
 stash=false
 base_branch=
 
+# Go through the arguments one at a time: $# is how many are left, and shift
+# drops the first. -?* matches an option: a - and at least one more
+# character.
 while [ "$#" -gt 0 ]; do
   case "$1" in
     -h | --help)
@@ -54,6 +58,9 @@ if [ -z "$branch_name" ]; then
   exit 1
 fi
 
+# Default to origin's default branch. git rev-parse --abbrev-ref origin/HEAD
+# prints the branch it points to, like origin/main, and ${...#origin/} drops
+# the origin/.
 if [ -z "$base_branch" ]; then
   if ! base_branch="$(git rev-parse --abbrev-ref origin/HEAD 2>/dev/null)"; then
     echo "error: origin's default branch isn't known. Run: git remote set-head origin --auto" >&2
@@ -68,6 +75,8 @@ fi
 
 # Pop only a stash made here. git stash makes none when there's nothing to
 # stash, like when the only changes are untracked files, which stay put anyway.
+# git rev-parse -q --verify refs/stash prints the latest stash's hash, or
+# nothing when there's no stash, so a change means git stash made one.
 stashed=false
 if $stash; then
   stash_before="$(git rev-parse -q --verify refs/stash || true)"
@@ -78,6 +87,10 @@ if $stash; then
   fi
 fi
 
+# git checkout -b creates the branch from origin's copy of the base branch and
+# switches to it. --no-track leaves it without an upstream, so it isn't tied
+# to the base branch. If it fails, save its exit status (|| exit_code=$?) so
+# the stash still comes back.
 exit_code=0
 echo-run git checkout -b "$branch_name" --no-track "origin/${base_branch}" || exit_code=$?
 

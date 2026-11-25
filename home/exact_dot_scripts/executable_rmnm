@@ -1,8 +1,13 @@
 #!/bin/sh
 
+# Stop at the first command that fails.
 set -o errexit
 
 dir=
+
+# Go through the arguments one at a time: $# is how many are left, and shift
+# drops the first. -?* matches an option: a - and at least one more
+# character.
 while [ "$#" -gt 0 ]; do
   case "$1" in
     -h | --help)
@@ -33,6 +38,10 @@ fi
 
 # Skip trash from an earlier run that's still being deleted. find can still
 # trip over that trash vanishing mid-search, so ignore its errors.
+#
+# find's expression reads as: skip anything named .rmnm.* without looking
+# inside (-prune), or (-o) print each node_modules directory (-type d) without
+# looking inside it either.
 dirs="$(find . -name '.rmnm.*' -prune -o -name node_modules -type d -prune -print 2>/dev/null || true)"
 if [ -z "$dirs" ]; then
   echo "error: no node_modules under ${PWD}" >&2
@@ -41,13 +50,18 @@ fi
 
 # Renaming is instant, so move everything into a hidden trash folder first and
 # delete that afterward. Each one keeps the name node_modules inside the trash
-# so .gitignore still hides it while it's being deleted.
+# so .gitignore still hides it while it's being deleted. mktemp -d makes a new
+# directory, replacing the XXXXXX with random characters.
 trash="$(mktemp -d ./.rmnm.XXXXXX)"
 count=0
 echo "removing in the background:"
+# Read the paths one per line, from the <<EOF block below. IFS= and -r keep
+# each line exactly as it is, spaces and backslashes included.
 while IFS= read -r path; do
   count=$((count + 1))
   # Show the path relative to where rmnm was run, like the directory argument.
+  # ${dir:+...} adds the directory and a / only when one was given, ${dir%/}
+  # drops a / it already ends with, and ${path#./} drops find's leading ./.
   echo "  ${dir:+${dir%/}/}${path#./}"
   mkdir "${trash}/${count}"
   mv "$path" "${trash}/${count}/node_modules"
@@ -55,5 +69,6 @@ done <<EOF
 $dirs
 EOF
 
-# nohup so the delete keeps going if the terminal closes.
+# nohup so the delete keeps going if the terminal closes, and & to run it in
+# the background.
 nohup rm -rf "$trash" >/dev/null 2>&1 &

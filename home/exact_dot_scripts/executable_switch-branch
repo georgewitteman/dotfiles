@@ -1,9 +1,13 @@
 #!/bin/sh
 
+# Stop at the first command that fails.
 set -o errexit
 
 branch=
 
+# Go through the arguments one at a time: $# is how many are left, and shift
+# drops the first. -?* matches an option: a - and at least one more
+# character.
 while [ "$#" -gt 0 ]; do
   case "$1" in
     -h | --help)
@@ -30,23 +34,28 @@ while [ "$#" -gt 0 ]; do
 done
 
 if [ -n "$branch" ]; then
-  # Only fetch if the branch exists on the remote
+  # Only fetch if the branch exists on the remote. git ls-remote --heads lists
+  # origin's matching branches, and --exit-code makes it fail when there are
+  # none.
   if git ls-remote --exit-code --heads origin "refs/heads/${branch}" >/dev/null 2>&1; then
     current_branch="$(git branch --show-current)"
     if [ "$current_branch" = "$branch" ]; then
       # git fetch can't update the branch that's checked out, so fast-forward
-      # it with a merge instead.
+      # it with a merge instead. --ff-only fails instead of making a merge
+      # commit when the branch has its own commits.
       echo-run git fetch origin "$branch"
       if ! echo-run git merge --ff-only "origin/${branch}"; then
         echo "warning: couldn't fast-forward ${branch} to origin's" >&2
       fi
+    # <remote branch>:<local branch> fetches straight into the local branch.
     elif ! echo-run git fetch origin "$branch":"$branch"; then
       # Only a fast-forward updates the branch, so local commits are kept
       echo "warning: ${branch} has commits origin doesn't, so it wasn't updated" >&2
       echo-run git fetch origin "$branch"
     fi
     # Fetching into a local branch does not set its upstream, so set it here.
-    # Without this, a plain "git pull" fails on the new branch.
+    # Without this, a plain "git pull" fails on the new branch. git rev-parse
+    # of <branch>@{upstream} fails when the branch has no upstream.
     if ! git rev-parse --abbrev-ref --symbolic-full-name "${branch}@{upstream}" >/dev/null 2>&1; then
       echo-run git branch --set-upstream-to="origin/$branch" "$branch"
     fi
@@ -57,11 +66,20 @@ fi
 
 # Pick from the most recently committed-to branches by number. The list is
 # printed in reverse so number 1, the most recent, sits right above the prompt.
+#
+# git for-each-ref lists the local branches (refs/heads/), newest commit first
+# (the - in --sort=-committerdate), at most 20.
 list_branches() {
   git for-each-ref --sort=-committerdate --count=20 refs/heads/ "$@"
 }
 # Turn off line wrapping while listing so long subjects get cut off at the edge
-# of the terminal instead of wrapping.
+# of the terminal instead of wrapping. \033[?7l turns it off and \033[?7h back
+# on.
+#
+# In --format, each %(...) is a field of the branch, and %(HEAD) is * for the
+# current one. nl numbers the lines: -w 2 makes the numbers two characters wide
+# and -s ') ' puts ") " after them. awk keeps every line (lines[NR], where NR is
+# the line number) and prints them last to first.
 printf '\033[?7l'
 list_branches --color=always --format='%(HEAD) %(color:green)%(refname:short)%(color:reset) - %(color:yellow)%(committerdate:relative)%(color:reset) - %(contents:subject)' |
   nl -w 2 -s ') ' |
@@ -69,12 +87,14 @@ list_branches --color=always --format='%(HEAD) %(color:green)%(refname:short)%(c
 printf '\033[?7h'
 printf 'Branch number: '
 read -r choice
+# *[!0-9]* matches anything with a character that isn't a digit.
 case "$choice" in
   '' | *[!0-9]*)
     echo "error: not a number: ${choice}" >&2
     exit 1
     ;;
 esac
+# awk -v n=... passes the number in, and 'NR == n' prints only that line.
 branch="$(list_branches --format='%(refname:short)' | awk -v n="$choice" 'NR == n')"
 if [ -z "$branch" ]; then
   echo "error: no branch number ${choice}" >&2

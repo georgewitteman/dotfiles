@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# Stop at the first command that fails.
 set -o errexit
 
 USAGE="usage: $(basename "$0") [<options>] [--] [<message>]
@@ -22,10 +23,16 @@ no_verify=false
 add=false
 amend=false
 
+# Go through the arguments one at a time: $# is how many are left, and shift
+# drops the first.
 while [ "$#" -gt 0 ]; do
+  # Split joined short options, like -ap, into the first one and the rest:
+  # -a, then -p. ${1##-?} is what's after the first option (p), so _value is
+  # the rest as an option (-p), and ${1%%...} drops it to leave the first
+  # (-a). Both go back in front of the remaining arguments, to be handled in
+  # turn.
   case "$1" in
     -[[:alnum:]][[:alnum:]]*)
-      # Joined short args (e.g. -abc)
       _value="-${1##-?}"
       _arg="${1%%"${1##-?}"}"
       ;;
@@ -55,6 +62,7 @@ while [ "$#" -gt 0 ]; do
     -n | --no-verify)
       no_verify=true
       ;;
+    # -- ends the options, so whatever follows is the message.
     --)
       shift
       break
@@ -74,6 +82,7 @@ while [ "$#" -gt 0 ]; do
   shift
 done
 
+# The message after --, if any. ${2:-$1} names the extra argument.
 if [ $# -gt 0 ]; then
   if [ -n "$message" ] || [ $# -gt 1 ]; then
     echo "error: unexpected argument: ${2:-$1}" >&2
@@ -86,6 +95,8 @@ if $add; then
   echo-run git add --verbose --all
 fi
 
+# git diff --cached compares the staged changes with the last commit, and
+# --quiet makes it succeed only when there are none.
 staged=true
 if git diff --cached --quiet; then
   staged=false
@@ -97,11 +108,15 @@ if ! $staged && ! $amend && [ -n "$message" ]; then
 fi
 
 if $staged || $amend; then
-  # A new repository has no commit to go back to yet.
+  # A new repository has no commit to go back to yet. git rev-parse --verify
+  # --short HEAD prints the current commit's short hash, and fails quietly
+  # (--quiet) when there isn't one.
   if current_head="$(git rev-parse --quiet --verify --short HEAD)"; then
     echo "Undo these changes with 'git reset ${current_head}'"
   fi
 
+  # Build git commit's arguments in "$@": set -- empties it, and
+  # set -- "$@" ... adds to it.
   set --
   if $no_verify; then
     set -- --no-verify
@@ -112,6 +127,8 @@ if $staged || $amend; then
     set -- "$@" --no-edit
   fi
 
+  # Ask before amending someone else's commit. git show --no-patch
+  # --format='%ae' prints the last commit's author email, without its diff.
   if $amend; then
     current_commit_author="$(git show --no-patch --format='%ae')"
     repo_email="$(git config --get user.email || true)"
@@ -131,6 +148,8 @@ else
   echo "Skipping commit since nothing is staged."
 fi
 
+# --force-with-lease overwrites the remote branch only if it hasn't changed
+# since the last fetch, so it won't drop someone else's commits.
 if $push; then
   set --
   if $force || $amend; then

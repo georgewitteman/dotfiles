@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# Stop at the first command that fails.
 set -o errexit
 
 die() {
@@ -22,6 +23,9 @@ EOF
 commit_id=
 branch=
 
+# Go through the arguments one at a time: $# is how many are left, and shift
+# drops the first. -?* matches an option: a - and at least one more
+# character.
 while [ "$#" -gt 0 ]; do
   case "$1" in
     -h | --help)
