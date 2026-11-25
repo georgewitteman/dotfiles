@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# Based on chezmoi's own install script:
 # https://github.com/chezmoi/dotfiles/blob/master/install.sh
 
 set -o errexit
